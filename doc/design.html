@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd"
+    >
+<html lang="en">
+<head>
+    <title>Internote3 Design</title>
+    <style>
+      h1 { font-size: 2.5em; font-weight: bolder; text-align: center; }
+      h2 { font-size: 1.5em; font-weight: bolder; }
+      h3 { font-size: 1.2em; font-weight: normal; font-style: italic; }
+    </style>
+</head>
+<body>
+    
+    <h1>Some Basics</h1>
+    
+    <p>References to global variables are avoided throughout the program except during initialisation.
+       The reason for this is that Firefox has a habit of being unable to find your global variables
+       all the sudden.  This seems to be some sort of unidentified unreproducable bug to do with using
+       a JS code module.  As a result:</p>
+    <ul>
+        <li>All classes are linked together during initialisation by placing references inside the
+	    classes - this.utils, this.prefs, etc.  These are also shorter than the real thing.</li>
+	<li>No direct calls to Components should be made, instead use the utilities - getCCService,
+	    getCCInstance, getCIInterface, getCIConstant, etc.</li>
+    </ul>
+    
+    <h1>Files</h1>
+    
+    <h2>Internote Utilities</h2>
+    <p><code>internote-utils.js</code>, <code>internote-utils-colors.js</code>, <code>internote-utils-coords.js</code>,
+       <code>internote-utils-rects.js</code>, <code>internote-utils-web.js</code></p>
+    <p>Various utility methods.  The main file contains general methods.  The other files are incorporated into
+       the main file, so <strong>they are one object</strong>, <code>internoteUtilities</code> at runtime.</p>
+    <p><code>internote-utils-colors.js</code>: Methods for parsing, formatting, and processing colors.</p>
+    <p><code>internote-utils-coords.js</code>: Methods for calculating with coordinates as size-2 arrays.</p>
+    <p><code>internote-utils-rects.js</code>: Methods for calculating with rectangles.</p>
+    <p><code>internote-utils-web.js</code>: Methods for DOM, HTML, XML, CSS and URL manipulation.</p>
+    
+    <h2>Internote Preferences</h2>
+    <p><code>internote-preferences.js</code></p>
+    <p>Methods for retrieving preferences.</p>
+    
+    <h2>Internote Event Dispatcher</h2>
+    <p><code>internote-dispatcher.js</code></p>
+    <p>This is an event dispatcher used by <code>InternoteStorage</code> and <code>InternoteStorageWatcher</code>.</p>
+    
+    <h2>Internote Global Singleton</h2>
+    <p><code>internote-shared-global.jsm</code></p>
+    <p>This is a Javascript code module that allows a singleton for all windows.  It contains
+       the storage object, and well as a boolean to indicate total disabling upon initialisation failure,
+       which prevents subsequent windows giving unable-to-initialize error messages.</p>
+    <h3>Code Notes</h3>
+    <p>This is what allows MVC to happen, because calls to it can call back to code registered by
+       other windows.</p>
+    
+    <h2>Internote Storage</h2>
+    <p><code>internote-storage.js</code></p>
+    <p>This is responsible for in-memory storage of the internotes, note persistence and import/export.</p>
+    <p>There is <strong>only one</strong> storage object, shared by all window's UI controllers - it is stored
+       in the global singleton.</p>
+    <p>It generates events so that the application is Model/View based and so kept up-to-date. It also dispatches
+       some preference watching events.</p>
+    <p>Each note in storage is represented using the <code>InternoteNote</code> class.</p>
+    
+    <h2>Internote Storage Watcher</h2>
+    <p><code>internote-watcher.js</code></p>
+    <p>This maintains a subset of the notes in <code>InternoteStorage</code> that is automatically
+       updated based on a filter.  When notes are added to or removed from storage, it determines
+       whether this is relevant to the subset, and so whether to generate an add/remove event of its own.
+       When notes are modified, it determines whether this results in notes being added to or removed
+       from the subset, and so whether to generate this sort of event. It also lets certain events
+       pass for notes in its subset.
+    <p>It is currently used to determine the notes on a page as well as manager search results.</p>
+
+    <h2>Internote UI Controller</h2>
+    <p><code>internote-ui-controller.js</code></p>
+    <p>This is the main controller for the application.  It ties together the other components,
+       performs note animations, drags, watching storage, etc.</p>
+    <p>Each note in the user interface is represented with the <code>UINote</code> class, which includes the
+       back-end <code>InternoteNote</code> object, and various DOM elements that appear in the UI.</p>
+    <h3>Code Notes</h3>
+    <p>Both allUINotes and uiNoteLookup are used.  allUINotes allows fast looping and a guarantee of elements
+       not being null, but makes delete a little slower and has no order.  uiNoteLookup allows fast lookup by
+       number and fast deletion, but is not easy to loop through due to all the nulls that can result.</p>
+
+    <h2>Internote Note UI</h2>
+    <p><code>internote-ui-notes.js</code></p>
+    
+    <p>This is responsible for the UI within each note, including layout, registering callbacks,
+       and drawing on canvases.</p>
+
+    <h2>Internote Display UI</h2>
+    <p><code>internote-ui-display.js</code></p>
+    <p>This is responsible for displaying the notes within the browser.</p>
+
+    <p>Internote2 created absolutely-positioned chrome over the browser, however this no longer
+       works in Firefox3. This file in Internote3 creates a transparent anchored panel-popup over the viewport,
+       within which the notes are displayed.</p>
+    <p>Considerable effort must be put into calculating this position and size of this popup,
+       in particular if the window goes partially off-screen, as Firefox (at times randomly)
+       repositions popups in this situation.</p>
+    <p>If a future version of Firefox supports chrome over the viewport again, a second implementation
+       of this file could be introduced.</p>
+
+    <h2>Internote Balloon UI</h2>
+    <p><code>internote-ui-balloon.js</code></p>
+    <p>This displays a "balloon" message in the browser to give feedback to the user.</p>
+
+    <h2>Internote Drag UI</h2>
+    <p><code>internote-ui-drag.js</code></p>
+    <p>This code supports dragging operations, including checking for adequate movement and so
+       distinguishing between clicks/drags, supporting ESC-key aborts, calculating offsets,
+       cleaning up on failure, and setting up appropriate event handlers.</p>
+        
+    <h2>Internote Overlay</h2>
+    <p><code>internote.xul</code></p>
+    <p>This is the main overlay for the Firefox browser.  All code should call methods in the
+       UI Controller for that window.</p>
+        
+    <h2>Internote Manager Dialog</h2>
+    <p><code>internote-dlg-manager.xul, internote-dlg-manager.js</code></p>
+    <p>This is a dialog that allows management of all notes.</p>
+
+    <h2>Internote Manager Dialog</h2>
+    <p><code>internote-dlg-prefs.xul, internote-dlg-prefs.js</code></p>
+    <p>This is the preferences dialog.</p>
+
+</body>
+</html>

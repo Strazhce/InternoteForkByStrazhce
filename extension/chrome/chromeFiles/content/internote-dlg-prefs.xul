@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://internote/locale/internote.dtd">
+
+<!--
+Internote Extension
+Preferences XUL Dialog
+Copyright (C) 2010 Matthew Tuck
+Copyright (C) 2006 Tim Horton
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<prefwindow id="internote-prefs-dialog"
+            xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+            xmlns:html="http://www.w3.org/1999/xhtml"
+            title="&internote.prefsDialog.title;"
+            onload="internotePrefsDialog.init();"
+            ondialogaccept="return internotePrefsDialog.onAccept();"
+            buttons="accept,cancel"
+            height="780px"
+            width="450px">
+
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-prefs.js"/>
+    
+    <prefpane id="internotePreferencesPane" image="chrome://internote/content/prefs.png" flex="1">
+        <preferences>
+            <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
+            <preference id="backColorPreference"       name="internote.defaultnotecolor" type="string"/>
+            <preference id="foreColorPreference"       name="internote.defaulttextcolor" type="string"/>
+            <preference id="defaultPositionPreference" name="internote.defaultposition"  type="string"/>
+            <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
+            <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
+            <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
+            <preference id="scrollbarPreference"       name="internote.usescrollbar"     type="bool"/>
+            <preference id="statusbarPreference"       name="internote.usestatusbar"     type="bool"/>
+            <preference id="saveLocationPreference"    name="internote.savelocation"     type="file"/>
+            <preference id="changeLocationPreference"  name="internote.changelocation"   type="bool"/>
+            <preference id="askBeforeDeletePreference" name="internote.askbeforedelete"  type="bool"/>
+        </preferences>
+        <vbox flex="1">
+            <groupbox>
+                <caption label="&internote.defaultStylePrefs.caption;" />
+                <grid>
+                    <columns>
+                        <column />
+                        <column />
+                    </columns>
+                    <rows>
+                        <row align="center">
+                            <label value="&internote.defaultNoteColor.label;:" control="colorEntryBox" />
+                            <menulist id="colorEntryBox" preference="backColorPreference">
+                                <menupopup>
+                                    <menuitem value="0" label="&internote.bananaColor.value;" />
+                                    <menuitem value="1" label="&internote.melonColor.value;" />
+                                    <menuitem value="2" label="&internote.blueberryColor.value;" />
+                                    <menuitem value="3" label="&internote.limeColor.value;" />
+                                    <menuitem value="4" label="&internote.grapeColor.value;" />
+                                    <menuitem value="5" label="&internote.cauliflowerColor.value;" />
+                                </menupopup>
+                            </menulist>
+                        </row>
+                        <row align="center">
+                            <label value="&internote.defaultTextColor.label;:" control="textColorEntryBox" />
+                            <menulist id="textColorEntryBox" preference="foreColorPreference">
+                                <menupopup>
+                                    <menuitem value="0" label="&internote.charcoalColor.value;" />
+                                    <menuitem value="1" label="&internote.topsoilColor.value;" />
+                                    <menuitem value="2" label="&internote.grassColor.value;" />
+                                    <menuitem value="3" label="&internote.roseColor.value;" />
+                                    <menuitem value="4" label="&internote.aluminumColor.value;" />
+                                    <menuitem value="5" label="&internote.snowColor.value;" />
+                                </menupopup>
+                            </menulist>
+                        </row>
+                        <row align="center">
+                            <label value="&internote.defaultSize.label;:" control="sizeEntryBox" />
+                            <menulist id="sizeEntryBox" preference="defaultSizePreference">
+                                <menupopup>
+                                    <menuitem value="0" label="&internote.tinySize.value;" />
+                                    <menuitem value="1" label="&internote.normalSize.value;" />
+                                    <menuitem value="2" label="&internote.largeSize.value;" />
+                                    <menuitem value="3" label="&internote.giantSize.value;" />
+                                </menupopup>
+                            </menulist>
+                        </row>
+                        <row align="center">
+                            <label value="&internote.defaultPos.label;:" control="defaultNotePosition" />
+                            <menulist id="defaultNotePosition" preference="defaultPositionPreference">
+                                <menupopup>
+                                    <menuitem value="0" label="&internote.topLeftPos.value;" />
+                                    <menuitem value="1" label="&internote.topRightPos.value;" />
+                                    <menuitem value="2" label="&internote.bottomLeftPos.value;" />
+                                    <menuitem value="3" label="&internote.bottomRightPos.value;" />
+                                    <menuitem value="4" label="&internote.centerPos.value;" />
+                                </menupopup>
+                            </menulist>
+                        </row>
+                        <description>
+                            (&internote.adjustDefaults.desc;)
+                        </description>
+                    </rows>
+                </grid>
+            </groupbox>
+            <groupbox>
+                <caption label="&internote.globalStylePrefs.caption;" />
+                <hbox align="center">
+                    <label value="&internote.fontSize.label;:" control="fontSizeEntryBox" />
+                    <menulist id="fontSizeEntryBox" preference="fontSizePreference">
+                        <menupopup>
+                            <menuitem value="10" label="&internote.tinySize.value;" />
+                            <menuitem value="12" label="&internote.normalSize.value;" />
+                            <menuitem value="14" label="&internote.largeSize.value;" />
+                            <menuitem value="16" label="&internote.giantSize.value;" />
+                            <menuitem value="18" label="&internote.megaSize.value;" />
+                        </menupopup>
+                    </menulist>
+                </hbox>
+                <checkbox id="defaultTransCheckBox"    preference="transparencyPreference"    label="&internote.useTranslucencyCBox.label;" />
+                <checkbox id="highlightableCheckBox"   preference="highlightablePreference"   label="&internote.useHighlightableCBox.label;" />
+                <checkbox id="scrollbarCheckBox"       preference="scrollbarPreference"       label="&internote.useScrollbarCBox.label;" />
+            </groupbox>
+            <groupbox>
+                <caption label="&internote.generalPrefs.caption;"/>
+                <vbox align="left">
+                    <checkbox id="statusbarCheckBox"       preference="statusbarPreference"       label="&internote.useStatusBarCBox.label;" />
+                    <checkbox id="askBeforeDeleteCheckBox" preference="askBeforeDeletePreference" label="&internote.confirmDeleteCBox.label;" />
+                    <description>
+                        (&internote.confirmProviso.desc;)
+                    </description>
+                </vbox>
+            </groupbox>
+            <groupbox>
+                <caption label="&internote.storagePrefs.caption;"/>
+                <vbox>
+                    <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;"/>
+                    <hbox>
+                        <textbox id="saveFolderField" flex="1" />
+                        <button id="chooseFolder" label="&internote.browseButton.label;..." />
+                    </hbox>
+                    <description>
+                        (&internote.storageMove.desc;)
+                    </description>
+                </vbox>
+            </groupbox>
+        </vbox>
+    </prefpane>
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
+    </stringbundleset>
+</prefwindow>

@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://internote/locale/internote.dtd">
+
+<!--
+Internote Extension
+Manager XUL Dialog
+Copyright (C) 2010 Matthew Tuck
+Copyright (C) 2006 Tim Horton
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<dialog id="internoteManager"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        title="&internote.managerDialog.title;"
+        onload="internoteManager.init()"
+        onunload="internoteManager.destroy();"
+        buttons="accept"
+        buttonlabelaccept="&internote.closeButton.label;"
+        persist="screenX screenY width height"
+        screenX="24" screenY="24" width="800px" height="700px">
+    
+    <script type="application/x-javascript" src="chrome://internote/content/internote-consts.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-dispatcher.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-storage.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-watcher.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-manager.js"/>
+    <script type="application/x-javascript" src="chrome://global/content/printUtils.js"/>
+    
+    <label value="&internote.managerDialog.title;" style="font-size: 20px; font-weight: bold; text-align: center; margin-bottom: 5px;" />
+    
+    <popupset>
+      <popup id="actionsMenu">
+        <menuitem id="selectAll"        label="&internote.selectAllCmd.label;"
+                  oncommand="internoteManager.userSelectsAll();" />
+        <menuitem id="expandSelected"   label="&internote.expandSelectedCmd.label;"
+                  oncommand="internoteManager.userChangesExpandOnSelected(true);" />
+        <menuitem id="collapseSelected" label="&internote.collapseSelectedCmd.label;"
+                  oncommand="internoteManager.userChangesExpandOnSelected(false);" />
+        <menuseparator />
+        <menuitem id="deleteSelected" label="&internote.deleteSelectedCmd.label;"  oncommand="internoteManager.userDeletesNotes(true);" />
+        <menuitem id="resetSelected"  label="&internote.resetSelectedCmd.label;"   oncommand="internoteManager.userResetsNotes(true);" />
+        <menuseparator />
+        <menuitem id="importNotes" label="&internote.importV2Cmd.label;..."        oncommand="internoteManager.userImportsNotesInV2();" />
+        <menuseparator />
+        <menu id="exportAll" label="&internote.exportAllCmd.label;...">
+          <menupopup>
+            <menuitem id="exportAllHTML"      label="&internote.toHTMLCmd.label;..."
+                      oncommand="internoteManager.userExportsNotesInHTML(false);" />
+            <menuitem id="exportAllText"      label="&internote.toTextCmd.label;..."
+                      oncommand="internoteManager.userExportsNotesInText(false);" />
+            <menuitem id="exportAllBookmarks" label="&internote.toBookmarksCmd.label;..."
+                      oncommand="internoteManager.userExportsNotesInBookmarks(false);" />
+            <menuitem id="exportAllV2"        label="&internote.toV2Cmd.label;..."
+                      oncommand="internoteManager.userExportsNotesInV2(false);" />
+          </menupopup>
+        </menu>
+        <menu id="exportSelected" label="&internote.exportSelectedCmd.label;...">
+          <menupopup>
+            <menuitem id="exportSelectedHTML"      label="&internote.toHTMLCmd.label;..."
+                      oncommand="internoteManager.userExportsNotesInHTML(true);" />
+            <menuitem id="exportSelectedText"      label="&internote.toTextCmd.label;..."
+                      oncommand="internoteManager.userExportsNotesInText(true);" />
+            <menuitem id="exportSelectedBookmarks" label="&internote.toBookmarksCmd.label;..."
+                      oncommand="internoteManager.userExportsNotesInBookmarks(true);" />
+            <menuitem id="exportSelectedV2"        label="&internote.toV2Cmd.label;..."
+                      oncommand="internoteManager.userExportsNotesInV2(true);" />
+          </menupopup>
+        </menu>
+        <menuseparator />
+        <menuitem id="printAll"      label="&internote.printAllCmd.label;..."   oncommand="internoteManager.userPrintsNotes(false);" />
+        <menuitem id="printSelected" label="&internote.printSelectedCmd.label;..."  oncommand="internoteManager.userPrintsNotes(true);" />
+      </popup>
+    </popupset>
+    
+    <hbox flex="2">
+        <vbox flex="3">
+            <tree id="noteList" flex="2" onselect="internoteManager.userSelectsTreeElement();">
+                <treecols>
+                    <treecol id="element" label="&internote.noteList.columnTitle;" primary="true" flex="1"/>
+                </treecols>
+                <treechildren />
+            </tree>
+            <tree id="resultsList" flex="1" onselect="internoteManager.userSelectsSearchElement();" style="display: none;">
+                <treecols>
+                    <treecol id="elementsr" label="&internote.searchResults.label;" primary="true" flex="1"/>
+                </treecols>
+                <treechildren id="searchResultChildren" />
+            </tree>
+            <hbox>
+                <button id="notesActions" type="menu" label="&internote.actionsCmd.label;"
+                        style="font-weight: bold;" popup="actionsMenu" />
+                <spacer width="10px" />
+                <hbox flex="1" style="width: 90%;" align="center">
+                    <label control="searchFilter" value="&internote.searchQuery.label;:" style="font-weight: bold;" />
+                    <textbox id="searchFilter" oninput="internoteManager.updateSearchResults()" flex="1" style="height: 2em;" />
+                    <label value="X" tooltiptext="&internote.closeResults.tooltip;"
+                           style="background-color: lightgray; opacity: .75; width: 1.5em; height: 1.5em; text-align: center; padding-top: .1em;"
+                           onclick="document.getElementById('searchFilter').value=''; internoteManager.updateSearchResults();" />
+                </hbox>
+            </hbox>
+        </vbox>
+        <splitter id="splitter" state="collapsed" collapse="after" resizeafter="closest" />
+        <vbox flex="1">
+            <groupbox flex="2">
+            <caption label="&internote.noteData.caption;"/>
+            
+            <hbox>
+                <label control="noteURL" value="&internote.noteURL.label;:" style="font-weight: bold;" width="100px" />
+                <label id="goToLink" value="&internote.goLink.label;" onclick="internoteManager.openURL();" style="color: gray; text-decoration: underline;"/>
+            </hbox>
+            <textbox id="noteURL" oninput="internoteManager.userEditsData()" disabled="true" />
+            <grid>
+                <columns>
+                    <column />
+                    <column flex="1" />
+                </columns>
+                <rows>
+                    <row>
+                        <label value="&internote.createTime.label;:" style="font-weight: bold;" width="100px" />
+                        <label id="noteCreateTime" value="" />
+                    </row>
+                    <row>
+                        <label control="noteModfnTime" value="&internote.modfnTime.label;:" style="font-weight: bold;" width="100px" />
+                        <label id="noteModfnTime" value="" />
+                    </row>
+                </rows>
+            </grid>
+            <hbox>
+                <checkbox id="isMinimized" oncommand="internoteManager.userEditsData()" disabled="true" label="&internote.isMinimizedCBox.label;" style="font-weight: bold;" width="100px" />
+                <checkbox id="isURLRegexp" oncommand="internoteManager.userEditsData()" disabled="true" label="&internote.isRegexpCBox.label;" flex="1" tooltiptext="&internote.isURLRegexp.tooltip;" style="font-weight: bold;" width="100px" />
+            </hbox>
+            <label control="noteText" value="&internote.text.label;:" style="font-weight: bold;" width="100px" />
+            <textbox id="noteText" multiline="true" oninput="internoteManager.userEditsData()" disabled="true" flex="1" />
+            <grid>
+                <columns>
+                    <column />
+                    <column flex="5" />
+                </columns>
+                <rows>
+                    <row align="center">
+                        <label value="&internote.backColor.label;:" control="colorEntryBox" style="font-weight: bold;" width="100px" />
+                        <menulist id="colorEntryBox" disabled="true">
+                            <menupopup>
+                                <menuitem value="0" label="&internote.bananaColor.value;" />
+                                <menuitem value="1" label="&internote.melonColor.value;" />
+                                <menuitem value="2" label="&internote.blueberryColor.value;" />
+                                <menuitem value="3" label="&internote.limeColor.value;" />
+                                <menuitem value="4" label="&internote.grapeColor.value;" />
+                                <menuitem value="5" label="&internote.cauliflowerColor.value;" />
+                            </menupopup>
+                        </menulist>
+                    </row>
+                    <row align="center">
+                        <label value="&internote.foreColor.label;:" control="textColorEntryBox" style="font-weight: bold;" width="100px" />
+                        <menulist id="textColorEntryBox" disabled="true">
+                            <menupopup>
+                                <menuitem value="0" label="&internote.charcoalColor.value;" />
+                                <menuitem value="1" label="&internote.topsoilColor.value;" />
+                                <menuitem value="2" label="&internote.grassColor.value;" />
+                                <menuitem value="3" label="&internote.roseColor.value;" />
+                                <menuitem value="4" label="&internote.aluminumColor.value;" />
+                                <menuitem value="5" label="&internote.snowColor.value;" />
+                            </menupopup>
+                        </menulist>
+                    </row>
+                </rows>
+            </grid>
+            </groupbox>
+            
+            <groupbox>
+            <caption label="&internote.thisNoteActions.caption;"/>
+            <hbox>
+                <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;" style="font-weight: bold;" onclick="internoteManager.userDeletesNotes(false)"   disabled="true" left="0px" />
+                <button id="resetCurrentNote"  label="&internote.resetCurrentCmd.label;"  style="font-weight: bold;" onclick="internoteManager.userResetsNotes (false)" disabled="true" />
+            </hbox>
+            </groupbox>
+        </vbox>
+    </hbox>
+    
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
+    </stringbundleset>
+    
+    <html:iframe id="internote-scratch-frame" src="about:blank" style="height: 0px; width: 0px; overflow: hidden; border: none;"/>
+    
+</dialog>

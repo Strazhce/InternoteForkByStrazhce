@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://internote/locale/internote.dtd">
+
+<!--
+Internote Extension
+About XUL Dialog
+Copyright (C) 2010 Matthew Tuck
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<dialog id="internoteAbout"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title="&internote.aboutDialog.title;"
+        buttons="accept"
+        buttonlabelaccept="&internote.closeButton.label;"
+        persist="screenX screenY"
+        screenX="24" screenY="24" width="800px" height="800px"
+        onload="internoteAboutDlg.init();" >
+    
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js" />
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js" />
+    <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-about.js" />
+    <vbox flex="1">
+        <hbox>
+            <spacer flex="1" />
+            <groupbox>
+                <hbox>
+                    <spacer style="min-width: 20px; max-width: 20px;" />
+                    <vbox pack="center">
+                        <image src="chrome://internote/content/internote.png" pack="center"
+                               style="min-width: 100px; max-width: 100px; min-height: 100px; max-height: 100px;" />
+                    </vbox>
+                    <spacer style="min-width: 20px; max-width: 20px;" />
+                    <vbox>
+                        <bbox pack="center">
+                            <label value="&internote.appName.label;" style="font-size: 3em;" />
+                            <spacer style="min-width: 20px;" />
+                            <label value="&internote.aboutVersion.label;" style="font-size: 1.5em;" />
+                            <label value="?" id="version-number" style="font-size: 1.5em;" />
+                        </bbox>
+                        <hbox pack="center">
+                            <label id="app-description" value="" style="font-size: 1.2em;" crop="right" />
+                        </hbox>
+                        <hbox pack="center">
+                            <label value="Internote Home Page" onclick="internoteAboutDlg.openHomePage();"
+                                   style="color: blue; text-decoration: underline; cursor: pointer;"/>
+                        </hbox>
+                    </vbox>
+                    <spacer style="min-width: 20px; max-width: 20px;" />
+                </hbox>
+            </groupbox>
+            <spacer flex="1" />
+        </hbox>
+        
+        <hbox>
+            <vbox flex="1">
+                <groupbox flex="1">
+                    <caption label="&internote.aboutCreators.caption;" />
+                    <vbox id="creators" />
+                </groupbox>
+                    
+                <groupbox flex="1">
+                    <caption label="&internote.aboutDevelopers.caption;" />
+                    <vbox id="developers" />
+                </groupbox>
+                
+                <groupbox flex="1">
+                    <caption label="&internote.aboutContributors.caption;" />
+                    <vbox id="contributors" />
+                </groupbox>
+            </vbox>
+            
+            <vbox flex="1">
+                <groupbox flex="1">
+                    <caption label="&internote.aboutTranslators.caption;" />
+                    <vbox id="translators" />
+                </groupbox>
+            </vbox>
+        </hbox>
+        
+        <groupbox>
+            <caption label="&internote.aboutReporting.caption;" />
+            
+            <description>&internote.aboutReporting.desc;</description>
+            
+            <description>&internote.aboutInfo.desc;</description>
+            <description>&internote.aboutPrivacy.desc;</description>
+            
+            <vbox id="errors-box" flex="1">
+                <textbox id="errors-text" rows="3" columns="60" multiline="true" />
+                <hbox>
+                    <spacer flex="1" />
+                    <button label="&internote.aboutCopy.label;" oncommand="internoteAboutDlg.copy();" style="min-width: 100px;" />
+                    <spacer flex="1" />
+                </hbox>
+            </vbox>
+        </groupbox>
+    </vbox>
+
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
+    </stringbundleset>
+</dialog>

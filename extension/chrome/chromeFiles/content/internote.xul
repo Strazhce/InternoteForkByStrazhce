@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://internote/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://internote/skin/overlay_mac.css" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://internote/locale/internote.dtd">
+
+<!--
+Internote Extension
+Main XUL Overlay
+Copyright (C) 2010 Matthew Tuck
+Copyright (C) 2006 Tim Horton
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<overlay id="internote" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+                        xmlns:html="http://www.w3.org/1999/xhtml">
+
+<script type="application/x-javascript" src="chrome://internote/content/internote-consts.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils-colors.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils-coords.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils-rects.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-dispatcher.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-storage.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-watcher.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-balloon.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-animation.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-drag.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-notes.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-display.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-controller.js"/>
+
+<commandset id="mainCommandSet">
+    <command id="cmd_newNote"             oncommand="internoteUIController.userCreatesNote();" />
+    <command id="cmd_minimizeAll"         oncommand="internoteUIController.userMinimizesAll();" />
+    <command id="cmd_showInternoteManger" oncommand="internoteUIController.userOpensManager();" />
+    
+    <command id="cmd_debugIN"             oncommand="internoteUIController.activateDebugFunction()" />
+
+</commandset>
+
+<keyset id="mainKeyset">
+    <!-- Disabled until I figure out more about potential conflicts. -->
+    <!--<key id="minimizeall-key" key="a" command="cmd_minimizeAll" modifiers="alt" /> -->
+    <key id="newnote-key"  key="i" command="cmd_newNote" modifiers="alt" />
+    <key id="debugin-key"  key="g" command="cmd_debugIN" modifiers="alt" />
+</keyset>
+
+<menupopup id="menu_ToolsPopup">
+    <menu accesskey="&internote.appName.accessKey;" label="&internote.appName.label;" insertafter="javascriptConsole">
+        <menupopup id="internote-main-menu" onpopupshowing="internoteUIController.chromePrepareStatusBarMenu();">
+            <menuitem label="&internote.newNoteCmd.label;"
+                      oncommand="internoteUIController.userCreatesNote();" />
+            <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all"
+                      oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
+            <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all"
+                      oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
+            <menuseparator />
+            <menuitem label="&internote.openManagerCmd.label;..."
+                      oncommand="internoteUIController.userOpensManager();" />
+            <menuitem label="&internote.openPrefsCmd.label;..."   
+                      oncommand="internoteUIController.userOpensPrefs();" />
+            <!--
+            <menuitem label="&internote.helpCmd.label;..."
+                      oncommand="getBrowser().contentWindow.location = 'chrome://internote/content/help.html';" />
+            -->
+            <menuseparator />
+            <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes"
+                      oncommand="internoteUIController.userTogglesDisplay();" checked="true" />
+        </menupopup>
+    </menu>    
+</menupopup>
+
+<toolbarpalette id="BrowserToolbarPalette">
+    <toolbarbutton id="newInternoteButton" class="toolbarbutton-1 chromeclass-toolbar-additional" label="&internote.newNoteCmd.label;" command="cmd_newNote" tooltiptext="&internote.newNoteCmd.label;" />
+</toolbarpalette>
+
+<popupset id="mainPopupSet">
+    <tooltip id="internote-popup" onpopupshowing="internoteUIController.chromePrepareTooltip();">
+        <vbox flex="1">
+            <label id="internote-popup-label" value=""/>
+        </vbox>
+    </tooltip>
+    
+    <menupopup id="internote-popup-menu" onpopupshowing="internoteUIController.chromePrepareStatusBarMenu();">
+        <menuitem label="&internote.newNoteCmd.label;"
+                  oncommand="internoteUIController.userCreatesNote();" />
+        <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all"
+                  oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
+        <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all"
+                  oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
+        <menuseparator />
+        <menuitem label="&internote.openManagerCmd.label;..."
+                  oncommand="internoteUIController.userOpensManager();" />
+        <menuitem label="&internote.openPrefsCmd.label;..."   
+                  oncommand="internoteUIController.userOpensPrefs();" />
+        <menuitem label="&internote.helpCmd.label;"
+                  oncommand="internoteUIController.userOpensHelp();" />
+        <menuseparator />
+        <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes"
+                  oncommand="internoteUIController.userTogglesDisplay();" checked="true" />
+    </menupopup>
+    
+    <popup id="internote-note-menu" onpopupshowing="internoteUIController.chromePrepareContextMenu(popupNode);">
+        <!-- Don't use command directly so we can disable them separately. -->
+        <menuitem label="Cut"        id="internote-context-cut-text"    oncommand="internoteUIController.userCutsText();"    />
+        <menuitem label="Copy"       id="internote-context-copy-text"   oncommand="internoteUIController.userCopiesText();"  />
+        <menuitem label="Paste"      id="internote-context-paste-text"  oncommand="internoteUIController.userPastesText();"  />
+        <menuitem label="Delete"     id="internote-context-delete-text" oncommand="internoteUIController.userDeletesText();" />
+        <menuitem label="Select All" id="internote-context-select-all"  oncommand="internoteUIController.userSelectsAll();"  />
+        <menuseparator />
+        <menuitem label="Delete Note"        id="internote-context-delete-note" 
+                  oncommand="internoteUIController.userRemovesNote(popupNode);"    />
+        <menuitem label="Flip Note"          id="internote-context-flip-note"
+                  oncommand="internoteUIController.userFlipsNote(popupNode);"      />
+        <menuitem label="Minimize Note"      id="internote-context-minimize-note"
+                  oncommand="internoteUIController.userMinimizesNote(popupNode);"  />
+        <menuitem label="Restore Note"       id="internote-context-restore-note"
+                  oncommand="internoteUIController.userMinimizesNote(popupNode);" style="display: none;" />
+        <menuitem label="View in Manager..." id="internote-view-in-manager"
+                  oncommand="internoteUIController.userViewsInManager(popupNode);" />
+    </popup>
+</popupset>
+
+<statusbar id="status-bar">
+    <statusbarpanel class="statusbarpanel-iconic" id="internote-panel"
+                    label="&internote.newNoteCmd.label;" src="chrome://internote/content/newnote16.png"
+                    onclick="if (!event.button) internoteUIController.userCreatesNote();"
+                    context="internote-popup-menu"
+                    tooltip="internote-popup" />
+</statusbar>
+
+<stringbundleset id="stringbundleset">
+    <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
+</stringbundleset>
+
+<window id="main-window">
+    <html:iframe id="internote-scratch-frame" src="about:blank"
+                 style="height: 0px; width: 0px; overflow: hidden; border: none; background-color: red;"/>
+</window>
+
+</overlay>
