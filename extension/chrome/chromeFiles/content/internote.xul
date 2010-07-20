@@ -59,7 +59,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <!-- Disabled until I figure out more about potential conflicts. -->
     <!--<key id="minimizeall-key" key="a" command="cmd_minimizeAll" modifiers="alt" /> -->
     <key id="newnote-key"  key="i" command="cmd_newNote" modifiers="alt" />
-    <key id="debugin-key"  key="g" command="cmd_debugIN" modifiers="alt" />
+    <!-- <key id="debugin-key"  key="g" command="cmd_debugIN" modifiers="alt" /> -->
 </keyset>
 
 <menupopup id="menu_ToolsPopup">
@@ -76,10 +76,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       oncommand="internoteUIController.userOpensManager();" />
             <menuitem label="&internote.openPrefsCmd.label;..."
                       oncommand="internoteUIController.userOpensPrefs();" />
-            <!--
             <menuitem label="&internote.helpCmd.label;..."
-                      oncommand="getBrowser().contentWindow.location = 'chrome://internote/content/help.html';" />
-            -->
+                      oncommand="internoteUIController.userOpensHelp();" />
             <menuseparator />
             <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-main"
                       oncommand="internoteUIController.userTogglesDisplay();" checked="true" />
