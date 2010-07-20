@@ -1274,10 +1274,20 @@ chromePrepareTooltip: function()
 
 chromePrepareStatusBarMenu: function()
 {
+    this.chromePrepareMenu("statusbar");
+},
+
+chromePrepareMainMenu: function()
+{
+    this.chromePrepareMenu("main");
+},
+
+chromePrepareMenu: function(prefix)
+{
     try
     {
-        var minimizeAllOption   = document.getElementById("internote-minimize-all");
-        var unminimizeAllOption = document.getElementById("internote-unminimize-all");
+        var minimizeAllOption   = document.getElementById("internote-minimize-all-" + prefix);
+        var unminimizeAllOption = document.getElementById("internote-unminimize-all-" + prefix);
         
         if (this.pageWatcher == null || this.pageWatcher.getCount() <= 0 || !this.storage.areNotesDisplaying)
         {
@@ -1308,15 +1318,18 @@ chromePrepareStatusBarMenu: function()
 
 chromeUpdateDisplayCheckbox: function()
 {
-    var checkbox = document.getElementById("internote-display-notes");
+    var checkbox1 = document.getElementById("internote-display-notes-main");
+    var checkbox2 = document.getElementById("internote-display-notes-statusbar");
     
     if (this.storage.areNotesDisplaying)
     {
-        checkbox.setAttribute("checked", "true");
+        checkbox1.setAttribute("checked", "true");
+        checkbox2.setAttribute("checked", "true");
     }
     else
     {
-        checkbox.removeAttribute("checked");
+        checkbox1.removeAttribute("checked");
+        checkbox2.removeAttribute("checked");
     }
 },
 

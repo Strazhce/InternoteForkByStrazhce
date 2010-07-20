@@ -64,12 +64,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 <menupopup id="menu_ToolsPopup">
     <menu accesskey="&internote.appName.accessKey;" label="&internote.appName.label;" insertafter="javascriptConsole">
-        <menupopup id="internote-main-menu" onpopupshowing="internoteUIController.chromePrepareStatusBarMenu();">
+        <menupopup id="internote-main-menu" onpopupshowing="internoteUIController.chromePrepareMainMenu();">
             <menuitem label="&internote.newNoteCmd.label;"
                       oncommand="internoteUIController.userCreatesNote();" />
-            <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all"
+            <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-main"
                       oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
-            <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all"
+            <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-main"
                       oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
             <menuseparator />
             <menuitem label="&internote.openManagerCmd.label;..."
@@ -81,7 +81,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       oncommand="getBrowser().contentWindow.location = 'chrome://internote/content/help.html';" />
             -->
             <menuseparator />
-            <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes"
+            <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-main"
                       oncommand="internoteUIController.userTogglesDisplay();" checked="true" />
         </menupopup>
     </menu>    
@@ -101,9 +101,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <menupopup id="internote-popup-menu" onpopupshowing="internoteUIController.chromePrepareStatusBarMenu();">
         <menuitem label="&internote.newNoteCmd.label;"
                   oncommand="internoteUIController.userCreatesNote();" />
-        <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all"
+        <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-statusbar"
                   oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
-        <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all"
+        <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-statusbar"
                   oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
         <menuseparator />
         <menuitem label="&internote.openManagerCmd.label;..."
@@ -113,7 +113,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <menuitem label="&internote.helpCmd.label;"
                   oncommand="internoteUIController.userOpensHelp();" />
         <menuseparator />
-        <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes"
+        <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-statusbar"
                   oncommand="internoteUIController.userTogglesDisplay();" checked="true" />
     </menupopup>
     
