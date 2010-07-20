@@ -11,7 +11,7 @@
 
 <!ENTITY internote.displayNotesCmd.label      "Display Internotes">
 
-<!ENTITY internote.minimizeAllCmd.label	      "Minimize This Page's Notes">
+<!ENTITY internote.minimizeAllCmd.label	      "Minimise This Page's Notes">
 <!ENTITY internote.unminimizeAllCmd.label	  "Restore This Page's Notes">
 
 <!ENTITY internote.newNoteCmd.accessKey       "N">
@@ -27,7 +27,7 @@
 
 <!ENTITY internote.deleteNoteCmd.label        "Delete Note">
 <!ENTITY internote.flipNoteCmd.label          "Flip Note">
-<!ENTITY internote.minimizeNoteCmd.label      "Minimize Note">
+<!ENTITY internote.minimizeNoteCmd.label      "Minimise Note">
 <!ENTITY internote.restoreNoteCmd.label       "Restore Note">
 <!ENTITY internote.viewInOpenManagerCmd.label "View in Manager">
 
@@ -67,7 +67,7 @@
 <!ENTITY internote.topRightPos.value          "Top-Right">
 <!ENTITY internote.bottomLeftPos.value        "Bottom-Left">
 <!ENTITY internote.bottomRightPos.value       "Bottom-Right">
-<!ENTITY internote.centerPos.value            "Center">
+<!ENTITY internote.centerPos.value            "Centre">
 
 <!ENTITY internote.tinySize.value             "Tiny">
 <!ENTITY internote.normalSize.value           "Normal">
@@ -102,11 +102,11 @@
 <!ENTITY internote.noteURL.label              "URL">
 <!ENTITY internote.createTime.label           "Created">
 <!ENTITY internote.modfnTime.label	          "Modified">
-<!ENTITY internote.isMinimizedCBox.label	  "Minimized?">
+<!ENTITY internote.isMinimizedCBox.label	  "Minimised?">
 <!ENTITY internote.isRegexpCBox.label         "URL is a Regular Expression?">
 <!ENTITY internote.text.label                 "Text">
-<!ENTITY internote.backColor.label	          "Note Color">
-<!ENTITY internote.foreColor.label	          "Text Color">
+<!ENTITY internote.backColor.label	          "Note Colour">
+<!ENTITY internote.foreColor.label	          "Text Colour">
 
 <!ENTITY internote.goLink.label		          "Go to Page">
 

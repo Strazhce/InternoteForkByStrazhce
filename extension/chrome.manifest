@@ -4,6 +4,7 @@ overlay chrome://browser/content/browser.xul chrome://internote/content/internot
 resource internotejs chrome/chromeFiles/content/
 
 locale internote en-US chrome/chromeFiles/locale/en-US/
+locale internote en-GB chrome/chromeFiles/locale/en-GB/
 
 skin internote classic/1.0 chrome/chromeFiles/skin/
 style chrome://global/content/customizeToolbar.xul chrome://internote/skin/overlay.css

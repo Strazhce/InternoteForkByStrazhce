@@ -32,6 +32,7 @@
 	
     <em:name>Internote</em:name>
     <em:description>Persistent sticky notes for Firefox.</em:description>
+    
     <em:creator>Matthew Tuck</em:creator>
 	<em:developer>Tim Horton (Internote2, Original Developer)</em:developer>
     <em:aboutURL>chrome://internote/content/internote-dlg-about.xul</em:aboutURL>

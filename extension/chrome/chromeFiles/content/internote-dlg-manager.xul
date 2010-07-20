@@ -124,7 +124,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             
             <hbox>
                 <label control="noteURL" value="&internote.noteURL.label;:" style="font-weight: bold;" width="100px" />
-                <label id="goToLink" value="&internote.goLink.label;" onclick="internoteManager.openURL();" style="color: gray; text-decoration: underline;"/>
+                <label id="goToLink" value="&internote.goLink.label;..." style="color: gray; text-decoration: underline;"
+                       onclick="internoteManager.openURL();" />
             </hbox>
             <textbox id="noteURL" oninput="internoteManager.userEditsData()" disabled="true" />
             <grid>
