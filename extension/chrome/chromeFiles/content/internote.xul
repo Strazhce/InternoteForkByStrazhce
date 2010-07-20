@@ -74,7 +74,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <menuseparator />
             <menuitem label="&internote.openManagerCmd.label;..."
                       oncommand="internoteUIController.userOpensManager();" />
-            <menuitem label="&internote.openPrefsCmd.label;..."   
+            <menuitem label="&internote.openPrefsCmd.label;..."
                       oncommand="internoteUIController.userOpensPrefs();" />
             <!--
             <menuitem label="&internote.helpCmd.label;..."
@@ -119,21 +119,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     
     <popup id="internote-note-menu" onpopupshowing="internoteUIController.chromePrepareContextMenu(popupNode);">
         <!-- Don't use command directly so we can disable them separately. -->
-        <menuitem label="Cut"        id="internote-context-cut-text"    oncommand="internoteUIController.userCutsText();"    />
-        <menuitem label="Copy"       id="internote-context-copy-text"   oncommand="internoteUIController.userCopiesText();"  />
-        <menuitem label="Paste"      id="internote-context-paste-text"  oncommand="internoteUIController.userPastesText();"  />
-        <menuitem label="Delete"     id="internote-context-delete-text" oncommand="internoteUIController.userDeletesText();" />
-        <menuitem label="Select All" id="internote-context-select-all"  oncommand="internoteUIController.userSelectsAll();"  />
+        <menuitem label="&internote.cutTextCmd.label;"    id="internote-context-cut-text"
+                  oncommand="internoteUIController.userCutsText();"    />
+        <menuitem label="&internote.copyTextCmd.label;"   id="internote-context-copy-text"
+                  oncommand="internoteUIController.userCopiesText();"  />
+        <menuitem label="&internote.pasteTextCmd.label;"  id="internote-context-paste-text"
+                  oncommand="internoteUIController.userPastesText();"  />
+        <menuitem label="&internote.deleteTextCmd.label;" id="internote-context-delete-text"
+                  oncommand="internoteUIController.userDeletesText();" />
+        <menuitem label="&internote.selectAllCmd.label;"  id="internote-context-select-all"
+                  oncommand="internoteUIController.userSelectsAll();"  />
         <menuseparator />
-        <menuitem label="Delete Note"        id="internote-context-delete-note" 
+        <menuitem label="&internote.deleteNoteCmd.label;"        id="internote-context-delete-note" 
                   oncommand="internoteUIController.userRemovesNote(popupNode);"    />
-        <menuitem label="Flip Note"          id="internote-context-flip-note"
+        <menuitem label="&internote.flipNoteCmd.label;"          id="internote-context-flip-note"
                   oncommand="internoteUIController.userFlipsNote(popupNode);"      />
-        <menuitem label="Minimize Note"      id="internote-context-minimize-note"
+        <menuitem label="&internote.minimizeNoteCmd.label;"      id="internote-context-minimize-note"
                   oncommand="internoteUIController.userMinimizesNote(popupNode);"  />
-        <menuitem label="Restore Note"       id="internote-context-restore-note"
+        <menuitem label="&internote.restoreNoteCmd.label;"       id="internote-context-restore-note"
                   oncommand="internoteUIController.userMinimizesNote(popupNode);" style="display: none;" />
-        <menuitem label="View in Manager..." id="internote-view-in-manager"
+        <menuitem label="&internote.viewInOpenManagerCmd.label;" id="internote-view-in-manager"
                   oncommand="internoteUIController.userViewsInManager(popupNode);" />
     </popup>
 </popupset>

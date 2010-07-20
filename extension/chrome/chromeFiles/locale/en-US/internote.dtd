@@ -29,7 +29,7 @@
 <!ENTITY internote.flipNoteCmd.label          "Flip Note">
 <!ENTITY internote.minimizeNoteCmd.label      "Minimize Note">
 <!ENTITY internote.restoreNoteCmd.label       "Restore Note">
-<!ENTITY internote.viewInopenManagerCmd.label "View in Manager">
+<!ENTITY internote.viewInOpenManagerCmd.label "View in Manager">
 
 <!-- Prefs/Manager Colors -->
 
