@@ -103,24 +103,24 @@ StorageEvent: function(note, data1, data2)
     this.data2 = data2;
 },
 
-InternoteNote: function(url, isURLRegexp, text, left, top, width, height, backColor, foreColor, createTime, modfnTime, zIndex, isMinimized, isHTML)
+InternoteNote: function(url, matchType, text, left, top, width, height, backColor, foreColor, createTime, modfnTime, zIndex, isMinimized, isHTML)
 {
     if (arguments.length >= 1)
     {
-        this.url         = url;
-        this.isURLRegexp = isURLRegexp;
-        this.text        = text;
-        this.left        = left;
-        this.top         = top;
-        this.width       = width;
-        this.height      = height;
-        this.backColor   = backColor;
-        this.foreColor   = foreColor;
-        this.createTime  = createTime;
-        this.modfnTime   = modfnTime;
-        this.zIndex      = zIndex;
-        this.isMinimized = isMinimized;
-        this.isHTML      = isHTML;
+        this.url          = url;
+        this.matchType    = matchType;
+        this.text         = text;
+        this.left         = left;
+        this.top          = top;
+        this.width        = width;
+        this.height       = height;
+        this.backColor    = backColor;
+        this.foreColor    = foreColor;
+        this.createTime   = createTime;
+        this.modfnTime    = modfnTime;
+        this.zIndex       = zIndex;
+        this.isMinimized  = isMinimized;
+        this.isHTML       = isHTML;
     }
 },
 
@@ -155,6 +155,11 @@ LOAD_SUCCESS: 1,
 LOADED_FROM_SCRATCH: 2,
 LOADED_FROM_LEGACY: 3,
 LOADED_FROM_BACKUP: 4,
+
+URL_MATCH_EXACT: 0,
+URL_MATCH_REGEXP: 1,
+URL_MATCH_STARTS: 2,
+URL_MATCH_ALL: 3,
 
 areNotesDisplaying: true,
 
@@ -274,19 +279,19 @@ indicateDataChanged: function(note)
 {
     note.modfnTime = new Date().getTime();
     
-    note.xml.setAttribute("url",         note.url        );
-    note.xml.setAttribute("isURLRegexp", note.isURLRegexp);
+    note.xml.setAttribute("url",          note.url        );
+    note.xml.setAttribute("matchType", note.matchType);
     //note.xml.setAttribute("text",        note.text       );
-    note.xml.setAttribute("left",        note.left       );
-    note.xml.setAttribute("top",         note.top        );
-    note.xml.setAttribute("width",       note.width      );
-    note.xml.setAttribute("height",      note.height     );
-    note.xml.setAttribute("backColor",   note.backColor  );
-    note.xml.setAttribute("foreColor",   note.foreColor  );
-    note.xml.setAttribute("modfnTime",   note.modfnTime  );
-    note.xml.setAttribute("zIndex",      note.zIndex     );
-    note.xml.setAttribute("isMinimized",    note.isMinimized   );
-    note.xml.setAttribute("isHTML",      note.isHTML     );
+    note.xml.setAttribute("left",         note.left       );
+    note.xml.setAttribute("top",          note.top        );
+    note.xml.setAttribute("width",        note.width      );
+    note.xml.setAttribute("height",       note.height     );
+    note.xml.setAttribute("backColor",    note.backColor  );
+    note.xml.setAttribute("foreColor",    note.foreColor  );
+    note.xml.setAttribute("modfnTime",    note.modfnTime  );
+    note.xml.setAttribute("zIndex",       note.zIndex     );
+    note.xml.setAttribute("isMinimized",  note.isMinimized   );
+    note.xml.setAttribute("isHTML",       note.isHTML     );
     
     var textNode = this.getXMLTextNode(note.xml);
     if (textNode == null)
@@ -513,8 +518,20 @@ loadXMLElements: function()
         var textNode = this.getXMLTextNode(element);
         var text     = (textNode == null) ? "" : textNode.nodeValue;
         
+        if (element.hasAttribute("matchType"))
+        {
+            var matchType = parseInt(element.getAttribute("matchType"));
+        }
+        else
+        {
+            // Handle old alpha1 isURLRegexp field, remove this eventually.
+            var matchType = this.utils.parseBoolean(element.getAttribute("isURLRegexp"))
+                          ? this.URL_MATCH_REGEXP
+                          : this.URL_MATCH_EXACT;
+        }
+        
         var url         = element.getAttribute("url");
-        var isURLRegexp = this.utils.parseBoolean(element.getAttribute("isURLRegexp"));
+        
         var left        = parseInt(element.getAttribute("left"), 10);
         var top         = parseInt(element.getAttribute("top"),  10);
         var noteWidth   = parseInt(element.getAttribute("width"), 10);
@@ -527,7 +544,7 @@ loadXMLElements: function()
         var isMinimized = this.utils.parseBoolean(element.getAttribute("isMinimized"));
         var isHTML      = this.utils.parseBoolean(element.getAttribute("isHTML"));
         
-        var note = new this.InternoteNote(url, isURLRegexp, text,
+        var note = new this.InternoteNote(url, matchType, text,
                                           left, top, noteWidth, noteHeight, backColor, foreColor,
                                           createTime, modfnTime, zIndex, isMinimized, isHTML);
         this.addNoteToList(note);
@@ -538,24 +555,24 @@ loadXMLElements: function()
 
 addWelcomeNote: function()
 {
-    var welcomeText = this.utils.getLocaleString("WelcomeNote").replace(/\\n/g, "\n");
-    var sizeType    = parseInt(this.prefs.getDefaultSize()); // XXX Why parse here?
+    var welcomeText  = this.utils.getLocaleString("WelcomeNote").replace(/\\n/g, "\n");
+    var sizeType     = parseInt(this.prefs.getDefaultSize()); // XXX Why parse here?
     
-    var currTime    = new Date().getTime();
-    var backColor   = this.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
-    var foreColor   = this.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
-    var zIndex      = this.getMaxZIndex() + 1;
-    var noteWidth   = 280;
-    var noteHeight  = 300;
-    var isMinimized    = false;
-    var isURLRegexp = true;
-    var isHTML      = false;
-    var url         = ".*";
+    var currTime     = new Date().getTime();
+    var backColor    = this.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
+    var foreColor    = this.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
+    var zIndex       = this.getMaxZIndex() + 1;
+    var noteWidth    = 280;
+    var noteHeight   = 300;
+    var isMinimized  = false;
+    var matchType    = this.URL_MATCH_ALL;
+    var isHTML       = false;
+    var url          = "";
     
     var left = 10;
     var top  = 10;
     
-    return this.addNote(new this.InternoteNote(url, isURLRegexp, welcomeText, left, top, noteWidth, noteHeight,
+    return this.addNote(new this.InternoteNote(url, matchType, welcomeText, left, top, noteWidth, noteHeight,
                                                backColor, foreColor, currTime, currTime, zIndex, isMinimized, isHTML));
 },
 
@@ -576,17 +593,17 @@ addSimpleNote: function(url, text, noteTopLeft, noteDims)
     
     var noteCount = this.allNotes.length;
     
-    var currTime   = new Date().getTime();
-    var backColor  = this.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
-    var foreColor  = this.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
-    var zIndex     = this.getMaxZIndex() + 1;
-    var isMinimized   = false;
-    var isHTML     = false;
-    var isURLRegexp = false;
+    var currTime     = new Date().getTime();
+    var backColor    = this.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
+    var foreColor    = this.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
+    var zIndex       = this.getMaxZIndex() + 1;
+    var isMinimized  = false;
+    var isHTML       = false;
+    var matchType = this.URL_MATCH_EXACT;
     
     url = this.utils.canonicalizeURL(url);
     
-    return this.addNote(new this.InternoteNote(url, isURLRegexp, text,
+    return this.addNote(new this.InternoteNote(url, matchType, text,
                                                noteTopLeft[0], noteTopLeft[1], noteDims[0], noteDims[1],
                                                backColor, foreColor,
                                                currTime, currTime, zIndex, isMinimized, isHTML));
@@ -618,19 +635,19 @@ addNote: function(note)
     note.xml.setAttribute("id",          this.nextNoteID);
     this.nextNoteID++;
     
-    note.xml.setAttribute("url",         note.url        );
-    note.xml.setAttribute("isURLRegexp", note.isURLRegexp);
-    note.xml.setAttribute("left",        note.left       );
-    note.xml.setAttribute("top",         note.top        );
-    note.xml.setAttribute("width",       note.width      );
-    note.xml.setAttribute("height",      note.height     );
-    note.xml.setAttribute("backColor",   note.backColor  );
-    note.xml.setAttribute("foreColor",   note.foreColor  );
-    note.xml.setAttribute("createTime",  note.createTime );
-    note.xml.setAttribute("modfnTime",   note.modfnTime  );
-    note.xml.setAttribute("zIndex",      note.zIndex     );
-    note.xml.setAttribute("isMinimized", note.isMinimized);
-    note.xml.setAttribute("isHTML",      note.isHTML     );
+    note.xml.setAttribute("url",          note.url         );
+    note.xml.setAttribute("matchType", note.matchType);
+    note.xml.setAttribute("left",         note.left        );
+    note.xml.setAttribute("top",          note.top         );
+    note.xml.setAttribute("width",        note.width       );
+    note.xml.setAttribute("height",       note.height      );
+    note.xml.setAttribute("backColor",    note.backColor   );
+    note.xml.setAttribute("foreColor",    note.foreColor   );
+    note.xml.setAttribute("createTime",   note.createTime  );
+    note.xml.setAttribute("modfnTime",    note.modfnTime   );
+    note.xml.setAttribute("zIndex",       note.zIndex      );
+    note.xml.setAttribute("isMinimized",  note.isMinimized );
+    note.xml.setAttribute("isHTML",       note.isHTML      );
     
     var textNode = this.doc.createTextNode(note.text);
     note.xml.appendChild(textNode);
@@ -706,15 +723,29 @@ matchesURL: function(note, pageURL)
 {
     var noteURLCanon = this.utils.canonicalizeURL(note.url);
     var pageURLCanon = this.utils.canonicalizeURL(pageURL);
-    if (note.isURLRegexp)
+    if (note.matchType == this.URL_MATCH_EXACT)
+    {
+        return pageURLCanon == noteURLCanon;
+    }
+    else if (note.matchType == this.URL_MATCH_REGEXP)
     {
         return pageURL     .match(note.url    ) ? true : false ||
                pageURLCanon.match(note.url    ) ? true : false ||
                pageURLCanon.match(noteURLCanon) ? true : false;
     }
+    else if (note.matchType == this.URL_MATCH_STARTS)
+    {
+        return pageURLCanon == noteURLCanon ||
+               this.utils.startsWith(pageURLCanon, note.url);
+    }
+    else if (note.matchType == this.URL_MATCH_ALL)
+    {
+        return true;
+    }
     else
     {
-        return pageURLCanon == noteURLCanon;
+        this.utils.assertWarnNotHere("Unknown match type in InternoteStorage.matchesURL", note.matchType);
+        return false;
     }
 },
 
@@ -844,15 +875,16 @@ setIsMinimizedMulti: function(notes, newIsMinimized)
     }
 },
 
-setIsURLRegexp: function(note, newIsURLRegexp)
+setMatchType: function(note, newMatchType)
 {
-    this.utils.assertError(this.utils.isBoolean(newIsURLRegexp), "Trying to set isURLRegexp to a non-boolean.");
-    if (note.isURLRegexp != newIsURLRegexp)
+    this.utils.assertError(this.utils.isNonNegativeNumber(newMatchType), "Trying to set matchType to a non-number.", newMatchType);
+    if (note.matchType != newMatchType)
     {
-        note.isURLRegexp = newIsURLRegexp;
+        var oldMatchType = note.matchType;
+        note.matchType = newMatchType;
         this.indicateDataChanged(note);
         
-        this.dispatchEvent("noteIsRegexpChanged", new this.StorageEvent(note, newIsURLRegexp, !newIsURLRegexp));
+        this.dispatchEvent("noteIsRegexpChanged", new this.StorageEvent(note, newMatchType, oldMatchType));
     }
 },
 
@@ -1133,23 +1165,23 @@ makeNoteFromV2Line: function(line)
     // Internote V2 coordinate's were funny, compensate for this.
     var COMPENSATION_FACTOR = 90;
     
-    var url         = this.utils.canonicalizeURL(attributeArray[0]);
-    var text        = attributeArray[1].replace(/<br>/g, "\n");
-    var left        = Math.max(0, this.utils.removePx(attributeArray[2]));
-    var top         = Math.max(0, this.utils.removePx(attributeArray[3]) + COMPENSATION_FACTOR);
-    var noteWidth   = this.utils.removePx(attributeArray[4]);
-    var noteHeight  = this.utils.removePx(attributeArray[5]);
-    var backColor   = attributeArray[6];
-    var foreColor   = this.utils.convertRGBToHex(attributeArray[7]);
+    var url          = this.utils.canonicalizeURL(attributeArray[0]);
+    var text         = attributeArray[1].replace(/<br>/g, "\n");
+    var left         = Math.max(0, this.utils.removePx(attributeArray[2]));
+    var top          = Math.max(0, this.utils.removePx(attributeArray[3]) + COMPENSATION_FACTOR);
+    var noteWidth    = this.utils.removePx(attributeArray[4]);
+    var noteHeight   = this.utils.removePx(attributeArray[5]);
+    var backColor    = attributeArray[6];
+    var foreColor    = this.utils.convertRGBToHex(attributeArray[7]);
     // ignore tags attributeArray[8];
-    var createTime  = this.utils.parseOptionalDate(attributeArray[9]);
-    var modfnTime   = null;
-    var isMinimized = false;
-    var isURLRegexp = false;
-    var isHTML      = false;
-    var zIndex      = 1;
+    var createTime   = this.utils.parseOptionalDate(attributeArray[9]);
+    var modfnTime    = null;
+    var isMinimized  = false;
+    var matchType = this.URL_MATCH_EXACT;
+    var isHTML       = false;
+    var zIndex       = 1;
     
-    var note = new this.InternoteNote(url, isURLRegexp, text,
+    var note = new this.InternoteNote(url, matchType, text,
                                       left, top, noteWidth, noteHeight, backColor, foreColor,
                                       createTime, modfnTime, zIndex, isMinimized, isHTML);
     this.checkInvariant(note, false);

@@ -31,8 +31,8 @@ isRelocating: false,
 
 noteBeingEdited: null,
 
-editingFields: ["noteURL", "colorEntryBox", "textColorEntryBox",
-                "deleteCurrentNote", "resetCurrentNote", "isURLRegexp", "isMinimized"],
+editingFields: ["noteURL", "colorEntryBox", "textColorEntryBox", "isMinimized",
+                "deleteCurrentNote", "resetCurrentNote", "matchTypeEntryBox"],
 
 actions: ["deleteSelected", "resetSelected", "exportSelected", "printSelected"],
 
@@ -56,9 +56,11 @@ init: function()
     
     var foreColorBox = document.getElementById("textColorEntryBox");
     var backColorBox = document.getElementById("colorEntryBox"    );
+    var matchTypeBox = document.getElementById("matchTypeEntryBox");
     
     this.utils.addBoundDOMEventListener(foreColorBox, "ValueChange", this, "entryBoxChanges", false);
     this.utils.addBoundDOMEventListener(backColorBox, "ValueChange", this, "entryBoxChanges", false);
+    this.utils.addBoundDOMEventListener(matchTypeBox, "ValueChange", this, "entryBoxChanges", false);
     
     this.tree = document.getElementById("noteList");
     this.tree.view = this.treeView;
@@ -162,7 +164,7 @@ onNoteRemoved: function(event)
         if (event.note == this.noteBeingEdited)
         {
             this.clearNoteData();
-        }   
+        }
     }
     catch (ex)
     {
@@ -323,14 +325,16 @@ clearNoteData : function ()
     
     document.getElementById("splitter").setAttribute("state", "collapsed");
     
-    document.getElementById("noteText").value = "";
+    document.getElementById("noteText")      .value = "";
     document.getElementById("noteCreateTime").value = "";
-    document.getElementById("noteModfnTime").value = "";
-    document.getElementById("noteURL").value = "";
-    document.getElementById("isMinimized").checked = "";
-    document.getElementById("isURLRegexp").checked = "";
-    document.getElementById("colorEntryBox").value = 0;
+    document.getElementById("noteModfnTime") .value = "";
+    document.getElementById("noteURL")       .value = "";
+    
+    document.getElementById("colorEntryBox"    ).value = 0;
     document.getElementById("textColorEntryBox").value = 0;
+    document.getElementById("matchTypeEntryBox").value = 0;
+    
+    document.getElementById("isMinimized").checked = "";
     
     this.utils.disableMultiple(this.editingFields);
     document.getElementById("noteText").setAttribute("disabled", "true");
@@ -412,11 +416,11 @@ setNoteData: function(noteNum)
         this.updateValue("noteCreateTime",    convertTime(note.createTime));
         this.updateValue("noteModfnTime",     convertTime(note.modfnTime));
         this.updateValue("noteURL",           note.url);
+        this.updateValue("matchTypeEntryBox", note.matchType);
         this.updateValue("colorEntryBox",     backColor);
         this.updateValue("textColorEntryBox", foreColor);
         
         this.updateCheck("isMinimized",       note.isMinimized);
-        this.updateCheck("isURLRegexp",       note.isURLRegexp);
         
         this.utils.enableMultiple(this.editingFields);
         if (note.isHTML)
@@ -439,14 +443,23 @@ setNoteData: function(noteNum)
 setMenuListToCustom: function(menuListID)
 {
     var menuList = document.getElementById(menuListID);
-    var item = menuList.appendItem(this.utils.getLocaleString("CustomColor"), "-1");
-    item.setAttribute("id", menuListID + "-custom");
-    menuList.value = "-1";
+    var customText = this.utils.getLocaleString("CustomColor");
+    
+    var customID = menuListID + "-custom";
+    var existingElement = document.getElementById(customID);
+    
+    if (existingElement == null)
+    {
+        var item = menuList.appendItem(customText, "-1");
+        item.setAttribute("id", customID);
+        menuList.value = "-1";
+    }
 },
 
 uncustomizeMenuList: function(menuListID)
 {
     var item = document.getElementById(menuListID + "-custom");
+    
     if (item != null)
     {
         item.parentNode.removeChild(item);
@@ -470,54 +483,68 @@ userSelectsTreeElement: function()
 {
     //dump("internoteManager.userSelectsTreeElement\n");
     
-    if (this.isRelocating) return;
-    
-    var currentTreeIndex = this.tree.currentIndex;
-    var isContainer = this.treeView.isContainer(currentTreeIndex);
-    
-    // Load the data into the editing panel.
-    // XXX Should probably disable for multiple.
-    if (!isContainer && this.isValidTreeIndex(currentTreeIndex))
+    try
     {
-        var noteNum = this.treeView.treeData[currentTreeIndex][this.treeView.COL_LOOKUP];
+    
+        if (this.isRelocating) return;
+        
+        var currentTreeIndex = this.tree.currentIndex;
+        var isContainer = this.treeView.isContainer(currentTreeIndex);
+        
+        // Load the data into the editing panel.
+        // XXX Should probably disable for multiple.
+        if (!isContainer && this.isValidTreeIndex(currentTreeIndex))
+        {
+            var noteNum = this.treeView.treeData[currentTreeIndex][this.treeView.COL_LOOKUP];
+            this.setNoteData(noteNum);
+            this.utils.enableMultiple(this.actions);
+        }
+        else
+        {
+            this.utils.disableMultiple(this.actions);
+            this.clearNoteData();
+        }
+        
+        // Deselect search tree.  Check first to prevent infinite recursion when selection changes.
+        // XXX Should probably support Ctrl-Click not deselecting the other tree, so they work together.
+        var resultsList = document.getElementById("resultsList");
+        if (resultsList.view != null)
+        {
+            var selection = resultsList.view.selection;
+            if (selection.getRangeCount() != 0)
+            {
+                selection.clearSelection();
+            }
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Except caught when user selected tree element.", ex);
+    }
+},
+
+userSelectsSearchElement: function()
+{
+    try
+    {
+        var currentTreeIndex = document.getElementById("resultsList").currentIndex;
+        var noteNum = this.searchMapping[currentTreeIndex];
+
+        // Load the data into the editing panel.
+        // XXX Should probably disable for multiple.
         this.setNoteData(noteNum);
         this.utils.enableMultiple(this.actions);
-    }
-    else
-    {
-        this.utils.disableMultiple(this.actions);
-        this.clearNoteData();
-    }
-    
-    // Deselect search tree.  Check first to prevent infinite recursion when selection changes.
-    // XXX Should probably support Ctrl-Click not deselecting the other tree, so they work together.
-    var resultsList = document.getElementById("resultsList");
-    if (resultsList.view != null)
-    {
-        var selection = resultsList.view.selection;
+
+        // Deselect main tree.  Check first to prevent infinite recursion when selection changes.
+        var selection = this.treeView.selection;
         if (selection.getRangeCount() != 0)
         {
             selection.clearSelection();
         }
     }
-    
-},
-
-userSelectsSearchElement: function()
-{
-    var currentTreeIndex = document.getElementById("resultsList").currentIndex;
-    var noteNum = this.searchMapping[currentTreeIndex];
-    
-    // Load the data into the editing panel.
-    // XXX Should probably disable for multiple.
-    this.setNoteData(noteNum);
-    this.utils.enableMultiple(this.actions);
-    
-    // Deselect main tree.  Check first to prevent infinite recursion when selection changes.
-    var selection = this.treeView.selection;
-    if (selection.getRangeCount() != 0)
+    catch (ex)
     {
-        selection.clearSelection();
+        this.utils.handleException("Except caught when user selected search element.", ex);
     }
 },
 
@@ -525,22 +552,30 @@ userEditsData: function(event)
 {
     //dump("internoteManager.userEditsData\n");
     
-    var noteURLVal   = document.getElementById("noteURL").value;
-    var noteTextVal  = document.getElementById("noteText").value;
-    var backColorVal = document.getElementById("colorEntryBox").value;
-    var foreColorVal = document.getElementById("textColorEntryBox").value;
-    var isMinimized  = document.getElementById("isMinimized").checked;
-    var isURLRegexp  = document.getElementById("isURLRegexp").checked;
-    
-    if (this.noteBeingEdited != null)
+    try
     {
-        //dump("  Committing data.\n");
-        this.storage.setURL             (this.noteBeingEdited,   noteURLVal);
-        this.storage.setText            (this.noteBeingEdited,   noteTextVal);
-        this.storage.setBackColor       (this.noteBeingEdited,   this.consts.BACKGROUND_COLOR_SWABS[backColorVal]);
-        this.storage.setForeColor       (this.noteBeingEdited,   this.consts.FOREGROUND_COLOR_SWABS[foreColorVal]);
-        this.storage.setIsMinimizedMulti([this.noteBeingEdited], isMinimized);
-        this.storage.setIsURLRegexp     (this.noteBeingEdited,   isURLRegexp);
+        if (this.noteBeingEdited != null)
+        {
+            //dump("  Committing data.\n");
+            
+            var noteURLVal   = document.getElementById("noteURL").value;
+            var noteTextVal  = document.getElementById("noteText").value;
+            var backColorVal = document.getElementById("colorEntryBox").value;
+            var foreColorVal = document.getElementById("textColorEntryBox").value;
+            var isMinimized  = document.getElementById("isMinimized").checked;
+            var matchType    = parseInt(document.getElementById("matchTypeEntryBox").value, 10);
+            
+            this.storage.setURL             (this.noteBeingEdited,   noteURLVal);
+            this.storage.setText            (this.noteBeingEdited,   noteTextVal);
+            this.storage.setBackColor       (this.noteBeingEdited,   this.consts.BACKGROUND_COLOR_SWABS[backColorVal]);
+            this.storage.setForeColor       (this.noteBeingEdited,   this.consts.FOREGROUND_COLOR_SWABS[foreColorVal]);
+            this.storage.setIsMinimizedMulti([this.noteBeingEdited], isMinimized);
+            this.storage.setMatchType       (this.noteBeingEdited,   matchType);
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Except caught when user edited data.", ex);
     }
 },
 
@@ -898,7 +933,7 @@ openURL : function ()
         
         if (noteURL != null)
         {
-            if (this.noteBeingEdited.isURLRegexp)
+            if (this.noteBeingEdited.matchType == this.storage.URL_MATCH_REGEXP)
             {
                 noteURL = noteURL.replace(/\.\*$/, "");
             }

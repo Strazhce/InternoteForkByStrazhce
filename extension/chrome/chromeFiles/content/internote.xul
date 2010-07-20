@@ -52,7 +52,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <command id="cmd_showInternoteManger" oncommand="internoteUIController.userOpensManager();" />
     
     <command id="cmd_debugIN"             oncommand="internoteUIController.activateDebugFunction()" />
-
 </commandset>
 
 <keyset id="mainKeyset">
@@ -138,6 +137,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   oncommand="internoteUIController.userMinimizesNote(popupNode);" style="display: none;" />
         <menuitem label="&internote.viewInOpenManagerCmd.label;" id="internote-view-in-manager"
                   oncommand="internoteUIController.userViewsInManager(popupNode);" />
+        <!--
+        <menuseparator />
+        <menu label="&internote.showsOnMenuCmd.label;">
+            <menupopup>
+                <menuitem label="&internote.showsOnPageCmd.label;" type="checkbox" />
+                <menuitem label="&internote.showsOnAllCmd.label;"  type="checkbox" />
+                <menuseparator />
+            </menupopup>
+        </menu>
+        -->
     </popup>
 </popupset>
 

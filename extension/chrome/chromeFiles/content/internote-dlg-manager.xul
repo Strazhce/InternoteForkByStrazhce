@@ -119,43 +119,51 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         </vbox>
         <splitter id="splitter" state="collapsed" collapse="after" resizeafter="closest" />
         <vbox flex="1">
-            <groupbox flex="2">
-            <caption label="&internote.noteData.caption;"/>
+            <groupbox>
+            <caption label="&internote.noteScope.caption;"/>
             
+            <hbox align="center">
+                <label control="matchTypeEntryBox" value="&internote.noteMatchType.label;"
+                       style="font-weight: bold;" />
+                <menulist id="matchTypeEntryBox" align="center">
+                    <menupopup>
+                        <menuitem value="0" label="&internote.urlMatchExact.value;" />
+                        <menuitem value="2" label="&internote.urlMatchStarts.value;" />
+                        <menuitem value="3" label="&internote.urlMatchAll.value;" />
+                        <menuitem value="1" label="&internote.urlMatchRegexp.value;" />
+                    </menupopup>
+                </menulist>
+            </hbox>
             <hbox>
-                <label control="noteURL" value="&internote.noteURL.label;:" style="font-weight: bold;" width="100px" />
-                <label id="goToLink" value="&internote.goLink.label;..." style="color: gray; text-decoration: underline;"
+                <label control="noteURL" value="&internote.noteURL.label;:"
+                       style="font-weight: bold;" width="100px" />
+                <label id="goToLink" value="&internote.goLink.label;..."
+                       style="color: gray; text-decoration: underline;"
                        onclick="internoteManager.openURL();" />
             </hbox>
             <textbox id="noteURL" oninput="internoteManager.userEditsData()" disabled="true" />
-            <grid>
-                <columns>
-                    <column />
-                    <column flex="1" />
-                </columns>
-                <rows>
-                    <row>
-                        <label value="&internote.createTime.label;:" style="font-weight: bold;" width="100px" />
-                        <label id="noteCreateTime" value="" />
-                    </row>
-                    <row>
-                        <label control="noteModfnTime" value="&internote.modfnTime.label;:" style="font-weight: bold;" width="100px" />
-                        <label id="noteModfnTime" value="" />
-                    </row>
-                </rows>
-            </grid>
-            <hbox>
-                <checkbox id="isMinimized" oncommand="internoteManager.userEditsData()" disabled="true" label="&internote.isMinimizedCBox.label;" style="font-weight: bold;" width="100px" />
-                <checkbox id="isURLRegexp" oncommand="internoteManager.userEditsData()" disabled="true" label="&internote.isRegexpCBox.label;" flex="1" tooltiptext="&internote.isURLRegexp.tooltip;" style="font-weight: bold;" width="100px" />
-            </hbox>
+            </groupbox>
+            <groupbox flex="1">
+            <caption label="&internote.noteData.caption;"/>
+
             <label control="noteText" value="&internote.text.label;:" style="font-weight: bold;" width="100px" />
             <textbox id="noteText" multiline="true" oninput="internoteManager.userEditsData()" disabled="true" flex="1" />
+            <checkbox id="isMinimized" oncommand="internoteManager.userEditsData()" disabled="true"
+                      label="&internote.isMinimizedCBox.label;" style="font-weight: bold;" width="100px" />
             <grid>
                 <columns>
                     <column />
                     <column flex="5" />
                 </columns>
                 <rows>
+                    <row align="center">
+                        <label value="&internote.createTime.label;:" style="font-weight: bold;" width="100px" />
+                        <label id="noteCreateTime" value="" />
+                    </row>
+                    <row align="center">
+                        <label control="noteModfnTime" value="&internote.modfnTime.label;:" style="font-weight: bold;" width="100px" />
+                        <label id="noteModfnTime" value="" />
+                    </row>
                     <row align="center">
                         <label value="&internote.backColor.label;:" control="colorEntryBox" style="font-weight: bold;" width="100px" />
                         <menulist id="colorEntryBox" disabled="true">

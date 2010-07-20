@@ -31,6 +31,10 @@
 <!ENTITY internote.restoreNoteCmd.label       "Restore Note">
 <!ENTITY internote.viewInOpenManagerCmd.label "View in Manager">
 
+<!ENTITY internote.showsOnMenuCmd.label       "Shows On">
+<!ENTITY internote.showsOnPageCmd.label       "This Page Only">
+<!ENTITY internote.showsOnAllCmd.label        "Everywhere">
+
 <!-- Prefs/Manager Colors -->
 
 <!ENTITY internote.bananaColor.value		  "Banana">
@@ -96,14 +100,18 @@
 <!ENTITY internote.searchQuery.label	      "Search">
 <!ENTITY internote.searchResults.label	      "Search Results">
 
+<!ENTITY internote.noteScope.caption		  "Note Scope">
 <!ENTITY internote.noteData.caption		      "Note Data">
 <!ENTITY internote.thisNoteActions.caption	  "Actions on This Note">
 
 <!ENTITY internote.noteURL.label              "URL">
+<!ENTITY internote.noteURLPrefix.label        "URL Prefix">
+<!ENTITY internote.noteURLRegexp.label        "URL RegExp">
+
+<!ENTITY internote.noteMatchType.label        "On which pages?">
 <!ENTITY internote.createTime.label           "Created">
 <!ENTITY internote.modfnTime.label	          "Modified">
 <!ENTITY internote.isMinimizedCBox.label	  "Minimized?">
-<!ENTITY internote.isRegexpCBox.label         "URL is a Regular Expression?">
 <!ENTITY internote.text.label                 "Text">
 <!ENTITY internote.backColor.label	          "Note Color">
 <!ENTITY internote.foreColor.label	          "Text Color">
@@ -113,6 +121,11 @@
 <!ENTITY internote.noteList.columnTitle       "Notes">
 
 <!ENTITY internote.closeButton.label  	      "Close">
+
+<!ENTITY internote.urlMatchExact.value  	  "One Only">
+<!ENTITY internote.urlMatchStarts.value  	  "Those Starting with a URL Prefix">
+<!ENTITY internote.urlMatchAll.value  	      "All (Universal Note)">
+<!ENTITY internote.urlMatchRegexp.value  	  "Matching RegExp (Advanced)">
 
 <!-- Manager Menu Commands -->
 
@@ -143,7 +156,6 @@
 
 <!-- Manager Tooltips -->
 
-<!ENTITY internote.isURLRegexp.tooltip        "Regular expressions allow you specify a pattern in the URL field that defines a set of web pages, and then this note will display on all of them.  If you are not familiar with these expressions, you should leave this off, which is the normal situation.  For more information on regular expressions, many good tutorials are available on the internet.">
 <!ENTITY internote.closeResults.tooltip       "Close Search Results">
 
 <!-- About Dialog -->
