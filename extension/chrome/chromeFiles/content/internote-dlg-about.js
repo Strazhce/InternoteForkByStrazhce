@@ -23,7 +23,8 @@ var internoteAboutDlg =
 
 init: function()
 {
-    this.utils = internoteUtilities;
+    this.utils  = internoteUtilities;
+    this.global = internoteSharedGlobal;
     
     internoteUtilities.init();
     
@@ -137,9 +138,9 @@ adjustErrorInfo: function(internoteVersion)
         //textBox.style.backgroundColor = "transparent";
         
         var text = "";
-        for (var i = 0; i < internoteSharedGlobal.dumpData.length; i++)
+        for (var i = 0; i < this.global.dumpData.length; i++)
         {
-            text += internoteSharedGlobal.dumpData[i];
+            text += this.global.dumpData[i];
         }
         
         text = text.replace(/\n\n\n+/g, "\n\n");

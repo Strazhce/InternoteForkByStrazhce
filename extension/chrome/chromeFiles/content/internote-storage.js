@@ -324,8 +324,8 @@ scheduleXMLSave: function()
         }
         catch (ex)
         {
-            // I have seem timeouts go wrong (FF bugs I believe), so try immediate instead.
-            this.utils.handleException("Failure to schedule save.", ex);
+            // Workaround firefox bug #580570.
+            this.utils.handleException("Failure to schedule save, falling back to immediate.", ex);
             this.saveXMLNow();
         }
     }

@@ -33,6 +33,8 @@ init: function()
     this.Ci = Components.interfaces;
     this.Cu = Components.utils;
     this.Cr = Components.results;
+    
+    this.global = internoteSharedGlobal;
 },
 
 // Used for incorporating the utility methods from the satellite utility files.
@@ -188,9 +190,9 @@ quietStackMessage: function(msg)
 doubleDump: function(dumpMessage)
 {
     dump(dumpMessage);
-    if (internoteSharedGlobal.dumpData.length < this.MAX_DUMP_DATA_SIZE)
+    if (this.global.dumpData.length < this.MAX_DUMP_DATA_SIZE)
     {
-        internoteSharedGlobal.dumpData.push(dumpMessage);
+        this.global.dumpData.push(dumpMessage);
     }
 },
 
