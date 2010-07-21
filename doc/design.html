@@ -72,6 +72,12 @@
        from the subset, and so whether to generate this sort of event. It also lets certain events
        pass for notes in its subset.
     <p>It is currently used to determine the notes on a page as well as manager search results.</p>
+    <h3>Code Notes</h3>
+    <p>The set* methods in storage all check whether the data is actually different, and only
+       generate events in that case.  This is important, because with the MVC setup, changes to UI
+       lead to events that change storage, and changes to storage lead to events that change the UI.
+       This measure therefore prevents infinite recursion.  In theory you could also cause the UI
+       to not generate events in this case of being changed by code, but this way is easier.</p>
 
     <h2>Internote UI Controller</h2>
     <p><code>internote-ui-controller.js</code></p>
