@@ -367,7 +367,7 @@ configureStorageWatcher: function(newURL)
         this.pageWatcher.destroy();
     }
     
-    var extraReevaluateEvents  = ["noteRelocated", "noteIsRegexpChanged"];
+    var extraReevaluateEvents  = ["noteRelocated"];
     var extraPassthruEvents    = ["noteResized", "noteMoved", "noteReset", "notesMinimized",
                                   "noteBackRecolored", "noteForeRecolored", "noteEdited", "noteRaised"];
     var pageFilter = this.getPageFilter(newURL);
@@ -999,6 +999,52 @@ userSelectsAll: function()
     document.getElementById("cmd_selectAll").doCommand();
 },
 
+userChoosesMatchSingle: function(element)
+{
+    //dump("userChoosesMatchSingle\n");
+    
+    try
+    {
+        var note = this.storage.allNotes[this.screenGetNoteNum(element)];
+        this.storage.setMatch(note, this.currentURL, this.storage.URL_MATCH_EXACT);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when selecting single match.", ex);
+    }
+},
+
+userChoosesMatchAll: function(element)
+{
+    //dump("userChoosesMatchAll\n");
+    
+    try
+    {
+        var note = this.storage.allNotes[this.screenGetNoteNum(element)];
+        this.storage.setMatch(note, "", this.storage.URL_MATCH_ALL);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when selecting match all.", ex);
+    }
+},
+
+userChoosesURLPrefix: function(ev, element)
+{
+    //dump("userChoosesURLPrefix\n");
+    
+    try
+    {
+        var note = this.storage.allNotes[this.screenGetNoteNum(element)];
+        var url = ev.target.getUserData("internote-url");
+        this.storage.setMatch(note, url, this.storage.URL_MATCH_STARTS);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when selecting URL prefix.", ex);
+    }
+},
+
 ///////////////////////////////
 // Drag Code
 ///////////////////////////////
@@ -1345,7 +1391,7 @@ chromePrepareContextMenu: function(element)
         var isMinimized = this.noteUI.isMinimized(uiNote);
         
         var editElements = ["internote-context-cut-text", "internote-context-copy-text", "internote-context-paste-text",
-                             "internote-context-delete-text", "internote-context-select-all"];
+                            "internote-context-delete-text", "internote-context-select-all"];
         
         this.utils.setEnabled(editElements, !isFlipped && !isMinimized);
         this.utils.setEnabled("internote-context-flip-note", !isMinimized);
@@ -1356,6 +1402,88 @@ chromePrepareContextMenu: function(element)
     catch (ex)
     {
         this.utils.handleException("Exception when preparing context menu.", ex);
+    }
+},
+
+chromePrepareShowOnMenu: function(element)
+{
+    try
+    {
+        var menuSeparator = document.getElementById("internote-showon-menu-sep");
+        var menuPopup = menuSeparator.parentNode;
+        var note = this.storage.allNotes[this.screenGetNoteNum(element)];        
+        
+        // First set the radio checkboxes for the static items.
+        var singleItem = document.getElementById("internote-match-single");
+        var allItem    = document.getElementById("internote-match-all");
+        var regexpItem = document.getElementById("internote-match-regexp");
+        
+        var isExact  = (note.matchType == this.storage.URL_MATCH_EXACT );
+        var isAll    = (note.matchType == this.storage.URL_MATCH_ALL   );
+        var isRegexp = (note.matchType == this.storage.URL_MATCH_REGEXP);
+        var isPrefix = (note.matchType == this.storage.URL_MATCH_STARTS);
+        
+        this.utils.setDisplayed(regexpItem, isRegexp);
+        
+        if (isExact ) singleItem.setAttribute("checked", "true")
+        if (isAll   ) allItem   .setAttribute("checked", "true")
+        if (isRegexp) regexpItem.setAttribute("checked", "true")
+        
+        // Now remove any existing prefix items.
+        while (menuSeparator.nextSibling != null)
+        {
+            menuPopup.removeChild(menuSeparator.nextSibling);
+        }
+        
+        // Add an existing prefix item, if relevant.
+        var startsWithLabel = this.utils.getLocaleString("StartsWithMenuItem");
+        
+        if (isPrefix && !this.utils.endsWith(note.url, "/"))
+        {
+            var menuItem = document.createElement("menuitem");
+            
+            menuItem.setAttribute("label", startsWithLabel.replace("%1", note.url));
+            menuItem.setAttribute("type", "radio");
+            menuItem.setAttribute("name", "showson");
+            menuItem.setAttribute("checked", "true");
+            
+            menuPopup.appendChild(menuItem);
+        }
+        
+        // Now add the new prefix items.
+       
+        var url = this.currentURL;
+        var index = url.lastIndexOf("/");
+        
+        while (index != -1 && url.charAt(index - 1) != "/")
+        {
+            url = url.substr(0, index + 1);
+            
+            var menuItem = document.createElement("menuitem");
+            
+            menuItem.setAttribute("label", startsWithLabel.replace("%1", url));
+            menuItem.setAttribute("type", "radio");
+            menuItem.setAttribute("name", "showson");
+            
+            if (isPrefix && url == note.url)
+            {
+                menuItem.setAttribute("checked", "true");
+            }
+            
+            // May be necessary to set handler after setting the check!
+            menuItem.setAttribute("oncommand", "internoteUIController.userChoosesURLPrefix(event, popupNode)");
+            
+            menuItem.setUserData("internote-url", url, null);
+            
+            menuPopup.appendChild(menuItem);
+            
+            url = url.substr(0, url.length - 1);
+            index = url.lastIndexOf("/");
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught while preparing show on menu.", ex);
     }
 },
 
@@ -2479,7 +2607,8 @@ minimizedNoteSortFunc: function(a, b)
 
 onNoteAdded: function(event)
 {
-    //dump("onNoteAdded\n");
+    dump("onNoteAdded\n");
+    dump(this.utils.getStack());
     
     try
     {
@@ -2514,7 +2643,8 @@ onNoteAdded: function(event)
 
 onNoteRemoved: function(event)
 {
-    //dump("onNoteRemoved\n");
+    dump("onNoteRemoved\n");
+    dump(this.utils.getStack());
     
     try
     {

@@ -46,34 +46,42 @@ init: function()
     
     this.utils.init();
     this.prefs.init(this.utils);
-    
-    InternoteEventDispatcher.prototype.incorporateED(InternoteStorage.prototype);
-    InternoteEventDispatcher.prototype.incorporateED(InternoteStorageWatcher.prototype);
-    
-    this.storage = InternoteStorage.makeStorage();
-    
-    this.initTreeView();
-    
-    var foreColorBox = document.getElementById("textColorEntryBox");
-    var backColorBox = document.getElementById("colorEntryBox"    );
-    var matchTypeBox = document.getElementById("matchTypeEntryBox");
-    
-    this.utils.addBoundDOMEventListener(foreColorBox, "ValueChange", this, "entryBoxChanges", false);
-    this.utils.addBoundDOMEventListener(backColorBox, "ValueChange", this, "entryBoxChanges", false);
-    this.utils.addBoundDOMEventListener(matchTypeBox, "ValueChange", this, "entryBoxChanges", false);
-    
-    this.tree = document.getElementById("noteList");
-    this.tree.view = this.treeView;
-    
-    this.utils.disableMultiple(this.actions);
-    
-    addEventListener("message", this.utils.bind(this, function(event) {
-        // These events come from "view in manager" in a note's context menu.
-        if (event.origin == "chrome://browser")
-        {
-            this.viewNote(this.storage.allNotes[parseInt(event.data)]);
-        }
-    }), true);
+        
+    try
+    {
+        
+        InternoteEventDispatcher.prototype.incorporateED(InternoteStorage.prototype);
+        InternoteEventDispatcher.prototype.incorporateED(InternoteStorageWatcher.prototype);
+        
+        this.storage = InternoteStorage.makeStorage();
+        
+        this.initTreeView();
+        
+        var foreColorBox = document.getElementById("textColorEntryBox");
+        var backColorBox = document.getElementById("colorEntryBox"    );
+        var matchTypeBox = document.getElementById("matchTypeEntryBox");
+        
+        this.utils.addBoundDOMEventListener(foreColorBox, "ValueChange", this, "entryBoxChanges", false);
+        this.utils.addBoundDOMEventListener(backColorBox, "ValueChange", this, "entryBoxChanges", false);
+        this.utils.addBoundDOMEventListener(matchTypeBox, "ValueChange", this, "entryBoxChanges", false);
+        
+        this.tree = document.getElementById("noteList");
+        this.tree.view = this.treeView;
+        
+        this.utils.disableMultiple(this.actions);
+        
+        addEventListener("message", this.utils.bind(this, function(event) {
+            // These events come from "view in manager" in a note's context menu.
+            if (event.origin == "chrome://browser")
+            {
+                this.viewNote(this.storage.allNotes[parseInt(event.data)]);
+            }
+        }), true);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught while initializing manager.", ex);
+    }
 },
 
 initTreeView: function()
@@ -107,7 +115,6 @@ initTreeView: function()
     this.storage.addBoundEventListener("noteBackRecolored",   this, "onNoteUpdateData");
     this.storage.addBoundEventListener("noteReset",           this, "onNoteUpdateData");
     this.storage.addBoundEventListener("notesMinimized",      this, "onNoteUpdateData");
-    this.storage.addBoundEventListener("noteIsRegexpChanged", this, "onNoteUpdateData");
 },
 
 destroy: function()
@@ -121,7 +128,6 @@ destroy: function()
     this.storage.removeBoundEventListener("noteBackRecolored",   this, "onNoteUpdateData");
     this.storage.removeBoundEventListener("noteReset",           this, "onNoteUpdateData");
     this.storage.removeBoundEventListener("notesMinimized",      this, "onNoteUpdateData");
-    this.storage.removeBoundEventListener("noteIsRegexpChanged", this, "onNoteUpdateData");
 },
 
 viewNote: function(note)
@@ -202,20 +208,29 @@ onNoteRelocated: function(event)
     
     try
     {
-        // First check it's not just a change within canonicalization.
-        if (this.utils.canonicalizeURL(event.data1) == this.utils.canonicalizeURL(event.data2))
+        // First check it's not just a change within URL canonicalization.
+        if (this.utils.canonicalizeURL(event.data1[1]) == this.utils.canonicalizeURL(event.data2[1]))
         {
             return;
         }
-    
-        this.isRelocating = true;
+        
+        var note = event.note;
+        
+        this.isRelocating = true; // Prevent normal select events.
         
         // We pass the old URL to remove in case we must delete an old collapsed category.
-        var wasCategoryOpen = this.treeRemoveNote(event.note, event.data2);
-        this.treeCreateNote(event.note, wasCategoryOpen);
+        var [wasSelected, wasCategoryOpen] = this.treeRemoveNote(note, event.data2[1]);
+        var shouldForceCategoryOpen = wasCategoryOpen || wasSelected;
+        var newIndex = this.treeCreateNote(note, shouldForceCategoryOpen);
         
-        // XXX Should select automatically.
+        if (wasCategoryOpen && wasSelected)
+        {
+            this.treeView.selection.select(newIndex);
+        }
+        
         this.isRelocating = false;
+        
+        this.setNoteData(note.num);
     }
     catch (ex)
     {
@@ -245,10 +260,8 @@ onNoteUpdateData: function(event)
 
 makeURLRow: function(url)
 {
-    var strippedURL =     url.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
-    strippedURL = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
-    if (strippedURL == "") strippedURL = url;
-    return [strippedURL, true, false, url];
+    var description = this.getURLDescription(url);
+    return [description, true, false, url];
 },
 
 makeNoteRow: function(note)
@@ -258,9 +271,12 @@ makeNoteRow: function(note)
 },
 
 // This does a linear search.
-getNoteTreeIndex: function(searchNoteNum)
+getNoteTreeIndex: function(searchNoteNum, startPoint)
 {
-    for (var i = 0; i < this.treeView.treeData.length; i++)
+    this.utils.assertError(this.utils.isNonNegativeNumber(searchNoteNum), "SearchNoteNum not a number.", searchNoteNum);
+    if (startPoint == null) startPoint = 0;
+    
+    for (var i = startPoint; i < this.treeView.treeData.length; i++)
     {
         var isContainer = this.treeView.treeData[i][this.treeView.COL_IS_CONTAINER];
         if (!isContainer)
@@ -565,12 +581,11 @@ userEditsData: function(event)
             var isMinimized  = document.getElementById("isMinimized").checked;
             var matchType    = parseInt(document.getElementById("matchTypeEntryBox").value, 10);
             
-            this.storage.setURL             (this.noteBeingEdited,   noteURLVal);
+            this.storage.setMatch           (this.noteBeingEdited,   noteURLVal, matchType);
             this.storage.setText            (this.noteBeingEdited,   noteTextVal);
             this.storage.setBackColor       (this.noteBeingEdited,   this.consts.BACKGROUND_COLOR_SWABS[backColorVal]);
             this.storage.setForeColor       (this.noteBeingEdited,   this.consts.FOREGROUND_COLOR_SWABS[foreColorVal]);
             this.storage.setIsMinimizedMulti([this.noteBeingEdited], isMinimized);
-            this.storage.setMatchType       (this.noteBeingEdited,   matchType);
         }
     }
     catch (ex)
@@ -683,6 +698,22 @@ userDeletesNotes: function (shouldDeleteAllSelected)
     }
 },
 
+getURLDescription: function(url)
+{
+    if (url == "")
+    {
+        var emptyURLMessage = this.utils.getLocaleString("EmptyURLMessage");
+        return "--- " + emptyURLMessage + " ---";
+    }
+    else
+    {
+        var strippedURL = url.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
+        strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
+        if (strippedURL == "") strippedURL = url;
+        return strippedURL;
+    }
+},
+
 getDescription: function(note)
 {
     //var note = this.storage.allNotes[noteNum];
@@ -702,6 +733,7 @@ getDescription: function(note)
 treeCreateNote: function(note, shouldForceCategoryOpen)
 {
     //dump("internoteManager.treeCreateNote\n");
+    
     var urlTreeIndex = this.getURLTreeIndex(note.url);
     
     if (urlTreeIndex != -1)
@@ -710,13 +742,15 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
         if (shouldForceCategoryOpen && !this.treeView.isContainerOpen(urlTreeIndex))
         {
             //dump("  Forcing category open.\n");
-            this.treeView.toggleOpenState(urlTreeIndex);
+            this.treeView.toggleOpenState(urlTreeIndex); // This will find the new note.
+            return this.getNoteTreeIndex(note.num, urlTreeIndex + 1);
         }
         else if (this.treeView.isContainerOpen(urlTreeIndex))
         {
             //dump("  Category is already open.\n");
             this.treeView.treeData.splice        (urlTreeIndex + 1, 0, this.makeNoteRow(note));
             this.treeView.treeBox.rowCountChanged(urlTreeIndex + 1, 1);
+            return urlTreeIndex + 1; // XXX This assumption will be wrong when the tree becomes sorted.
         }
     }
     else
@@ -724,7 +758,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
         //dump("  Creating category.\n");
         
         // URL category doesn't exist, create it collapsed.
-        var newTreeIndex = this.treeView.treeData.length;
+        var newTreeIndex = this.treeView.treeData.length; // XXX This assumes adding to the end.
         this.treeView.treeData.push(this.makeURLRow(this.utils.canonicalizeURL(note.url)));
         this.treeView.treeBox.rowCountChanged(newTreeIndex, 1);
         
@@ -734,6 +768,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
             this.treeView.toggleOpenState(newTreeIndex);
         }
         
+        return newTreeIndex + 1;
     }
 },
 
@@ -745,6 +780,7 @@ treeRemoveNote: function(note, url)
     var treeIndex = this.getNoteTreeIndex(note.num);
     
     var isCategoryOpen = (treeIndex != -1);
+    var isSelected = this.treeView.selection.isSelected(treeIndex);
     if (isCategoryOpen)
     {
         //dump("  Removing element.\n");
@@ -786,7 +822,7 @@ treeRemoveNote: function(note, url)
         }
     }
     
-    return isCategoryOpen;
+    return [isSelected, isCategoryOpen];
 },
 
 getSearchFilter: function(searchTerm)

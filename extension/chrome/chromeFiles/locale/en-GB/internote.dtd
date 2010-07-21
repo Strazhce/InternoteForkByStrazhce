@@ -33,7 +33,8 @@
 
 <!ENTITY internote.showsOnMenuCmd.label       "Shows On">
 <!ENTITY internote.showsOnPageCmd.label       "This Page Only">
-<!ENTITY internote.showsOnAllCmd.label        "Everywhere">
+<!ENTITY internote.showsOnAllCmd.label        "All Pages">
+<!ENTITY internote.showsRegexpCmd.label       "Pages Matching Regular Expression">
 
 <!-- Prefs/Manager Colors -->
 

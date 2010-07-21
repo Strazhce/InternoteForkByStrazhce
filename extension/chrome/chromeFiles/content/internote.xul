@@ -137,16 +137,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   oncommand="internoteUIController.userMinimizesNote(popupNode);" style="display: none;" />
         <menuitem label="&internote.viewInOpenManagerCmd.label;" id="internote-view-in-manager"
                   oncommand="internoteUIController.userViewsInManager(popupNode);" />
-        <!--
         <menuseparator />
         <menu label="&internote.showsOnMenuCmd.label;">
-            <menupopup>
-                <menuitem label="&internote.showsOnPageCmd.label;" type="checkbox" />
-                <menuitem label="&internote.showsOnAllCmd.label;"  type="checkbox" />
-                <menuseparator />
+            <menupopup onpopupshowing="internoteUIController.chromePrepareShowOnMenu(popupNode);">
+                <menuitem label="&internote.showsOnPageCmd.label;" type="radio" name="showson" id="internote-match-single"
+                          oncommand="internoteUIController.userChoosesMatchSingle(popupNode);" />
+                <menuitem label="&internote.showsOnAllCmd.label;"  type="radio" name="showson" id="internote-match-all"
+                          oncommand="internoteUIController.userChoosesMatchAll(popupNode);" />
+                <menuitem label="&internote.showsRegexpCmd.label;" type="radio" name="showson" id="internote-match-regexp" />
+                <menuseparator id="internote-showon-menu-sep" />
             </menupopup>
         </menu>
-        -->
     </popup>
 </popupset>
 

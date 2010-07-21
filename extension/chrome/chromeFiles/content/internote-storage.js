@@ -80,7 +80,6 @@ function InternoteStorage()
     this.createEvent("noteForeRecolored");
     this.createEvent("noteBackRecolored");
     this.createEvent("noteReset");
-    this.createEvent("noteIsRegexpChanged");
     this.createEvent("notesMinimized");
     
     this.isInitialising = false;
@@ -766,19 +765,23 @@ setText: function(note, newText)
     }
 },
 
-setURL: function(note, newURL)
+setMatch: function(note, newURL, newMatchType)
 {
-    //dump("InternoteStorage.setURL\n");
+    //dump("InternoteStorage.setMatch\n");
     this.utils.assertError(typeof(newURL) == "string", "Trying to set note URL to non-text.");
-    if (note.url != newURL) // We need this restriction or the UI/Storage will infinitely recurse?
+    this.utils.assertError(this.utils.isNonNegativeNumber(newMatchType), "Trying to set matchType to a non-number.", newMatchType);
+    
+    if (note.url != newURL || note.matchType != newMatchType)
     {
-        //dump("  URL changed.\n");
+        //dump("  Match changed.\n");
         
-        var oldURL = note.url;
-        note.url = newURL;
+        var oldURL       = note.url;
+        var oldMatchType = note.matchType;
+        note.url       = newURL;
+        note.matchType = newMatchType;
         this.indicateDataChanged(note);
         
-        this.dispatchEvent("noteRelocated", new this.StorageEvent(note, newURL, oldURL));
+        this.dispatchEvent("noteRelocated", new this.StorageEvent(note, [newMatchType, newURL], [oldMatchType, oldURL]));
     }
 },
 
@@ -872,19 +875,6 @@ setIsMinimizedMulti: function(notes, newIsMinimized)
     if (changedNotes.length > 0)
     {
         this.dispatchEvent("notesMinimized", new this.StorageEvent(changedNotes, newIsMinimized, !newIsMinimized));
-    }
-},
-
-setMatchType: function(note, newMatchType)
-{
-    this.utils.assertError(this.utils.isNonNegativeNumber(newMatchType), "Trying to set matchType to a non-number.", newMatchType);
-    if (note.matchType != newMatchType)
-    {
-        var oldMatchType = note.matchType;
-        note.matchType = newMatchType;
-        this.indicateDataChanged(note);
-        
-        this.dispatchEvent("noteIsRegexpChanged", new this.StorageEvent(note, newMatchType, oldMatchType));
     }
 },
 
