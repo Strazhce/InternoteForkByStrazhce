@@ -124,7 +124,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             
             <hbox align="center">
                 <label control="matchTypeEntryBox" value="&internote.noteMatchType.label;"
-                       style="font-weight: bold;" />
+                       style="font-weight: bold;" class="editlabel" />
                 <menulist id="matchTypeEntryBox" align="center">
                     <menupopup>
                         <menuitem value="0" label="&internote.urlMatchExact.value;" />
@@ -135,20 +135,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 </menulist>
             </hbox>
             <hbox>
-                <label control="noteURL" value="&internote.noteURL.label;:"
-                       style="font-weight: bold;" width="100px" />
-                <label id="goToLink" value="&internote.goLink.label;..."
+                <deck flex="1" id="urlLabelDeck">
+                    <label control="noteURL" value="&internote.noteURL.label;:" id="mainURLLabel"
+                           style="font-weight: bold;" class="editlabel" />
+                    <label control="noteURL" value="&internote.noteURLPrefix.label;:"
+                           style="font-weight: bold;" class="editlabel" />
+                    <label control="noteURL" value="&internote.noteURLRegexp.label;:"
+                           style="font-weight: bold;" class="editlabel" />
+                </deck>
+                <label flex="1" id="goToLink" value="&internote.goLink.label;..."
                        style="color: gray; text-decoration: underline;"
                        onclick="internoteManager.openURL();" />
             </hbox>
-            <textbox id="noteURL" oninput="internoteManager.userEditsData()" disabled="true" />
+            <textbox id="noteURL" oninput="internoteManager.userEditsData()" />
             </groupbox>
             <groupbox flex="1">
             <caption label="&internote.noteData.caption;"/>
 
-            <label control="noteText" value="&internote.text.label;:" style="font-weight: bold;" width="100px" />
-            <textbox id="noteText" multiline="true" oninput="internoteManager.userEditsData()" disabled="true" flex="1" />
-            <checkbox id="isMinimized" oncommand="internoteManager.userEditsData()" disabled="true"
+            <label control="noteText" value="&internote.text.label;:" class="editlabel" style="font-weight: bold;" width="100px" />
+            <textbox id="noteText" multiline="true" oninput="internoteManager.userEditsData()" flex="1" />
+            <checkbox id="isMinimized" oncommand="internoteManager.userEditsData()"
                       label="&internote.isMinimizedCBox.label;" style="font-weight: bold;" width="100px" />
             <grid>
                 <columns>
@@ -157,16 +163,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 </columns>
                 <rows>
                     <row align="center">
-                        <label value="&internote.createTime.label;:" style="font-weight: bold;" width="100px" />
+                        <label class="editlabel" value="&internote.createTime.label;:" style="font-weight: bold;" width="100px" />
                         <label id="noteCreateTime" value="" />
                     </row>
                     <row align="center">
-                        <label control="noteModfnTime" value="&internote.modfnTime.label;:" style="font-weight: bold;" width="100px" />
+                        <label class="editlabel" control="noteModfnTime" value="&internote.modfnTime.label;:" style="font-weight: bold;" width="100px" />
                         <label id="noteModfnTime" value="" />
                     </row>
                     <row align="center">
-                        <label value="&internote.backColor.label;:" control="colorEntryBox" style="font-weight: bold;" width="100px" />
-                        <menulist id="colorEntryBox" disabled="true">
+                        <label class="editlabel" value="&internote.backColor.label;:" control="colorEntryBox" style="font-weight: bold;" width="100px" />
+                        <menulist id="colorEntryBox">
                             <menupopup>
                                 <menuitem value="0" label="&internote.bananaColor.value;" />
                                 <menuitem value="1" label="&internote.melonColor.value;" />
@@ -178,8 +184,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         </menulist>
                     </row>
                     <row align="center">
-                        <label value="&internote.foreColor.label;:" control="textColorEntryBox" style="font-weight: bold;" width="100px" />
-                        <menulist id="textColorEntryBox" disabled="true">
+                        <label class="editlabel" value="&internote.foreColor.label;:" control="textColorEntryBox" style="font-weight: bold;" width="100px" />
+                        <menulist id="textColorEntryBox">
                             <menupopup>
                                 <menuitem value="0" label="&internote.charcoalColor.value;" />
                                 <menuitem value="1" label="&internote.topsoilColor.value;" />
@@ -197,8 +203,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <groupbox>
             <caption label="&internote.thisNoteActions.caption;"/>
             <hbox>
-                <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;" style="font-weight: bold;" onclick="internoteManager.userDeletesNotes(false)"   disabled="true" left="0px" />
-                <button id="resetCurrentNote"  label="&internote.resetCurrentCmd.label;"  style="font-weight: bold;" onclick="internoteManager.userResetsNotes (false)" disabled="true" />
+                <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;" style="font-weight: bold;" onclick="internoteManager.userDeletesNotes(false)" />
+                <button id="resetCurrentNote"  label="&internote.resetCurrentCmd.label;"  style="font-weight: bold;" onclick="internoteManager.userResetsNotes (false)" />
             </hbox>
             </groupbox>
         </vbox>

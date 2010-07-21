@@ -46,7 +46,7 @@ init: function()
     
     this.utils.init();
     this.prefs.init(this.utils);
-        
+    
     try
     {
         
@@ -69,6 +69,7 @@ init: function()
         this.tree.view = this.treeView;
         
         this.utils.disableMultiple(this.actions);
+        this.clearNoteData();
         
         addEventListener("message", this.utils.bind(this, function(event) {
             // These events come from "view in manager" in a note's context menu.
@@ -93,7 +94,8 @@ initTreeView: function()
         var note = this.storage.allNotes[i];
         if (note != null)
         {
-            urls[this.utils.canonicalizeURL(note.url)] = 1;
+            var url = this.utils.canonicalizeURL(this.storage.getURL(note));
+            urls[url] = 1;
         }
     }
     
@@ -136,7 +138,7 @@ viewNote: function(note)
     
     if (noteTreeIndex == -1)
     {
-        var urlTreeIndex = this.getURLTreeIndex(note.url);
+        var urlTreeIndex = this.getURLTreeIndex(this.storage.getURL(note));
         this.utils.assertError(urlTreeIndex != -1, "Couldn't find URL when trying to view note.");
         
         this.treeView.toggleOpenState(urlTreeIndex);
@@ -165,7 +167,7 @@ onNoteRemoved: function(event)
 {
     try
     {
-        this.treeRemoveNote(event.note, event.note.url);
+        this.treeRemoveNote(event.note, this.storage.getURL(event.note));
         
         if (event.note == this.noteBeingEdited)
         {
@@ -209,7 +211,16 @@ onNoteRelocated: function(event)
     try
     {
         // First check it's not just a change within URL canonicalization.
-        if (this.utils.canonicalizeURL(event.data1[1]) == this.utils.canonicalizeURL(event.data2[1]))
+        // XXX This is a bit ridiculous, it would probably be a lot better to autoset
+        // XXX URL to "" in this mode, but we really need to have undo first because
+        // XXX the user has no way of getting back the URL when ALL is mischosen.
+        var newMatchType = event.data1[0];
+        var oldMatchType = event.data2[0];
+        
+        var newURL = (newMatchType == this.storage.URL_MATCH_ALL) ? "" : event.data1[1];
+        var oldURL = (oldMatchType == this.storage.URL_MATCH_ALL) ? "" : event.data2[1];
+        
+        if (this.utils.canonicalizeURL(newURL) == this.utils.canonicalizeURL(oldURL))
         {
             return;
         }
@@ -353,6 +364,7 @@ clearNoteData : function ()
     document.getElementById("isMinimized").checked = "";
     
     this.utils.disableMultiple(this.editingFields);
+    this.utils.disableMultiple(document.getElementsByClassName("editlabel"));
     document.getElementById("noteText").setAttribute("disabled", "true");
     
     this.isUpdating = false;
@@ -386,8 +398,16 @@ setNoteData: function(noteNum)
     
     if (note != null)
     {
-        document.getElementById("goToLink").style.color  = "blue";
-        document.getElementById("goToLink").style.cursor = "pointer";
+        if (this.storage.getURL(note) == "") // XXX Should be a valid URL check.
+        {
+            document.getElementById("goToLink").style.color  = "gray";
+            document.getElementById("goToLink").style.cursor = "";
+        }
+        else
+        {
+            document.getElementById("goToLink").style.color  = "blue";
+            document.getElementById("goToLink").style.cursor = "pointer";
+        }
         
         document.getElementById("splitter").setAttribute("state", "open");
         
@@ -439,6 +459,8 @@ setNoteData: function(noteNum)
         this.updateCheck("isMinimized",       note.isMinimized);
         
         this.utils.enableMultiple(this.editingFields);
+        this.utils.enableMultiple(document.getElementsByClassName("editlabel"));
+        
         if (note.isHTML)
         {
             document.getElementById("noteText").setAttribute("disabled", "true");
@@ -453,7 +475,48 @@ setNoteData: function(noteNum)
         this.clearNoteData();
     }
     
+    this.configureURLSection(this.noteBeingEdited);
+    
     this.isUpdating = false;
+},
+
+configureURLSection: function(note)
+{
+    var urlLabelDeck = document.getElementById("urlLabelDeck");
+    var mainURLLabel = document.getElementById("mainURLLabel");
+    var urlText      = document.getElementById("noteURL");
+    var goToLink     = document.getElementById("goToLink");
+    
+    mainURLLabel.removeAttribute("disabled");
+    urlText     .removeAttribute("disabled");
+    goToLink    .removeAttribute("disabled");
+    
+    if (note.matchType == this.storage.URL_MATCH_EXACT)
+    {
+        urlLabelDeck.setAttribute("selectedIndex", "0");
+    }
+    else if (note.matchType == this.storage.URL_MATCH_ALL)
+    {
+        urlLabelDeck.setAttribute("selectedIndex", "0");
+        mainURLLabel.setAttribute("disabled", "true");
+        urlText     .setAttribute("disabled", "true");
+    
+        goToLink.style.color = "gray";
+        goToLink.style.cursor = "";
+    }
+    else if (note.matchType == this.storage.URL_MATCH_STARTS)
+    {
+        urlLabelDeck.setAttribute("selectedIndex", "1");
+    }
+    else if (note.matchType == this.storage.URL_MATCH_REGEXP)
+    {
+        urlLabelDeck.setAttribute("selectedIndex", "2");
+    }
+    else
+    {
+        this.utils.assertWarnNotHere("Unknown match type when setting URL label deck.", note.matchType);
+        urlLabelDeck.setAttribute("selectedIndex", "0");
+    }
 },
 
 setMenuListToCustom: function(menuListID)
@@ -586,6 +649,8 @@ userEditsData: function(event)
             this.storage.setBackColor       (this.noteBeingEdited,   this.consts.BACKGROUND_COLOR_SWABS[backColorVal]);
             this.storage.setForeColor       (this.noteBeingEdited,   this.consts.FOREGROUND_COLOR_SWABS[foreColorVal]);
             this.storage.setIsMinimizedMulti([this.noteBeingEdited], isMinimized);
+            
+            this.configureURLSection(this.noteBeingEdited);            
         }
     }
     catch (ex)
@@ -718,6 +783,7 @@ getDescription: function(note)
 {
     //var note = this.storage.allNotes[noteNum];
     this.utils.assertError(note != null, "Note is null when trying to update in manager.");
+    
     var text = this.utils.trim(note.text);
     if (text == "")
     {
@@ -734,7 +800,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
 {
     //dump("internoteManager.treeCreateNote\n");
     
-    var urlTreeIndex = this.getURLTreeIndex(note.url);
+    var urlTreeIndex = this.getURLTreeIndex(this.storage.getURL(note));
     
     if (urlTreeIndex != -1)
     {
@@ -759,7 +825,8 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
         
         // URL category doesn't exist, create it collapsed.
         var newTreeIndex = this.treeView.treeData.length; // XXX This assumes adding to the end.
-        this.treeView.treeData.push(this.makeURLRow(this.utils.canonicalizeURL(note.url)));
+        var url = this.utils.canonicalizeURL(this.storage.getURL(note));
+        this.treeView.treeData.push(this.makeURLRow(url));
         this.treeView.treeBox.rowCountChanged(newTreeIndex, 1);
         
         if (shouldForceCategoryOpen)
@@ -952,7 +1019,7 @@ updateSearchResults: function()
 
 openURL : function ()
 {
-    if (this.noteBeingEdited != null)
+    if (this.noteBeingEdited != null && this.storage.getURL(this.noteBeingEdited) != "")
     {
         var noteURL = document.getElementById("noteURL").value;
         

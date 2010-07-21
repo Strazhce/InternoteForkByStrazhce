@@ -2609,8 +2609,7 @@ minimizedNoteSortFunc: function(a, b)
 
 onNoteAdded: function(event)
 {
-    dump("onNoteAdded\n");
-    dump(this.utils.getStack());
+    //dump("onNoteAdded\n");
     
     try
     {
@@ -2645,8 +2644,7 @@ onNoteAdded: function(event)
 
 onNoteRemoved: function(event)
 {
-    dump("onNoteRemoved\n");
-    dump(this.utils.getStack());
+    //dump("onNoteRemoved\n");
     
     try
     {

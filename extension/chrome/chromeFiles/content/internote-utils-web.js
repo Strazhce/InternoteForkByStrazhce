@@ -207,8 +207,9 @@ getBrowserURL: function(browser)
 
 disableMultiple: function(fieldArray)
 {
-    for each (var field in fieldArray)
+    for (var i = 0; i < fieldArray.length; i++)
     {
+        var field = fieldArray[i];
         if (typeof(field) == "string")
         {
             field = document.getElementById(field);
@@ -219,8 +220,9 @@ disableMultiple: function(fieldArray)
 
 enableMultiple: function(fieldArray)
 {
-    for each (var field in fieldArray)
+    for (var i = 0; i < fieldArray.length; i++)
     {
+        var field = fieldArray[i];
         if (typeof(field) == "string")
         {
             field = document.getElementById(field);

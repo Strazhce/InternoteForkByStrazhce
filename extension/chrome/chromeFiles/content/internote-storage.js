@@ -898,6 +898,18 @@ resetNote: function(note)
     }
 },
 
+getURL: function(note)
+{
+    if (note.matchType == this.URL_MATCH_ALL)
+    {
+        return "";
+    }
+    else
+    {
+        return note.url;
+    }
+},
+
 getPos: function(note)
 {
     return [note.left, note.top];
@@ -937,7 +949,7 @@ getNotesForURL: function(searchURL)
         
         if (note != null)
         {
-            if (this.utils.canonicalizeURL(note.url) == searchURL2)
+            if (this.utils.canonicalizeURL(this.getURL(note)) == searchURL2)
             {
                 results.push(note);
             }
