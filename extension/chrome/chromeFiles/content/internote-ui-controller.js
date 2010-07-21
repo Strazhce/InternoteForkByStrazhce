@@ -207,6 +207,8 @@ init: function()
     }
     
     this.SCROLLBAR_SIZE = this.utils.calcScrollbarWidth();
+    
+    dump("Internote startup successful\n");    
 },
 
 setUpInternote: function()
