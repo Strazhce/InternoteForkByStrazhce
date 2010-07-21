@@ -504,7 +504,7 @@ configureURLSection: function(note)
         goToLink.style.color = "gray";
         goToLink.style.cursor = "";
     }
-    else if (note.matchType == this.storage.URL_MATCH_STARTS)
+    else if (note.matchType == this.storage.URL_MATCH_PREFIX)
     {
         urlLabelDeck.setAttribute("selectedIndex", "1");
     }

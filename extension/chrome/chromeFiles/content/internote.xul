@@ -141,7 +141,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <menu label="&internote.showsOnMenuCmd.label;">
             <menupopup onpopupshowing="internoteUIController.chromePrepareShowOnMenu(popupNode);">
                 <menuitem label="&internote.showsOnPageCmd.label;" type="radio" name="showson" id="internote-match-single"
-                          oncommand="internoteUIController.userChoosesMatchSingle(popupNode);" />
+                          oncommand="internoteUIController.userChoosesMatchExact(popupNode);" />
                 <menuitem label="&internote.showsOnAllCmd.label;"  type="radio" name="showson" id="internote-match-all"
                           oncommand="internoteUIController.userChoosesMatchAll(popupNode);" />
                 <menuitem label="&internote.showsRegexpCmd.label;" type="radio" name="showson" id="internote-match-regexp" />

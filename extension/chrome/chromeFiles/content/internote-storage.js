@@ -155,10 +155,10 @@ LOADED_FROM_SCRATCH: 2,
 LOADED_FROM_LEGACY: 3,
 LOADED_FROM_BACKUP: 4,
 
-URL_MATCH_EXACT: 0,
+URL_MATCH_EXACT:  0,
 URL_MATCH_REGEXP: 1,
-URL_MATCH_STARTS: 2,
-URL_MATCH_ALL: 3,
+URL_MATCH_PREFIX: 2,
+URL_MATCH_ALL:    3,
 
 areNotesDisplaying: true,
 
@@ -732,7 +732,7 @@ matchesURL: function(note, pageURL)
                pageURLCanon.match(note.url    ) ? true : false ||
                pageURLCanon.match(noteURLCanon) ? true : false;
     }
-    else if (note.matchType == this.URL_MATCH_STARTS)
+    else if (note.matchType == this.URL_MATCH_PREFIX)
     {
         return pageURLCanon == noteURLCanon ||
                this.utils.startsWith(pageURLCanon, note.url);

@@ -1001,9 +1001,9 @@ userSelectsAll: function()
     document.getElementById("cmd_selectAll").doCommand();
 },
 
-userChoosesMatchSingle: function(element)
+userChoosesMatchExact: function(element)
 {
-    //dump("userChoosesMatchSingle\n");
+    //dump("userChoosesMatchExact\n");
     
     try
     {
@@ -1012,7 +1012,7 @@ userChoosesMatchSingle: function(element)
     }
     catch (ex)
     {
-        this.utils.handleException("Exception caught when selecting single match.", ex);
+        this.utils.handleException("Exception caught when selecting match exact.", ex);
     }
 },
 
@@ -1039,7 +1039,7 @@ userChoosesURLPrefix: function(ev, element)
     {
         var note = this.storage.allNotes[this.screenGetNoteNum(element)];
         var url = ev.target.getUserData("internote-url");
-        this.storage.setMatch(note, url, this.storage.URL_MATCH_STARTS);
+        this.storage.setMatch(note, url, this.storage.URL_MATCH_PREFIX);
     }
     catch (ex)
     {
@@ -1423,7 +1423,7 @@ chromePrepareShowOnMenu: function(element)
         var isExact  = (note.matchType == this.storage.URL_MATCH_EXACT );
         var isAll    = (note.matchType == this.storage.URL_MATCH_ALL   );
         var isRegexp = (note.matchType == this.storage.URL_MATCH_REGEXP);
-        var isPrefix = (note.matchType == this.storage.URL_MATCH_STARTS);
+        var isPrefix = (note.matchType == this.storage.URL_MATCH_PREFIX);
         
         this.utils.setDisplayed(regexpItem, isRegexp);
         
