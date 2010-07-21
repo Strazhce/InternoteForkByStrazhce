@@ -6,13 +6,13 @@
 <!ENTITY internote.newNoteCmd.label           "Add New Internote">
 
 <!ENTITY internote.openManagerCmd.label       "Internote Manager">
-<!ENTITY internote.helpCmd.label	          "Internote Help">
+<!ENTITY internote.helpCmd.label              "Internote Help">
 <!ENTITY internote.openPrefsCmd.label         "Internote Preferences">
 
 <!ENTITY internote.displayNotesCmd.label      "Display Internotes">
 
-<!ENTITY internote.minimizeAllCmd.label	      "Minimise This Page's Notes">
-<!ENTITY internote.unminimizeAllCmd.label	  "Restore This Page's Notes">
+<!ENTITY internote.minimizeAllCmd.label       "Minimise This Page's Notes">
+<!ENTITY internote.unminimizeAllCmd.label     "Restore This Page's Notes">
 
 <!ENTITY internote.newNoteCmd.accessKey       "N">
 <!ENTITY internote.openManagerCmd.accessKey   "M">
@@ -38,19 +38,19 @@
 
 <!-- Prefs/Manager Colors -->
 
-<!ENTITY internote.bananaColor.value		  "Banana">
-<!ENTITY internote.melonColor.value		      "Melon">
-<!ENTITY internote.blueberryColor.value		  "Blueberry">
-<!ENTITY internote.limeColor.value			  "Lime">
-<!ENTITY internote.grapeColor.value			  "Grape">
-<!ENTITY internote.cauliflowerColor.value	  "Cauliflower">
+<!ENTITY internote.bananaColor.value          "Banana">
+<!ENTITY internote.melonColor.value           "Melon">
+<!ENTITY internote.blueberryColor.value       "Blueberry">
+<!ENTITY internote.limeColor.value            "Lime">
+<!ENTITY internote.grapeColor.value           "Grape">
+<!ENTITY internote.cauliflowerColor.value     "Cauliflower">
 
-<!ENTITY internote.charcoalColor.value		  "Charcoal">
-<!ENTITY internote.topsoilColor.value		  "Topsoil">
-<!ENTITY internote.grassColor.value			  "Grass">
-<!ENTITY internote.roseColor.value		      "Rose">
-<!ENTITY internote.aluminumColor.value		  "Aluminum">
-<!ENTITY internote.snowColor.value			  "Snow">
+<!ENTITY internote.charcoalColor.value        "Charcoal">
+<!ENTITY internote.topsoilColor.value         "Topsoil">
+<!ENTITY internote.grassColor.value           "Grass">
+<!ENTITY internote.roseColor.value            "Rose">
+<!ENTITY internote.aluminumColor.value        "Aluminum">
+<!ENTITY internote.snowColor.value            "Snow">
 
 <!-- Preferences Dialog -->
 
@@ -96,14 +96,14 @@
 
 <!-- Manager Dialog -->
 
-<!ENTITY internote.managerDialog.title	      "Internote Manager">
+<!ENTITY internote.managerDialog.title        "Internote Manager">
 
-<!ENTITY internote.searchQuery.label	      "Search">
-<!ENTITY internote.searchResults.label	      "Search Results">
+<!ENTITY internote.searchQuery.label          "Search">
+<!ENTITY internote.searchResults.label        "Search Results">
 
-<!ENTITY internote.noteScope.caption		  "Note Scope">
-<!ENTITY internote.noteData.caption		      "Note Data">
-<!ENTITY internote.thisNoteActions.caption	  "Actions on This Note">
+<!ENTITY internote.noteScope.caption          "Note Scope">
+<!ENTITY internote.noteData.caption           "Note Data">
+<!ENTITY internote.thisNoteActions.caption    "Actions on This Note">
 
 <!ENTITY internote.noteURL.label              "URL">
 <!ENTITY internote.noteURLPrefix.label        "URL Prefix">
@@ -111,36 +111,36 @@
 
 <!ENTITY internote.noteMatchType.label        "On which pages?">
 <!ENTITY internote.createTime.label           "Created">
-<!ENTITY internote.modfnTime.label	          "Modified">
-<!ENTITY internote.isMinimizedCBox.label	  "Minimised?">
+<!ENTITY internote.modfnTime.label            "Modified">
+<!ENTITY internote.isMinimizedCBox.label      "Minimised?">
 <!ENTITY internote.text.label                 "Text">
-<!ENTITY internote.backColor.label	          "Note Colour">
-<!ENTITY internote.foreColor.label	          "Text Colour">
+<!ENTITY internote.backColor.label            "Note Colour">
+<!ENTITY internote.foreColor.label            "Text Colour">
 
-<!ENTITY internote.goLink.label		          "Go to Page">
+<!ENTITY internote.goLink.label               "Go to Page">
 
 <!ENTITY internote.noteList.columnTitle       "Notes">
 
-<!ENTITY internote.closeButton.label  	      "Close">
+<!ENTITY internote.closeButton.label          "Close">
 
-<!ENTITY internote.urlMatchExact.value  	  "One Only">
-<!ENTITY internote.urlMatchStarts.value  	  "Those Starting with a URL Prefix">
-<!ENTITY internote.urlMatchAll.value  	      "All (Universal Note)">
-<!ENTITY internote.urlMatchRegexp.value  	  "Matching RegExp (Advanced)">
+<!ENTITY internote.urlMatchExact.value        "One Only">
+<!ENTITY internote.urlMatchStarts.value       "Those Starting with a URL Prefix">
+<!ENTITY internote.urlMatchAll.value          "All (Universal Note)">
+<!ENTITY internote.urlMatchRegexp.value       "Matching RegExp (Advanced)">
 
 <!-- Manager Menu Commands -->
 
 <!ENTITY internote.importV2Cmd.label          "Import from Internote v2">
 
-<!ENTITY internote.selectAllCmd.label	      "Select All">
-<!ENTITY internote.expandSelectedCmd.label	  "Expand Selected">
+<!ENTITY internote.selectAllCmd.label         "Select All">
+<!ENTITY internote.expandSelectedCmd.label    "Expand Selected">
 <!ENTITY internote.collapseSelectedCmd.label  "Collapse Selected">
 
-<!ENTITY internote.printSelectedCmd.label	  "Print Selected">
-<!ENTITY internote.exportSelectedCmd.label	  "Export Selected">
+<!ENTITY internote.printSelectedCmd.label     "Print Selected">
+<!ENTITY internote.exportSelectedCmd.label    "Export Selected">
 
-<!ENTITY internote.printAllCmd.label		  "Print All">
-<!ENTITY internote.exportAllCmd.label		  "Export All">
+<!ENTITY internote.printAllCmd.label          "Print All">
+<!ENTITY internote.exportAllCmd.label         "Export All">
 
 <!ENTITY internote.toV2Cmd.label              "To Internote v2">
 <!ENTITY internote.toBookmarksCmd.label       "To Bookmarks">
@@ -149,11 +149,11 @@
 
 <!ENTITY internote.actionsCmd.label           "Actions">
 
-<!ENTITY internote.deleteCurrentCmd.label	  "Delete Note">
-<!ENTITY internote.resetCurrentCmd.label	  "Reset Position">
+<!ENTITY internote.deleteCurrentCmd.label     "Delete Note">
+<!ENTITY internote.resetCurrentCmd.label      "Reset Position">
 
-<!ENTITY internote.deleteSelectedCmd.label	  "Delete Selected">
-<!ENTITY internote.resetSelectedCmd.label	  "Reset Position of Selected">
+<!ENTITY internote.deleteSelectedCmd.label    "Delete Selected">
+<!ENTITY internote.resetSelectedCmd.label     "Reset Position of Selected">
 
 <!-- Manager Tooltips -->
 
@@ -174,9 +174,9 @@
 
 <!ENTITY internote.aboutPeople.caption        "People Who Have Helped Make Internote What It is">
 
-<!ENTITY internote.aboutReporting.caption	  "Reporting Issues with Internote">
-<!ENTITY internote.aboutReporting.desc 		  "You are welcome to send any reports of bugs, limitations and desired features in Internote.  Please see the home page for more details.">
+<!ENTITY internote.aboutReporting.caption     "Reporting Issues with Internote">
+<!ENTITY internote.aboutReporting.desc        "You are welcome to send any reports of bugs, limitations and desired features in Internote.  Please see the home page for more details.">
 <!ENTITY internote.aboutInfo.desc             "The following information can be copied into any bug reports.  It includes some basic information about your installation as well as any internal problems that Internote detected. This may help diagnose your problem.">
 <!ENTITY internote.aboutPrivacy.desc          "Note: It's possible that this includes information about your browsing session, such as web page addresses.">
 
-<!ENTITY internote.aboutHomePage.label		  "Internote Home Page">
+<!ENTITY internote.aboutHomePage.label        "Internote Home Page">

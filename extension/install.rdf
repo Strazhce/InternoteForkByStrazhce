@@ -5,9 +5,9 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>{e3631030-7c02-11da-a72b-0800200c9a66}</em:id>
-    <em:version>3.0trunk</em:version>
+    <em:version>3.0alpha2</em:version>
     <em:type>2</em:type>
-    
+
     <!-- Firefox -->
     <em:targetApplication>
       <Description>
@@ -16,35 +16,35 @@
         <em:maxVersion>3.6.*</em:maxVersion>
       </Description>
     </em:targetApplication>
-    
+
     <!-- Flock -->
-	<!-- Disabled, if you know what you're doing, give it a go.
-    
-	<em:targetApplication>
+    <!-- Disabled, if you know what you're doing, give it a go.
+
+    <em:targetApplication>
       <Description>
         <em:id>{a463f10c-3994-11da-9945-000d60ca027b}</em:id>
         <em:minVersion>0.6</em:minVersion>
         <em:maxVersion>1.0+</em:maxVersion>
       </Description>
-    </em:targetApplication>	
-	
-	-->
-	
+    </em:targetApplication>
+
+    -->
+
     <em:name>Internote</em:name>
     <em:description>Persistent sticky notes for Firefox.</em:description>
-    
+
     <em:creator>Matthew Tuck</em:creator>
-	<em:developer>Tim Horton (Internote2, Original Developer)</em:developer>
+    <em:developer>Tim Horton (Internote2, Original Developer)</em:developer>
     <em:aboutURL>chrome://internote/content/internote-dlg-about.xul</em:aboutURL>
     <em:optionsURL>chrome://internote/content/internote-dlg-prefs.xul</em:optionsURL>
     <em:homepageURL>http://internote.sourceforge.net/</em:homepageURL>
     <em:iconURL>chrome://internote/content/internote.png</em:iconURL>
-    
+
     <em:contributor>Ildikó Balla (Internote3, Beta Testing)</em:contributor>
     <em:contributor>Justin Lewis (Internote2, Beta Testing)</em:contributor>
-	<em:contributor>Robert Horton (Internote2, Beta Testing)</em:contributor>
-    
-	<em:translator>Rickart (Internote2, Simplified Chinese Translation)</em:translator>
+    <em:contributor>Robert Horton (Internote2, Beta Testing)</em:contributor>
+
+    <em:translator>Rickart (Internote2, Simplified Chinese Translation)</em:translator>
     <em:translator>AlleyKat (Internote2, Danish Translation)</em:translator>
     <em:translator>Goofy (Internote2, French Translation)</em:translator>
     <em:translator>neue.medien (Internote2, German Translation)</em:translator>
@@ -56,5 +56,5 @@
     <em:translator>Alf (Internote2, Dutch Translation)</em:translator>
     <em:translator>stalker48 (Internote2, Russian Translation)</em:translator>
     <em:translator>Heon Oh (Internote2, Korean Translation)</em:translator>
-  </Description>      
+  </Description>
 </RDF>
