@@ -57,6 +57,7 @@ RECOLOR_ANIMATION_TIME: 250,
 
 WIDTH_BETWEEN_MINIMIZED: 2,
 
+ACTIVE_WARNING_INTERVAL: 5000,
 CHECK_VIEWPORT_INTERVAL: 50,
 
 dragMode:            this.DRAG_NONE,
@@ -112,6 +113,7 @@ init: function()
     this.balloonUI = internoteBalloonUI;
     this.anim      = internoteAnimation;
     this.consts    = internoteConstants;
+    this.global    = internoteSharedGlobal;
     
     this.utils.init();
     this.prefs.init(this.utils);
@@ -208,7 +210,21 @@ init: function()
     
     this.SCROLLBAR_SIZE = this.utils.calcScrollbarWidth();
     
-    dump("Internote startup successful\n");    
+    if (this.prefs.isInDebugMode())
+    {
+        this.activeWarnInterval =
+            setInterval(this.utils.bind(this, this.chromeActiveWarning), this.ACTIVE_WARNING_INTERVAL);
+        
+        var key    = document.createElement("key");
+        key.setAttribute("key",       "g");
+        key.setAttribute("modifiers", "alt");
+        key.setAttribute("command",   "cmd_debugIN");
+        
+        var keySet = document.getElementById("mainKeyset");
+        keySet.appendChild(key);
+    }
+    
+    dump("Internote startup successful\n");
 },
 
 setUpInternote: function()
@@ -1489,6 +1505,61 @@ chromePrepareShowOnMenu: function(element)
     }
 },
 
+// For debugging purposes, only runs in debug mode.
+chromeActiveWarning: function()
+{
+    //dump("chromeActiveWarning\n");
+    
+    try
+    {
+        if (this.activeWarnCount == null)
+        {
+            this.activeWarnCount = 0;
+        }
+        
+        var newCount = this.global.dumpData.length;
+        
+        if (this.activeWarnCount < newCount)
+        {
+            this.activeWarnCount = newCount;
+            
+            if (this.prefs.shouldUseStatusbar())
+            {
+                var panel = document.getElementById("internote-panel");
+                if (panel.style.backgroundColor == "red")
+                {
+                    panel.removeAttribute("style");
+                }
+                else
+                {
+                    panel.setAttribute("style", "-moz-appearance: none; background-color: red;");
+                }
+            }
+            else
+            {
+                if (!this.balloonUI.isInitialized)
+                {
+                    var myBody = document.getElementById("main-window");
+                    this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
+                }
+                
+                this.balloonUI.popup("New errors/warnings/messages detected.");
+            }
+        }
+    }
+    catch (ex)
+    {
+        try {
+            clearInterval(this.activeWarningInterval);
+        }
+        catch (ex2)
+        {
+            dump("Failed to clear interval.");
+        }
+        this.utils.handleException("Chrome warning failed", ex);
+    }
+},
+
 //////////////////////////////
 // Screen Management
 //////////////////////////////
@@ -2526,16 +2597,13 @@ hasOffscreenNotes: function()
 
 showMessage: function(messageName)
 {
-    var myBody = document.getElementById("main-window");
-    
     if (!this.balloonUI.isInitialized)
     {
+        var myBody = document.getElementById("main-window");
         this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
     }
     
-    var message = this.utils.getLocaleString(messageName);
-            
-    this.balloonUI.popup(message);
+    this.balloonUI.popup(this.utils.getLocaleString(messageName));
     
     this.hasMsgBeenShown = true;
 },

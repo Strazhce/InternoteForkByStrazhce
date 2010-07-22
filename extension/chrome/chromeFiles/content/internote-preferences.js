@@ -94,6 +94,9 @@ shouldUseScrollbar     : function() { return this.getBoolPref("usescrollbar",   
 shouldUseOtherSaveLoc  : function() { return this.getBoolPref("changelocation",  false); },
 shouldAskBeforeDelete  : function() { return this.getBoolPref("askbeforedelete", false); },
 
+// This is a hidden preference for the purpose of debugging.
+isInDebugMode: function() { return this.getBoolPref("debugmode", false); },
+
 setSaveLocationPref: function(path)
 {
     if (path == null || path == "")
