@@ -1650,7 +1650,7 @@ screenGetViewportDims: function()
     // In this case we calculate the biggest the viewport could be, given the window dimensions.
     // If this is smaller than what we've already calculated, truncate it.
     var windowDims = [window.innerWidth, window.innerHeight];
-    var windowTopLeft = [window.mozInnerScreenX, window.mozInnerScreenY];
+    var windowTopLeft = this.utils.getScreenPos(document.documentElement.boxObject);
     var viewportTopLeft = this.utils.getScreenPos(this.currentBrowser.boxObject);
     var viewportTopLeftOnWindow = this.utils.coordPairSubtract(viewportTopLeft, windowTopLeft);
     var viewportPotentialDims = this.utils.coordPairSubtractNonNeg(windowDims, viewportTopLeftOnWindow);
