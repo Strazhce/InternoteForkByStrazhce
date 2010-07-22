@@ -1791,6 +1791,8 @@ screenGetViewportDims: function()
     
     var viewportDims = this.utils.getDims(browser.boxObject);
     
+    this.utils.assertError(this.utils.isCoordPair(viewportDims), "Bad original viewport dims", viewportDims);
+    
     try
     {
         if (contentDoc.documentElement != null)
@@ -1820,51 +1822,30 @@ screenGetViewportDims: function()
         this.utils.handleException("Exception caught when trying to compensate for scrollbars.", ex);
     }
     
-    /*
-    dump("BO      " + this.currentBrowser.boxObject.width  + " " +
-                      this.currentBrowser.boxObject.height + "\n");
-    dump("CD.     " + this.currentBrowser.contentDocument.width + " " +
-                      this.currentBrowser.contentDocument.height + "\n");
-    dump("CD.DE.O " + this.currentBrowser.contentDocument.documentElement.offsetWidth + " " +
-                      this.currentBrowser.contentDocument.documentElement.offsetHeight + "\n");
-    dump("CD.DE.C " + this.currentBrowser.contentDocument.documentElement.clientWidth + " " +
-                      this.currentBrowser.contentDocument.documentElement.clientHeight + "\n");
-    dump("CD.DE.S " + this.currentBrowser.contentDocument.documentElement.scrollWidth + " " +
-                      this.currentBrowser.contentDocument.documentElement.scrollHeight + "\n");
-    dump("CW.I    " + this.currentBrowser.contentWindow.innerWidth  + " " +
-                      this.currentBrowser.contentWindow.innerHeight + "\n");
-    */
-    
-    /*
-    dump("CD.B.C  " + this.currentBrowser.contentDocument.body.clientWidth  + " " +
-                      this.currentBrowser.contentDocument.body.clientHeight + "\n");
-    dump("CD.B.O  " + this.currentBrowser.contentDocument.body.offsetWidth  + " " +
-                      this.currentBrowser.contentDocument.body.offsetHeight + "\n");
-    dump("CD.B.S  " + this.currentBrowser.contentDocument.body.scrollWidth  + " " +
-                      this.currentBrowser.contentDocument.body.scrollHeight + "\n");
-    dump("\n");
-    */
-                      
+    this.utils.assertError(this.utils.isCoordPair(viewportDims), "Bad modified viewport dims", viewportDims);
+   
     //this.utils.dumpTraceData(viewportDims, 110, 1);
     
     // Next we handle really small windows, where the window is smaller than the browser box!
     // In this case we calculate the biggest the viewport could be, given the window dimensions.
     // If this is smaller than what we've already calculated, truncate it.
+    var windowTopLeft = this.utils.getScreenPos(document.documentElement.boxObject);
+    //dump("  WTopLeft      = " + this.utils.compactDumpString(windowTopLeft) + "\n");
     var windowDims = [window.innerWidth, window.innerHeight];
-    var windowTopLeft = [window.mozInnerScreenX, window.mozInnerScreenY];
+    //dump("  WindowDims    = " + this.utils.compactDumpString(windowDims) + "\n");
     var viewportTopLeft = this.utils.getScreenPos(this.currentBrowser.boxObject);
+    //dump("  VTopLeft      = " + this.utils.compactDumpString(viewportTopLeft) + "\n");
     var viewportTopLeftOnWindow = this.utils.coordPairSubtract(viewportTopLeft, windowTopLeft);
+    //dump("  VWTopLeft     = " + this.utils.compactDumpString(viewportTopLeftOnWindow) + "\n");
     var viewportPotentialDims = this.utils.coordPairSubtractNonNeg(windowDims, viewportTopLeftOnWindow);
+    //dump("  PotentialDims = " + this.utils.compactDumpString(viewportPotentialDims) + "\n\n\n");
     
     // Now restrict the earlier calculated dimensions.
     viewportDims = this.utils.coordPairMin(viewportDims, viewportPotentialDims);
     
+    this.utils.assertError(this.utils.isCoordPair(viewportDims), "Bad adjusted viewport dims", viewportDims);    
+    
     //dump("  ViewportDims  = " + this.utils.compactDumpString(viewportDims) + "\n");
-    //dump("  WindowDims    = " + this.utils.compactDumpString(windowDims) + "\n");
-    //dump("  WTopLeft      = " + this.utils.compactDumpString(windowTopLeft) + "\n");
-    //dump("  VTopLeft      = " + this.utils.compactDumpString(viewportTopLeft) + "\n");
-    //dump("  VWTopLeft     = " + this.utils.compactDumpString(viewportTopLeftOnWindow) + "\n");
-    //dump("  PotentialDims = " + this.utils.compactDumpString(viewportPotentialDims) + "\n\n\n");
     
     return viewportDims;
 },
