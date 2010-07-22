@@ -1061,12 +1061,25 @@ drawNoteBackSide: function(uiNote)
     const MAX_TEXT_WIDTH = this.consts.MIN_NOTE_WIDTH - 2 * this.NOTE_BORDER_SIZE - 2 * this.NOTE_OUTER_SIZE;
     context.fillStyle = "black";
     context.font = "bold " + this.SWAB_TITLE_FONT + "px sans-serif";
-    context.fillText(noteColorStr, this.SWAB_LEFT - 1, this.SWABTEXT1_TOP + this.SWAB_TITLE_FONT, MAX_TEXT_WIDTH);
-    context.fillText(textColorStr, this.SWAB_LEFT - 1, this.SWABTEXT2_TOP + this.SWAB_TITLE_FONT, MAX_TEXT_WIDTH);
     
-    // XXX They may not be loaded.
-    //context.drawImage(this.noteNoteHeader, 0, this.SWABTEXT1_TOP, this.noteNoteHeader.width, this.noteNoteHeader.height);
-    //context.drawImage(this.noteTextHeader, 0, this.SWABTEXT2_TOP, this.noteTextHeader.width, this.noteTextHeader.height);
+    if (context.fillText)
+    {
+        context.fillText(noteColorStr, this.SWAB_LEFT - 1, this.SWABTEXT1_TOP + this.SWAB_TITLE_FONT, MAX_TEXT_WIDTH);
+        context.fillText(textColorStr, this.SWAB_LEFT - 1, this.SWABTEXT2_TOP + this.SWAB_TITLE_FONT, MAX_TEXT_WIDTH);
+    }
+    else
+    {
+        // Compatibility: Before FF 3.5.
+        context.save();
+        context.translate(this.SWAB_LEFT - 1, this.SWABTEXT1_TOP + this.SWAB_TITLE_FONT);
+        context.mozDrawText(noteColorStr);
+        context.restore();
+        
+        context.save();
+        context.translate(this.SWAB_LEFT - 1, this.SWABTEXT2_TOP + this.SWAB_TITLE_FONT);
+        context.mozDrawText(textColorStr);
+        context.restore();
+    }
 },
 
 drawCloseButton: function(uiNote)
