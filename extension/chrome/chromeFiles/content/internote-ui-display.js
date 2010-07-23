@@ -217,7 +217,8 @@ createInsertionContainer: function(viewportDims)
         
         this.popupPanel = document.createElement("panel");
         this.popupPanel.setAttribute("id", "internote-displaypopup");
-        this.popupPanel.setAttribute("style", "background-color: transparent; border: none;");
+        // -moz-appearance seems to be necessary on Linux but not Windows.
+        this.popupPanel.setAttribute("style", "background-color: transparent; border: none; -moz-appearance: none;");
         this.popupPanel.setAttribute("noautohide", "true");
         
         // We need this intermediate stack so resetPane can adjust the top-left coordinate

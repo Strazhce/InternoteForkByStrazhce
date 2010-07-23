@@ -964,7 +964,8 @@ drawNoteBackground: function(uiNote)
     this.utils.assertClassError(uiNote, "UINote", "Note is not a UINote when drawing note background.");
     //uiNote.checkInvariant();
     
-    var shouldUseTranslucency = this.prefs.shouldUseTransparency();
+    var shouldUseTranslucency = this.prefs.shouldUseTransparency()
+                             && this.utils.supportsTranslucentPopups();
     
     var w = uiNote.background.width;
     var h = uiNote.background.height;
