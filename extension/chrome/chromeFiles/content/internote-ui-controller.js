@@ -1611,7 +1611,7 @@ screenCreateNote: function(uiNote, shouldAnimate)
     var posOnViewport = this.screenCalcNotePosOnViewport(uiNote);
     
     // Animation should be the very last thing so it doesn't get interrupted by other CPU tasks.
-    if (shouldAnimate)
+    if (shouldAnimate && this.utils.supportsTranslucentPopups())
     {
         var animation = internoteAnimation.getFadeAnimation(this.utils, uiNote.noteElt, true);
         this.startNoteAnimation(uiNote, animation, this.CREATE_ANIMATION_TIME);
@@ -1628,10 +1628,12 @@ screenRemoveNote: function(uiNote)
     this.noteUI.disableUI(uiNote);
     
     var animation = internoteAnimation.getFadeAnimation(this.utils, uiNote.noteElt, false);
+    
+    var shouldSkipAnimation = !this.utils.supportsTranslucentPopups();
     this.startNoteAnimation(uiNote, animation, this.REMOVE_ANIMATION_TIME, this.utils.bind(this, function()
     {
         this.screenRemoveNoteNow(uiNote);
-    }));
+    }), shouldSkipAnimation);
 },
 
 screenRemoveNoteNow: function(uiNote)
@@ -2506,16 +2508,18 @@ hurryNoteAnimation: function(uiNote)
 },
 
 // This helper makes sure that there is only one animation running at a time for each note.
-startNoteAnimation: function(uiNote, animation, animationTime, onCompleteExtra)
+startNoteAnimation: function(uiNote, animation, animationTime, onCompleteExtra, shouldSkip)
 {
     //dump("startNoteAnimation " + uiNote.num + "\n");
     
-    this.utils.assertError(this.utils.isPositiveNumber(animationTime), "Bad animation time.", animationTime);
+    if (shouldSkip == null) shouldSkip = false;
+    
+    this.utils.assertError(shouldSkip || this.utils.isPositiveNumber(animationTime), "Bad animation time.", animationTime);
     
     var existingDriver = this.noteAnimations[uiNote.num];
     if (existingDriver != null) existingDriver.hurry();
     
-    var driver = new internoteAnimation.AnimationDriver(this.utils, animation, animationTime);
+    var driver = new internoteAnimation.AnimationDriver(this.utils, animation);
     this.noteAnimations[uiNote.num] = driver;
     
     var onComplete = this.utils.bind(this, function()
@@ -2530,13 +2534,13 @@ startNoteAnimation: function(uiNote, animation, animationTime, onCompleteExtra)
     
     driver.addEventListener("animationCompleted", onComplete);
     
-    if (this.utils.isMinimized())
+    if (this.utils.isMinimized() || shouldSkip)
     {
         driver.hurry();
     }
     else
     {
-        driver.start();
+        driver.start(animationTime);
     }
 },
 

@@ -250,14 +250,11 @@ internoteAnimation.SequentialAnimation.prototype.indicateComplete = function()
 // AnimationDriver
 //////////////////
 
-internoteAnimation.AnimationDriver = function(utils, animation, animationTime)
+internoteAnimation.AnimationDriver = function(utils, animation)
 {
-    utils.assertError(utils.isPositiveNumber(animationTime), "Bad animation time.", animationTime);
-    
     this.utils = utils;
     
     this.animation = animation;
-    this.animationTime = animationTime;
     
     this.isStarted = false;
     
@@ -269,8 +266,13 @@ internoteUtilities.nameConstructor(internoteAnimation, "AnimationDriver");
 
 internoteAnimation.AnimationDriver.prototype.stepTime = 50;
 
-internoteAnimation.AnimationDriver.prototype.start = function()
+internoteAnimation.AnimationDriver.prototype.start = function(animationTime)
 {
+    this.utils.assertError(this.utils.isPositiveNumber(animationTime), "Bad animation time.", animationTime);
+    
+    // We don't do this in the constructor because it's not relevant if hurry instead of start is called.
+    this.animationTime = animationTime;
+    
     // It's okay to start immediately if we have a delayed start pending, just kill it.
     if (this.delayTimeout != null)
     {
@@ -289,14 +291,14 @@ internoteAnimation.AnimationDriver.prototype.start = function()
     this.interval = setInterval(this.utils.bind(this, this.animateStep), this.stepTime);
 };
 
-internoteAnimation.AnimationDriver.prototype.delayedStart = function(delayTime)
+internoteAnimation.AnimationDriver.prototype.delayedStart = function(delayTime, animationTime)
 {
     this.utils.assertError(!this.isStarted, "Can't delay start an already started animation.");
     
     this.delayTimeout = setTimeout(this.utils.bind(this, function()
     {
         this.delayTimeout = null;
-        this.start();
+        this.start(animationTime);
     }), delayTime);
 };
 

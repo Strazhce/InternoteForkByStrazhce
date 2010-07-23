@@ -53,7 +53,9 @@ popup: function(text)
     this.abandonAnimation();
     
     this.balloonPanel = document.createElement("panel");
-    this.balloonPanel.setAttribute("style", "background-color: transparent; border: none;");
+    // -moz-appearance seems to be necessary on Linux but not Windows.
+    this.balloonPanel.setAttribute("style", "background-color: transparent; border: none; -moz-appearance: none;");
+
     this.balloonPanel.setAttribute("id", this.id);
     this.balloonPanel.setAttribute("noautohide", "true");
     
@@ -107,15 +109,23 @@ popup: function(text)
         // so we can then figure out the correct canvas height.
         this.balloonCanvas.height = this.balloonPanel.boxObject.height;
         this.drawCanvas();
-        this.startAnimation(this.MIN_DISPLAY_TIME + text.length * 100);
+        var displayTime = this.MIN_DISPLAY_TIME + text.length * 100;
+        this.startAnimation(displayTime);
     }), false);
     
     this.balloonPanel.addEventListener("click", this.utils.bind(this, function()
     {
-        if (!this.balloonAnimDriver.isStarted)
+        if (this.utils.supportsTranslucentPopups())
         {
-            this.balloonAnimDriver.start();
-        }        
+            if (!this.balloonAnimDriver.isStarted)
+            {
+                this.balloonAnimDriver.start();
+            }
+        }
+        else
+        {
+            this.resetPanel();
+        }
     }), false);
 },
 
@@ -155,8 +165,18 @@ startAnimation: function(displayTime)
     fadeAnimation.onComplete = this.utils.bind(this, this.onBalloonAnimComplete);
     
     this.balloonAnimDriver =
-        new this.anim.AnimationDriver(this.utils, fadeAnimation, this.FADE_OUT_TIME);
-    this.balloonAnimDriver.delayedStart(displayTime);
+        new this.anim.AnimationDriver(this.utils, fadeAnimation);
+    
+    if (this.utils.supportsTranslucentPopups())
+    {
+        this.balloonAnimDriver.delayedStart(displayTime, this.FADE_OUT_TIME);
+    }
+    else
+    {
+        setTimeout(this.utils.bind(this, function() {
+            this.balloonAnimDriver.hurry();
+        }), displayTime + this.FADE_OUT_TIME / 2);
+    }
 },
 
 drawCanvas: function()
@@ -165,12 +185,13 @@ drawCanvas: function()
     
     var w = this.balloonCanvas.width;
     var h = this.balloonCanvas.height;
+    var alpha = this.utils.supportsTranslucentPopups() ? 0.9 : 1.0;
     
     context.clearRect(0, 0, w, h);
     
     context.lineJoin    = "round";
     context.strokeStyle = "black";
-    context.fillStyle   = "rgba(255, 255, 200, 0.9)";
+    context.fillStyle   = "rgba(255, 255, 200, " + alpha + ")";
     context.lineWidth   = 2;
     
     var x1      = this.ROUNDED_CORNER_SIZE;
