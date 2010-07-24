@@ -119,7 +119,7 @@ popup: function(text)
         {
             if (!this.balloonAnimDriver.isStarted)
             {
-                this.balloonAnimDriver.start();
+                this.balloonAnimDriver.start(this.FADE_OUT_TIME);
             }
         }
         else
