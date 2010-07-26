@@ -1411,23 +1411,23 @@ onStartPressLine: function(event, uiNote, location)
 {
     //dump("internoteNoteUI.onStartPressLine\n");
     
-    var dragHandler = new this.utils.DragHandler(this.utils, uiNote.scrollLine);
+    var dragHandler = new this.utils.DragHandler(this.utils);
     
-    dragHandler.onClick = this.utils.bind(this, function(wasCompleted)
+    dragHandler.onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset)
     {
-        if (location < 0)
+        if (!wasDrag)
         {
-            this.onScrollUpPage(event, uiNote);
-        }
-        else
-        {
-            this.onScrollDownPage(event, uiNote);
-        }
-    });
-    
-    dragHandler.onDragFinished = this.utils.bind(this, function(wasCompleted)
-    {
-        dragHandler = null;
+	        if (location < 0)
+	        {
+	            this.onScrollUpPage(event, uiNote);
+	        }
+	        else
+	        {
+	            this.onScrollDownPage(event, uiNote);
+	        }
+    	}
+    	
+    	dragHandler = null;
     });
     
     dragHandler.dragStarted(event);
@@ -1437,7 +1437,7 @@ onStartDragSlider: function(event, uiNote)
 {
     //dump("internoteNoteUI.onStartDragSlider\n");
     
-    var dragHandler = new this.utils.DragHandler(this.utils, uiNote.scrollLine);
+    var dragHandler = new this.utils.DragHandler(this.utils);
     var startLine = uiNote.lineNum;
     
     dragHandler.onDragMouseMoved = this.utils.bind(this, function(event, offset) {
@@ -1447,7 +1447,7 @@ onStartDragSlider: function(event, uiNote)
         this.onChangeScroll(uiNote, lineNum);
     });
     
-    dragHandler.onDragFinished = this.utils.bind(this, function(wasCompleted)
+    dragHandler.onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset)
     {
         if (!wasCompleted)
         {

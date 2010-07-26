@@ -18,16 +18,15 @@
 
 // This is used for handling drags for movement and resizing.
 
-// To use, you simply create a drag handler, overwrite onDragMouseMoved, onDragFinished and onClick
-// as appropriate, and call dragStarted().  The handler will distingush a drag (moved an adequate
-// distance) from a click (didn't) by calling the appropriate method, as well as handling the ESC key
-// through a parameter to onDragFinished.
+// To use, you simply create a drag handler, overwrite onDragMouseMoved and onDragFinished,
+// and call dragStarted().  The handler will distingush a drag (moved an adequate distance)
+// from a click (didn't), as well as handling the ESC key, both through parameters to onDragFinished.
 
 internoteUtilities.incorporate({
-    DragHandler: function(utils, elt)
+    DragHandler: function(utils, data)
     {
         this.utils = utils;
-        this.elt = elt;
+        this.data  = data;
     }
 });
 
@@ -35,9 +34,8 @@ internoteUtilities.DragHandler.prototype =
 {
 
 // Overwrite these as appropriate.
-onDragMouseMoved: function(event, offset) {},
-onDragFinished:   function(wasCompleted) {},
-onClick:          function() {},
+onDragMouseMoved: function(event, offset, data) {},
+onDragFinished:   function(wasCompleted, wasDrag, offset, data) {},
 
 registerHandlers: function()
 {
@@ -72,13 +70,13 @@ dragStarted: function(event)
     this.registerHandlers();
 },
 
-dragFinished: function(wasCompleted)
+dragFinished: function(wasCompleted, wasDrag)
 {
     //dump("internoteUtilities.DragHandler.dragFinished\n");
     
     try
     {
-        this.onDragFinished(wasCompleted);
+        this.onDragFinished(wasCompleted, wasDrag, this.pointerOffset, this.data);
         this.hasBeenDragMovement = false;
         this.deregisterHandlers();
     }
@@ -117,7 +115,7 @@ dragFailure: function(msg, ex)
     
     try
     {
-        this.onDragFinished(false);
+        this.onDragFinished(false, null, null, this.data);
     }
     catch (ex2)
     {
@@ -138,7 +136,7 @@ dragKeyPressed: function(event)
         const VK_ESCAPE = 27;
         if (event.keyCode == VK_ESCAPE)
         {
-            this.dragFinished(false);
+            this.dragFinished(false, null, null, this.data);
             event.stopPropagation();
             event.preventDefault();
         }
@@ -156,9 +154,9 @@ dragMouseMoved: function(event)
     try
     {
         var pointerCurrentPos = [event.screenX, event.screenY];
-        var pointerOffset = this.utils.coordPairSubtract(pointerCurrentPos, this.pointerInitialPos);
+        this.pointerOffset = this.utils.coordPairSubtract(pointerCurrentPos, this.pointerInitialPos);
         
-        if (!this.hasBeenDragMovement && this.isAdequateDrag(pointerOffset))
+        if (!this.hasBeenDragMovement && this.isAdequateDrag(this.pointerOffset))
         {
             //dump("  Has been movement.\n");
             this.hasBeenDragMovement = true;
@@ -166,7 +164,7 @@ dragMouseMoved: function(event)
         
         if (this.hasBeenDragMovement)
         {
-            this.onDragMouseMoved(event, pointerOffset);
+            this.onDragMouseMoved(event, this.pointerOffset, this.data);
         }
     }
     catch (ex)
@@ -181,17 +179,7 @@ dragButtonReleased: function(event)
     
     try
     {
-        if (this.hasBeenDragMovement)
-        {
-            //dump("  Drag finished.\n");
-            this.dragFinished(true);
-        }
-        else
-        {
-            //dump("  Drag is really a click.\n");
-            this.onClick();
-        }
-        
+        this.dragFinished(true, this.hasBeenDragMovement);
         this.deregisterHandlers();
     }
     catch (ex)

@@ -43,9 +43,9 @@ Components.utils.import("resource://internotejs/internote-shared-global.jsm");
 
 var internoteUIController = {
 
-DRAG_NOTE_NONE:    0,
-DRAG_NOTE_MOVE:    1,
-DRAG_NOTE_RESIZE:  2,
+DRAG_MODE_NONE:    0,
+DRAG_MODE_MOVE:    1,
+DRAG_MODE_RESIZE:  2,
 
 CREATE_ANIMATION_TIME: 600,
 REMOVE_ANIMATION_TIME: 600,
@@ -60,7 +60,7 @@ WIDTH_BETWEEN_MINIMIZED: 2,
 ACTIVE_WARNING_INTERVAL: 5000,
 CHECK_VIEWPORT_INTERVAL: 50,
 
-dragMode:            this.DRAG_NONE,
+dragMode:            this.DRAG_MODE_NONE,
 noteMode:            this.NOTE_NORMAL,
 uiNoteBeingDragged:  null,
 hasBeenDragMovement: false,
@@ -725,7 +725,32 @@ userResizesNote: function(event)
     
     try
     {
-        this.userStartsDrag(event, this.DRAG_NOTE_RESIZE);  
+	    var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
+            // XXX Limit resize to viewport?
+            this.screenSetModifiedNoteDims(uiNote, offset);
+		});
+		
+	    var onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote) {
+	        if (wasCompleted && wasDrag)
+	        {
+	            // We first set the *position* to the current screen position.  Normally, this will do nothing
+	            // since we resized, not moved the note.  However if an off-page note was forced onto the page
+	            // this will cause it to be locked into its screen position and no longer forced, because such
+	            // notes must stay on the edge of the page and we just resized the note, so it probably isn't.
+	            var topLeftOnViewport = this.displayUI.getScreenPosition(uiNote);
+	            this.screenCommitPos(uiNote, topLeftOnViewport);
+	            
+	            // Then we set the new size.
+	            var newDims = this.screenCalcModifiedNoteDims(uiNote, offset);
+	            this.storage.setDimensions(uiNote.note, newDims);
+	        }
+	        else
+	        {
+	            this.screenResetNoteDims(uiNote, [0, 0], false);
+	        }
+	    });
+	    
+        this.userStartsDrag(event, this.DRAG_MODE_RESIZE, onDragMouseMoved, onDragFinished);  
     }
     catch (ex)
     {
@@ -735,16 +760,83 @@ userResizesNote: function(event)
 
 userMovesNote: function(event)
 {
-    //dump("userMovesNote\n");
-        
     try
     {
-        this.userStartsDrag(event, this.DRAG_NOTE_MOVE);
+	    var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
+            this.utils.assertError(this.utils.isCoordPair(offset), "Invalid offset.");
+            var newPosOnViewport = this.screenCalcDraggedPos(uiNote, offset);
+            this.displayUI.moveNote(uiNote, newPosOnViewport);
+		});
+		
+	    var onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote) {
+		    // Store any changes.
+	        if (wasCompleted && wasDrag)
+	        {
+	            var newPosOnViewport = this.screenCalcDraggedPos(uiNote, offset);
+	            this.screenCommitPos(uiNote, newPosOnViewport);
+	        }
+	        else
+	        {
+		        // Importantly we move to the position that should be correct now, not the original position,
+		        // because that might have changed (due to force-on-page) if the page was loading during drag.
+		        // Note that the drag has completed by this time so we can reposition the note now.
+		        this.screenRepositionNote(uiNote);
+		    }
+	    });
+	    
+        this.userStartsDrag(event, this.DRAG_MODE_MOVE, onDragMouseMoved, onDragFinished);  
     }
     catch (ex)
     {
-        this.utils.handleException("Caught exception while attempting to move note.", ex);
+        this.utils.handleException("Caught exception while attempting to resize note.", ex);
     }
+},
+
+userStartsDrag: function(event, dragMode, onDragMouseMoved, onDragFinished)
+{
+    //dump("userStartsDrag\n");
+    
+    this.utils.assertError(event != null, "Null event when starting drag.");
+	
+    var noteNum = this.screenGetNoteNum(event.target);
+	var uiNote = this.uiNoteLookup[noteNum];
+    
+    if (uiNote.note.isMinimized)
+    {
+        return;
+    }
+    
+    // Normally animations should disable dragging if necessary, but just in case ...
+    this.hurryNoteAnimation(uiNote);
+    
+    // Don't allow typing and who knows what else while dragging ... simpler that way.
+    this.noteUI.setIsEnabled(uiNote, false);
+    
+    // Store the info on the drag.  This might be used elsewhere eg screenResetPosition.
+    this.uiNoteBeingDragged = uiNote;
+    this.dragStartPos       = this.displayUI.getScreenPosition(uiNote);
+    this.dragMode           = dragMode;
+    
+    var handler = new this.utils.DragHandler(this.utils, uiNote);
+    
+    handler.onDragMouseMoved = onDragMouseMoved;
+    
+    handler.onDragFinished   = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote)
+    {
+	    this.uiNoteBeingDragged = null;
+	    
+	    // It's important to call the callback after cleaning uiNoteBeingDragged
+	    // because we may wish to do things that will check that the drag has finished.
+    	onDragFinished(wasCompleted, wasDrag, offset, uiNote);
+    
+	    // Clear this after onDragFinished which may use it.
+	    this.dragStartPos = null;
+	    this.dragMode     = this.DRAG_MODE_NONE;
+	    
+	    this.noteUI.setIsEnabled(uiNote, true);
+	});
+    
+    handler.dragStarted(event);
 },
 
 userFlipsNote: function(elementOrEvent)
@@ -1061,222 +1153,6 @@ userChoosesURLPrefix: function(ev, element)
     {
         this.utils.handleException("Exception caught when selecting URL prefix.", ex);
     }
-},
-
-///////////////////////////////
-// Drag Code
-///////////////////////////////
-
-userStartsDrag: function(event, dragMode)
-{
-    //dump("userStartsDrag\n");
-    
-    this.utils.assertError(event != null, "Null event when starting drag.");
-    this.utils.assertError(dragMode != this.DRAG_NONE, "Bad drag mode when starting drag.");
-    
-    var noteNum = this.screenGetNoteNum(event.target);
-    var uiNote = this.uiNoteLookup[noteNum];
-    
-    if (uiNote.note.isMinimized)
-    {
-        return;
-    }
-    
-    // Normally animations should disable dragging if necessary, but just in case ...
-    this.hurryNoteAnimation(uiNote);
-    
-    // Don't allow typing and who knows what else while dragging ... simpler that way.
-    this.noteUI.setIsEnabled(uiNote, false);
-    
-    this.pointerInitialPos = [event.screenX, event.screenY];
-    
-    // Store the info on the drag.
-    this.uiNoteBeingDragged = uiNote;
-    this.dragMode           = dragMode;
-    
-    if (this.dragMode == this.DRAG_NOTE_MOVE)
-    {
-        this.dragStartPos = this.displayUI.getScreenPosition(uiNote);
-    }
-    
-    // Register drag handlers.
-    this.utils.addBoundDOMEventListener(document, "keypress",  this, "duringDragKeyPresses",     false);
-    this.utils.addBoundDOMEventListener(document, "mousemove", this, "duringDragMouseMoves",     false);
-    this.utils.addBoundDOMEventListener(document, "mouseup",   this, "duringDragButtonReleases", false);
-},
-
-deregisterDragHandlers: function()
-{
-    this.utils.removeBoundDOMEventListener(document, "keypress",  this, "duringDragKeyPresses"    , false);
-    this.utils.removeBoundDOMEventListener(document, "mousemove", this, "duringDragMouseMoves"    , false);
-    this.utils.removeBoundDOMEventListener(document, "mouseup",   this, "duringDragButtonReleases", false);
-},
-
-userFinishesDrag: function(wasCompleted, offset)
-{
-    //dump("userFinishesDrag " + this.utils.compactDumpString(offset) + "\n");
-    
-    var uiNote = this.uiNoteBeingDragged;
-    
-    var shouldRepositionNote = false;
-    
-    this.utils.assertError(uiNote != null, "Note is null when user finishes drag.");
-    // Store any changes.
-    if (this.dragMode == this.DRAG_NOTE_MOVE)
-    {
-        if (wasCompleted)
-        {
-            var newPosOnViewport = this.screenCalcDraggedPos(uiNote, offset);
-            this.screenCommitPos(uiNote, newPosOnViewport);
-        }
-        else
-        {
-            shouldRepositionNote = true;
-        }
-    }
-    else if (this.dragMode == this.DRAG_NOTE_RESIZE)
-    {
-        if (wasCompleted)
-        {
-            // We first set the *position* to the current screen position.  Normally, this will do nothing
-            // since we resized, not moved the note.  However if an off-page note was forced onto the page
-            // this will cause it to be locked into its screen position and no longer forced, because such
-            // notes must stay on the edge of the page and we just resized the note, so it probably isn't.
-            var topLeftOnViewport = this.displayUI.getScreenPosition(uiNote);
-            this.screenCommitPos(uiNote, topLeftOnViewport);
-            
-            // Then we set the new size.
-            var newDims = this.screenCalcModifiedNoteDims(uiNote, offset);
-            this.storage.setDimensions(uiNote.note, newDims);
-        }
-        else
-        {
-            this.screenResetNoteDims(uiNote, [0, 0], false);
-        }
-    }
-    else
-    {
-        this.utils.assertWarnNotHere("Drag of unknown mode finished");
-    }
-    
-    // Clear the info on the drag.
-    this.dragMode = this.DRAG_NOTE_NONE;
-    this.hasBeenDragMovement = false;
-    this.uiNoteBeingDragged = null;
-    
-    if (shouldRepositionNote)
-    {
-        // Importantly we move to the position that should be correct now, not the original position,
-        // because that might have changed (due to force-on-page) if the page was loading during drag.
-        // It's important that the drag has already been cancelled or else we can't reposition the note.
-        this.screenRepositionNote(uiNote);
-    }    
-    
-    this.noteUI.setIsEnabled(uiNote, true);
-    
-    // Deregister drag handlers.
-    this.deregisterDragHandlers();
-},
-
-duringDragKeyPresses: function(event)
-{
-    const VK_ESCAPE = 27;
-    if (event.keyCode == VK_ESCAPE)
-    {
-        this.userFinishesDrag(false, [0, 0]);
-        event.stopPropogation();
-        event.preventDefault();
-    }
-},
-
-duringDragMouseMoves: function(event)
-{
-    try
-    {
-        //dump("internoteUIController.duringDragMouseMoves\n");
-        
-        var pointerCurrentPos = [event.screenX, event.screenY];
-        var uiNote = this.uiNoteBeingDragged;
-        
-        var pointerOffset = this.utils.coordPairSubtract(pointerCurrentPos, this.pointerInitialPos);
-        
-        // Drags shouldn't start until a small minimum distance has been traversed to prevent accidents.
-        if (!this.hasBeenDragMovement && this.isAdequateDrag(pointerOffset))
-        {
-            this.hasBeenDragMovement = true;
-        }
-        
-        if (this.hasBeenDragMovement)
-        {
-            if (this.dragMode == this.DRAG_NOTE_NONE)
-            {
-                this.utils.assertWarnNotHere("Not dragging but handlers still firing.");
-                this.deregisterDragHandlers();
-            }
-            else if (this.dragMode == this.DRAG_NOTE_MOVE)
-            {
-                this.utils.assertError(this.utils.isCoordPair(pointerOffset), "Invalid offset.");
-                var newPosOnViewport = this.screenCalcDraggedPos(uiNote, pointerOffset);
-                this.displayUI.moveNote(uiNote, newPosOnViewport);
-            }
-            else if (this.dragMode == this.DRAG_NOTE_RESIZE)
-            {
-                // XXX Limit resize to viewport?
-                this.screenSetModifiedNoteDims(uiNote, pointerOffset);
-            }
-            else
-            {
-                this.utils.assertWarnNotHere("Unknown drag mode.");
-                this.dragMode = this.DRAG_NOTE_NONE;
-                this.deregisterDragHandlers();
-            }
-        }
-    }
-    catch (ex)
-    {
-        this.utils.handleException("Exception caught while moving mouse during drag.", ex);
-        this.dragMode = this.DRAG_NOTE_NONE;
-        this.deregisterDragHandlers();
-    }
-},
-
-duringDragButtonReleases: function(event)
-{
-    //dump("duringDragButtonReleases\n");
-    
-    try
-    {
-        if (this.hasBeenDragMovement)
-        {
-            if (this.dragMode != this.DRAG_NONE)
-            {
-                var pointerCurrentPos = [event.screenX, event.screenY];
-                var pointerOffset = this.utils.coordPairSubtract(pointerCurrentPos, this.pointerInitialPos);
-                this.userFinishesDrag(true, pointerOffset);
-            }
-            else
-            {
-                this.utils.assertWarnNotHere("Button released but no drag operation running.");
-            }
-        }
-        else
-        {
-            this.userFinishesDrag(false, [0, 0]);
-        }
-    }
-    catch (ex)
-    {
-        this.utils.handleException("Exception caught while releasing button during drag.", ex);
-        this.dragMode = this.DRAG_NOTE_NONE;
-        this.deregisterDragHandlers();
-    }
-},
-
-isAdequateDrag: function(pointerOffset)
-{
-    const DRAG_MIN_DISTANCE = 3;
-    var pointerMovement = this.utils.coordPairDistance(pointerOffset);
-    return DRAG_MIN_DISTANCE <= pointerMovement;
 },
 
 //////////////////////
@@ -2114,9 +1990,9 @@ screenRepositionAllNotes: function()
 
 screenRepositionNote: function(uiNote)
 {
-    //dump("screenRepositionNote\n");
+    dump("screenRepositionNote\n");
     
-    if (uiNote == this.uiNoteBeingDragged && this.dragMode == this.DRAG_NOTE_MOVE)
+    if (uiNote == this.uiNoteBeingDragged && this.dragMode == this.DRAG_MODE_MOVE)
     {
         // We don't want to mess with the drag.  If it's committed this reposition
         // won't matter.  If cancelled later the new correct position will be taken anyway.
