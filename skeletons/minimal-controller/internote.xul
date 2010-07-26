@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://internote/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://internote/skin/overlay_mac.css" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://internote/locale/internote.dtd">
+
+<!--
+Internote Extension
+Main XUL Overlay
+Copyright (C) 2010 Matthew Tuck
+Copyright (C) 2006 Tim Horton
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<overlay id="internote" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+                        xmlns:html="http://www.w3.org/1999/xhtml">
+
+<script type="application/x-javascript" src="chrome://internote/content/internote-consts.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils-colors.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils-coords.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils-rects.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-dispatcher.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-animation.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-drag.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-notes.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-display.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-controller.js"/>
+
+<keyset id="mainKeyset">
+    <key key="i" oncommand="internoteUIController.userCreatesNote();" modifiers="alt" />
+    <key key="g" oncommand="internoteUIController.userTearsDown();" modifiers="alt" />
+</keyset>
+
+<statusbar id="status-bar">
+    <statusbarpanel class="statusbarpanel-iconic" id="internote-panel"
+                    label="&internote.newNoteCmd.label;" src="chrome://internote/content/newnote16.png"
+                    onclick="if (!event.button) internoteUIController.userCreatesNote();" />
+</statusbar>
+
+<stringbundleset id="stringbundleset">
+    <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
+</stringbundleset>
+
+<window id="main-window">
+    <html:iframe id="internote-scratch-frame" src="about:blank"
+                 style="height: 0px; width: 0px; overflow: hidden; border: none; background-color: red;"/>
+</window>
+
+</overlay>
