@@ -32,11 +32,10 @@ innerContainer: null,
 offset: [0, 0],
 autoFocusNote:  null,
 
-init: function(storage, prefs, utils, noteUI)
+init: function(prefs, utils, noteUI)
 {
     // It seems that a strange limitation with JS Code Modules prevents
     // global references from callbacks.
-    this.storage = storage;
     this.prefs   = prefs;
     this.utils   = utils;
     this.noteUI  = noteUI;

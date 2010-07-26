@@ -50,9 +50,8 @@ FLIPPED_PAGE: 1,
 // Externally called methods
 /////////////////////////////////
 
-init: function(storage, prefs, utils, consts)
+init: function(prefs, utils, consts)
 {
-    this.storage = storage;
     this.prefs   = prefs;
     this.utils   = utils;
     this.consts  = consts;
@@ -224,7 +223,7 @@ createNewNote: function(note, callbacks, doc)
     }
     else
     {
-        this.adjustDims(uiNote, this.storage.getDims(note));
+        this.adjustDims(uiNote, note.getDims());
     }
     
     this.paintUI(uiNote);

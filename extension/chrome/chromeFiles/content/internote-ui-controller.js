@@ -124,6 +124,8 @@ init: function()
     // This will provide a global object shared between windows
     this.storage   = InternoteStorage.makeStorage();
     
+    this.utils.assertError(this.storage != null, "Failed to initialize storage.");
+    
     if (this.storage.loadStatus == this.storage.LOAD_FAILED)
     {
         this.handleStorageFailure("LoadFailedError");
@@ -170,10 +172,8 @@ init: function()
         onFocus:         this.utils.bind(this, this.userFocusesNote),
     };
     
-    this.utils.assertError(this.storage != null, "Failed to initialize storage.");
-    
-    internoteDisplayUI.init(this.storage, this.prefs, this.utils, this.noteUI);
-    internoteNoteUI   .init(this.storage, this.prefs, this.utils, this.consts);
+    internoteDisplayUI.init(this.prefs, this.utils, this.noteUI);
+    internoteNoteUI   .init(this.prefs, this.utils, this.consts);
     internoteAnimation.init(this.utils);
     
     this.utils.addBoundDOMEventListener(window, "unload", this, "destroy", false);
@@ -1815,7 +1815,8 @@ screenGetViewportDims: function()
             }
             else
             {
-                this.utils.assertWarnNotHere("Unhandled document type.");
+                this.utils.assertWarnNotHere("Unhandled document type.", this.utils.getJSClassName());
+                this.utils.dumpXML(contentDoc);
             }
         }
     }

@@ -90,6 +90,9 @@ function InternoteStorage()
     {
         this.addWelcomeNote();
     }
+    
+    InternoteStorage.prototype.InternoteNote.prototype.getDims = function() { return [this.width, this.height]; };
+    InternoteStorage.prototype.InternoteNote.prototype.getPos  = function() { return [this.left,  this.top   ]; };
 }
 
 InternoteStorage.prototype =
