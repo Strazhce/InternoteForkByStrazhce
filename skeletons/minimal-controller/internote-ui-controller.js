@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-// This is the Display UI, responsible for displaying the notes within the browser.
 
 // This is a basic replacement for UI controller that does not include many
 // features.  Its use is in testing and developing reduced test cases.
