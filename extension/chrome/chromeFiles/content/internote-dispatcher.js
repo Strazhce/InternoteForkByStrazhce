@@ -30,17 +30,13 @@ InternoteEventDispatcher.prototype.incorporateED = function(newPrototype)
 
 InternoteEventDispatcher.prototype.initEventDispatcher = function()
 {
-    /*
-    var count = InternoteEventDispatcher.prototype.createCount || 0;
-    this.createCount = count + 1;
-    InternoteEventDispatcher.prototype.createCount = this.createCount;
-    */
-    
     this.events = [];
 };
 
 InternoteEventDispatcher.prototype.addEventListener = function(eventName, callback)
 {
+    //dump("InternoteEventDispatcher.addEventListener " + eventName + " " + this.utils.getJSClassName(this) + "\n");
+    
     this.utils.assertError(typeof(callback) == "function", "addEventListener: callback not a function", typeof(callback));
     
     var listeners = this.events[eventName];
@@ -63,7 +59,7 @@ InternoteEventDispatcher.prototype.addEventListener = function(eventName, callba
 
 InternoteEventDispatcher.prototype.removeEventListener = function(eventName, callback)
 {
-    //dump("InternoteEventDispatcher.removeEventListener " + eventName + " " + this.createCount + " " + this.utils.getJSClassName(this) + "\n");
+    //dump("InternoteEventDispatcher.removeEventListener " + eventName + " " + this.utils.getJSClassName(this) + "\n");
     
     var listeners = this.events[eventName];
     if (listeners != null)
@@ -119,7 +115,12 @@ InternoteEventDispatcher.prototype.createEvent = function(eventName)
 
 InternoteEventDispatcher.prototype.dispatchEvent = function(eventName, eventObj)
 {
-    eventObj.name = eventName;
+    this.utils.assertError(eventObj.name == null || eventObj.name == eventName, "Tried to dispatch an already used event object.", eventObj);
+	
+	// We're overwriting .name, but we just checked it wasn't already there, so that's cool.
+	// This ensures "immutability" is preserved, since the object goes out to multiple places.
+	eventObj.name = eventName;
+	
     var listeners = this.events[eventName];
     if (listeners != null)
     {

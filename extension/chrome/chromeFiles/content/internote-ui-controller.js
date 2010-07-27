@@ -1471,9 +1471,9 @@ screenGetNoteNum: function(elementOrEvent)
 
 screenCreateNote: function(uiNote, shouldAnimate)
 {
-    this.utils.assertClassError(uiNote, "UINote", "Not a UINote when calling screenCreateNote.");
-    
     //dump("screenCreateNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
+    
+    this.utils.assertClassError(uiNote, "UINote", "Not a UINote when calling screenCreateNote.");
     
     this.utils.assertError(!this.displayUI.doesNoteExist(uiNote.num), "Note is already on-screen.");
 
@@ -1498,6 +1498,8 @@ screenCreateNote: function(uiNote, shouldAnimate)
 
 screenRemoveNote: function(uiNote)
 {
+    //dump("screenRemoveNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
+	
     this.utils.assertError(uiNote != null, "Note is not on-screen when attempting to remove animatedly.");
     this.utils.assertError(this.utils.isSpecificJSClass(uiNote, "UINote"), "Not a UINote when calling screenRemoveNote.");
     
