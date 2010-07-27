@@ -1741,7 +1741,14 @@ screenGetViewportRect: function()
 screenGetPageDims: function()
 {
     var contentDoc = this.currentBrowser.contentDocument;
-    return [contentDoc.documentElement.scrollWidth, contentDoc.documentElement.scrollHeight];
+	if (contentDoc.documentElement == null)
+	{
+		return [0, 0];
+	}
+	else
+	{
+		return [contentDoc.documentElement.scrollWidth, contentDoc.documentElement.scrollHeight];
+	}
 },
 
 screenCalcNotePosOnViewport: function(uiNote)

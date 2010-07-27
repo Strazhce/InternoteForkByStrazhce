@@ -123,7 +123,7 @@ InternoteEventDispatcher.prototype.dispatchEvent = function(eventName, eventObj)
     var listeners = this.events[eventName];
     if (listeners != null)
     {
-        for (var i in listeners)
+        for (var i = 0; i < listeners.length; i++)
         {
             var listener = listeners[i];
             try
