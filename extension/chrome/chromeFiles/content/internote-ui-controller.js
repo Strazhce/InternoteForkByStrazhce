@@ -109,7 +109,6 @@ init: function()
     this.utils     = internoteUtilities;
     this.prefs     = internotePreferences;
     this.noteUI    = internoteNoteUI;
-    this.displayUI = internoteDisplayUI;
     this.balloonUI = internoteBalloonUI;
     this.anim      = internoteAnimation;
     this.consts    = internoteConstants;
@@ -118,6 +117,8 @@ init: function()
     this.utils.init();
     this.prefs.init(this.utils);
     
+    this.displayUI = this.chooseDisplayUI();
+
     InternoteEventDispatcher.prototype.incorporateED(InternoteStorage.prototype);
     InternoteEventDispatcher.prototype.incorporateED(InternoteStorageWatcher.prototype);
     
@@ -172,9 +173,9 @@ init: function()
         onFocus:         this.utils.bind(this, this.userFocusesNote),
     };
     
-    internoteDisplayUI.init(this.prefs, this.utils, this.noteUI);
-    internoteNoteUI   .init(this.prefs, this.utils, this.consts);
-    internoteAnimation.init(this.utils);
+    this.displayUI.init(this.prefs, this.utils, this.noteUI);
+    this.noteUI   .init(this.prefs, this.utils, this.consts);
+    this.anim     .init(this.utils);
     
     this.utils.addBoundDOMEventListener(window, "unload", this, "destroy", false);
     
@@ -225,6 +226,11 @@ init: function()
     }
     
     dump("Internote startup successful\n");
+},
+
+chooseDisplayUI: function()
+{
+	return internoteDisplayUIPopupPane;
 },
 
 setUpInternote: function()
