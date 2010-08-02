@@ -146,7 +146,7 @@ resetPanel: function()
     {
         // It is much easier to destroy the panel than hide it and try to reuse it later,
         // due to the instrinsic height.
-		this.balloonPanel.hidePopup();
+        this.balloonPanel.hidePopup();
         this.balloonPanel.parentNode.removeChild(this.balloonPanel);
         this.balloonPanel = null;
     }

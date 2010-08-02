@@ -112,7 +112,7 @@ InternoteStorageWatcher.prototype.addNote = function(event)
 InternoteStorageWatcher.prototype.removeNote = function(event)
 {
     //dump("InternoteStorageWatcher.remove " + event.name + "\n");
-	
+    
     delete this.noteMap[event.note.num];
     this.count--;
     this.dispatchEvent("noteRemoved", event.clone());
@@ -121,7 +121,7 @@ InternoteStorageWatcher.prototype.removeNote = function(event)
 InternoteStorageWatcher.prototype.passEvent = function(event)
 {
     //dump("InternoteStorageWatcher.passEvent " + event.name + "\n");
-	
+    
     this.dispatchEvent(event.name, event);
 };
 
@@ -142,7 +142,7 @@ InternoteStorageWatcher.prototype.doesPassFilter = function(note)
 InternoteStorageWatcher.prototype.onNoteAdded = function(event)
 {
     //dump("InternoteStorageWatcher.onNoteAdded " + event.name + "\n");
-	
+    
     var isNowPresent = this.doesPassFilter(event.note);
     if (isNowPresent) this.addNote(event);
 };
@@ -150,7 +150,7 @@ InternoteStorageWatcher.prototype.onNoteAdded = function(event)
 InternoteStorageWatcher.prototype.onNoteRemoved = function(event)
 {
     //dump("InternoteStorageWatcher.onNoteRemoved " + event.name + "\n");
-	
+    
     var wasPreviouslyPresent = this.noteMap.hasOwnProperty(event.note.num);
     if (wasPreviouslyPresent) this.removeNote(event);
 };
@@ -162,8 +162,8 @@ InternoteStorageWatcher.prototype.onNeedingReevaluate = function(event)
     var isNowPresent = this.doesPassFilter(event.note);
     var wasPreviouslyPresent = this.noteMap.hasOwnProperty(event.note.num);
     
-	//dump("  " + wasPreviouslyPresent + "->" + isNowPresent + "\n");
-	
+    //dump("  " + wasPreviouslyPresent + "->" + isNowPresent + "\n");
+    
     if      (isNowPresent && !wasPreviouslyPresent) this.addNote   (event);
     else if (!isNowPresent && wasPreviouslyPresent) this.removeNote(event);
     else                                            this.passEvent (event);
@@ -172,7 +172,7 @@ InternoteStorageWatcher.prototype.onNeedingReevaluate = function(event)
 InternoteStorageWatcher.prototype.onNeedingPassthru = function(event)
 {
     //dump("InternoteStorageWatcher.onNeedingPassthru " + event.name + "\n");
-	
+    
     if (this.utils.isArray(event.note))
     {
         // Normally all notes modified in a multi-event (ie minimize) would still be on the same page,

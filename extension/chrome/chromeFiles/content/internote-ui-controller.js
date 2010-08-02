@@ -230,7 +230,7 @@ init: function()
 
 chooseDisplayUI: function()
 {
-	return internoteDisplayUIPopupPane;
+    return internoteDisplayUIPopupPane;
 },
 
 setUpInternote: function()
@@ -731,31 +731,31 @@ userResizesNote: function(event)
     
     try
     {
-	    var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
+        var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
             // XXX Limit resize to viewport?
             this.screenSetModifiedNoteDims(uiNote, offset);
-		});
-		
-	    var onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote) {
-	        if (wasCompleted && wasDrag)
-	        {
-	            // We first set the *position* to the current screen position.  Normally, this will do nothing
-	            // since we resized, not moved the note.  However if an off-page note was forced onto the page
-	            // this will cause it to be locked into its screen position and no longer forced, because such
-	            // notes must stay on the edge of the page and we just resized the note, so it probably isn't.
-	            var topLeftOnViewport = this.displayUI.getScreenPosition(uiNote);
-	            this.screenCommitPos(uiNote, topLeftOnViewport);
-	            
-	            // Then we set the new size.
-	            var newDims = this.screenCalcModifiedNoteDims(uiNote, offset);
-	            this.storage.setDimensions(uiNote.note, newDims);
-	        }
-	        else
-	        {
-	            this.screenResetNoteDims(uiNote, [0, 0], false);
-	        }
-	    });
-	    
+        });
+        
+        var onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote) {
+            if (wasCompleted && wasDrag)
+            {
+                // We first set the *position* to the current screen position.  Normally, this will do nothing
+                // since we resized, not moved the note.  However if an off-page note was forced onto the page
+                // this will cause it to be locked into its screen position and no longer forced, because such
+                // notes must stay on the edge of the page and we just resized the note, so it probably isn't.
+                var topLeftOnViewport = this.displayUI.getScreenPosition(uiNote);
+                this.screenCommitPos(uiNote, topLeftOnViewport);
+                
+                // Then we set the new size.
+                var newDims = this.screenCalcModifiedNoteDims(uiNote, offset);
+                this.storage.setDimensions(uiNote.note, newDims);
+            }
+            else
+            {
+                this.screenResetNoteDims(uiNote, [0, 0], false);
+            }
+        });
+        
         this.userStartsDrag(event, this.DRAG_MODE_RESIZE, onDragMouseMoved, onDragFinished);  
     }
     catch (ex)
@@ -768,28 +768,28 @@ userMovesNote: function(event)
 {
     try
     {
-	    var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
+        var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
             this.utils.assertError(this.utils.isCoordPair(offset), "Invalid offset.");
             var newPosOnViewport = this.screenCalcDraggedPos(uiNote, offset);
             this.displayUI.moveNote(uiNote, newPosOnViewport);
-		});
-		
-	    var onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote) {
-		    // Store any changes.
-	        if (wasCompleted && wasDrag)
-	        {
-	            var newPosOnViewport = this.screenCalcDraggedPos(uiNote, offset);
-	            this.screenCommitPos(uiNote, newPosOnViewport);
-	        }
-	        else
-	        {
-		        // Importantly we move to the position that should be correct now, not the original position,
-		        // because that might have changed (due to force-on-page) if the page was loading during drag.
-		        // Note that the drag has completed by this time so we can reposition the note now.
-		        this.screenRepositionNote(uiNote);
-		    }
-	    });
-	    
+        });
+        
+        var onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote) {
+            // Store any changes.
+            if (wasCompleted && wasDrag)
+            {
+                var newPosOnViewport = this.screenCalcDraggedPos(uiNote, offset);
+                this.screenCommitPos(uiNote, newPosOnViewport);
+            }
+            else
+            {
+                // Importantly we move to the position that should be correct now, not the original position,
+                // because that might have changed (due to force-on-page) if the page was loading during drag.
+                // Note that the drag has completed by this time so we can reposition the note now.
+                this.screenRepositionNote(uiNote);
+            }
+        });
+        
         this.userStartsDrag(event, this.DRAG_MODE_MOVE, onDragMouseMoved, onDragFinished);  
     }
     catch (ex)
@@ -803,9 +803,9 @@ userStartsDrag: function(event, dragMode, onDragMouseMoved, onDragFinished)
     //dump("userStartsDrag\n");
     
     this.utils.assertError(event != null, "Null event when starting drag.");
-	
+    
     var noteNum = this.screenGetNoteNum(event.target);
-	var uiNote = this.uiNoteLookup[noteNum];
+    var uiNote = this.uiNoteLookup[noteNum];
     
     if (uiNote.note.isMinimized)
     {
@@ -829,18 +829,18 @@ userStartsDrag: function(event, dragMode, onDragMouseMoved, onDragFinished)
     
     handler.onDragFinished   = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote)
     {
-	    this.uiNoteBeingDragged = null;
-	    
-	    // It's important to call the callback after cleaning uiNoteBeingDragged
-	    // because we may wish to do things that will check that the drag has finished.
-    	onDragFinished(wasCompleted, wasDrag, offset, uiNote);
+        this.uiNoteBeingDragged = null;
+        
+        // It's important to call the callback after cleaning uiNoteBeingDragged
+        // because we may wish to do things that will check that the drag has finished.
+        onDragFinished(wasCompleted, wasDrag, offset, uiNote);
     
-	    // Clear this after onDragFinished which may use it.
-	    this.dragStartPos = null;
-	    this.dragMode     = this.DRAG_MODE_NONE;
-	    
-	    this.noteUI.setIsEnabled(uiNote, true);
-	});
+        // Clear this after onDragFinished which may use it.
+        this.dragStartPos = null;
+        this.dragMode     = this.DRAG_MODE_NONE;
+        
+        this.noteUI.setIsEnabled(uiNote, true);
+    });
     
     handler.dragStarted(event);
 },
@@ -1505,7 +1505,7 @@ screenCreateNote: function(uiNote, shouldAnimate)
 screenRemoveNote: function(uiNote)
 {
     //dump("screenRemoveNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
-	
+    
     this.utils.assertError(uiNote != null, "Note is not on-screen when attempting to remove animatedly.");
     this.utils.assertError(this.utils.isSpecificJSClass(uiNote, "UINote"), "Not a UINote when calling screenRemoveNote.");
     
@@ -1749,14 +1749,14 @@ screenGetViewportRect: function()
 screenGetPageDims: function()
 {
     var contentDoc = this.currentBrowser.contentDocument;
-	if (contentDoc.documentElement == null)
-	{
-		return [0, 0];
-	}
-	else
-	{
-		return [contentDoc.documentElement.scrollWidth, contentDoc.documentElement.scrollHeight];
-	}
+    if (contentDoc.documentElement == null)
+    {
+        return [0, 0];
+    }
+    else
+    {
+        return [contentDoc.documentElement.scrollWidth, contentDoc.documentElement.scrollHeight];
+    }
 },
 
 screenCalcNotePosOnViewport: function(uiNote)

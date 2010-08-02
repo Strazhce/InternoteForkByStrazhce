@@ -56,7 +56,7 @@ tearDown: function()
     
     if (this.popupPanel != null)
     {
-		this.popupPanel.hidePopup();
+        this.popupPanel.hidePopup();
         this.popupPanel.parentNode.removeChild(this.popupPanel);
         
         this.popupPanel = null;

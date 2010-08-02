@@ -1417,17 +1417,17 @@ onStartPressLine: function(event, uiNote, location)
     {
         if (!wasDrag)
         {
-	        if (location < 0)
-	        {
-	            this.onScrollUpPage(event, uiNote);
-	        }
-	        else
-	        {
-	            this.onScrollDownPage(event, uiNote);
-	        }
-    	}
-    	
-    	dragHandler = null;
+            if (location < 0)
+            {
+                this.onScrollUpPage(event, uiNote);
+            }
+            else
+            {
+                this.onScrollDownPage(event, uiNote);
+            }
+        }
+        
+        dragHandler = null;
     });
     
     dragHandler.dragStarted(event);

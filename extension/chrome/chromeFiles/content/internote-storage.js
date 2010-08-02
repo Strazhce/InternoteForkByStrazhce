@@ -93,12 +93,12 @@ function InternoteStorage()
     
     InternoteStorage.prototype.InternoteNote.prototype.getDims = function() { return [this.width, this.height]; };
     InternoteStorage.prototype.InternoteNote.prototype.getPos  = function() { return [this.left,  this.top   ]; };
-	
-	InternoteStorage.prototype.StorageEvent.prototype.clone = function()
-	{
-		// Importantly this won't clone .name which the event dispatcher adds.
-		return new InternoteStorage.prototype.StorageEvent(this.note, this.data1, this.data2);
-	};
+    
+    InternoteStorage.prototype.StorageEvent.prototype.clone = function()
+    {
+        // Importantly this won't clone .name which the event dispatcher adds.
+        return new InternoteStorage.prototype.StorageEvent(this.note, this.data1, this.data2);
+    };
 }
 
 InternoteStorage.prototype =
