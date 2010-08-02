@@ -69,7 +69,7 @@ doesNoteExist: function(noteNum)
 
 addNote: function(uiNote, pos, dims)
 {
-    this.utils.addBoundDOMEventListener(uiNote.textArea, "focus", this, "onNoteFocused", false);
+    this.noteUI.addFocusListener(uiNote, this.utils.bind(this, this.onNoteFocused));
     
     this.createInsertionContainer();
     

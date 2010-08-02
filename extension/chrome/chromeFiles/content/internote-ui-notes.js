@@ -31,8 +31,6 @@ NOTE_SPACING_LITTLE: 4,
 
 NOTE_ALPHA:  0.85,
 
-noteNoteHeader: new Image(),
-noteTextHeader: new Image(),
 noteFlipButton: new Image(),
 
 SWAB_LEFT: 5,
@@ -57,8 +55,6 @@ init: function(prefs, utils, consts)
     this.consts  = consts;
         
     // XXX Can't find a constructor for this?
-    this.noteNoteHeader.src = "chrome://internote/locale/note.png";
-    this.noteTextHeader.src = "chrome://internote/locale/text.png";
     this.noteFlipButton.src = "chrome://internote/content/arrow.png";
     
     this.SWAB_DISTANCE = this.SWAB_WIDTH + this.SWAB_X_SPACING,
@@ -75,6 +71,21 @@ init: function(prefs, utils, consts)
     
     this.MINIMIZED_WIDTH  = this.consts.MIN_NOTE_WIDTH;
     this.MINIMIZED_HEIGHT = 2 * this.NOTE_BORDER_SIZE + this.NOTE_OUTER_SIZE;
+},
+
+waitForImageLoad: function(onLoad)
+{
+	this.noteFlipButton.addEventListener("load", onLoad, false);
+},
+
+areImagesLoaded: function()
+{
+    return this.noteFlipButton.complete;
+},
+
+addFocusListener: function(uiNote, func)
+{
+	uiNote.textArea.addEventListener("focus", func, false);
 },
 
 makeUINote: function(note)

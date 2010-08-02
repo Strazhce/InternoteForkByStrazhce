@@ -194,7 +194,7 @@ init: function()
     // See about starting stage 2 of initialisation.
     if (this.storage.areNotesDisplaying)
     {
-        if (this.areImagesLoaded())
+        if (this.noteUI.areImagesLoaded())
         {
             this.setUpInternote();
             this.isInitialized = true;
@@ -202,10 +202,7 @@ init: function()
         else
         {
             // Delay stage 2 of initialisation until the images are loaded.
-            var onLoad = this.utils.bind(this, this.imageLoadCheck);
-            this.noteUI.noteFlipButton.addEventListener("load", onLoad, false);
-            this.noteUI.noteNoteHeader.addEventListener("load", onLoad, false);
-            this.noteUI.noteTextHeader.addEventListener("load", onLoad, false);
+			this.noteUI.waitForImageLoad(this.utils.bind(this, this.imageLoadCheck));
         }
     }
     
@@ -363,18 +360,11 @@ destroy: function()
     getBrowser().removeProgressListener(this.progressListener);
 },
 
-areImagesLoaded: function()
-{
-    return this.noteUI.noteFlipButton.complete && 
-           this.noteUI.noteNoteHeader.complete &&
-           this.noteUI.noteTextHeader.complete;
-},
-
 imageLoadCheck: function()
 {
     try
     {
-        if (!this.isInitialized && this.areImagesLoaded())
+        if (!this.isInitialized && this.noteUI.areImagesLoaded())
         {
             this.setUpInternote();
             this.isInitialized = true;

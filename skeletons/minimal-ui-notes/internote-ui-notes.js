@@ -48,6 +48,20 @@ makeUINote: function(note)
     return new UINote(this.utils, note);
 },
 
+waitForImageLoad: function(onLoad)
+{
+	onLoad();
+},
+
+areImagesLoaded: function()
+{
+	return true;
+},
+
+addFocusListener: function(uiNote, func)
+{
+},
+
 destroy: function(uiNote)
 {
 },
