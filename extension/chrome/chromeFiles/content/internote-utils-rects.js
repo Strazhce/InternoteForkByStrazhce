@@ -122,6 +122,11 @@ doRectsOverlap: function(rect1, rect2)
     return (overlapRect.dims[0] > 0 && overlapRect.dims[1] > 0);    
 },
 
+isRectEmpty: function(rect)
+{
+    return rect.dims[0] == 0 || rect.dims[1] == 0;
+},
+
 makeScreenRectFromBoxObject: function(boxObject)
 {
     this.assertError(boxObject != null, "Can't create screen rect from null boxObject.");

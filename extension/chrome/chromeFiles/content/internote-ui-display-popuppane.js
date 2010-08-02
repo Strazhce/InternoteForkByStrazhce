@@ -1,5 +1,5 @@
 // Internote Extension
-// Note Display System
+// Note Display System - Single Popup Pane Implementation
 // Copyright (C) 2010 Matthew Tuck
 // 
 // This program is free software; you can redistribute it and/or
@@ -17,17 +17,10 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // This is the Display UI, responsible for displaying the notes within the browser.
 
-// Currently it creates a transparent anchored panel-popup over the whole viewport, within
-// which the notes are displayed.  Special handling needs to be performed to ensure the
-// popup does not go off-screen, which causes (at times strange) repositioning back on-screen.
-
-// Previously Internote2 created absolutely-positioned chrome over the viewport,
-// however this no longer works in Firefox3.
-
 var internoteDisplayUIPopupPane = {
 
 popupPanel:     null,
-outerContainer: null,
+//outerContainer: null,
 innerContainer: null,
 offset: [0, 0],
 autoFocusNote:  null,
@@ -45,9 +38,10 @@ init: function(prefs, utils, noteUI)
     this.lastWindowState = window.windowState;
 },
 
-setBrowser: function(browser)
+setBrowser: function(browser, viewportDims)
 {
     this.browser = browser;
+    this.viewportDims = viewportDims;
 },
 
 tearDown: function()
@@ -60,7 +54,7 @@ tearDown: function()
         this.popupPanel.parentNode.removeChild(this.popupPanel);
         
         this.popupPanel = null;
-        this.outerContainer = null;
+        //this.outerContainer = null;
         this.innerContainer = null;
     }
     
@@ -73,22 +67,11 @@ doesNoteExist: function(noteNum)
     return document.getElementById("internote-note" + noteNum) != null;
 },
 
-addNewNote: function(uiNote, viewportDims)
-{
-    //dump("internoteDisplayUI.addNote\n");
-    
-    this.utils.assertError(this.utils.isNonNegCoordPair(viewportDims), "Invalid dims.", viewportDims);
-    
-    this.createInsertionContainer(viewportDims);
-    
-    uiNote.noteElt.style.display = "none";
-    
-    this.addNote(uiNote, viewportDims);
-},
-
-addNote: function(uiNote, viewportDims)
+addNote: function(uiNote, pos, dims)
 {
     this.utils.addBoundDOMEventListener(uiNote.textArea, "focus", this, "onNoteFocused", false);
+    
+    this.createInsertionContainer();
     
     for (var i = 0; i < this.innerContainer.childNodes.length; i++)
     {
@@ -100,6 +83,8 @@ addNote: function(uiNote, viewportDims)
             return;
         }
     }
+    
+    this.adjustNote(uiNote, pos, dims);
     
     var elt = this.innerContainer.appendChild(uiNote.noteElt);
     elt.setUserData("uiNote", uiNote, null);
@@ -149,7 +134,7 @@ onNoteFocused: function()
     
     try
     {
-        this.checkInnerContainerScroll();
+        this.periodicCheck();
     }
     catch (ex)
     {
@@ -160,9 +145,9 @@ onNoteFocused: function()
 // If a note suddenly becomes focused the innerContainer can be unexpectedly scrolled,
 // resulting in incorrect coordinates.  This happens when you use the tab key between notes,
 // for example. We need to adjust the underlying document's scrollbars in this case.
-checkInnerContainerScroll: function()
+periodicCheck: function()
 {
-    //dump("internoteDisplayUI.checkInnerContainerScroll\n");
+    //dump("internoteDisplayUI.periodicCheck\n");
     
     if (this.innerContainer != null)
     {
@@ -183,7 +168,6 @@ checkInnerContainerScroll: function()
             // Move the underlying scroll window to try to get this note on.  It should trigger a
             // reposition of all notes, just in case.
             contentWin.scrollBy(xMovement, yMovement);
-            
         }
     }
 },
@@ -205,16 +189,17 @@ popupPanelShown: function()
     this.utils.removeBoundDOMEventListener(this.popupPanel, "popupshown", this, "popupPanelShown", false);    
 },
 
-createInsertionContainer: function(viewportDims)
+createInsertionContainer: function()
 {
     //dump("internoteDisplayUI.getInsertionContainer\n");
     
-    this.utils.assertError(this.utils.isNonNegCoordPair(viewportDims), "Invalid dims in createInsertionContainer", viewportDims);
+    this.utils.assertError(this.utils.isNonNegCoordPair(this.viewportDims), "Invalid dims in createInsertionContainer", this.viewportDims);
     
     if (this.innerContainer == null)
     {
         //dump("  Creating new popup & container.\n");
         
+        /*
         this.popupPanel = document.createElement("panel");
         this.popupPanel.setAttribute("id", "internote-displaypopup");
         // -moz-appearance seems to be necessary on Linux but not Windows.
@@ -228,6 +213,7 @@ createInsertionContainer: function(viewportDims)
         this.outerContainer.style.overflow = "hidden";
         this.outerContainer.style.backgroundColor = "transparent";
         //this.outerContainer.style.backgroundColor = "rgba(255, 0, 0, 0.1)"
+        */
         
         this.innerContainer = document.createElement("stack");
         this.innerContainer.id = "internote-displayinnercontainer";
@@ -235,18 +221,23 @@ createInsertionContainer: function(viewportDims)
         this.innerContainer.style.backgroundColor = "transparent";
         //this.innerContainer.style.backgroundColor = "rgba(255, 0, 0, 0.1)"
         
+        /*
         var myBody = document.getElementById("main-window");
         myBody.appendChild(this.popupPanel);
         this.popupPanel.appendChild(this.outerContainer);
         this.outerContainer.appendChild(this.innerContainer);
+        */
+        
+        this.popupPanel = this.utils.createShiftingPanel("pane", this.innerContainer);
+        //this.outerContainer = this.popupPanel.firstChild;
         
         this.isPanelCreated = true;
-        this.positionPane(viewportDims);
+        this.positionPane();
         
         this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown", this, "popupPanelShown", false);
     }
     
-    this.utils.assertError(document.getElementById("internote-displaypopup") != null, "Can't find display popup.");
+    this.utils.assertError(document.getElementById("internote-popuppane") != null, "Can't find display popup.");
 },
 
 // For debugging only.  Ctrl-G to activate ... see the main overlay.
@@ -256,57 +247,8 @@ showPopupPane: function()
     
     this.innerContainer.style.backgroundColor =
         (this.innerContainer.style.backgroundColor == "transparent") ? "rgba(255, 0, 0, 0.1)" : "transparent";
-    this.outerContainer.style.backgroundColor =
-        (this.outerContainer.style.backgroundColor == "transparent") ? "rgba(255, 0, 0, 0.1)" : "transparent";
-},
-
-getScreenRect: function()
-{
-    const WINDOW_MAXIMIZED = 1;
-    
-    var screenWidth  = window.screen.availWidth;
-    var screenHeight = window.screen.availHeight;
-    
-    if (this.utils.getPlatform() == "win")
-    {
-        // Some quirky aspects of (at least) Windows mess up moving the window close to but not going
-        // off-screen to the right, top half of it, or the bottom.  These are worked around by subtracting
-        // 4 pixels below, which would seem to be the size of Windows's resize border.
-        var shouldUseWorkaround = false;
-        
-        if (window.windowState != WINDOW_MAXIMIZED)
-        {
-            shouldUseWorkaround = true;
-        }
-        else
-        {
-            // A full-sized popup seems to work when maximized, as long as the popup extends
-            // below 110 pixels above the bottom of the screen, which would normally be the case but
-            // we just check just in case there's overlaid chrome there raising the viewport bottom.
-            var boxBottom = this.browser.boxObject.screenY + this.outerContainer.boxObject.height - 1;
-            shouldUseWorkaround = (boxBottom <= (screenHeight - 110));
-        }
-        
-        if (shouldUseWorkaround)
-        {
-            //dump("  Activated screen size workaround.\n");
-            
-            var WINDOW_BORDER_SIZE = 4;
-            screenWidth -= WINDOW_BORDER_SIZE;
-            screenHeight -= WINDOW_BORDER_SIZE;
-        }
-        else
-        {
-            // This seems necessary too but probably shouldn't matter in practice, due to the status
-            // bar ... I only saw it due to other bugs.
-            screenHeight -= 3;
-        }
-    }
-    
-    // Don't assume we're on the main monitor!
-    var screenTopLeft = [window.screen.availLeft, window.screen.availTop];
-    
-    return this.utils.makeRectFromDims(screenTopLeft, [screenWidth, screenHeight]);
+    //this.outerContainer.style.backgroundColor =
+    //    (this.outerContainer.style.backgroundColor == "transparent") ? "rgba(255, 0, 0, 0.1)" : "transparent";
 },
 
 // We need to change the pane dimensions if the viewport dimensions change.  Also
@@ -315,11 +257,11 @@ getScreenRect: function()
 // Also on Windows at least, popups on windows that get minimized and then restored,
 // get set to state "closed" once the window is restored, but still appear unanchored
 // at the wrong position and unmodifiable.  So we hide and open the popup as minimized.
-positionPane: function(viewportDims)
+positionPane: function()
 {
     //dump("internoteDisplayUI.positionPane\n");
     
-    this.utils.assertError(this.utils.isNonNegCoordPair(viewportDims), "Invalid dims in positionPane", viewportDims);
+    this.utils.assertError(this.utils.isNonNegCoordPair(this.viewportDims), "Invalid dims in positionPane", this.viewportDims);
     
     var isMinimized = this.utils.isMinimized();
     
@@ -332,9 +274,12 @@ positionPane: function(viewportDims)
         else
         {
             var viewportPos  = this.utils.getScreenPos(this.browser.boxObject);
-            var viewportRect = this.utils.makeRectFromDims(viewportPos, viewportDims);
-            var screenRect = this.getScreenRect();
-            var overlapRect = this.utils.getRectIntersection(screenRect, viewportRect);
+            var viewportRect = this.utils.makeRectFromDims(viewportPos, this.viewportDims);
+            
+            //var screenRect = this.utils.getPopupScreenRect(this.browser);
+            //var overlapRect = this.utils.getRectIntersection(screenRect, viewportRect);
+            
+            var overlapRect = this.utils.restrictRectToScreen(this.browser, viewportRect);
             var newOffset = this.utils.coordPairSubtract(overlapRect.topLeft, viewportRect.topLeft);
             
             //dump("  viewportPos  = " + this.utils.compactDumpString(viewportPos) + "\n");
@@ -345,7 +290,7 @@ positionPane: function(viewportDims)
             
             // The inner container can be to the top or left of the outer container, and so is smaller,
             // if we need to cut off the left or top of the popup panel.
-            this.utils.fixDOMEltDims(this.outerContainer, overlapRect .dims);
+            this.utils.fixDOMEltDims(this.innerContainer.parentNode, overlapRect.dims);
             this.utils.fixDOMEltDims(this.innerContainer, viewportRect.dims);
             
             if (isMinimized || this.popupPanel.state == "closed")
@@ -366,16 +311,38 @@ positionPane: function(viewportDims)
     }
 },
 
-viewportMovedOrResized: function(viewportDims)
+handleChangedAspects: function(allUINotes, viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
-    //dump("internoteDisplayUI.viewportMovedOrResized " + this.utils.compactDumpString(viewportDims) + "\n");
+    //dump("internoteDisplayUI.handleChangedAspects\n");
     
-    if (this.popupPanel != null)
+    if (viewportResized)
+    {
+        this.viewportDims = viewportDims;
+    }
+    
+    if ((viewportResized || viewportMoved) && this.popupPanel != null)
     {
         this.positionPane(viewportDims);
     }
+    
+    if (scrolled || viewportResized || pageResized)
+    {
+        this.adjustAllNotes(allUINotes, posFunc);
+    }
 },
 
+adjustAllNotes: function(allUINotes, getUpdatedPosFunc)
+{
+    for (var i = 0; i < allUINotes.length; i++)
+    {
+        var uiNote = allUINotes[i];
+        var updatedPos = (getUpdatedPosFunc == null) ? null : getUpdatedPosFunc(uiNote);
+        
+        this.adjustNote(uiNote, updatedPos, null);
+    }
+},
+
+/*
 readyToShowNote: function(uiNote, posOnViewport, dims)
 {
     //dump("internoteDisplayUI.readyToShowNote\n");
@@ -388,25 +355,33 @@ readyToShowNote: function(uiNote, posOnViewport, dims)
     
     uiNote.noteElt.style.display = "";
 },
+*/
 
 getScreenPosition: function(uiNote)
 {
     return this.utils.getPos(uiNote.noteElt);
 },
 
-// Gives the note new viewport coordinates
-moveNote: function(uiNote, newPosOnViewport)
+flipStart: function(uiNote)
 {
-    this.utils.assertError(this.utils.isPair(newPosOnViewport), "Invalid pos (1).", newPosOnViewport);
-    this.utils.assertError(this.utils.isOptionalFiniteNumber(newPosOnViewport[0]), "Invalid pos (2).", newPosOnViewport[0]);
-    this.utils.assertError(this.utils.isOptionalFiniteNumber(newPosOnViewport[1]), "Invalid pos (3).", newPosOnViewport[1]);
-
-    this.utils.setPos(uiNote.noteElt, newPosOnViewport);
+    this.flipStartPos = this.getScreenPosition(uiNote);
 },
 
-resizeNote: function(uiNote, newDims)
+flipStep: function(uiNote, offsetX)
 {
-    // No need to do anything for this implementation.
+    this.adjustNote(uiNote, [this.flipStartPos[0] + offsetX, this.flipStartPos[1]], null);
+},
+
+adjustNote: function(uiNote, newPosOnViewport, newDims)
+{
+    if (newPosOnViewport != null)
+    {
+        this.utils.assertError(this.utils.isPair(newPosOnViewport), "Invalid pos (1).", newPosOnViewport);
+        this.utils.assertError(this.utils.isOptionalFiniteNumber(newPosOnViewport[0]), "Invalid pos (2).", newPosOnViewport[0]);
+        this.utils.assertError(this.utils.isOptionalFiniteNumber(newPosOnViewport[1]), "Invalid pos (3).", newPosOnViewport[1]);
+
+        this.utils.setPos(uiNote.noteElt, newPosOnViewport);
+    }
 },
 
 };

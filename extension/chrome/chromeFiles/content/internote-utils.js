@@ -137,6 +137,24 @@ supportsTranslucentPopups: function()
     }
 },
 
+supportsTransparentClickThru: function()
+{
+    var platform = this.getPlatform();
+    if (platform == "win" || platform == "unix")
+    {
+        return true;
+    }
+    else if (platform == "mac")
+    {
+        return false;
+    }
+    else
+    {
+        this.assertWarnNotHere("Unknown platform when testing transparent clickthru.", platform);
+        return false;
+    }
+},
+
 saveStringToFilename : function(writeString, path)
 {
     var stream     = this.getCCInstance("@mozilla.org/network/file-output-stream;1",   "nsIFileOutputStream");
@@ -862,6 +880,27 @@ isArray: function(arr)
 callSuperconstructor: function(myThis, mySuperclass, argArray)
 {
     mySuperclass.apply(myThis, argArray);
+},
+
+arrayToString: function(arr, fn)
+{
+    var str = "[";
+    
+    if (arr.length > 0)
+    {
+        if (fn == null) fn = function(a) { return a.toString(); }
+        
+        str += fn(arr[0]);
+        
+        for (var i = 1; i < arr.length; i++)
+        {
+            str += ", " + fn(arr[i]);
+        }
+    }
+    
+    str += "]";
+    
+    return str;
 },
 
 areArraysEqual: function(arr1, arr2)

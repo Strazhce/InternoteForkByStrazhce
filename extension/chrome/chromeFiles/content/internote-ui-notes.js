@@ -110,7 +110,7 @@ destroy: function(uiNote)
 
 // createXULElement is used here rather than createElement so that we can create the element
 // inside the about:blank HTML doc in the scratch IFrame used for static images.
-createNewNote: function(note, callbacks, doc)
+createNewNote: function(note, callbacks, doc, initialOpacity)
 {
     this.utils.assertClassError(note, "InternoteNote", "Note is not correct class when creating new note.")
     
@@ -161,6 +161,7 @@ createNewNote: function(note, callbacks, doc)
     noteElt.appendChild(background);
     noteElt.appendChild(foreground);
     noteElt.style.overflow = "hidden";
+    noteElt.style.opacity  = initialOpacity;
     noteElt.setAttribute("context", "internote-note-menu");
     
     foreground.appendChild(topBox);
@@ -231,6 +232,11 @@ createNewNote: function(note, callbacks, doc)
     this.setIsEnabled(uiNote, true);
     
     return uiNote;
+},
+
+isFocused: function(uiNote)
+{
+    return document.activeElement == uiNote.textArea;
 },
 
 cloneUINote: function(uiNote, doc)
@@ -428,8 +434,8 @@ setShadingVisibility: function(uiNote)
 
 getDims: function(uiNote)
 {
-    return [uiNote.noteElt.boxObject.width, uiNote.noteElt.boxObject.height];
-    //return [uiNote.background.width, uiNote.background.height];
+    //return [uiNote.noteElt.boxObject.width, uiNote.noteElt.boxObject.height]; // XXX Seems to be a bit buggy and transitional.
+    return [uiNote.background.width, uiNote.background.height];
 },
 
 flipNote: function(uiNote, newIsFlipped)

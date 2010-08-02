@@ -401,6 +401,7 @@ internoteAnimation.getFlipAnimation = function(utils, noteUI, displayUI, uiNote)
     phase1.onStart = phase2.onStart = function()
     {
         noteUI.makeStaticImage(uiNote, startDims);
+        displayUI.flipStart(uiNote);
     };
     
     phase2.onStart = function()
@@ -452,7 +453,8 @@ internoteAnimation.getFlipAnimation = function(utils, noteUI, displayUI, uiNote)
         
         if (width != noteElt.style.width || left != noteElt.left)
         {
-            displayUI.moveNote  (uiNote, [left,  null]);
+            displayUI.flipStep(uiNote, widthLost/2);
+            //displayUI.moveNote  (uiNote, [left,  null]);
             noteUI.   adjustDims(uiNote, [width, null]);
         }
     };
@@ -488,17 +490,19 @@ internoteAnimation.getMoveOrResizeAnimation = function(utils, noteUI, displayUI,
     animation.doStep = function(timeRatioDone)
     {
         var distanceDone = shouldForceLinear ? timeRatioDone : internoteAnimation.translateMovement(timeRatioDone);
-        var interpolatedPos = utils.interpolateCoordPair(distanceDone, startPair, endPair);
+        var interpolatedValue = utils.interpolateCoordPair(distanceDone, startPair, endPair);
         
         //dump("  MoveResize RatioDone = " + timeRatioDone + " " + distanceDone + "\n");
         
         if (isResize)
         {
-            noteUI.adjustDims(uiNote, interpolatedPos);
+            // Deal with noteUI before displayUI because the display UI might care.
+            noteUI.adjustDims(uiNote, interpolatedValue);
+            displayUI.adjustNote(uiNote, null, interpolatedValue);
         }
         else
         {
-            displayUI.moveNote(uiNote, interpolatedPos);
+            displayUI.adjustNote(uiNote, interpolatedValue, null);
         }
     };
     
@@ -537,8 +541,9 @@ internoteAnimation.getMoveAndResizeAnimation = function(utils, noteUI, displayUI
         
         if (!utils.areArraysEqual(oldNWPos, roundedRect.topLeft) || !utils.areArraysEqual(oldDims, roundedRect.dims) )
         {
-            displayUI.moveNote  (uiNote, roundedRect.topLeft);
+            // Deal with noteUI before displayUI because the display UI might care.
             noteUI.   adjustDims(uiNote, roundedRect.dims);
+            displayUI.adjustNote(uiNote, roundedRect.topLeft, roundedRect.dims);
         }
     };
     

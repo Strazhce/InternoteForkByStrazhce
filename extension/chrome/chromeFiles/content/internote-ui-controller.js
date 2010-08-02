@@ -118,7 +118,7 @@ init: function()
     this.prefs.init(this.utils);
     
     this.displayUI = this.chooseDisplayUI();
-
+    
     InternoteEventDispatcher.prototype.incorporateED(InternoteStorage.prototype);
     InternoteEventDispatcher.prototype.incorporateED(InternoteStorageWatcher.prototype);
     
@@ -230,7 +230,14 @@ init: function()
 
 chooseDisplayUI: function()
 {
-    return internoteDisplayUIPopupPane;
+    if (this.utils.supportsTransparentClickThru())
+    {
+        return internoteDisplayUIPopupPane;
+    }
+    else
+    {
+        return internoteDisplayUISeparatePopups;
+    }
 },
 
 setUpInternote: function()
@@ -422,7 +429,7 @@ getPageFilter: function(filterURL)
 tearDownOldPage: function()
 {
     //dump("tearDownOldPage\n");
-
+    
     this.balloonUI.abandonAnimation();
     this.abandonAllNoteAnimations();
     this.displayUI.tearDown();
@@ -453,7 +460,7 @@ changePage: function(newURL, isNewPageLoading)
 {
     // We might tab change to the same page, so we still need this ...
     this.currentBrowser = this.utils.getCurrentBrowser();
-    this.displayUI.setBrowser(this.currentBrowser);
+    this.displayUI.setBrowser(this.currentBrowser, this.screenGetViewportDims());
     
     if (newURL == null)
     {
@@ -466,7 +473,7 @@ changePage: function(newURL, isNewPageLoading)
         // If we've changed to the same URL on another tab, we should check for scrolling ...
         if (this.allowNotesOnThisPage(newURL))
         {
-            this.screenCheckViewport();
+            this.screenCheckAspects();
         }
     }
     else
@@ -475,6 +482,11 @@ changePage: function(newURL, isNewPageLoading)
         
         this.currentURL = newURL;
         
+        this.uiNoteLookup   = [];
+        this.allUINotes     = [];
+        this.minimizedNotes = [];
+        this.arePageListeners = false;
+        
         if (this.allowNotesOnThisPage(newURL))
         {
             // XXX These two should probably be distinguished.  It's possible that
@@ -482,17 +494,12 @@ changePage: function(newURL, isNewPageLoading)
             // XXX the user changed tabs.
             this.isPageLoaded    = isNewPageLoading;
             this.hasMsgBeenShown = isNewPageLoading;
-
-            this.configureStorageWatcher(this.currentURL);
             
-            this.uiNoteLookup   = [];
-            this.allUINotes     = [];
-            this.minimizedNotes = [];
-            this.arePageListeners = false;
+            this.configureStorageWatcher(this.currentURL);
             
             for each (var note in this.pageWatcher.noteMap)
             {
-                var uiNote = this.noteUI.createNewNote(note, this.noteUICallbacks)
+                var uiNote = this.noteUI.createNewNote(note, this.noteUICallbacks, document, 1);
                 this.uiNoteAdd(uiNote);
                 
                 if (note.isMinimized)
@@ -507,6 +514,9 @@ changePage: function(newURL, isNewPageLoading)
             {
                 this.minimizedNotes[i].minimizePos = i;
             }
+            
+            // Sort in correct order because screenCreateNote might create notes on top.
+            this.allUINotes.sort(function(uiNote1, uiNote2) { return uiNote1.note.zIndex - uiNote2.note.zIndex; });
             
             for (var i = 0; i < this.allUINotes.length; i++)
             {
@@ -534,15 +544,15 @@ addPageListeners: function()
     {
         this.arePageListeners = true;
         
-        this.utils.addBoundDOMEventListener(window,              "resize", this, "screenCheckViewport", true);
-        this.utils.addBoundDOMEventListener(this.currentBrowser, "resize", this, "screenCheckViewport", true);
-        this.utils.addBoundDOMEventListener(this.currentBrowser, "scroll", this, "screenCheckViewport", true);
+        this.utils.addBoundDOMEventListener(window,              "resize", this, "screenCheckAspects", true);
+        this.utils.addBoundDOMEventListener(this.currentBrowser, "resize", this, "screenCheckAspects", true);
+        this.utils.addBoundDOMEventListener(this.currentBrowser, "scroll", this, "screenCheckAspects", true);
         
         // This interval check is undesirable but necessary for the following reasons:
         // (a) resize and scroll events don't seem responsive enough by themselves
         // (b) there is no event set on page dims change or window move (as yet)
         // (c) it also checks the innerContainerScroll
-        this.checkViewportEvent = setInterval(this.utils.bind(this, this.screenCheckViewport),
+        this.checkViewportEvent = setInterval(this.utils.bind(this, this.screenCheckAspects),
                                               this.CHECK_VIEWPORT_INTERVAL);
     }
     else
@@ -559,9 +569,9 @@ removePageListeners: function()
     {
         this.arePageListeners = false;
         
-        this.utils.removeBoundDOMEventListener(window,              "resize", this, "screenCheckViewport", true);
-        this.utils.removeBoundDOMEventListener(this.currentBrowser, "resize", this, "screenCheckViewport", true);
-        this.utils.removeBoundDOMEventListener(this.currentBrowser, "scroll", this, "screenCheckViewport", true);
+        this.utils.removeBoundDOMEventListener(window,              "resize", this, "screenCheckAspects", true);
+        this.utils.removeBoundDOMEventListener(this.currentBrowser, "resize", this, "screenCheckAspects", true);
+        this.utils.removeBoundDOMEventListener(this.currentBrowser, "scroll", this, "screenCheckAspects", true);
         
         clearInterval(this.checkViewportEvent);
         this.checkViewportEvent = null;
@@ -771,7 +781,7 @@ userMovesNote: function(event)
         var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
             this.utils.assertError(this.utils.isCoordPair(offset), "Invalid offset.");
             var newPosOnViewport = this.screenCalcDraggedPos(uiNote, offset);
-            this.displayUI.moveNote(uiNote, newPosOnViewport);
+            this.displayUI.adjustNote(uiNote, newPosOnViewport, null);
         });
         
         var onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote) {
@@ -786,7 +796,7 @@ userMovesNote: function(event)
                 // Importantly we move to the position that should be correct now, not the original position,
                 // because that might have changed (due to force-on-page) if the page was loading during drag.
                 // Note that the drag has completed by this time so we can reposition the note now.
-                this.screenRepositionNote(uiNote);
+                this.screenAdjustTopNote(uiNote);
             }
         });
         
@@ -874,7 +884,20 @@ userMinimizesNote: function(elementOrEvent)
     {
         var noteNum = this.screenGetNoteNum(elementOrEvent);
         var note = this.storage.allNotes[noteNum];
+        
+        if (note.isMinimized)
+        {
+            // This would normally happen in userPressesNote, but not for minimized notes.
+            this.storage.raiseNote(note);
+        }
+        
         this.storage.setIsMinimizedMulti([note], !note.isMinimized);
+        
+        if (!note.isMinimized)
+        {
+            var uiNote = this.uiNoteLookup[noteNum];
+            this.displayUI.focusNote(uiNote);
+        }
     }
     catch (ex)
     {
@@ -1480,17 +1503,16 @@ screenCreateNote: function(uiNote, shouldAnimate)
     //dump("screenCreateNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
     
     this.utils.assertClassError(uiNote, "UINote", "Not a UINote when calling screenCreateNote.");
-    
     this.utils.assertError(!this.displayUI.doesNoteExist(uiNote.num), "Note is already on-screen.");
-
+    
     if (this.allUINotes.length > 0 && !this.arePageListeners)
     {
         this.addPageListeners();
     }
     
-    this.displayUI.addNewNote(uiNote, this.screenGetViewportDims());
+    var posOnViewport  = this.screenCalcNotePosOnViewport(uiNote);
     
-    var posOnViewport = this.screenCalcNotePosOnViewport(uiNote);
+    this.displayUI.addNote(uiNote, posOnViewport);
     
     // Animation should be the very last thing so it doesn't get interrupted by other CPU tasks.
     if (shouldAnimate && this.utils.supportsTranslucentPopups())
@@ -1499,12 +1521,12 @@ screenCreateNote: function(uiNote, shouldAnimate)
         this.startNoteAnimation(uiNote, animation, this.CREATE_ANIMATION_TIME);
     }
     
-    this.displayUI.readyToShowNote(uiNote, posOnViewport, this.storage.getDims(uiNote.note));
+    //this.displayUI.readyToShowNote(uiNote, posOnViewport, this.storage.getDims(uiNote.note));
 },
 
 screenRemoveNote: function(uiNote)
 {
-    //dump("screenRemoveNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
+    dump("screenRemoveNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
     
     this.utils.assertError(uiNote != null, "Note is not on-screen when attempting to remove animatedly.");
     this.utils.assertError(this.utils.isSpecificJSClass(uiNote, "UINote"), "Not a UINote when calling screenRemoveNote.");
@@ -1522,6 +1544,8 @@ screenRemoveNote: function(uiNote)
 
 screenRemoveNoteNow: function(uiNote)
 {
+    //dump("screenRemoveNoteNow " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
+    
     this.utils.assertClassError(uiNote, "UINote", "Not a UINote when calling screenRemoveNoteNow.");
     
     this.displayUI.removeNote(uiNote);
@@ -1990,46 +2014,49 @@ screenDoOverlappingNotesExist: function(newNoteRect)
     return false;
 },
 
-screenRepositionAllNotes: function()
+screenGetUpdatedPosFunc: function(uiNote)
 {
-    //dump("screenRepositionAllNotes\n");
-    
-    //this.displayUI.checkInnerContainerScroll();
-    
-    for (var i = 0; i < this.allUINotes.length; i++)
-    {
-        var uiNote = this.allUINotes[i];
-        this.screenRepositionNote(uiNote);
-    }
-},
-
-screenRepositionNote: function(uiNote)
-{
-    dump("screenRepositionNote\n");
-    
     if (uiNote == this.uiNoteBeingDragged && this.dragMode == this.DRAG_MODE_MOVE)
     {
         // We don't want to mess with the drag.  If it's committed this reposition
         // won't matter.  If cancelled later the new correct position will be taken anyway.
-        return;
+        return null;
     }
     
+    // Urgh, kludgy side effects ...
     var existingDriver = this.noteAnimations[uiNote.num];
     if (existingDriver != null)
     {
         // Delay ...
         existingDriver.addEventListener("animationCompleted", this.utils.bind(this, function()
         {
-            this.screenRepositionNote(uiNote);
+            this.screenAdjustTopNote(uiNote);
         }));
+        
+        return null;
     }
-    else
+    
+    return this.screenCalcNotePosOnViewport(uiNote);
+},
+
+// We can't simply loop over all the notes calling screenAdjustSingleNote, because some display
+// implementations (separate popups) may reopen and raise the note upon repositioning, and if notes higher
+// than repositioned notes don't get repositioned too they'll be out of Z-order.  Let displayUI handle it.
+screenAdjustAllNotes: function()
+{
+    //dump("screenAdjustAllNotes\n");
+    this.displayUI.adjustAllNotes(this.allUINotes, this.utils.bind(this, this.screenGetUpdatedPosFunc));
+},
+
+// This is just for the top note, so Z-order should not be an issue.
+screenAdjustTopNote: function(uiNote)
+{
+    //dump("screenAdjustTopNote\n");
+    
+    var updatedPos = this.screenGetUpdatedPosFunc(uiNote);
+    if (updatedPos != null)
     {
-        var newPosOnViewport = this.screenCalcNotePosOnViewport(uiNote);
-        
-        this.utils.assertError(this.utils.isCoordPair(newPosOnViewport), "Invalid Pos On Viewport Trying to Reposition Note", newPosOnViewport);
-        
-        this.displayUI.moveNote(uiNote, newPosOnViewport);
+        this.displayUI.adjustNote(uiNote, updatedPos, null);
     }
 },
 
@@ -2038,6 +2065,7 @@ screenResetNoteDims: function(uiNote)
     this.utils.assertError(!uiNote.note.isMinimized, "Can't set note dims for minimized note.");
     
     var newDims = this.storage.getDims(uiNote.note);
+    this.displayUI.adjustNote(uiNote, null, newDims);
     this.noteUI.adjustDims(uiNote, newDims);
     
     // XXX Changing dimensions might change effective note position and therefore screen position.
@@ -2049,7 +2077,12 @@ screenSetModifiedNoteDims: function(uiNote, offset)
     this.utils.assertError(this.utils.isCoordPair(offset), "Invalid offset.");
     
     var newDims = this.screenCalcModifiedNoteDims(uiNote, offset);
+    
+    //dump("DEF " + this.utils.compactDumpString(newDims, 110, 1) + "\n");
+    
+    // Deal with noteUI before displayUI because the display UI might care.
     this.noteUI.adjustDims(uiNote, newDims);
+    this.displayUI.adjustNote(uiNote, null, newDims);
     
     // XXX Changing dimensions might change effective note position and therefore screen position.
 },
@@ -2060,16 +2093,8 @@ screenSetModifiedNoteDims: function(uiNote, offset)
 // the panel popup needs to get cut off).
 // If the page size has changed, we may need to change how notes are forced on-page.
 // In any case, we need to redraw any translucency.
-screenCheckViewport: function(ev)
+screenCheckAspects: function(ev)
 {
-    // This _should_ be done elsewhere, but ...
-    // XXX Remove this
-    if (this.arePageListeners && this.allUINotes.length == 0)
-    {
-        this.utils.assertWarnNotHere("Page listeners not removed at correct time.");
-        this.removePageListeners();
-    }
-    
     if (this.utils.isMinimized())
     {
         return;
@@ -2077,16 +2102,15 @@ screenCheckViewport: function(ev)
     
     try
     {
-        /*
         if (ev != null && ev.type != null)
         {
-            //dump("screenCheckViewport " + this.utils.compactDumpString(ev.type) + "\n");
+            //dump("screenCheckAspects " + this.utils.arrayToString(this.allUINotes.map(function(a) { return a.num; })) + "\n");
+            //dump("screenCheckAspects " + this.utils.compactDumpString(ev.type) + "\n");
         }
         else
         {
-            //dump("screenCheckViewport periodic\n");
+            //dump("screenCheckAspects periodic\n");
         }
-        */
         
         var content = this.currentBrowser.contentWindow;
         
@@ -2099,7 +2123,12 @@ screenCheckViewport: function(ev)
         var [newWidth,     newHeight]      = this.screenGetViewportDims();
         var [newPageWidth, newPageHeight]  = this.screenGetPageDims();
         
-        function updateViewportCharacteristics()
+        var viewportMoved   = (this.currentLeft      != newLeft      || this.currentTop        != newTop       );
+        var viewportResized = (this.currentWidth     != newWidth     || this.currentHeight     != newHeight    );
+        var scrolled        = (this.currentScrollX   != newScrollX   || this.currentScrollY    != newScrollY   );
+        var pageResized     = (this.currentPageWidth != newPageWidth || this.currentPageHeight != newPageHeight);
+        
+        if (viewportMoved || viewportResized || scrolled || pageResized)
         {
             this.currentScrollX    = newScrollX;
             this.currentScrollY    = newScrollY;
@@ -2109,42 +2138,14 @@ screenCheckViewport: function(ev)
             this.currentTop        = newTop;
             this.currentPageWidth  = newPageWidth;
             this.currentPageHeight = newPageHeight;
-        }
-        
-        var changed = false;
-        
-        if (this.currentWidth   != newWidth   || this.currentHeight  != newHeight ||
-            this.currentLeft    != newLeft    || this.currentTop     != newTop)
-        {
-            //dump("  Viewport characteristics changed.\n");
-            //dump("  " + this.utils.compactDumpString([newWidth, newHeight]) + " " +
-            //     this.utils.compactDumpString(this.screenGetViewportDims()) + "\n");
             
-            this.displayUI.viewportMovedOrResized(this.screenGetViewportDims());
-            changed = true;
-        }
-        
-        if (this.currentScrollX != newScrollX || this.currentScrollY != newScrollY)
-        {
-            //dump("  Scrolled.\n");
+            var viewportDims = viewportResized ? this.screenGetViewportDims() : null;
+            var posFunc = this.utils.bind(this, this.screenGetUpdatedPosFunc);
             
-            changed = true;
+            this.displayUI.handleChangedAspects(this.allUINotes, viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized);
         }
         
-        if (this.currentPageWidth != newPageWidth || this.currentPageHeight != newPageHeight)
-        {
-            //dump("  Page changed.\n");
-            
-            changed = true;
-        }
-        
-        if (changed)
-        {
-            updateViewportCharacteristics.apply(this);
-            this.screenRepositionAllNotes();
-        }
-        
-        this.displayUI.checkInnerContainerScroll();
+        this.displayUI.periodicCheck();
     }
     catch (ex)
     {
@@ -2570,8 +2571,8 @@ onNoteAdded: function(event)
             
             this.noteAnimations[note.num].hurry();
         }
-    
-        var uiNote = this.noteUI.createNewNote(note, this.noteUICallbacks);
+        
+        var uiNote = this.noteUI.createNewNote(note, this.noteUICallbacks, document, 0);
         this.uiNoteAdd(uiNote);
         
         if (note.isMinimized)
@@ -2767,7 +2768,7 @@ onNoteRaised: function(event)
         var uiNote = this.uiNoteLookup[note.num];
         this.utils.assertError(uiNote != null, "UINote is null trying to raise note.");
         
-        var isFocused = (document.activeElement == uiNote.textArea);
+        var isFocused = this.noteUI.isFocused(uiNote);
         
         this.displayUI.raiseNote(uiNote);
         
@@ -2932,7 +2933,7 @@ onPageLoadEnd: function()
     {
         // Changing the page to loaded should trigger forcing
         // off-page notes back onto the page, so reposition them.
-        this.screenRepositionAllNotes();
+        this.screenAdjustAllNotes();
         
         this.maybeShowHTMLMessage();
         this.maybeShowOffscreenMessage();
@@ -2944,8 +2945,9 @@ onPageContentArrived: function()
     if (this.allowNotesOnThisPage(this.currentURL))
     {
         // Update notes as content comes in ...
-        this.screenRepositionAllNotes();
-        this.displayUI.viewportMovedOrResized(this.screenGetViewportDims());
+        this.screenCheckAspects();
+        //this.screenAdjustAllNotes();
+        //this.displayUI.viewportMovedOrResized(this.screenGetViewportDims(), this.uiNoteLookup);
     }
 },
 

@@ -35,6 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-utils-coords.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-utils-rects.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-utils-popups.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-dispatcher.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-storage.js"/>
@@ -44,6 +45,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-drag.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-notes.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-display-popuppane.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-display-separatepopups.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-controller.js"/>
 
 <commandset id="mainCommandSet">
