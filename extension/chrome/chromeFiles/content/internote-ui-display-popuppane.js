@@ -20,7 +20,6 @@
 var internoteDisplayUIPopupPane = {
 
 popupPanel:     null,
-//outerContainer: null,
 innerContainer: null,
 offset: [0, 0],
 autoFocusNote:  null,
@@ -35,7 +34,6 @@ init: function(prefs, utils, noteUI)
     
     this.isPanelShown   = false;
     this.isPanelCreated = false;
-    this.lastWindowState = window.windowState;
 },
 
 setBrowser: function(browser, viewportDims)
@@ -60,7 +58,6 @@ tearDown: function()
         this.popupPanel.parentNode.removeChild(this.popupPanel);
         
         this.popupPanel = null;
-        //this.outerContainer = null;
         this.innerContainer = null;
     }
     
@@ -204,37 +201,13 @@ createInsertionContainer: function()
     {
         //dump("  Creating new popup & container.\n");
         
-        /*
-        this.popupPanel = document.createElement("panel");
-        this.popupPanel.setAttribute("id", "internote-displaypopup");
-        // -moz-appearance seems to be necessary on Linux but not Windows.
-        this.popupPanel.setAttribute("style", "background-color: transparent; border: none; -moz-appearance: none;");
-        this.popupPanel.setAttribute("noautohide", "true");
-        
-        // We need this intermediate stack so resetPane can adjust the top-left coordinate
-        // of the inner container.
-        this.outerContainer = document.createElement("stack");
-        this.outerContainer.id = "internote-displayoutercontainer";
-        this.outerContainer.style.overflow = "hidden";
-        this.outerContainer.style.backgroundColor = "transparent";
-        //this.outerContainer.style.backgroundColor = "rgba(255, 0, 0, 0.1)"
-        */
-        
         this.innerContainer = document.createElement("stack");
         this.innerContainer.id = "internote-displayinnercontainer";
         this.innerContainer.style.overflow = "hidden";
         this.innerContainer.style.backgroundColor = "transparent";
         //this.innerContainer.style.backgroundColor = "rgba(255, 0, 0, 0.1)"
         
-        /*
-        var myBody = document.getElementById("main-window");
-        myBody.appendChild(this.popupPanel);
-        this.popupPanel.appendChild(this.outerContainer);
-        this.outerContainer.appendChild(this.innerContainer);
-        */
-        
         this.popupPanel = this.utils.createShiftingPanel("pane", this.innerContainer);
-        //this.outerContainer = this.popupPanel.firstChild;
         
         this.isPanelCreated = true;
         this.positionPane();
@@ -252,8 +225,6 @@ showPopupPane: function()
     
     this.innerContainer.style.backgroundColor =
         (this.innerContainer.style.backgroundColor == "transparent") ? "rgba(255, 0, 0, 0.1)" : "transparent";
-    //this.outerContainer.style.backgroundColor =
-    //    (this.outerContainer.style.backgroundColor == "transparent") ? "rgba(255, 0, 0, 0.1)" : "transparent";
 },
 
 // We need to change the pane dimensions if the viewport dimensions change.  Also
@@ -311,8 +282,6 @@ positionPane: function()
                 this.popupPanel.openPopup(this.browser, "overlap", newOffset[0], newOffset[1], false, false);
             }
         }
-        
-        this.lastWindowState = windowState;
     }
 },
 
