@@ -216,8 +216,8 @@ init: function()
         var key    = document.createElement("key");
         key.setAttribute("key",       "g");
         key.setAttribute("modifiers", "alt");
-        key.setAttribute("command",   "cmd_debugIN");
-        
+        key.setAttribute("oncommand", "internoteUIController.activateDebugFunction()");
+
         var keySet = document.getElementById("mainKeyset");
         keySet.appendChild(key);
     }

@@ -52,7 +52,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <command id="cmd_newNote"             oncommand="internoteUIController.userCreatesNote();" />
     <command id="cmd_minimizeAll"         oncommand="internoteUIController.userMinimizesAll();" />
     <command id="cmd_showInternoteManger" oncommand="internoteUIController.userOpensManager();" />
-    <command id="cmd_debugIN"             oncommand="internoteUIController.activateDebugFunction()" />
 </commandset>
 
 <keyset id="mainKeyset">
