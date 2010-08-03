@@ -91,8 +91,6 @@ addFocusListener: function(uiNote, func)
 makeUINote: function(note)
 {
     // We use this inner function so UINote is not global yet it isn't anonymous for debugging.
-    var utils = this.utils;
-    
     function UINote(utils, note)
     {
         this.note           = note;
