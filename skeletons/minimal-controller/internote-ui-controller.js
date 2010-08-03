@@ -25,8 +25,6 @@
 //    Dialogs, Scope Setting, Balloons, Proper Viewport Calculation
 //    Raising, AutoFocusing, Progress Listeners
 
-Components.utils.import("resource://internotejs/internote-shared-global.jsm");
-
 var internoteUIController = {
 
 DRAG_NOTE_NONE:    0,
@@ -439,12 +437,6 @@ setBackColor: function(uiNote, backColor)
 	uiNote.note.backColor = backColor;
 	var animation = internoteAnimation.getBackRecolorAnimation(this.utils, this.noteUI, uiNote, backColor);
 	this.startNoteAnimation(uiNote, animation, this.RECOLOR_ANIMATION_TIME);
-},
-
-screenAreAllMinimized: function()
-{
-    return this.allUINotes.map(function(uiNote) { return uiNote.note.isMinimized; })
-                            .reduce(function(a, b) { return a && b; }, true);
 },
 
 screenGetNoteNum: function(elementOrEvent)
