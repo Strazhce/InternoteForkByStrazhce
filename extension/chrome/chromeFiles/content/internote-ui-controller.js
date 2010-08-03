@@ -2184,9 +2184,9 @@ screenResizeNote: function(uiNote)
     }
 },
 
-screenUpdateNotesShading: function(uiNotes)
+screenUpdateNotesMinimizing: function(uiNotes)
 {
-    //dump("screenUpdateNotesShading\n");
+    //dump("screenUpdateNotesMinimizing\n");
     
     for (var i = 0; i < uiNotes.length; i++)
     {
@@ -2717,7 +2717,7 @@ onNotesMinimized: function(event)
             this.screenRemoveMinimizedNotes(uiNotesToProcess, this.MINIMIZE_ANIMATION_TIME);
         }
         
-        this.screenUpdateNotesShading(uiNotesToProcess);
+        this.screenUpdateNotesMinimizing(uiNotesToProcess);
         
     }
     catch (ex)
@@ -2776,7 +2776,7 @@ onNoteReset: function(event)
         {
             var updateStartPos = uiNote.minimizePos;
             this.screenRemoveMinimizedNotes([uiNote], this.MINIMIZE_ANIMATION_TIME);
-            this.screenUpdateNotesShading([uiNote]);
+            this.screenUpdateNotesMinimizing([uiNote]);
         }
         else
         {
