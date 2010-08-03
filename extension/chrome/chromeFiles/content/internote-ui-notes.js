@@ -474,6 +474,12 @@ flipNote: function(uiNote, newIsFlipped)
     
     var newIndex = uiNote.isFlipped ? this.FLIPPED_PAGE : this.FRONT_PAGE;
     uiNote.innerDeck.setAttribute("selectedIndex", newIndex);
+	
+	if (uiNote.isFlipped)
+	{
+		// Prevent typing while back side up.
+		uiNote.textArea.blur();
+	}
 },
 
 focusNote: function(uiNote)
