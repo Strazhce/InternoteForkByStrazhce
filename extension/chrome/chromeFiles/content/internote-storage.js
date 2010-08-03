@@ -39,8 +39,10 @@ function InternoteStorage()
     
     this.isInitialising  = true;
     
-    this.utils = internoteUtilities;
-    this.prefs = internotePreferences;
+    this.utils      = internoteUtilities;
+    this.prefs      = internotePreferences;
+	this.serializer = XMLSerializer;
+	this.xml        = XML;
     
     // We deliberately store the same storage location for the entire session.
     // This makes handling change of location preference much easier - next run.
@@ -94,10 +96,12 @@ function InternoteStorage()
     InternoteStorage.prototype.InternoteNote.prototype.getDims = function() { return [this.width, this.height]; };
     InternoteStorage.prototype.InternoteNote.prototype.getPos  = function() { return [this.left,  this.top   ]; };
     
+	var myStorageEventClass = InternoteStorage.prototype.StorageEvent; // Avoid referring to global after init.
+	
     InternoteStorage.prototype.StorageEvent.prototype.clone = function()
     {
         // Importantly this won't clone .name which the event dispatcher adds.
-        return new InternoteStorage.prototype.StorageEvent(this.note, this.data1, this.data2);
+        return new myStorageEventClass(this.note, this.data1, this.data2);
     };
 }
 
@@ -370,9 +374,9 @@ saveXMLNow: function()
         var stream = this.utils.getCCInstance("@mozilla.org/network/file-output-stream;1", "nsIFileOutputStream");
         stream.init(storageFile, 0x02 | 0x08 | 0x20, 0664, 0);
         
-        var serializer = new XMLSerializer();
+        var serializer = new this.serializer();
         
-        var prettyString = XML(serializer.serializeToString(this.doc)).toXMLString();
+        var prettyString = this.xml(serializer.serializeToString(this.doc)).toXMLString();
         
         var converter = this.utils.getCCInstance("@mozilla.org/intl/converter-output-stream;1", "nsIConverterOutputStream");
         converter.init(stream, "UTF-8", 0, 0);  
