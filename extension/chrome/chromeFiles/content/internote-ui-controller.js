@@ -192,19 +192,16 @@ init: function()
     this.chromeUpdateDisplayCheckbox();
     
     // See about starting stage 2 of initialisation.
-    if (this.storage.areNotesDisplaying)
-    {
-        if (this.noteUI.areImagesLoaded())
-        {
-            this.setUpInternote();
-            this.isInitialized = true;
-        }
-        else
-        {
-            // Delay stage 2 of initialisation until the images are loaded.
-			this.noteUI.waitForImageLoad(this.utils.bind(this, this.imageLoadCheck));
-        }
+	if (this.noteUI.areImagesLoaded())
+	{
+        this.setUpInternote();
+        this.isInitialized = true;
     }
+	else
+	{
+		// Delay stage 2 of initialisation until the images are loaded.
+		this.noteUI.waitForImageLoad(this.utils.bind(this, this.imageLoadCheck));
+	}
     
     this.SCROLLBAR_SIZE = this.utils.calcScrollbarWidth();
     
@@ -239,7 +236,12 @@ chooseDisplayUI: function()
 
 setUpInternote: function()
 {
-    this.changePage(null, true);
+    if (!this.storage.areNotesDisplaying)
+	{
+		return;
+	}
+	
+	this.changePage(null, true);
     getBrowser().addProgressListener(this.progressListener,
                                      this.utils.getCIConstant("nsIWebProgress", "NOTIFY_STATE_DOCUMENT"));
 },
