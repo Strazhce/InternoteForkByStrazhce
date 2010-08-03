@@ -68,9 +68,8 @@
     <p>This maintains a subset of the notes in <code>InternoteStorage</code> that is automatically
        updated based on a filter.  When notes are added to or removed from storage, it determines
        whether this is relevant to the subset, and so whether to generate an add/remove event of its own.
-       When notes are modified, it determines whether this results in notes being added to or removed
-       from the subset, and so whether to generate this sort of event. It also lets certain events
-       pass for notes in its subset.
+       When notes are modified, it determines whether to pass this event through, or whether this results
+	   in notes being added to or removed from the subset, and so whether to generate this sort of event.</p>	   
     <p>It is currently used to determine the notes on a page as well as manager search results.</p>
     <h3>Code Notes</h3>
     <p>The set* methods in storage all check whether the data is actually different, and only
@@ -81,7 +80,7 @@
 
     <h2>Internote UI Controller</h2>
     <p><code>internote-ui-controller.js</code></p>
-    <p>This is the main controller for the application.  It ties together the other components,
+    <p>This is the main controller for the application - each window has one.  It ties together the other components,
        performs note animations, drags, watching storage, etc.</p>
     <p>Each note in the user interface is represented with the <code>UINote</code> class, which includes the
        back-end <code>InternoteNote</code> object, and various DOM elements that appear in the UI.</p>
@@ -97,18 +96,25 @@
        and drawing on canvases.</p>
 
     <h2>Internote Display UI</h2>
-    <p><code>internote-ui-display.js</code></p>
+    <p><code>internote-ui-display-popuppane.js, internote-ui-display-separatepopups.js</code></p>
     <p>This is responsible for displaying the notes within the browser.</p>
-
-    <p>Internote2 created absolutely-positioned chrome over the browser, however this no longer
-       works in Firefox3. This file in Internote3 creates a transparent anchored panel-popup over the viewport,
+	<p>Internote2 created absolutely-positioned chrome over the browser, however this no longer
+       works in Firefox3.  If a future version of Firefox supports chrome over the viewport again,
+	   a new implementation of this could be introduced, and chosen instead by the controller.</p>
+	   
+	<h3>Code Notes - internote-ui-display-popuppane.js</h3>
+	
+    <p>This file in Internote3 creates a transparent anchored panel-popup over the viewport,
        within which the notes are displayed.</p>
     <p>Considerable effort must be put into calculating this position and size of this popup,
        in particular if the window goes partially off-screen, as Firefox (at times randomly)
-       repositions popups in this situation.</p>
-    <p>If a future version of Firefox supports chrome over the viewport again, a second implementation
-       of this file could be introduced.</p>
-
+       repositions popups in this situation, and this must be worked around by repositioning
+	   and resizing as necessary.</p>
+	<p>The <em>outer container</em> is required because we need to use a stack to allow positioning,
+	   as you can't position within a panel.</p>
+	<p>The <em>inner container</em> is required so that we can easily scroll everything at once,
+	   by moving the inner container around in the outer container.</p>
+	
     <h2>Internote Balloon UI</h2>
     <p><code>internote-ui-balloon.js</code></p>
     <p>This displays a "balloon" message in the browser to give feedback to the user.</p>
