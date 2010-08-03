@@ -366,12 +366,12 @@ setIsEnabled: function(uiNote, newIsEnabled)
     }
 },
 
-// See firefox bug #542394.
 fixTextArea: function(uiNote, dims)
 {
-    //var dims = this.getDims(uiNote);
     var BORDER_AREA = 2 * (this.NOTE_OUTER_SIZE + this.NOTE_BORDER_SIZE);
-    var textDims = this.utils.coordPairSubtract(dims, [BORDER_AREA, BORDER_AREA]);
+    
+	// See firefox bug #542394.
+	var textDims = this.utils.coordPairSubtract(dims, [BORDER_AREA, BORDER_AREA]);
     textDims = this.utils.coordPairMax(textDims, [0, 0]);
     this.utils.fixDOMEltDims(uiNote.textArea, textDims);
 },
@@ -427,6 +427,9 @@ forceMinimizedDims: function(uiNote)
     var dims = [this.MINIMIZED_WIDTH, this.MINIMIZED_HEIGHT];
     this.utils.setDims      (uiNote.background, dims);
     this.utils.fixDOMEltDims(uiNote.noteElt,    dims);
+	
+	var littleSize = dims[0] - 2 * this.NOTE_BORDER_SIZE - 2 * this.NOTE_OUTER_SIZE - 2 * this.NOTE_SPACING - this.NOTE_SPACING_LITTLE;
+    this.utils.fixDOMEltWidth(uiNote.littleText, littleSize);
 },
 
 adjustMinimizing: function(uiNote)
@@ -697,15 +700,11 @@ createLittleText: function(doc, uiNote)
     littleText.style.lineHeight      = "1em";
     littleText.style.cursor          = "default";
     littleText.style.color           = uiNote.note.foreColor;
-    
-    littleText.style.flex  = 1;
-    littleText.style.width = "0px";
-    
-    littleText.setAttribute("readonly", "yes"); 
+	littleText.style.resize          = "none";
+	
+    littleText.setAttribute("readonly", "yes");
     littleText.setAttribute("wrap",     "off");
     littleText.setAttribute("tabindex", "-1"); // Prevent focus with TAB key.
-    
-    //littleText.setAttribute("newLines", "stripsurroundingwhitespace"); // XXX This was for XUL?
     
     this.utils.fixDOMEltHeight(littleText, this.NOTE_OUTER_SIZE);
     
