@@ -227,7 +227,7 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
         noteElt.addEventListener("mousedown", callbacks.onMouseDown, false);
     }
     
-    this.setShadingVisibility(uiNote);
+    this.setMinimizedVisibility(uiNote);
     
     if (note.isMinimized)
     {
@@ -422,23 +422,23 @@ adjustDims: function(uiNote, dims)
 
 forceMinimizedDims: function(uiNote)
 {
-    this.utils.assertError(uiNote.note.isMinimized, "Tried to init shading for unminimized note.");
+    this.utils.assertError(uiNote.note.isMinimized, "Tried to init minimizing for unminimized note.");
     
     var dims = [this.MINIMIZED_WIDTH, this.MINIMIZED_HEIGHT];
     this.utils.setDims      (uiNote.background, dims);
     this.utils.fixDOMEltDims(uiNote.noteElt,    dims);
 },
 
-adjustShading: function(uiNote)
+adjustMinimizing: function(uiNote)
 {
-    this.utils.assertClassError(uiNote, "UINote", "UINote is not correct class when updating shading.")
+    this.utils.assertClassError(uiNote, "UINote", "UINote is not correct class when updating minimizing.")
     
-    this.setShadingVisibility(uiNote);
+    this.setMinimizedVisibility(uiNote);
 },
 
-setShadingVisibility: function(uiNote)
+setMinimizedVisibility: function(uiNote)
 {
-    this.utils.assertClassError(uiNote, "UINote", "UINote is not correct class when updating shading.")
+    this.utils.assertClassError(uiNote, "UINote", "UINote is not correct class when updating minimizing.")
     this.utils.setDisplayed(uiNote.midBotBox,    !uiNote.note.isMinimized);
     this.utils.setDisplayed(uiNote.minimizedTop, uiNote.note.isMinimized );
 },
@@ -1305,7 +1305,7 @@ makeStaticImage: function(uiNote, dims)
     
     if (uiNote.isFlipped) this.flipNote(tempUINote);
     
-    // The dimensions may be different to that on the note due to shading, etc, so copy from the uiNote instead.
+    // The dimensions may be different to that on the note due to minimizing, etc, so copy from the uiNote instead.
     
     var rawCanvas = uiNote.rawCanvas =
         this.utils.getCanvasOfElement(scratchIFrame, tempUINote.noteElt, dims);
