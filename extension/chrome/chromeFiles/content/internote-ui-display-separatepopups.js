@@ -43,6 +43,12 @@ setBrowser: function(browser, viewportDims)
     this.viewportDims = viewportDims;
 },
 
+setUINotes: function(allUINotes, uiNoteLookup)
+{
+	this.allUINotes   = allUINotes;
+	this.uiNoteLookup = uiNoteLookup;
+},
+
 tearDown: function()
 {
     //dump("internoteDisplayUI.tearDown\n");
@@ -229,7 +235,7 @@ showPopupPane: function()
 {
 },
 
-handleChangedAspects: function(allUINotes, viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized)
+handleChangedAspects: function(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects " + viewportResized + " " + viewportMoved + " " + scrolled + " " + pageResized + "\n");
     
@@ -245,11 +251,11 @@ handleChangedAspects: function(allUINotes, viewportDims, posFunc, viewportResize
     {
         // These can lead to changing note positions.  Both types of resizing because of
         // notes forced on page, plus viewport resized because of minimized notes.
-        this.adjustAllNotes(allUINotes, posFunc);
+        this.adjustAllNotes(posFunc);
     }
     else
     {
-        this.adjustAllNotes(allUINotes, null);
+        this.adjustAllNotes(null);
     }
 },
 
@@ -284,9 +290,9 @@ reopenNote: function(uiNote)
     }
 },
 
-adjustAllNotes: function(allUINotes, getUpdatedPosFunc)
+adjustAllNotes: function(getUpdatedPosFunc)
 {
-    var uiNotes = this.sortUINotes(allUINotes);
+    var uiNotes = this.sortUINotes(this.allUINotes);
     
     var shouldForceReopen = false;
     for (var i = 0; i < uiNotes.length; i++)

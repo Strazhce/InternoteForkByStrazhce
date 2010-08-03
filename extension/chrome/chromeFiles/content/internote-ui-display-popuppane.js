@@ -44,6 +44,12 @@ setBrowser: function(browser, viewportDims)
     this.viewportDims = viewportDims;
 },
 
+setUINotes: function(allUINotes, uiNoteLookup)
+{
+	this.allUINotes   = allUINotes;
+	this.uiNoteLookup = uiNoteLookup;
+},
+
 tearDown: function()
 {
     //dump("internoteDisplayUI.tearDown\n");
@@ -75,19 +81,18 @@ addNote: function(uiNote, pos, dims)
     
     for (var i = 0; i < this.innerContainer.childNodes.length; i++)
     {
-        var otherUINote = this.innerContainer.childNodes[i].getUserData("uiNote");
+		var noteNum = this.utils.getNoteNum(this.innerContainer.childNodes[i]);
+		var otherUINote = this.uiNoteLookup[noteNum];
         if (uiNote.note.zIndex <= otherUINote.note.zIndex)
         {
             var elt = this.innerContainer.insertBefore(uiNote.noteElt, this.innerContainer.childNodes[i]);
-            elt.setUserData("uiNote", uiNote, null);
             return;
         }
     }
     
     this.adjustNote(uiNote, pos, dims);
     
-    var elt = this.innerContainer.appendChild(uiNote.noteElt);
-    elt.setUserData("uiNote", uiNote, null);
+    this.innerContainer.appendChild(uiNote.noteElt);
 },
 
 removeNote: function(uiNote)
@@ -311,7 +316,7 @@ positionPane: function()
     }
 },
 
-handleChangedAspects: function(allUINotes, viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized)
+handleChangedAspects: function(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects\n");
     
@@ -327,15 +332,15 @@ handleChangedAspects: function(allUINotes, viewportDims, posFunc, viewportResize
     
     if (scrolled || viewportResized || pageResized)
     {
-        this.adjustAllNotes(allUINotes, posFunc);
+        this.adjustAllNotes(posFunc);
     }
 },
 
-adjustAllNotes: function(allUINotes, getUpdatedPosFunc)
+adjustAllNotes: function(getUpdatedPosFunc)
 {
-    for (var i = 0; i < allUINotes.length; i++)
+    for (var i = 0; i < this.allUINotes.length; i++)
     {
-        var uiNote = allUINotes[i];
+        var uiNote = this.allUINotes[i];
         var updatedPos = (getUpdatedPosFunc == null) ? null : getUpdatedPosFunc(uiNote);
         
         this.adjustNote(uiNote, updatedPos, null);

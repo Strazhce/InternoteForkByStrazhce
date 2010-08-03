@@ -469,4 +469,25 @@ loadXML: function(file)
     }
 },
 
+
+getNoteNum: function(elementOrEvent)
+{
+    var element = (elementOrEvent.tagName != null) ? elementOrEvent : elementOrEvent.target;
+    
+    var ELEMENT_NODE = 1;
+    while (element != null && element.nodeType == ELEMENT_NODE)
+    {
+        if (element.hasAttribute("id"))
+        {
+            var num = element.id.replace(/internote-[a-zA-Z]+([0-9]+)/, "$1");
+            if (num.match(/^[0-9]+$/)) {
+                return parseInt(num, 10);
+            }
+        }
+        element = element.parentNode;
+    }
+    
+    this.assertErrorNotHere("Could not find note num.");
+},
+
 });

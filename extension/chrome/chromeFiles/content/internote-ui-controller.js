@@ -477,6 +477,8 @@ changePage: function(newURL, isNewPageLoading)
         this.minimizedNotes = [];
         this.arePageListeners = false;
         
+		this.displayUI.setUINotes(this.allUINotes, this.uiNoteLookup);
+		
         if (this.allowNotesOnThisPage(newURL))
         {
             // XXX These two should probably be distinguished.  It's possible that
@@ -618,7 +620,7 @@ userPressesNote: function(event)
         // can get an empty ID string when clicking again, at least the flip button.  So just ignore this case.
         if (event.target.id != "")
         {
-            var noteNum = this.screenGetNoteNum(event.target);
+            var noteNum = this.utils.getNoteNum(event.target);
             var note = this.storage.allNotes[noteNum];
             if (!note.isMinimized)
             {
@@ -697,7 +699,7 @@ userRemovesNote: function(elementOrEvent)
     
     try
     {
-        var noteNum = this.screenGetNoteNum(elementOrEvent);
+        var noteNum = this.utils.getNoteNum(elementOrEvent);
         var note = this.storage.allNotes[noteNum];
         
         if (note != null)
@@ -804,7 +806,7 @@ userStartsDrag: function(event, dragMode, onDragMouseMoved, onDragFinished)
     
     this.utils.assertError(event != null, "Null event when starting drag.");
     
-    var noteNum = this.screenGetNoteNum(event.target);
+    var noteNum = this.utils.getNoteNum(event.target);
     var uiNote = this.uiNoteLookup[noteNum];
     
     if (uiNote.note.isMinimized)
@@ -851,7 +853,7 @@ userFlipsNote: function(elementOrEvent)
     
     try
     {
-        var noteNum = this.screenGetNoteNum(elementOrEvent);
+        var noteNum = this.utils.getNoteNum(elementOrEvent);
         var uiNote = this.uiNoteLookup[noteNum];
         
         var startLeft  = parseInt(uiNote.note.left, 10);
@@ -872,7 +874,7 @@ userMinimizesNote: function(elementOrEvent)
     
     try
     {
-        var noteNum = this.screenGetNoteNum(elementOrEvent);
+        var noteNum = this.utils.getNoteNum(elementOrEvent);
         var note = this.storage.allNotes[noteNum];
         
         if (note.isMinimized)
@@ -903,7 +905,7 @@ userEditsNote: function(event)
     {
         this.utils.assertError(event.target != null, "No event target for onNoteEdited.");
         
-        var noteNum = this.screenGetNoteNum(event.target);
+        var noteNum = this.utils.getNoteNum(event.target);
         var note = this.storage.allNotes[noteNum];
         this.storage.setText(note, event.target.value);
     }
@@ -917,7 +919,7 @@ userClicksBackSideOfNote: function(event)
 {
     try
     {   
-        var noteNum = this.screenGetNoteNum(event.target);
+        var noteNum = this.utils.getNoteNum(event.target);
         var uiNote = this.uiNoteLookup[noteNum];
         
         var [internalX, internalY] = this.noteUI.getInternalCoordinates(uiNote, event);
@@ -953,7 +955,7 @@ userFocusesNote: function(event)
     /*
     try
     {   
-        var noteNum = this.screenGetNoteNum(event.target);
+        var noteNum = this.utils.getNoteNum(event.target);
         var uiNote = this.uiNoteLookup[noteNum];
         this.storage.raiseNote(uiNote.note);
     }
@@ -980,7 +982,7 @@ userViewsInManager: function(element)
 {
     try
     {
-        var noteNum = this.screenGetNoteNum(element);
+        var noteNum = this.utils.getNoteNum(element);
         this.userOpensManager(noteNum);
     }
     catch (ex)
@@ -1134,7 +1136,7 @@ userChoosesMatchExact: function(element)
     
     try
     {
-        var note = this.storage.allNotes[this.screenGetNoteNum(element)];
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         this.storage.setMatch(note, this.currentURL, this.storage.URL_MATCH_EXACT);
     }
     catch (ex)
@@ -1149,7 +1151,7 @@ userChoosesMatchAll: function(element)
     
     try
     {
-        var note = this.storage.allNotes[this.screenGetNoteNum(element)];
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         this.storage.setMatch(note, "", this.storage.URL_MATCH_ALL);
     }
     catch (ex)
@@ -1164,7 +1166,7 @@ userChoosesURLPrefix: function(ev, element)
     
     try
     {
-        var note = this.storage.allNotes[this.screenGetNoteNum(element)];
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         var url = ev.target.getUserData("internote-url");
         this.storage.setMatch(note, url, this.storage.URL_MATCH_PREFIX);
     }
@@ -1298,7 +1300,7 @@ chromePrepareContextMenu: function(element)
     
     try
     {
-        var uiNote = this.uiNoteLookup[this.screenGetNoteNum(element)];
+        var uiNote = this.uiNoteLookup[this.utils.getNoteNum(element)];
         
         var isFlipped   = uiNote.isFlipped;
         var isMinimized = this.noteUI.isMinimized(uiNote);
@@ -1324,7 +1326,7 @@ chromePrepareShowOnMenu: function(element)
     {
         var menuSeparator = document.getElementById("internote-showon-menu-sep");
         var menuPopup = menuSeparator.parentNode;
-        var note = this.storage.allNotes[this.screenGetNoteNum(element)];        
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];        
         
         // First set the radio checkboxes for the static items.
         var singleItem = document.getElementById("internote-match-single");
@@ -1468,29 +1470,9 @@ screenAreAllMinimized: function()
                             .reduce(function(a, b) { return a && b; }, true);
 },
 
-screenGetNoteNum: function(elementOrEvent)
-{
-    var element = (elementOrEvent.tagName != null) ? elementOrEvent : elementOrEvent.target;
-    
-    var ELEMENT_NODE = 1;
-    while (element != null && element.nodeType == ELEMENT_NODE)
-    {
-        if (element.hasAttribute("id"))
-        {
-            var num = element.id.replace(/internote-[a-zA-Z]+([0-9]+)/, "$1");
-            if (num.match(/^[0-9]+$/)) {
-                return parseInt(num, 10);
-            }
-        }
-        element = element.parentNode;
-    }
-    
-    this.utils.assertErrorNotHere("Could not find note num.");
-},
-
 screenCreateNote: function(uiNote, shouldAnimate)
 {
-    //dump("screenCreateNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
+    dump("screenCreateNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
     
     this.utils.assertClassError(uiNote, "UINote", "Not a UINote when calling screenCreateNote.");
     this.utils.assertError(!this.displayUI.doesNoteExist(uiNote.num), "Note is already on-screen.");
@@ -2035,7 +2017,7 @@ screenGetUpdatedPosFunc: function(uiNote)
 screenAdjustAllNotes: function()
 {
     //dump("screenAdjustAllNotes\n");
-    this.displayUI.adjustAllNotes(this.allUINotes, this.utils.bind(this, this.screenGetUpdatedPosFunc));
+    this.displayUI.adjustAllNotes(this.utils.bind(this, this.screenGetUpdatedPosFunc));
 },
 
 // This is just for the top note, so Z-order should not be an issue.
@@ -2132,7 +2114,7 @@ screenCheckAspects: function(ev)
             var viewportDims = viewportResized ? this.screenGetViewportDims() : null;
             var posFunc = this.utils.bind(this, this.screenGetUpdatedPosFunc);
             
-            this.displayUI.handleChangedAspects(this.allUINotes, viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized);
+            this.displayUI.handleChangedAspects(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized);
         }
         
         this.displayUI.periodicCheck();
