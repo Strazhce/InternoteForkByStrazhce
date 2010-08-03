@@ -292,7 +292,7 @@ indicateDataChanged: function(note)
     note.modfnTime = new Date().getTime();
     
     note.xml.setAttribute("url",          note.url        );
-    note.xml.setAttribute("matchType", note.matchType);
+    note.xml.setAttribute("matchType",    note.matchType);
     //note.xml.setAttribute("text",        note.text       );
     note.xml.setAttribute("left",         note.left       );
     note.xml.setAttribute("top",          note.top        );
@@ -537,24 +537,24 @@ loadXMLElements: function()
         else
         {
             // Handle old alpha1 isURLRegexp field, remove this eventually.
-            var matchType = this.utils.parseBoolean(element.getAttribute("isURLRegexp"))
+            var matchType = this.utils.getXMLBoolean(element, "isURLRegexp", false)
                           ? this.URL_MATCH_REGEXP
                           : this.URL_MATCH_EXACT;
         }
         
         var url         = element.getAttribute("url");
         
-        var left        = parseInt(element.getAttribute("left"), 10);
-        var top         = parseInt(element.getAttribute("top"),  10);
-        var noteWidth   = parseInt(element.getAttribute("width"), 10);
-        var noteHeight  = parseInt(element.getAttribute("height"), 10);
+        var left        = this.utils.getXMLInt(element, "left", 0);
+        var top         = this.utils.getXMLInt(element, "top", 0);
+        var noteWidth   = this.utils.getXMLInt(element, "width", 200);
+        var noteHeight  = this.utils.getXMLInt(element, "height", 200);
         var backColor   = element.getAttribute("backColor");
         var foreColor   = element.getAttribute("foreColor");
         var createTime  = this.utils.parseOptionalDate(element.getAttribute("createTime"));
         var modfnTime   = this.utils.parseOptionalDate(element.getAttribute("modfnTime"));
-        var zIndex      = parseInt(element.getAttribute("zIndex"), 10);
-        var isMinimized = this.utils.parseBoolean(element.getAttribute("isMinimized"));
-        var isHTML      = this.utils.parseBoolean(element.getAttribute("isHTML"));
+        var zIndex      = this.utils.getXMLInt(element, "zIndex", 0);
+        var isMinimized = this.utils.getXMLBoolean(element, "isMinimized", false);
+        var isHTML      = this.utils.getXMLBoolean(element, "isHTML",      false);
         
         var note = new this.InternoteNote(url, matchType, text,
                                           left, top, noteWidth, noteHeight, backColor, foreColor,
