@@ -44,8 +44,8 @@ setBrowser: function(browser, viewportDims)
 
 setUINotes: function(allUINotes, uiNoteLookup)
 {
-	this.allUINotes   = allUINotes;
-	this.uiNoteLookup = uiNoteLookup;
+    this.allUINotes   = allUINotes;
+    this.uiNoteLookup = uiNoteLookup;
 },
 
 tearDown: function()
@@ -78,8 +78,8 @@ addNote: function(uiNote, pos, dims)
     
     for (var i = 0; i < this.innerContainer.childNodes.length; i++)
     {
-		var noteNum = this.utils.getNoteNum(this.innerContainer.childNodes[i]);
-		var otherUINote = this.uiNoteLookup[noteNum];
+        var noteNum = this.utils.getNoteNum(this.innerContainer.childNodes[i]);
+        var otherUINote = this.uiNoteLookup[noteNum];
         if (uiNote.note.zIndex <= otherUINote.note.zIndex)
         {
             var elt = this.innerContainer.insertBefore(uiNote.noteElt, this.innerContainer.childNodes[i]);

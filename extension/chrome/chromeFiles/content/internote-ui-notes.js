@@ -75,7 +75,7 @@ init: function(prefs, utils, consts)
 
 waitForImageLoad: function(onLoad)
 {
-	this.noteFlipButton.addEventListener("load", onLoad, false);
+    this.noteFlipButton.addEventListener("load", onLoad, false);
 },
 
 areImagesLoaded: function()
@@ -85,7 +85,7 @@ areImagesLoaded: function()
 
 addFocusListener: function(uiNote, func)
 {
-	uiNote.textArea.addEventListener("focus", func, false);
+    uiNote.textArea.addEventListener("focus", func, false);
 },
 
 makeUINote: function(note)
@@ -435,8 +435,8 @@ forceMinimizedDims: function(uiNote)
     var dims = [this.MINIMIZED_WIDTH, this.MINIMIZED_HEIGHT];
     this.utils.setDims      (uiNote.background, dims);
     this.utils.fixDOMEltDims(uiNote.noteElt,    dims);
-	
-	var littleSize = dims[0] - 2 * this.NOTE_BORDER_SIZE - 2 * this.NOTE_OUTER_SIZE - 2 * this.NOTE_SPACING - this.NOTE_SPACING_LITTLE;
+    
+    var littleSize = dims[0] - 2 * this.NOTE_BORDER_SIZE - 2 * this.NOTE_OUTER_SIZE - 2 * this.NOTE_SPACING - this.NOTE_SPACING_LITTLE;
     this.utils.fixDOMEltWidth(uiNote.littleText, littleSize);
 },
 
@@ -480,12 +480,12 @@ flipNote: function(uiNote, newIsFlipped)
     
     var newIndex = uiNote.isFlipped ? this.FLIPPED_PAGE : this.FRONT_PAGE;
     uiNote.innerDeck.setAttribute("selectedIndex", newIndex);
-	
-	if (uiNote.isFlipped)
-	{
-		// Prevent typing while back side up.
-		uiNote.textArea.blur();
-	}
+    
+    if (uiNote.isFlipped)
+    {
+        // Prevent typing while back side up.
+        uiNote.textArea.blur();
+    }
     
     this.updateScrollbarPresence(uiNote);
 },
@@ -706,8 +706,8 @@ createLittleText: function(doc, uiNote)
     littleText.style.lineHeight      = "1em";
     littleText.style.cursor          = "default";
     littleText.style.color           = uiNote.note.foreColor;
-	littleText.style.resize          = "none";
-	
+    littleText.style.resize          = "none";
+    
     littleText.setAttribute("readonly", "yes");
     littleText.setAttribute("wrap",     "off");
     littleText.setAttribute("tabindex", "-1"); // Prevent focus with TAB key.

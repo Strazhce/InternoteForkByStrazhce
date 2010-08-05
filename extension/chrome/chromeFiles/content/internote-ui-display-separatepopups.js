@@ -45,8 +45,8 @@ setBrowser: function(browser, viewportDims)
 
 setUINotes: function(allUINotes, uiNoteLookup)
 {
-	this.allUINotes   = allUINotes;
-	this.uiNoteLookup = uiNoteLookup;
+    this.allUINotes   = allUINotes;
+    this.uiNoteLookup = uiNoteLookup;
 },
 
 tearDown: function()

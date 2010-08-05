@@ -507,38 +507,38 @@ getNoteNum: function(elementOrEvent)
 
 getXMLAttr: function(element, attrName, defaultVal)
 {
-	if (element.hasAttribute(attrName))
-	{
-		return element.getAttribute(attrName);
-	}
-	else
-	{
-		return defaultVal;
-	}
+    if (element.hasAttribute(attrName))
+    {
+        return element.getAttribute(attrName);
+    }
+    else
+    {
+        return defaultVal;
+    }
 },
 
 getXMLInt: function(element, attrName, defaultVal)
 {
-	if (element.hasAttribute(attrName))
-	{
-		return parseInt(element.getAttribute(attrName), 10);
-	}
-	else
-	{
-		return defaultVal;
-	}
+    if (element.hasAttribute(attrName))
+    {
+        return parseInt(element.getAttribute(attrName), 10);
+    }
+    else
+    {
+        return defaultVal;
+    }
 },
 
 getXMLBoolean: function(element, attrName, defaultVal)
 {
-	if (element.hasAttribute(attrName))
-	{
-		return this.parseBoolean(element.getAttribute(attrName));
-	}
-	else
-	{
-		return defaultVal;
-	}
+    if (element.hasAttribute(attrName))
+    {
+        return this.parseBoolean(element.getAttribute(attrName));
+    }
+    else
+    {
+        return defaultVal;
+    }
 },
 
 });

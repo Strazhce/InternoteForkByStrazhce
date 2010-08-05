@@ -192,16 +192,16 @@ init: function()
     this.chromeUpdateDisplayCheckbox();
     
     // See about starting stage 2 of initialisation.
-	if (this.noteUI.areImagesLoaded())
-	{
+    if (this.noteUI.areImagesLoaded())
+    {
         this.setUpInternote();
         this.isInitialized = true;
     }
-	else
-	{
-		// Delay stage 2 of initialisation until the images are loaded.
-		this.noteUI.waitForImageLoad(this.utils.bind(this, this.imageLoadCheck));
-	}
+    else
+    {
+        // Delay stage 2 of initialisation until the images are loaded.
+        this.noteUI.waitForImageLoad(this.utils.bind(this, this.imageLoadCheck));
+    }
     
     this.SCROLLBAR_SIZE = this.utils.calcScrollbarWidth();
     
@@ -237,11 +237,11 @@ chooseDisplayUI: function()
 setUpInternote: function()
 {
     if (!this.storage.areNotesDisplaying)
-	{
-		return;
-	}
-	
-	this.changePage(null, true);
+    {
+        return;
+    }
+    
+    this.changePage(null, true);
     getBrowser().addProgressListener(this.progressListener,
                                      this.utils.getCIConstant("nsIWebProgress", "NOTIFY_STATE_DOCUMENT"));
 },
@@ -479,8 +479,8 @@ changePage: function(newURL, isNewPageLoading)
         this.minimizedNotes = [];
         this.arePageListeners = false;
         
-		this.displayUI.setUINotes(this.allUINotes, this.uiNoteLookup);
-		
+        this.displayUI.setUINotes(this.allUINotes, this.uiNoteLookup);
+        
         if (this.allowNotesOnThisPage(newURL))
         {
             // XXX These two should probably be distinguished.  It's possible that

@@ -41,8 +41,8 @@ function InternoteStorage()
     
     this.utils      = internoteUtilities;
     this.prefs      = internotePreferences;
-	this.serializer = XMLSerializer;
-	this.xml        = XML;
+    this.serializer = XMLSerializer;
+    this.xml        = XML;
     
     // We deliberately store the same storage location for the entire session.
     // This makes handling change of location preference much easier - next run.
@@ -96,8 +96,8 @@ function InternoteStorage()
     InternoteStorage.prototype.InternoteNote.prototype.getDims = function() { return [this.width, this.height]; };
     InternoteStorage.prototype.InternoteNote.prototype.getPos  = function() { return [this.left,  this.top   ]; };
     
-	var myStorageEventClass = InternoteStorage.prototype.StorageEvent; // Avoid referring to global after init.
-	
+    var myStorageEventClass = InternoteStorage.prototype.StorageEvent; // Avoid referring to global after init.
+    
     InternoteStorage.prototype.StorageEvent.prototype.clone = function()
     {
         // Importantly this won't clone .name which the event dispatcher adds.
