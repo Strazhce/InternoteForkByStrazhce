@@ -48,45 +48,50 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     
     <popupset>
       <popup id="actionsMenu">
-        <menuitem id="selectAll"        label="&internote.selectAllCmd.label;"
+        <menuitem id="selectAll"        label="&internote.selectAllCmd.label;" accesskey="&internote.selectAllCmd.accesskey;"
                   oncommand="internoteManager.userSelectsAll();" />
-        <menuitem id="expandSelected"   label="&internote.expandSelectedCmd.label;"
+        <menuitem id="expandSelected"   label="&internote.expandSelectedCmd.label;" accesskey="&internote.expandSelectedCmd.accesskey;"
                   oncommand="internoteManager.userChangesExpandOnSelected(true);" />
-        <menuitem id="collapseSelected" label="&internote.collapseSelectedCmd.label;"
+        <menuitem id="collapseSelected" label="&internote.collapseSelectedCmd.label;" accesskey="&internote.collapseSelectedCmd.accesskey;"
                   oncommand="internoteManager.userChangesExpandOnSelected(false);" />
         <menuseparator />
-        <menuitem id="deleteSelected" label="&internote.deleteSelectedCmd.label;"  oncommand="internoteManager.userDeletesNotes(true);" />
-        <menuitem id="resetSelected"  label="&internote.resetSelectedCmd.label;"   oncommand="internoteManager.userResetsNotes(true);" />
+        <menuitem id="deleteSelected" label="&internote.deleteSelectedCmd.label;"  oncommand="internoteManager.userDeletesNotes(true);"
+		          accesskey="&internote.deleteSelectedCmd.accesskey;"/>
+        <menuitem id="resetSelected"  label="&internote.resetSelectedCmd.label;"   oncommand="internoteManager.userResetsNotes(true);"
+		          accesskey="&internote.resetSelectedCmd.accesskey;"/>
         <menuseparator />
-        <menuitem id="importNotes" label="&internote.importV2Cmd.label;..."        oncommand="internoteManager.userImportsNotesInV2();" />
+        <menuitem id="importNotes" label="&internote.importV2Cmd.label;..."        oncommand="internoteManager.userImportsNotesInV2();"
+		          accesskey="&internote.importV2Cmd.accesskey;"/>
         <menuseparator />
-        <menu id="exportAll" label="&internote.exportAllCmd.label;...">
+        <menu id="exportAll" label="&internote.exportAllCmd.label;..." accesskey="&internote.exportAllCmd.accesskey;">
           <menupopup>
-            <menuitem id="exportAllHTML"      label="&internote.toHTMLCmd.label;..."
+            <menuitem id="exportAllHTML"      label="&internote.toHTMLCmd.label;..." accesskey="&internote.toHTMLCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInHTML(false);" />
-            <menuitem id="exportAllText"      label="&internote.toTextCmd.label;..."
+            <menuitem id="exportAllText"      label="&internote.toTextCmd.label;..." accesskey="&internote.toTextCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInText(false);" />
-            <menuitem id="exportAllBookmarks" label="&internote.toBookmarksCmd.label;..."
+            <menuitem id="exportAllBookmarks" label="&internote.toBookmarksCmd.label;..." accesskey="&internote.toBookmarksCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInBookmarks(false);" />
-            <menuitem id="exportAllV2"        label="&internote.toV2Cmd.label;..."
+            <menuitem id="exportAllV2"        label="&internote.toV2Cmd.label;..." accesskey="&internote.toV2Cmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInV2(false);" />
           </menupopup>
         </menu>
-        <menu id="exportSelected" label="&internote.exportSelectedCmd.label;...">
+        <menu id="exportSelected" label="&internote.exportSelectedCmd.label;..." accesskey="&internote.exportSelectedCmd.accesskey;" >
           <menupopup>
-            <menuitem id="exportSelectedHTML"      label="&internote.toHTMLCmd.label;..."
+            <menuitem id="exportSelectedHTML"      label="&internote.toHTMLCmd.label;..." accesskey="&internote.toHTMLCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInHTML(true);" />
-            <menuitem id="exportSelectedText"      label="&internote.toTextCmd.label;..."
+            <menuitem id="exportSelectedText"      label="&internote.toTextCmd.label;..." accesskey="&internote.toTextCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInText(true);" />
-            <menuitem id="exportSelectedBookmarks" label="&internote.toBookmarksCmd.label;..."
+            <menuitem id="exportSelectedBookmarks" label="&internote.toBookmarksCmd.label;..." accesskey="&internote.toBookmarksCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInBookmarks(true);" />
-            <menuitem id="exportSelectedV2"        label="&internote.toV2Cmd.label;..."
+            <menuitem id="exportSelectedV2"        label="&internote.toV2Cmd.label;..." accesskey="&internote.toV2Cmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInV2(true);" />
           </menupopup>
         </menu>
         <menuseparator />
-        <menuitem id="printAll"      label="&internote.printAllCmd.label;..."   oncommand="internoteManager.userPrintsNotes(false);" />
-        <menuitem id="printSelected" label="&internote.printSelectedCmd.label;..."  oncommand="internoteManager.userPrintsNotes(true);" />
+        <menuitem id="printAll"      label="&internote.printAllCmd.label;..."   oncommand="internoteManager.userPrintsNotes(false);"
+		          accesskey="&internote.printAllCmd.accesskey;" />
+        <menuitem id="printSelected" label="&internote.printSelectedCmd.label;..."  oncommand="internoteManager.userPrintsNotes(true);"
+		          accesskey="&internote.printSelectedCmd.accesskey;" />
       </popup>
     </popupset>
     
@@ -105,7 +110,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <treechildren id="searchResultChildren" />
             </tree>
             <hbox>
-                <button id="notesActions" type="menu" label="&internote.actionsCmd.label;"
+                <button id="notesActions" type="menu" label="&internote.actionsCmd.label;" accesskey="&internote.actionsCmd.accesskey;"
                         style="font-weight: bold;" popup="actionsMenu" />
                 <spacer width="10px" />
                 <hbox flex="1" style="width: 90%;" align="center">
@@ -203,8 +208,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <groupbox>
             <caption label="&internote.thisNoteActions.caption;"/>
             <hbox>
-                <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;" style="font-weight: bold;" onclick="internoteManager.userDeletesNotes(false)" />
-                <button id="resetCurrentNote"  label="&internote.resetCurrentCmd.label;"  style="font-weight: bold;" onclick="internoteManager.userResetsNotes (false)" />
+                <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;" style="font-weight: bold;"
+				        accesskey="&internote.deleteCurrentCmd.accesskey;" onclick="internoteManager.userDeletesNotes(false)" />
+                <button id="resetCurrentNote"  label="&internote.resetCurrentCmd.label;"  style="font-weight: bold;"
+				        accesskey="&internote.resetCurrentCmd.accesskey;" onclick="internoteManager.userResetsNotes (false)" />
             </hbox>
             </groupbox>
         </vbox>

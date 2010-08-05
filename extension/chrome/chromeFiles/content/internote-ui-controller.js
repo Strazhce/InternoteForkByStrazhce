@@ -1314,7 +1314,7 @@ chromePrepareContextMenu: function(element)
         this.utils.setEnabled("internote-context-flip-note", !isMinimized);
         
         this.utils.setDisplayed("internote-context-minimize-note", !isMinimized);
-        this.utils.setDisplayed("internote-context-restore-note",  isMinimized );
+        this.utils.setDisplayed("internote-context-unminimize-note",  isMinimized );
     }
     catch (ex)
     {

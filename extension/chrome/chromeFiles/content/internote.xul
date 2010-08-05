@@ -65,22 +65,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <menupopup id="menu_ToolsPopup">
     <menu accesskey="&internote.appName.accessKey;" label="&internote.appName.label;" insertafter="javascriptConsole">
         <menupopup id="internote-main-menu" onpopupshowing="internoteUIController.chromePrepareMainMenu();">
-            <menuitem label="&internote.newNoteCmd.label;"
+            <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accessKey;"
                       oncommand="internoteUIController.userCreatesNote();" />
-            <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-main"
+            <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-main" accesskey="&internote.minimizeAllCmd.accessKey;"
                       oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
-            <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-main"
+            <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-main" accesskey="&internote.unminimizeAllCmd.accessKey;"
                       oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
             <menuseparator />
-            <menuitem label="&internote.openManagerCmd.label;..."
+            <menuitem label="&internote.openManagerCmd.label;..." accesskey="&internote.openManagerCmd.accessKey;"
                       oncommand="internoteUIController.userOpensManager();" />
-            <menuitem label="&internote.openPrefsCmd.label;..."
+            <menuitem label="&internote.openPrefsCmd.label;..." accesskey="&internote.openPrefsCmd.accessKey;"
                       oncommand="internoteUIController.userOpensPrefs();" />
-            <menuitem label="&internote.helpCmd.label;..."
+            <menuitem label="&internote.helpCmd.label;..." accesskey="&internote.helpCmd.accessKey;"
                       oncommand="internoteUIController.userOpensHelp();" />
             <menuseparator />
             <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-main"
-                      oncommand="internoteUIController.userTogglesDisplay();" checked="true" />
+                      oncommand="internoteUIController.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accessKey;" />
         </menupopup>
     </menu>    
 </menupopup>
@@ -97,55 +97,56 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     </tooltip>
     
     <menupopup id="internote-popup-menu" onpopupshowing="internoteUIController.chromePrepareStatusBarMenu();">
-        <menuitem label="&internote.newNoteCmd.label;"
+        <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accessKey;"
                   oncommand="internoteUIController.userCreatesNote();" />
-        <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-statusbar"
+        <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-statusbar" accesskey="&internote.minimizeAllCmd.accessKey;"
                   oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
-        <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-statusbar"
+        <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-statusbar" accesskey="&internote.unminimizeAllCmd.accessKey;"
                   oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
         <menuseparator />
-        <menuitem label="&internote.openManagerCmd.label;..."
+        <menuitem label="&internote.openManagerCmd.label;..." accesskey="&internote.openManagerCmd.accessKey;"
                   oncommand="internoteUIController.userOpensManager();" />
-        <menuitem label="&internote.openPrefsCmd.label;..."   
+        <menuitem label="&internote.openPrefsCmd.label;..." accesskey="&internote.openPrefsCmd.accessKey;"
                   oncommand="internoteUIController.userOpensPrefs();" />
-        <menuitem label="&internote.helpCmd.label;"
+        <menuitem label="&internote.helpCmd.label;" accesskey="&internote.helpCmd.accessKey;"
                   oncommand="internoteUIController.userOpensHelp();" />
         <menuseparator />
         <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-statusbar"
-                  oncommand="internoteUIController.userTogglesDisplay();" checked="true" />
+                  oncommand="internoteUIController.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accessKey;"/>
     </menupopup>
     
     <menupopup id="internote-note-menu" onpopupshowing="internoteUIController.chromePrepareContextMenu(popupNode);">
         <!-- Don't use command directly so we can disable them separately. -->
         <menuitem label="&internote.cutTextCmd.label;"    id="internote-context-cut-text"
-                  oncommand="internoteUIController.userCutsText();"    />
+                  oncommand="internoteUIController.userCutsText();" accesskey="&internote.cutTextCmd.accessKey;" />
         <menuitem label="&internote.copyTextCmd.label;"   id="internote-context-copy-text"
-                  oncommand="internoteUIController.userCopiesText();"  />
+                  oncommand="internoteUIController.userCopiesText();" accesskey="&internote.copyTextCmd.accessKey;" />
         <menuitem label="&internote.pasteTextCmd.label;"  id="internote-context-paste-text"
-                  oncommand="internoteUIController.userPastesText();"  />
+                  oncommand="internoteUIController.userPastesText();" accesskey="&internote.pasteTextCmd.accessKey;" />
         <menuitem label="&internote.deleteTextCmd.label;" id="internote-context-delete-text"
-                  oncommand="internoteUIController.userDeletesText();" />
+                  oncommand="internoteUIController.userDeletesText();" accesskey="&internote.deleteTextCmd.accessKey;"/>
         <menuitem label="&internote.selectAllCmd.label;"  id="internote-context-select-all"
-                  oncommand="internoteUIController.userSelectsAll();"  />
+                  oncommand="internoteUIController.userSelectsAll();" accesskey="&internote.selectAllCmd.accessKey;" />
         <menuseparator />
         <menuitem label="&internote.deleteNoteCmd.label;"        id="internote-context-delete-note" 
-                  oncommand="internoteUIController.userRemovesNote(popupNode);"    />
+                  oncommand="internoteUIController.userRemovesNote(popupNode);" accesskey="&internote.deleteNoteCmd.accessKey;" />
         <menuitem label="&internote.flipNoteCmd.label;"          id="internote-context-flip-note"
-                  oncommand="internoteUIController.userFlipsNote(popupNode);"      />
+                  oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.flipNoteCmd.accessKey;" />
         <menuitem label="&internote.minimizeNoteCmd.label;"      id="internote-context-minimize-note"
-                  oncommand="internoteUIController.userMinimizesNote(popupNode);"  />
-        <menuitem label="&internote.restoreNoteCmd.label;"       id="internote-context-restore-note"
-                  oncommand="internoteUIController.userMinimizesNote(popupNode);" style="display: none;" />
+                  oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.minimizeNoteCmd.accessKey;" />
+        <menuitem label="&internote.unminimizeNoteCmd.label;"    id="internote-context-unminimize-note"
+                  oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.unminimizeNoteCmd.accessKey;" style="display: none;" />
         <menuitem label="&internote.viewInOpenManagerCmd.label;" id="internote-view-in-manager"
-                  oncommand="internoteUIController.userViewsInManager(popupNode);" />
+                  oncommand="internoteUIController.userViewsInManager(popupNode);" accesskey="&internote.viewInOpenManagerCmd.accessKey;" />
         <menuseparator />
-        <menu label="&internote.showsOnMenuCmd.label;">
+        <menu label="&internote.showsOnMenuCmd.label;" accesskey="&internote.showsOnMenuCmd.accessKey;">
             <menupopup onpopupshowing="internoteUIController.chromePrepareShowOnMenu(popupNode);">
                 <menuitem label="&internote.showsOnPageCmd.label;" type="radio" name="showson" id="internote-match-single"
-                          oncommand="internoteUIController.userChoosesMatchExact(popupNode);" />
+                          oncommand="internoteUIController.userChoosesMatchExact(popupNode);" accesskey="&internote.showsOnPageCmd.accessKey;" />
                 <menuitem label="&internote.showsOnAllCmd.label;"  type="radio" name="showson" id="internote-match-all"
-                          oncommand="internoteUIController.userChoosesMatchAll(popupNode);" />
-                <menuitem label="&internote.showsRegexpCmd.label;" type="radio" name="showson" id="internote-match-regexp" />
+                          oncommand="internoteUIController.userChoosesMatchAll(popupNode);" accesskey="&internote.showsOnAllCmd.accessKey;" />
+                <menuitem label="&internote.showsRegexpCmd.label;" type="radio" name="showson" id="internote-match-regexp"
+				          accesskey="&internote.showsRegexpCmd.accessKey;" />
                 <menuseparator id="internote-showon-menu-sep" />
             </menupopup>
         </menu>
