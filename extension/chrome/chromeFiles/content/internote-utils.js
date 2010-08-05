@@ -85,24 +85,6 @@ getFile: function(path)
     return dir;
 },
 
-getPlatform: function()
-{
-    var platform = new String(navigator.platform);
-    var platString = "";
-    if (!platform.search(/^Mac/))
-    {
-       return "mac";
-    }
-    else if (!platform.search(/^Win/))
-    {
-       return "win";
-    }
-    else
-    {
-       return "unix";
-    }
-},
-
 // Use to open a URL from a dialog.
 openURL: function(url)
 {
@@ -116,42 +98,6 @@ openURL: function(url)
     else
     {
         window.open(url);
-    }
-},
-
-supportsTranslucentPopups: function()
-{
-    var platform = this.getPlatform();
-    if (platform == "win" || platform == "mac")
-    {
-        return true;
-    }
-    else if (platform == "unix")
-    {
-        return false;
-    }
-    else
-    {
-        this.assertWarnNotHere("Unknown platform when testing translucent popups.", platform);
-        return false;
-    }
-},
-
-supportsTransparentClickThru: function()
-{
-    var platform = this.getPlatform();
-    if (platform == "win" || platform == "unix")
-    {
-        return true;
-    }
-    else if (platform == "mac")
-    {
-        return false;
-    }
-    else
-    {
-        this.assertWarnNotHere("Unknown platform when testing transparent clickthru.", platform);
-        return false;
     }
 },
 

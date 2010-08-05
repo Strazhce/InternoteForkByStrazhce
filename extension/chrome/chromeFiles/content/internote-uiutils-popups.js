@@ -22,7 +22,7 @@ createShiftingPanel: function(suffix, containee)
 {
     var popupPanel = document.createElement("panel");
     popupPanel.setAttribute("id", "internote-popup" + suffix);
-    // -moz-appearance seems to be necessary on Linux but not Windows.
+    // -moz-appearance seems to be necessary on Linux/Mac but not Windows.
     popupPanel.setAttribute("style", "background-color: transparent; border: none; -moz-appearance: none; -moz-window-shadow: none;");
     popupPanel.setAttribute("noautohide", "true");
     

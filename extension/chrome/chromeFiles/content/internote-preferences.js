@@ -87,12 +87,12 @@ getFontSize : function()
     }
 },
 
-shouldUseStatusbar     : function() { return this.getBoolPref("usestatusbar",    true ); },
-shouldUseTransparency  : function() { return this.getBoolPref("transparency",    false); },
-shouldAllowHighlighting: function() { return this.getBoolPref("highlightable",   false); },
-shouldUseScrollbar     : function() { return this.getBoolPref("usescrollbar",    false); },
-shouldUseOtherSaveLoc  : function() { return this.getBoolPref("changelocation",  false); },
-shouldAskBeforeDelete  : function() { return this.getBoolPref("askbeforedelete", false); },
+shouldUseStatusbar      : function() { return this.getBoolPref("usestatusbar",    true ); },
+shouldUseTransparency   : function() { return this.getBoolPref("transparency",    false); },
+shouldAllowHighlighting : function() { return this.getBoolPref("highlightable",   false); },
+shouldUseNativeScrollbar: function() { return this.getBoolPref("usenativescroll", false); },
+shouldUseOtherSaveLoc   : function() { return this.getBoolPref("changelocation",  false); },
+shouldAskBeforeDelete   : function() { return this.getBoolPref("askbeforedelete", false); },
 
 // This is a hidden preference for the purpose of debugging.
 isInDebugMode: function() { return this.getBoolPref("debugmode", false); },

@@ -179,21 +179,33 @@ popupPanelShown: function()
 {
     //dump("internoteDisplayUI.popupPanelShown\n");
     
-    if (this.autoFocusNote != null)
+    try
     {
-        //dump("  AutoFocusing ...\n");
+        if (this.autoFocusNote != null)
+        {
+            //dump("  AutoFocusing ...\n");
+            
+            this.noteUI.focusNote(this.autoFocusNote);
+            this.autoFocusNote = null;
+        }
         
-        this.noteUI.focusNote(this.autoFocusNote);
-        this.autoFocusNote = null;
+        this.isPanelShown = true;
+        
+        for (var i = 0; i < this.allUINotes.length; i++)
+        {
+            var uiNote = this.allUINotes[i];
+            this.noteUI.noteShown(uiNote);
+        }
     }
-    
-    this.isPanelShown = true;
-    this.utils.removeBoundDOMEventListener(this.popupPanel, "popupshown", this, "popupPanelShown", false);    
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when popup panel shown.", ex);
+    }
 },
 
 createInsertionContainer: function()
 {
-    //dump("internoteDisplayUI.getInsertionContainer\n");
+    //dump("internoteDisplayUI.createInsertionContainer\n");
     
     this.utils.assertError(this.utils.isNonNegCoordPair(this.viewportDims), "Invalid dims in createInsertionContainer", this.viewportDims);
     
@@ -209,10 +221,10 @@ createInsertionContainer: function()
         
         this.popupPanel = this.utils.createShiftingPanel("pane", this.innerContainer);
         
+        this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown", this, "popupPanelShown", false);
+
         this.isPanelCreated = true;
         this.positionPane();
-        
-        this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown", this, "popupPanelShown", false);
     }
     
     this.utils.assertError(document.getElementById("internote-popuppane") != null, "Can't find display popup.");
@@ -315,21 +327,6 @@ adjustAllNotes: function(getUpdatedPosFunc)
         this.adjustNote(uiNote, updatedPos, null);
     }
 },
-
-/*
-readyToShowNote: function(uiNote, posOnViewport, dims)
-{
-    //dump("internoteDisplayUI.readyToShowNote\n");
-    
-    this.utils.assertError(this.utils.isCoordPair(posOnViewport), "Invalid pos.",  posOnViewport);
-    this.utils.assertError(this.utils.isCoordPair(dims),          "Invalid dims.", dims);
-    
-    this.moveNote  (uiNote, posOnViewport);
-    this.resizeNote(uiNote, dims);
-    
-    uiNote.noteElt.style.display = "";
-},
-*/
 
 getScreenPosition: function(uiNote)
 {

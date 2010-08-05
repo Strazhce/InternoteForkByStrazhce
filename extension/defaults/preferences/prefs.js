@@ -7,7 +7,7 @@ pref("internote.defaultposition", "0");
 pref("internote.defaultsize", "1");
 pref("internote.fontsize", "12");
 pref("internote.highlightable", false);
-pref("internote.usescrollbar", false);
+pref("internote.usenativescroll", false);
 pref("internote.usestatusbar", true);
 pref("internote.changelocation", false);
 pref("internote.askbeforedelete", true);

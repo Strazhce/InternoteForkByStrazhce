@@ -221,8 +221,6 @@ popupShown: function(event)
                 this.autoFocusNote = null;
             }
         }
-        
-        this.utils.removeBoundDOMEventListener(popup, "popupshown", this, "popupShown", false);
     }
     catch (ex)
     {

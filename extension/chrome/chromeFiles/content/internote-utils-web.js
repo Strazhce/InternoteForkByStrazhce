@@ -372,6 +372,21 @@ createXULElement: function(tagName, doc, id)
     return elt;
 },
 
+createHTMLCanvas: function(doc, id, width, height)
+{
+    var canvas = this.createHTMLElement("canvas", doc, id);
+    canvas.width  = width;
+    canvas.height = height;
+    return canvas;
+},
+
+createXULSpacer: function(doc, width, height)
+{
+    var spacer = this.createXULElement("spacer", doc);
+    this.fixDOMEltDims(spacer, [width, height]);
+    return spacer;
+},
+
 // Tricky code ... easier to break.
 getCanvasOfElement: function(iFrame, freshElement, dims)
 {

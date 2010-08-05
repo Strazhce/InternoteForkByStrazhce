@@ -99,11 +99,6 @@ makeUINote: function(note)
         
         this.backColor      = note.backColor;
         this.backColorArray = utils.parseHexColor(note.backColor);
-        
-        // For scrolling
-        this.lineNum        = 0;
-        this.lineCount      = 10;
-        this.pageSize       = 3;
     }
     
     return new UINote(this.utils, note);
@@ -115,6 +110,12 @@ destroy: function(uiNote)
     {
         onEdit(event);
     }, false);
+},
+
+noteShown: function(uiNote)
+{
+    uiNote.scrollHandler.drawScrollLine();
+    this.updateScrollbarPresence(uiNote);
 },
 
 // createXULElement is used here rather than createElement so that we can create the element
@@ -154,13 +155,16 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
     
     var littleText  = uiNote.littleText =
         this.createLittleText(doc, uiNote);
-    var textArea    = uiNote.textArea   =
-        this.createTextArea(doc, uiNote, callbacks.onEdit, callbacks.onMoveStart, callbacks.onFocus)
+    var textArea = this.createTextArea(doc, uiNote, callbacks.onEdit, callbacks.onMoveStart, callbacks.onFocus)
+    
+    var scrollbarHandler = uiNote.scrollHandler =
+        new this.utils.ScrollHandler(this.utils, uiNote.textArea, uiNote.num,
+                                     this.NOTE_OUTER_SIZE, this.getBorderColor(uiNote), this.getButtonColor(uiNote));
+    
+    var scrollbar = uiNote.scrollbar = scrollbarHandler.getScrollbar();
     
     var minimizedTop = uiNote.minimizedTop =
         this.utils.createXULElement("hbox", doc, "internote-minimizedtop" + note.num);
-    
-    var scrollbar = this.createScrollbar(uiNote, callbacks, doc);
     
     var dragNorth = uiNote.dragNorth = this.createDragBorder(doc, uiNote, "north", false, callbacks.onMoveStart);
     var dragSouth = uiNote.dragSouth = this.createDragBorder(doc, uiNote, "south", false, callbacks.onMoveStart);
@@ -239,6 +243,7 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
     this.paintUI(uiNote);
     
     this.setIsEnabled(uiNote, true);
+    this.updateFontSize(uiNote);
     
     return uiNote;
 },
@@ -251,11 +256,13 @@ isFocused: function(uiNote)
 cloneUINote: function(uiNote, doc)
 {
     var tempUINote = this.createNewNote(uiNote.note, {}, doc);
+    tempUINote.textArea.scrollTop = uiNote.textArea.scrollTop;
+    tempUINote.hasScrollbar = this.isScrollbarNecessary(uiNote);
     
-    tempUINote.lineNum   = uiNote.lineNum;
-    tempUINote.lineCount = uiNote.lineCount;
-    tempUINote.pageSize  = uiNote.pageSize;
-
+    // Need to do get the scrollbar right.
+    this.updateScrollbarPresence(tempUINote);
+    tempUINote.scrollHandler.drawScrollLine(uiNote.scrollHandler.getScrollInfo());
+    
     return tempUINote;
 },
 
@@ -267,9 +274,7 @@ pointers: {
     dragWest:       "move",
     dragEast:       "move",
     backSide:       "pointer",
-    upButton:       "pointer",
-    downButton:     "pointer",
-    scrollLine:     "pointer",
+    scrollbar:      "pointer",
     closeButton:    "pointer",
     minimizeButton: "pointer",
     textArea:       "text",
@@ -282,9 +287,7 @@ paintUI: function(uiNote)
     this.drawMinimizeButton(uiNote);
     this.drawResizeHandle(uiNote);
     this.colorFlipArrow(uiNote);
-    this.drawUpScrollButton(uiNote);
-    this.drawDownScrollButton(uiNote);
-    this.drawScrollLine(uiNote);
+    uiNote.scrollHandler.paintUI();
 },
 
 /*
@@ -368,27 +371,18 @@ fixTextArea: function(uiNote, dims)
 {
     var BORDER_AREA = 2 * (this.NOTE_OUTER_SIZE + this.NOTE_BORDER_SIZE);
     
-	// See firefox bug #542394.
-	var textDims = this.utils.coordPairSubtract(dims, [BORDER_AREA, BORDER_AREA]);
+    // See firefox bug #542394.
+    var textDims = this.utils.coordPairSubtract(dims, [BORDER_AREA, BORDER_AREA]);
     textDims = this.utils.coordPairMax(textDims, [0, 0]);
     this.utils.fixDOMEltDims(uiNote.textArea, textDims);
 },
 
-// Firefox doesn't support resizable canvases!
+// Firefox doesn't support flexing canvases!
 fixScrollLine: function(uiNote, height)
 {
-    var scrollLineHeight = height - 4 * this.NOTE_OUTER_SIZE     - 2 * this.NOTE_SPACING
-                                  - 2 * this.NOTE_SPACING_LITTLE - 2 * this.NOTE_BORDER_SIZE;
-    
-    if (scrollLineHeight > 0)
-    {
-        uiNote.scrollLine.height = scrollLineHeight;
-        this.drawScrollLine(uiNote);
-    }
-    else
-    {
-        uiNote.scrollLine.height = 0;
-    }
+    var scrollbarHeight = height - 2 * this.NOTE_OUTER_SIZE - 2 * this.NOTE_SPACING
+                                 - 2 * this.NOTE_BORDER_SIZE;
+    uiNote.scrollHandler.setHeight(scrollbarHeight);
 },
 
 // XXX Clean up use of fixDOMEltDims versus setDims + getDims should access noteElt?
@@ -410,11 +404,27 @@ adjustDims: function(uiNote, dims)
             var newDims = this.utils.getDims(uiNote.background);
             this.fixTextArea(uiNote, newDims);
             this.fixScrollLine(uiNote, newDims[1]);
+            this.updateScrollbarPresence(uiNote);
         }
         else
         {
             this.updateStaticImage(uiNote, this.utils.getDims(uiNote.noteElt.boxObject));
         }
+        
+        this.checkScrollTop(uiNote);
+    }
+},
+
+checkScrollTop: function(uiNote)
+{
+    //dump("checkScrollTop " + uiNote.num + "\n");
+    var maxScrollTop = uiNote.textArea.scrollHeight - uiNote.textArea.offsetHeight;
+    
+    //dump(uiNote.textArea.scrollHeight + " " + uiNote.textArea.offsetHeight +
+    //     " " + maxScrollTop + "\n");
+    if (maxScrollTop < uiNote.textArea.scrollTop)
+    {
+        uiNote.textArea.scrollTop = maxScrollTop;
     }
 },
 
@@ -463,10 +473,6 @@ flipNote: function(uiNote, newIsFlipped)
         uiNote.isFlipped = newIsFlipped;
     }
     
-    // XXX FIXME Should compute whether to show scrollbar on flip to front.
-    // XXX Scrollbars currently disabled.
-    //uiNote.eastDeck.setAttribute("selectedIndex", uiNote.isFlipped? 0 : 1);
-    
     if (uiNote.isFlipped)
     {
         this.drawNoteBackSide(uiNote);
@@ -480,6 +486,8 @@ flipNote: function(uiNote, newIsFlipped)
 		// Prevent typing while back side up.
 		uiNote.textArea.blur();
 	}
+    
+    this.updateScrollbarPresence(uiNote);
 },
 
 focusNote: function(uiNote)
@@ -492,17 +500,61 @@ updateFontSize: function(uiNote)
 {
     var textArea = uiNote.textArea;
     textArea.style.fontSize = this.prefs.getFontSize() + "pt";
+    
+    var view = uiNote.noteElt.ownerDocument.defaultView;
+    var style = view.getComputedStyle(textArea, "");
+    var lineHeight = parseInt(style.lineHeight, 10);
+    
+    uiNote.scrollHandler.updateLineHeight(lineHeight);
 },
 
 updateScrollbar: function(uiNote)
 {
-    if (this.prefs.shouldUseScrollbar())
+    if (this.prefs.shouldUseNativeScrollbar())
     {
         uiNote.textArea.style.overflow = "";
     }
     else
     {
         uiNote.textArea.style.overflow = "hidden";
+    }
+},
+
+isScrollbarNecessary: function(uiNote)
+{
+    dump("isScrollbarNecessary = " + uiNote.scrollHandler.isNecessary() + " " +
+         uiNote.isFlipped + "\n");
+    return uiNote.scrollHandler.isNecessary() && !uiNote.isFlipped;
+},
+
+updateScrollbarPresence: function(uiNote)
+{
+    dump("updateScrollbarPresence " + uiNote.num + "\n");
+    
+    if (uiNote.hasOwnProperty("hasScrollbar"))
+    {
+        // Used during flipping to avoid checks.
+        var hasScrollbar = uiNote.hasScrollbar;
+        dump("OverridenBar " + hasScrollbar + "\n");
+    }
+    else
+    {
+        var hasScrollbar = this.isScrollbarNecessary(uiNote);
+        dump("TestBar " + hasScrollbar + "\n");
+    }
+    
+    dump("hasScrollbar = " + hasScrollbar + "\n");
+    
+    if (hasScrollbar)
+    {
+        //dump("Necessary\n");
+        uiNote.eastDeck.setAttribute("selectedIndex", 1);
+    }
+    else
+    {
+        //dump("Unnecessary\n");
+        uiNote.eastDeck.setAttribute("selectedIndex", 0);
+        uiNote.textArea.scrollTop = 0;
     }
 },
 
@@ -560,6 +612,8 @@ setBackColor: function(uiNote, backColor, redrawSelection)
         uiNote.backColor = backColor;
         uiNote.backColorArray = this.utils.parseHexColor(backColor);
         
+        uiNote.scrollHandler.updateColors(this.getBorderColor(uiNote), this.getButtonColor(uiNote));
+        
         this.paintUI(uiNote);
         
         if (uiNote.isFlipped && redrawSelection)
@@ -590,23 +644,16 @@ getBorderColor: function(uiNote)
     return this.utils.formatHexColor(this.utils.darken(uiNote.backColorArray, 0.05));
 },
 
-createSpacer: function(doc, width, height)
-{
-    var spacer = this.utils.createXULElement("spacer", doc);
-    this.utils.fixDOMEltDims(spacer, [width, height]);
-    return spacer;
-},
-
 createHorzSpacer: function(doc, isLittle)
 {
     var size = (isLittle == true) ? this.NOTE_SPACING_LITTLE : this.NOTE_SPACING;
-    return this.createSpacer(doc, size, this.NOTE_OUTER_SIZE);
+    return this.utils.createXULSpacer(doc, size, this.NOTE_OUTER_SIZE);
 },
 
 createVertSpacer: function(doc, isLittle)
 {
     var size = (isLittle == true) ? this.NOTE_SPACING_LITTLE : this.NOTE_SPACING;
-    return this.createSpacer(doc, this.NOTE_OUTER_SIZE, size);
+    return this.utils.createXULSpacer(doc, this.NOTE_OUTER_SIZE, size);
 },
 
 createBackground: function(doc, uiNote)
@@ -644,51 +691,6 @@ createDragBorder: function(doc, uiNote, directionStr, isVertical, onMoveStart)
     return dragBorder;
 },
 
-createScrollbar: function(uiNote, callbacks, doc)
-{
-    var scrollbar = uiNote.scrollbar = this.utils.createXULElement("vbox", doc, "internote-scrollbar" + uiNote.num);
-    
-    var onScrollUpLine    = this.utils.bind(this, this.onScrollUpLine  );
-    var onScrollDownLine  = this.utils.bind(this, this.onScrollDownLine);
-    
-    var outerThis = this;
-    var onPressScrollLine = function(event)
-    {
-        outerThis.onPressScrollLine(event, uiNote);
-    }
-    
-    var scrollLine        = uiNote.scrollLine        = this.createScrollLine(doc, uiNote, onPressScrollLine);
-    var scrollLineWrapper = uiNote.scrollLineWrapper =
-        this.utils.createXULElement("vbox", doc, "internote-scrolllinewrapper" + uiNote.num);
-    
-    var upButton    = uiNote.upButton   =
-        this.createButton(doc, uiNote, onScrollUpLine,   "upButton",   "internote-upscroll",   "drawUpScrollButton");
-    var downButton  = uiNote.downButton   =
-        this.createButton(doc, uiNote, onScrollDownLine, "downButton", "internote-downscroll", "drawDownScrollButton");
-    
-    scrollbar.appendChild(upButton);
-    scrollbar.appendChild(this.createVertSpacer(doc, true));
-    scrollbar.appendChild(scrollLineWrapper);
-    scrollbar.appendChild(this.createVertSpacer(doc, true));
-    scrollbar.appendChild(downButton);
-    scrollbar.flex = "1";
-    
-    scrollLineWrapper.appendChild(scrollLine);
-    this.utils.fixDOMEltWidth(scrollLineWrapper, this.NOTE_OUTER_SIZE);
-    scrollLineWrapper.flex = "1";
-    scrollLineWrapper.style.overflow = "hidden";
-    
-    return scrollbar;
-},
-
-createScrollLine: function(doc, uiNote, onPress)
-{
-    var button = this.createButton(doc, uiNote, null, "scrollLine", "internote-scrollline", "drawScrollLine",
-                                   this.NOTE_OUTER_SIZE, 50);
-    button.addEventListener("mousedown", onPress, true);
-    return button;
-},
-
 createLittleText: function(doc, uiNote)
 {
     var littleText = this.utils.createHTMLElement("textarea", doc, "internote-littletext" + uiNote.num);
@@ -721,12 +723,7 @@ createLittleText: function(doc, uiNote)
 
 createButton: function(doc, uiNote, onClick, fieldName, id, drawMethod)
 {
-    var canvas = uiNote[fieldName] = this.utils.createHTMLElement("canvas", doc, id + uiNote.num);
-    var context = canvas.getContext("2d");
-    
-    canvas.width  = this.NOTE_OUTER_SIZE;
-    canvas.height = this.NOTE_OUTER_SIZE;
-    //canvas.style.backgroundColor = "rgb(200,0,0)";
+    var canvas = uiNote[fieldName] = this.utils.createHTMLCanvas(doc, id + uiNote.num, this.NOTE_OUTER_SIZE, this.NOTE_OUTER_SIZE);
     
     if (onClick != null)
     {
@@ -874,7 +871,7 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart)
 
 createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
 {
-    var textArea = this.utils.createHTMLElement("textarea", doc, "internote-text" + uiNote.num);
+    var textArea = uiNote.textArea = this.utils.createHTMLElement("textarea", doc, "internote-text" + uiNote.num);
     
     textArea.wrap = "yes";
     textArea.autocomplete = "off";
@@ -889,13 +886,12 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
     textArea.style.color = uiNote.note.foreColor;
     textArea.style.resize = "none";
     textArea.style.fontFamily = "helvetica, sans-serif";
-    textArea.style.fontSize = this.prefs.getFontSize() + "pt";
     textArea.style.width  = "100%";
     textArea.style.height = "100%";
-    //textArea.style.backgroundColor = "#AAAAAA";
+    
+    if (!this.prefs.shouldUseNativeScrollbar()) textArea.style.overflow = "hidden";
     
     textArea.style.margin = "0px";
-    if (!this.prefs.shouldUseScrollbar()) textArea.style.overflow = "hidden";
     
     if (uiNote.note.isHTML)
     {
@@ -905,6 +901,20 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
         textArea.readOnly = true;
         textArea.style.backgroundColor = "rgba(0,0,0,0.1)";
     }
+    
+    textArea.addEventListener("input", this.utils.bind(this, function()
+    {
+        try
+        {
+            this.checkScrollTop(uiNote);
+            uiNote.scrollHandler.drawScrollLine();
+            this.updateScrollbarPresence(uiNote);
+        }
+        catch (ex)
+        {
+            this.utils.handleException("Exception caught after user input.", ex);
+        }
+    }), false);
     
     if (onEdit != null)
     {
@@ -1158,80 +1168,6 @@ drawResizeHandle: function(uiNote)
     context.stroke();
 },
 
-drawUpScrollButton:   function(uiNote) { this.drawScrollButton(uiNote, true ); },
-drawDownScrollButton: function(uiNote) { this.drawScrollButton(uiNote, false); },
-
-drawScrollButton: function(uiNote, isUp)
-{
-    //this.utils.dumpTraceData(uiNote, 110, 1);
-    var canvas = isUp ? uiNote.upButton : uiNote.downButton;
-    var context = canvas.getContext("2d");
-    
-    var w = canvas.width;
-    var h = canvas.height;
-    
-    context.clearRect(0, 0, w, h);
-    
-    context.strokeStyle = this.getButtonColor(uiNote);
-    context.lineWidth = 0.3 * w;
-    context.lineCap   = "round";
-    
-    var Y1 = isUp ? 0.7 : 0.3;
-    var Y2 = isUp ? 0.3 : 0.7;
-    
-    context.beginPath();
-    context.moveTo(0.1 * w, Y1 * h);
-    context.lineTo(0.5 * w, Y2 * h);
-    context.lineTo(0.9 * w, Y1 * h);
-    context.stroke();
-},
-
-drawScrollLine: function(uiNote)
-{
-    var context = uiNote.scrollLine.getContext("2d");
-    
-    var w = uiNote.scrollLine.width;
-    var h = uiNote.scrollLine.height;
-    
-    context.clearRect(0, 0, w, h);
-    
-    context.strokeStyle = this.getBorderColor(uiNote);
-    context.fillStyle   = this.getButtonColor(uiNote);
-    context.lineWidth = 0.4 * w;
-    context.lineCap   = "round";
-    
-    if (this.NOTE_OUTER_SIZE < h)
-    {
-        var [scrollLineTop, scrollLineBot, scrollPos] = this.getScrollInfo(uiNote);
-        
-        //dump("  Drawing Line\n");
-        context.beginPath();
-        context.moveTo(0.5 * w, scrollLineTop);
-        context.lineTo(0.5 * w, scrollLineBot);
-        context.stroke();
-        
-        //dump("  Drawing Handle\n");
-        context.beginPath();
-        context.arc(0.5 * w, scrollPos, this.NOTE_OUTER_SIZE / 2, 0, 2 * Math.PI, false);
-        context.fill();
-    }
-    else
-    {
-        // This can happen initially.  We just don't draw.
-    }
-},
-
-getScrollInfo: function(uiNote)
-{
-    var scrollHeight = uiNote.scrollLine.height;
-    var scrollLineTop = 0.0 * scrollHeight + this.NOTE_OUTER_SIZE / 2;
-    var scrollLineBot = 1.0 * scrollHeight - this.NOTE_OUTER_SIZE / 2;
-    var scrollLineLength = scrollLineBot - scrollLineTop;
-    var scrollFraction = uiNote.lineNum / (uiNote.lineCount - 1);
-    var scrollPos = scrollLineTop + scrollLineLength * scrollFraction;
-    return [scrollLineTop, scrollLineBot, scrollPos];
-},
-
 colorFlipArrow: function(uiNote)
 {
     var context = uiNote.flipButton.getContext("2d");
@@ -1304,7 +1240,6 @@ makeStaticImage: function(uiNote, dims)
     var doc = scratchIFrame.contentDocument;
     
     var tempUINote = this.cloneUINote(uiNote, doc);
-    this.adjustDims(tempUINote, dims);
     
     if (uiNote.isFlipped) this.flipNote(tempUINote);
     
@@ -1336,8 +1271,6 @@ updateStaticImage: function(uiNote, dims)
     var scaledCanvas = uiNote.scaledCanvas;
     var context = scaledCanvas.getContext("2d");
     
-    //scaledCanvas.width  = width;
-    //scaledCanvas.height = height;
     this.utils.setDims(scaledCanvas, dims);
     
     context.drawImage(uiNote.rawCanvas, 0, 0, scaledCanvas.width, scaledCanvas.height);
@@ -1367,124 +1300,4 @@ makeDynamic: function(uiNote)
     //uiNote.background.style.visibility = "";
 },
 
-// XXX Fix to use the correct proportions.
-onScrollUpLine:   function(event, uiNote) { this.onChangeScroll(uiNote, uiNote.lineNum - 1); },
-onScrollDownLine: function(event, uiNote) { this.onChangeScroll(uiNote, uiNote.lineNum + 1); },
-onScrollUpPage:   function(event, uiNote) { this.onChangeScroll(uiNote, uiNote.lineNum - uiNote.pageSize); },
-onScrollDownPage: function(event, uiNote) { this.onChangeScroll(uiNote, uiNote.lineNum + uiNote.pageSize); },
-
-convertCoordToLine: function(uiNote, y)
-{
-    var [scrollLineTop, scrollLineBot, scrollPos] = this.getScrollInfo(uiNote);
-    var scrollLineLength = scrollLineBot - scrollLineTop;
-    var scrollRatio = this.utils.clipToRange(y / scrollLineLength, 0, 1);
-    return Math.round(scrollRatio * (uiNote.lineCount - 1));
-},
-
-// Returns a negative, zero or positive value depending on click proximity to the slider.
-getScrollLineLocation: function(event, uiNote)
-{
-    var [scrollLineTop, scrollLineBot, scrollPos] = this.getScrollInfo(uiNote);
-    var clickY = event.clientY - uiNote.scrollLineWrapper.boxObject.y;
-    
-    if (this.utils.isBetween(clickY, scrollPos - this.NOTE_OUTER_SIZE/2, scrollPos + this.NOTE_OUTER_SIZE/2))
-    {
-        return 0;
-    }
-    else
-    {
-        return clickY - scrollPos;
-    }
-},
-
-// XXX Should kill anims.
-onPressScrollLine: function(event, uiNote)
-{
-    try
-    {
-        //dump("internoteNoteUI.onPressScrollLine\n");
-        if (event.button == 0)
-        {
-            var location = this.getScrollLineLocation(event, uiNote);
-            
-            if (location == 0)
-            {
-                this.onStartDragSlider(event, uiNote);
-            }
-            else
-            {
-                this.onStartPressLine(event, uiNote, location);
-            }
-        }
-    }
-    catch (ex)
-    {
-        this.utils.handleException("Exception caught when pressing scroll line.", ex);
-    }
-},
-
-// We avoid the click event because it occurs even when you move the
-// mouse far away before releasing.  This way we can prevent doing
-// anything for this.
-// XXX Should support holding down for multiple move.
-onStartPressLine: function(event, uiNote, location)
-{
-    //dump("internoteNoteUI.onStartPressLine\n");
-    
-    var dragHandler = new this.utils.DragHandler(this.utils);
-    
-    dragHandler.onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset)
-    {
-        if (!wasDrag)
-        {
-            if (location < 0)
-            {
-                this.onScrollUpPage(event, uiNote);
-            }
-            else
-            {
-                this.onScrollDownPage(event, uiNote);
-            }
-        }
-        
-        dragHandler = null;
-    });
-    
-    dragHandler.dragStarted(event);
-},
-
-onStartDragSlider: function(event, uiNote)
-{
-    //dump("internoteNoteUI.onStartDragSlider\n");
-    
-    var dragHandler = new this.utils.DragHandler(this.utils);
-    var startLine = uiNote.lineNum;
-    
-    dragHandler.onDragMouseMoved = this.utils.bind(this, function(event, offset) {
-        var [scrollLineTop, scrollLineBot, scrollPos] = this.getScrollInfo(uiNote);
-        var mouseY = event.clientY - uiNote.scrollLineWrapper.boxObject.y - scrollLineTop;
-        var lineNum = this.convertCoordToLine(uiNote, mouseY);
-        this.onChangeScroll(uiNote, lineNum);
-    });
-    
-    dragHandler.onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset)
-    {
-        if (!wasCompleted)
-        {
-            this.onChangeScroll(uiNote, startLine);
-        }
-        
-        dragHandler = null;
-    });
-    
-    dragHandler.dragStarted(event);
-},
-
-onChangeScroll: function(uiNote, lineNum)
-{
-    uiNote.lineNum = this.utils.clipToRange(lineNum, 0, uiNote.lineCount - 1);
-    this.drawScrollLine(uiNote);
-},
-
 };
-
