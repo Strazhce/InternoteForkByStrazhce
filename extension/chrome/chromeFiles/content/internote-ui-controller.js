@@ -480,7 +480,7 @@ changePage: function(newURL, isNewPageLoading)
         this.arePageListeners = false;
         
         this.displayUI.setUINotes(this.allUINotes, this.uiNoteLookup);
-        
+
         if (this.allowNotesOnThisPage(newURL))
         {
             // XXX These two should probably be distinguished.  It's possible that
@@ -501,7 +501,7 @@ changePage: function(newURL, isNewPageLoading)
                     this.minimizedNotes.push(uiNote);
                 }
             }
-            
+
             this.minimizedNotes.sort(this.minimizedNoteSortFunc);
             
             for (var i = 0; i < this.minimizedNotes.length; i++)
@@ -1708,7 +1708,7 @@ screenGetViewportDims: function()
     }
     
     this.utils.assertError(this.utils.isCoordPair(viewportDims), "Bad modified viewport dims", viewportDims);
-   
+    
     //this.utils.dumpTraceData(viewportDims, 110, 1);
     
     // Next we handle really small windows, where the window is smaller than the browser box!

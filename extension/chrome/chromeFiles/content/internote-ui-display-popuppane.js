@@ -221,7 +221,7 @@ createInsertionContainer: function()
         
         this.popupPanel = this.utils.createShiftingPanel("pane", this.innerContainer);
         
-        this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown", this, "popupPanelShown", false);
+        this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown",   this, "popupPanelShown",   false);
 
         this.isPanelCreated = true;
         this.positionPane();

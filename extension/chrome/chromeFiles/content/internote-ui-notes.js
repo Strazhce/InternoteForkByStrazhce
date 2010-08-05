@@ -274,7 +274,7 @@ pointers: {
     dragWest:       "move",
     dragEast:       "move",
     backSide:       "pointer",
-    scrollbar:      "pointer",
+    scrollbar:        "pointer",
     closeButton:    "pointer",
     minimizeButton: "pointer",
     textArea:       "text",
@@ -825,7 +825,7 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart)
     textArea.value = uiNote.note.text;
     
     //if (!this.prefs.shouldUseScrollbar()) textArea.style.overflow = "hidden";
-    
+
     //textArea.oninput = onEdit;
     //if (onEdit != null)
     //{
