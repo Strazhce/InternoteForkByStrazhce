@@ -49,7 +49,6 @@ init: function()
     
     try
     {
-        
         InternoteEventDispatcher.prototype.incorporateED(InternoteStorage.prototype);
         InternoteEventDispatcher.prototype.incorporateED(InternoteStorageWatcher.prototype);
         
@@ -511,6 +510,10 @@ configureURLSection: function(note)
     else if (note.matchType == this.storage.URL_MATCH_REGEXP)
     {
         urlLabelDeck.setAttribute("selectedIndex", "2");
+    }
+    else if (note.matchType == this.storage.URL_MATCH_SITE)
+    {
+        urlLabelDeck.setAttribute("selectedIndex", "3");
     }
     else
     {

@@ -144,7 +144,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <menupopup>
                         <menuitem value="0" label="&internote.urlMatchExact.value;" />
                         <menuitem value="2" label="&internote.urlMatchStarts.value;" />
-                        <menuitem value="3" label="&internote.urlMatchAll.value;" />
+                        <menuitem value="3" label="&internote.urlMatchSite.value;" />
+                        <menuitem value="4" label="&internote.urlMatchAll.value;" />
                         <menuitem value="1" label="&internote.urlMatchRegexp.value;" />
                     </menupopup>
                 </menulist>
@@ -156,6 +157,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <label control="noteURL" value="&internote.noteURLPrefix.label;:"
                            style="font-weight: bold;" class="editlabel" />
                     <label control="noteURL" value="&internote.noteURLRegexp.label;:"
+                           style="font-weight: bold;" class="editlabel" />
+                    <label control="noteURL" value="&internote.noteSiteSuffix.label;:"
                            style="font-weight: bold;" class="editlabel" />
                 </deck>
                 <label flex="1" id="goToLink" value="&internote.goLink.label;..."

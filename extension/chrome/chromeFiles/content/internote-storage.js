@@ -171,7 +171,8 @@ LOADED_FROM_BACKUP: 4,
 URL_MATCH_EXACT:  0,
 URL_MATCH_REGEXP: 1,
 URL_MATCH_PREFIX: 2,
-URL_MATCH_ALL:    3,
+URL_MATCH_SITE:   3,
+URL_MATCH_ALL:    4,
 
 areNotesDisplaying: true,
 
@@ -763,6 +764,25 @@ matchesURL: function(note, pageURL)
     {
         return pageURLCanon == noteURLCanon ||
                this.utils.startsWith(pageURLCanon, note.url);
+    }
+    else if (note.matchType == this.URL_MATCH_SITE)
+    {
+        var site = this.utils.getURLSite(pageURL);
+        var noteSite = note.url;
+        
+        if (site == noteSite)
+        {
+            return true;
+        }
+        else
+        {
+            if (note.url.charAt(0) != ".")
+            {
+                noteSite = "." + note.url;
+            }
+            
+            return this.utils.endsWith(site, noteSite);
+        }
     }
     else if (note.matchType == this.URL_MATCH_ALL)
     {

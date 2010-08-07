@@ -60,6 +60,30 @@ htmlDecode: function(encodedText)
                       .replace(/&grave;/g, "`");
 },
 
+getURLSite: function(url)
+{
+    var protocolRegexp = "([^:]*)://";
+    var userNameRegexp = "([^:@]*:)?";
+    var passwordRegexp = "([^@]@)?";
+    var siteRegexp     = "([^:/]*)";
+    var portRegexp     = "(:[0-9]+)?";
+    var endRegexp      = "(/|$)";
+    
+    var regexp = "^" + protocolRegexp + userNameRegexp + passwordRegexp + siteRegexp + portRegexp + endRegexp;
+    
+    var regexpResults = new RegExp(regexp).exec(url);
+    
+    if (regexpResults == null)
+    {
+        this.assertWarnNotHere("Not a URL when parsing.", url);
+        return null;
+    }
+    else
+    {
+        return regexpResults[4];
+    }
+},
+
 dumpXML: function(node, level)
 {
     if (level == null) level = 0;
@@ -553,6 +577,14 @@ getXMLBoolean: function(element, attrName, defaultVal)
     else
     {
         return defaultVal;
+    }
+},
+
+clearAfterMenuSeparator: function(menuSeparator)
+{
+    while (menuSeparator.nextSibling != null && menuSeparator.nextSibling.tagName != "menuseparator")
+    {
+        menuSeparator.parentNode.removeChild(menuSeparator.nextSibling);
     }
 },
 

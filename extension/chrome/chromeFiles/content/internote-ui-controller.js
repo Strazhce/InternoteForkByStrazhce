@@ -1171,19 +1171,35 @@ userChoosesMatchAll: function(element)
     }
 },
 
-userChoosesURLPrefix: function(ev, element)
+userChoosesPagePrefix: function(ev, element)
 {
-    //dump("userChoosesURLPrefix\n");
+    //dump("userChoosesPagePrefix\n");
     
     try
     {
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
-        var url = ev.target.getUserData("internote-url");
+        var url = ev.target.getUserData("internote-data");
         this.storage.setMatch(note, url, this.storage.URL_MATCH_PREFIX);
     }
     catch (ex)
     {
         this.utils.handleException("Exception caught when selecting URL prefix.", ex);
+    }
+},
+
+userChoosesSiteSuffix: function(ev, element)
+{
+    //dump("userChoosesSiteSuffix\n");
+    
+    try
+    {
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];
+        var site = ev.target.getUserData("internote-data");
+        this.storage.setMatch(note, site, this.storage.URL_MATCH_SITE);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when selecting site suffix.", ex);
     }
 },
 
@@ -1335,8 +1351,6 @@ chromePrepareShowOnMenu: function(element)
 {
     try
     {
-        var menuSeparator = document.getElementById("internote-showon-menu-sep");
-        var menuPopup = menuSeparator.parentNode;
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];        
         
         // First set the radio checkboxes for the static items.
@@ -1348,6 +1362,7 @@ chromePrepareShowOnMenu: function(element)
         var isAll    = (note.matchType == this.storage.URL_MATCH_ALL   );
         var isRegexp = (note.matchType == this.storage.URL_MATCH_REGEXP);
         var isPrefix = (note.matchType == this.storage.URL_MATCH_PREFIX);
+        var isSite   = (note.matchType == this.storage.URL_MATCH_SITE  );
         
         this.utils.setDisplayed(regexpItem, isRegexp);
         
@@ -1355,62 +1370,100 @@ chromePrepareShowOnMenu: function(element)
         if (isAll   ) allItem   .setAttribute("checked", "true")
         if (isRegexp) regexpItem.setAttribute("checked", "true")
         
-        // Now remove any existing prefix items.
-        while (menuSeparator.nextSibling != null)
-        {
-            menuPopup.removeChild(menuSeparator.nextSibling);
-        }
-        
-        // Add an existing prefix item, if relevant.
-        var startsWithLabel = this.utils.getLocaleString("StartsWithMenuItem");
-        
-        if (isPrefix && !this.utils.endsWith(note.url, "/"))
-        {
-            var menuItem = document.createElement("menuitem");
-            
-            menuItem.setAttribute("label", startsWithLabel.replace("%1", note.url));
-            menuItem.setAttribute("type", "radio");
-            menuItem.setAttribute("name", "showson");
-            menuItem.setAttribute("checked", "true");
-            
-            menuPopup.appendChild(menuItem);
-        }
-        
-        // Now add the new prefix items.
-       
-        var url = this.currentURL;
-        var index = url.lastIndexOf("/");
-        
-        while (index != -1 && url.charAt(index - 1) != "/")
-        {
-            url = url.substr(0, index + 1);
-            
-            var menuItem = document.createElement("menuitem");
-            
-            menuItem.setAttribute("label", startsWithLabel.replace("%1", url));
-            menuItem.setAttribute("type", "radio");
-            menuItem.setAttribute("name", "showson");
-            
-            if (isPrefix && url == note.url)
-            {
-                menuItem.setAttribute("checked", "true");
-            }
-            
-            // May be necessary to set handler after setting the check!
-            menuItem.setAttribute("oncommand", "internoteUIController.userChoosesURLPrefix(event, popupNode)");
-            
-            menuItem.setUserData("internote-url", url, null);
-            
-            menuPopup.appendChild(menuItem);
-            
-            url = url.substr(0, url.length - 1);
-            index = url.lastIndexOf("/");
-        }
+        this.chromePrepareShowOnMenuPages(note, isPrefix);
+        this.chromePrepareShowOnMenuSites(note, isSite  );
     }
     catch (ex)
     {
         this.utils.handleException("Exception caught while preparing show on menu.", ex);
     }
+},
+
+chromePrepareShowOnMenuPages: function(note, isPrefix)
+{
+    var menuSeparator = document.getElementById("internote-showon-menu-pages-sep");
+    var startsWithLabel = this.utils.getLocaleString("PageStartsWithMenuItem");
+    
+    // Now remove any existing prefix items.
+    this.utils.clearAfterMenuSeparator(menuSeparator);
+    
+    // Add an existing prefix item, if relevant.
+    if (isPrefix && !this.utils.endsWith(note.url, "/"))
+    {
+        var text = startsWithLabel.replace("%1", url);
+        this.chromePrepareShowOnCreateItem(menuSeparator, text, url, true, null);
+    }
+    
+    // Now add the new prefix items.
+    var url = this.currentURL;
+    
+    while (true)
+    {
+        var index = url.lastIndexOf("/");
+        
+        if (index == -1 || url.charAt(index - 1) == "/") break;
+        
+        url = url.substr(0, index + 1);
+        
+        var text = startsWithLabel.replace("%1", url);
+        var isChecked = (isPrefix && url == note.url);
+        this.chromePrepareShowOnCreateItem(menuSeparator, text, url, isChecked,
+                                           "internoteUIController.userChoosesPagePrefix(event, popupNode)");
+        
+        url = url.substr(0, url.length - 1);
+    }
+},
+
+chromePrepareShowOnMenuSites: function(note, isSite)
+{
+    var menuSeparator = document.getElementById("internote-showon-menu-sites-sep");
+    var endsWithLabel = this.utils.getLocaleString("SiteEndsWithMenuItem");
+    var site = this.utils.getURLSite(this.currentURL);
+    
+    // Now remove any existing prefix items.
+    this.utils.clearAfterMenuSeparator(menuSeparator);
+    
+    // Add sites derived from the URL.
+    if (site != null)
+    {
+        while (true)
+        {
+            var text = endsWithLabel.replace("%1", site);
+            var isChecked = (isSite && site == note.url);
+            this.chromePrepareShowOnCreateItem(menuSeparator, text, site, isChecked,
+                                               "internoteUIController.userChoosesSiteSuffix(event, popupNode)");
+            
+            var index = site.indexOf(".");
+            
+            if (index == -1) break;
+            
+            site = site.substr(index + 1);
+        }
+    }
+},
+
+chromePrepareShowOnCreateItem: function(menuSeparator, text, data, isChecked, onCommand)
+{
+    var menuItem = document.createElement("menuitem");
+    
+    menuItem.setAttribute("label", text);
+    menuItem.setAttribute("type", "radio");
+    menuItem.setAttribute("name", "showson");
+    
+    menuItem.setUserData("internote-data", data, null);
+    
+    if (isChecked)
+    {
+        menuItem.setAttribute("checked", "true");
+    }
+    
+    // May be necessary to set handler after setting the check!
+    if (onCommand != null)
+    {
+        menuItem.setAttribute("oncommand", onCommand);
+    }
+    
+    menuSeparator.parentNode.insertBefore(menuItem, menuSeparator.nextSibling);
 },
 
 // For debugging purposes, only runs in debug mode.
