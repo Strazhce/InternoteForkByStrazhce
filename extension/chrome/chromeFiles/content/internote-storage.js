@@ -476,7 +476,13 @@ loadStorage: function()
         try
         {
             var text = this.utils.readStringFromFilename(legacyStorage.path);
-            this.loadInternoteV2(text);
+            var notes = this.loadInternoteV2(text);
+            
+            for (var i = 0; i < notes.length; i++)
+            {
+                this.addNote(notes[i]);            
+            }
+            
             this.loadStatus = this.LOADED_FROM_LEGACY;
         }
         catch (ex)
@@ -495,7 +501,17 @@ loadStorageFile: function(storageFile)
 {
     this.doc = this.utils.loadXML(storageFile);
     this.notesNode = this.doc.getElementsByTagName("notes")[0];
-    this.loadXMLElements();
+    var notes = this.loadInternoteV3(this.doc, true);
+    
+    for (var i = 0; i < notes.length; i++)
+    {
+        this.addNoteToList(notes[i]);
+        
+        if (!notes[i].xml.hasAttribute("guid"))
+        {
+            notes[i].xml.setAttribute("guid", this.utils.generateIdentifier());
+        }
+    }
 },
 
 createEmptyStorage: function()
@@ -508,24 +524,16 @@ createEmptyStorage: function()
     
     this.notesNode = this.doc.createElement("notes");
     root.appendChild(this.notesNode);
-    
-    this.nextNoteID = 0;
 },
 
-loadXMLElements: function()
+loadInternoteV3: function(storageDoc, includeXML)
 {
-    this.nextNoteID = 0;
+    var notes = [];
     
-    var noteElts = this.doc.getElementsByTagName("note");
+    var noteElts = storageDoc.getElementsByTagName("note");
     for (var i = 0; i < noteElts.length; i++)
     {
         var element = noteElts[i];
-        
-        var id = element.getAttribute("id");
-        //this.utils.assertError(id.match(/^note\d+$/) != null, "Id is invalid.");
-        //id = parseInt(id.replace("note", ""), 10);
-        id = parseInt(id, 10);
-        this.nextNoteID = Math.max(this.nextNoteID, id);
         
         var textNode = this.getXMLTextNode(element);
         var text     = (textNode == null) ? "" : textNode.nodeValue;
@@ -559,10 +567,15 @@ loadXMLElements: function()
         var note = new this.InternoteNote(url, matchType, text,
                                           left, top, noteWidth, noteHeight, backColor, foreColor,
                                           createTime, modfnTime, zIndex, isMinimized, isHTML);
-        this.addNoteToList(note);
+        if (includeXML)
+        {
+            note.xml = element;
+        }
         
-        note.xml = element;
+        notes.push(note);
     }
+    
+    return notes;
 },
 
 addWelcomeNote: function()
@@ -644,11 +657,11 @@ addNote: function(note)
     note.xml = this.doc.createElement("note");
     this.notesNode.appendChild(note.xml);
     
-    note.xml.setAttribute("id",          this.nextNoteID);
-    this.nextNoteID++;
+    // XXX Delete ID
+    note.xml.setAttribute("id",           0);
     
     note.xml.setAttribute("url",          note.url         );
-    note.xml.setAttribute("matchType", note.matchType);
+    note.xml.setAttribute("matchType",    note.matchType   );
     note.xml.setAttribute("left",         note.left        );
     note.xml.setAttribute("top",          note.top         );
     note.xml.setAttribute("width",        note.width       );
@@ -985,6 +998,26 @@ formatTextForOutput: function(text)
     return text;    
 },
 
+generateNotesInV3: function(notes)
+{
+    var storageDoc = document.implementation.createDocument("", "", null);
+    
+    var root = storageDoc.createElement("internote");
+    storageDoc.appendChild(root);
+    
+    var notesNode = storageDoc.createElement("notes");
+    root.appendChild(notesNode);
+    
+    for (var i = 0; i < notes.length; i++)
+    {
+        notesNode.appendChild(storageDoc.importNode(notes[i].xml, true));
+    }
+    
+    var serializer = new this.serializer();
+    var prettyString = this.xml(serializer.serializeToString(storageDoc)).toXMLString();
+    return prettyString;
+},
+
 generateNotesInHTML: function(notes, scratchDoc)
 {
     // HTML, HEAD, BODY already set up in scratchDoc.
@@ -1090,24 +1123,6 @@ generateNotesInText: function (notes)
     return notesString.replace(/\n/g, "\r\n");
 },
 
-formatLineForV2: function(note)
-{
-    var url        = note.url;
-    var text       = note.text.replace(/`/g, "'").replace(/\n/g, "<br>");
-    var left       = note.left   + "px";
-    var top        = note.top    + "px";
-    var width      = note.width  + "px";
-    var height     = note.height + "px";
-    var backColor  = note.backColor;
-    var foreColor  = this.utils.convertHexToRGB(note.foreColor);
-    var tags       = "";
-    var createTime = note.createTime;
-    
-    var fields = [url, text, left, top, width, height, backColor, foreColor, tags, createTime];
-    
-    return fields.join("`");
-},
-
 generateNotesInV2: function(notes)
 {
     var zIndexSortFunc = function(note1, note2) {
@@ -1129,6 +1144,24 @@ generateNotesInV2: function(notes)
     }
     
     return linesArray.join("\n");
+},
+
+formatLineForV2: function(note)
+{
+    var url        = note.url;
+    var text       = note.text.replace(/`/g, "'").replace(/\n/g, "<br>");
+    var left       = note.left   + "px";
+    var top        = note.top    + "px";
+    var width      = note.width  + "px";
+    var height     = note.height + "px";
+    var backColor  = note.backColor;
+    var foreColor  = this.utils.convertHexToRGB(note.foreColor);
+    var tags       = "";
+    var createTime = note.createTime;
+    
+    var fields = [url, text, left, top, width, height, backColor, foreColor, tags, createTime];
+    
+    return fields.join("`");
 },
 
 notesEqual: function(note1, note2)
@@ -1207,31 +1240,18 @@ makeNoteFromV2Line: function(line)
 
 loadInternoteV2: function(allLines)
 {
+    var notes = [];
     var allLinesArray = allLines.split("\n");
     
     for (var i = 0; i < allLinesArray.length; i++) {
         var line = this.utils.trim(allLinesArray[i]);
         if (line != "") {
             var note = this.makeNoteFromV2Line(line);
-            this.addNote(note);
-        }
-    }
-},
-
-importInternoteV2: function(allLines)
-{
-    var importedNotes = [];
-    var allLinesArray = allLines.split("\n");
-    
-    for (var i = 0; i < allLinesArray.length; i++) {
-        var line = this.utils.trim(allLinesArray[i]);
-        if (line != "") {
-            var note = this.makeNoteFromV2Line(line);
-            importedNotes.push(note);
+            notes.push(note);
         }
     }
     
-    return importedNotes;
+    return notes;
 },
 
 };
