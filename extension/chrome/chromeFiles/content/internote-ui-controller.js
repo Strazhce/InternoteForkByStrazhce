@@ -1483,7 +1483,7 @@ screenAreAllMinimized: function()
 
 screenCreateNote: function(uiNote, shouldAnimate)
 {
-    dump("screenCreateNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
+    //dump("screenCreateNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
     
     this.utils.assertClassError(uiNote, "UINote", "Not a UINote when calling screenCreateNote.");
     this.utils.assertError(!this.displayUI.doesNoteExist(uiNote.num), "Note is already on-screen.");

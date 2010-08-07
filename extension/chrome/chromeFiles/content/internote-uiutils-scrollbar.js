@@ -19,7 +19,7 @@
 internoteUtilities.incorporate({
     ScrollHandler: function(utils, prefs, element, idSuffix, width, lineColor, buttonColor)
     {
-        dump("internoteUtilities.ScrollHandler.ScrollHandler\n");
+        //dump("internoteUtilities.ScrollHandler.ScrollHandler\n");
         
         this.utils   = utils;
         this.prefs   = prefs;

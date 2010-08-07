@@ -556,8 +556,8 @@ updateFontSize: function(uiNote)
 
 isScrollbarNecessary: function(uiNote)
 {
-    dump("isScrollbarNecessary = " + uiNote.scrollHandler.isNecessary() + " " +
-         uiNote.isFlipped + "\n");
+    //dump("isScrollbarNecessary = " + uiNote.scrollHandler.isNecessary() + " " +
+    //     uiNote.isFlipped + "\n");
     return uiNote.scrollHandler.isNecessary() && !uiNote.isFlipped;
 },
 
