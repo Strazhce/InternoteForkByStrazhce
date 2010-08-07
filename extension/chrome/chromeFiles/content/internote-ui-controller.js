@@ -451,23 +451,23 @@ uiNoteRemove: function(uiNote)
 changePage: function(newURL, isNewPageLoading)
 {
     // We might tab change to the same page, so we still need this ...
-	
-	this.currentBrowser = this.utils.getCurrentBrowser();
-	
+    
+    this.currentBrowser = this.utils.getCurrentBrowser();
+    
     if (newURL == null)
     {
         newURL = this.utils.getBrowserURL(this.currentBrowser);
     }
     
-	if (this.allowNotesOnThisPage(newURL))
-	{
-		this.displayUI.setBrowser(this.currentBrowser, this.screenGetViewportDims());
-	}
-	else
-	{
-		this.displayUI.setBrowser(null, null);
-	}
-	
+    if (this.allowNotesOnThisPage(newURL))
+    {
+        this.displayUI.setBrowser(this.currentBrowser, this.screenGetViewportDims());
+    }
+    else
+    {
+        this.displayUI.setBrowser(null, null);
+    }
+    
     if (newURL == this.currentURL)
     {
         //dump("Redo " + this.currentURL + " " + newURL + "\n");
@@ -1678,7 +1678,7 @@ screenXMLUpdateViewportDims: function(contentDoc, startDims)
 // have less height than the viewport, and also image URLs might have less width and height.
 screenGetViewportDims: function()
 {
-	var browser = this.currentBrowser;
+    var browser = this.currentBrowser;
     var contentDoc = browser.contentDocument;
     
     var viewportDims = this.utils.getDims(browser.boxObject);
@@ -1687,7 +1687,7 @@ screenGetViewportDims: function()
     
     try
     {
-		// We sometimes get height == 0, in particular temporarily when dragging tabs into new windows ...
+        // We sometimes get height == 0, in particular temporarily when dragging tabs into new windows ...
         if (contentDoc.documentElement != null && viewportDims[1] > 0)
         {
             if (contentDoc instanceof ImageDocument)

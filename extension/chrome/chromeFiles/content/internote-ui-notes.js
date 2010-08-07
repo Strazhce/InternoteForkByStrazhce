@@ -195,21 +195,21 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
     foreground.style.margin = this.NOTE_BORDER_SIZE + "px";
     foreground.flex = "1";
     
-	if (this.hasLeftAlignedTopButtons())
-	{
-		topBox.appendChild(closeButton);
-		topBox.appendChild(this.createHorzSpacer(doc));
-		topBox.appendChild(minimizeButton);
-		topBox.appendChild(topStack);
-	}
-	else
-	{
-		topBox.appendChild(topStack);
-		topBox.appendChild(minimizeButton);
-		topBox.appendChild(this.createHorzSpacer(doc));
-		topBox.appendChild(closeButton);
-	}
-	
+    if (this.hasLeftAlignedTopButtons())
+    {
+        topBox.appendChild(closeButton);
+        topBox.appendChild(this.createHorzSpacer(doc));
+        topBox.appendChild(minimizeButton);
+        topBox.appendChild(topStack);
+    }
+    else
+    {
+        topBox.appendChild(topStack);
+        topBox.appendChild(minimizeButton);
+        topBox.appendChild(this.createHorzSpacer(doc));
+        topBox.appendChild(closeButton);
+    }
+    
     topStack.appendChild(dragNorth);
     topStack.appendChild(minimizedTop);
     topStack.style.overflow = "hidden";
