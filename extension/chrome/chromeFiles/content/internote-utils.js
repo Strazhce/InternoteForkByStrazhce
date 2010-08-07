@@ -830,23 +830,30 @@ callSuperconstructor: function(myThis, mySuperclass, argArray)
 
 arrayToString: function(arr, fn)
 {
-    var str = "[";
-    
-    if (arr.length > 0)
+    if (arr == null)
     {
-        if (fn == null) fn = function(a) { return a.toString(); }
-        
-        str += fn(arr[0]);
-        
-        for (var i = 1; i < arr.length; i++)
-        {
-            str += ", " + fn(arr[i]);
-        }
+        return "NULL";
     }
-    
-    str += "]";
-    
-    return str;
+    else
+    {
+        var str = "[";
+        
+        if (arr.length > 0)
+        {
+            if (fn == null) fn = function(a) { return a.toString(); }
+            
+            str += fn(arr[0]);
+            
+            for (var i = 1; i < arr.length; i++)
+            {
+                str += ", " + fn(arr[i]);
+            }
+        }
+        
+        str += "]";
+        
+        return str;
+    }
 },
 
 areArraysEqual: function(arr1, arr2)
