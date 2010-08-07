@@ -659,6 +659,7 @@ addNote: function(note)
     
     // XXX Delete ID
     note.xml.setAttribute("id",           0);
+    note.xml.setAttribute("guid",         this.utils.generateIdentifier());    
     
     note.xml.setAttribute("url",          note.url         );
     note.xml.setAttribute("matchType",    note.matchType   );

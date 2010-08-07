@@ -953,4 +953,14 @@ isPair: function(pair)
     return this.isArray(pair) && pair.length == 2;
 },
 
+generateIdentifier: function()
+{
+    if (this.generator == null)
+    {
+        this.generator = this.getCCService("@mozilla.org/uuid-generator;1", "nsIUUIDGenerator"); 
+    }
+    
+    return this.generator.generateUUID();
+},
+
 };
