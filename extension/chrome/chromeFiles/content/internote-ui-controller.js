@@ -2852,7 +2852,7 @@ onScrollbarPrefSet: function()
     {
         for (var i = 0; i < this.allUINotes.length; i++)
         {
-            this.noteUI.updateScrollbar(this.allUINotes[i]);
+            this.noteUI.updateScrollbarType(this.allUINotes[i]);
         }
     }
     catch (ex)

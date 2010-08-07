@@ -47,7 +47,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
             <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
             <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
-            <preference id="scrollbarPreference"       name="internote.usescrollbar"     type="bool"/>
+            <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
             <preference id="statusbarPreference"       name="internote.usestatusbar"     type="bool"/>
             <preference id="saveLocationPreference"    name="internote.savelocation"     type="file"/>
             <preference id="changeLocationPreference"  name="internote.changelocation"   type="bool"/>
@@ -133,7 +133,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 </hbox>
                 <checkbox id="defaultTransCheckBox"    preference="transparencyPreference"    label="&internote.useTranslucencyCBox.label;" />
                 <checkbox id="highlightableCheckBox"   preference="highlightablePreference"   label="&internote.useHighlightableCBox.label;" />
-                <checkbox id="scrollbarCheckBox"       preference="scrollbarPreference"       label="&internote.useScrollbarCBox.label;" />
+                <checkbox id="scrollbarCheckBox"       preference="nativeScrollPreference"    label="&internote.useNativeScrollCBox.label;" />
             </groupbox>
             <groupbox>
                 <caption label="&internote.generalPrefs.caption;"/>

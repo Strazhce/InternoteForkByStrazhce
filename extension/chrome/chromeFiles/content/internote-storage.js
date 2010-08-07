@@ -205,7 +205,7 @@ observePrefsChanges: function()
                 {
                     this.dispatchEvent("fontSizeChanged", new this.StorageEvent());
                 }
-                else if (data == "usescrollbar")
+                else if (data == "usenativescroll")
                 {
                     this.dispatchEvent("scrollbarChanged", new this.StorageEvent());
                 }

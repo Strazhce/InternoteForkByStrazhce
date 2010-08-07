@@ -115,7 +115,7 @@ destroy: function(uiNote)
 noteShown: function(uiNote)
 {
     uiNote.scrollHandler.drawScrollLine();
-    this.updateScrollbarPresence(uiNote);
+    this.updateScrollbarType(uiNote);
 },
 
 // createXULElement is used here rather than createElement so that we can create the element
@@ -260,7 +260,7 @@ cloneUINote: function(uiNote, doc)
     tempUINote.hasScrollbar = this.isScrollbarNecessary(uiNote);
     
     // Need to do get the scrollbar right.
-    this.updateScrollbarPresence(tempUINote);
+    this.updateScrollbarType(tempUINote);
     tempUINote.scrollHandler.drawScrollLine(uiNote.scrollHandler.getScrollInfo());
     
     return tempUINote;
@@ -369,11 +369,25 @@ setIsEnabled: function(uiNote, newIsEnabled)
 
 fixTextArea: function(uiNote, dims)
 {
-    var BORDER_AREA = 2 * (this.NOTE_OUTER_SIZE + this.NOTE_BORDER_SIZE);
+    this.utils.assertError(dims == null || this.utils.isNonNegCoordPair(dims), "Invalid dims fixing text area.", dims);
+    
+    if (dims == null)
+    {
+        dims = this.getDims(uiNote);
+    }
+    
+    var vertBorderArea = 2 * (this.NOTE_OUTER_SIZE + this.NOTE_BORDER_SIZE);
+    var horzBorderArea = vertBorderArea;
+    
+    if (uiNote.eastDeck.style.display == "none")
+    {
+        horzBorderArea -= this.NOTE_OUTER_SIZE;
+    }
     
     // See firefox bug #542394.
-    var textDims = this.utils.coordPairSubtract(dims, [BORDER_AREA, BORDER_AREA]);
+    var textDims = this.utils.coordPairSubtract(dims, [horzBorderArea, vertBorderArea]);
     textDims = this.utils.coordPairMax(textDims, [0, 0]);
+    
     this.utils.fixDOMEltDims(uiNote.textArea, textDims);
 },
 
@@ -508,18 +522,6 @@ updateFontSize: function(uiNote)
     uiNote.scrollHandler.updateLineHeight(lineHeight);
 },
 
-updateScrollbar: function(uiNote)
-{
-    if (this.prefs.shouldUseNativeScrollbar())
-    {
-        uiNote.textArea.style.overflow = "";
-    }
-    else
-    {
-        uiNote.textArea.style.overflow = "hidden";
-    }
-},
-
 isScrollbarNecessary: function(uiNote)
 {
     dump("isScrollbarNecessary = " + uiNote.scrollHandler.isNecessary() + " " +
@@ -527,35 +529,59 @@ isScrollbarNecessary: function(uiNote)
     return uiNote.scrollHandler.isNecessary() && !uiNote.isFlipped;
 },
 
+updateScrollbarType: function(uiNote)
+{
+    //dump("updateScrollbarType " + uiNote.num + "\n");
+    
+    if (this.prefs.shouldUseNativeScrollbar())
+    {
+        uiNote.textArea.style.overflow = "";
+    }
+    else
+    {
+        uiNote.textArea.style.overflow = "hidden";
+        uiNote.eastDeck.style.display = "";
+    }
+    
+    this.updateScrollbarPresence(uiNote);
+},
+
 updateScrollbarPresence: function(uiNote)
 {
-    dump("updateScrollbarPresence " + uiNote.num + "\n");
+    //dump("updateScrollbarPresence " + uiNote.num + "\n");
     
     if (uiNote.hasOwnProperty("hasScrollbar"))
     {
         // Used during flipping to avoid checks.
         var hasScrollbar = uiNote.hasScrollbar;
-        dump("OverridenBar " + hasScrollbar + "\n");
     }
     else
     {
         var hasScrollbar = this.isScrollbarNecessary(uiNote);
-        dump("TestBar " + hasScrollbar + "\n");
     }
     
-    dump("hasScrollbar = " + hasScrollbar + "\n");
-    
-    if (hasScrollbar)
+    if (this.prefs.shouldUseNativeScrollbar())
     {
-        //dump("Necessary\n");
-        uiNote.eastDeck.setAttribute("selectedIndex", 1);
+        var shouldHideEastDeck = this.isScrollbarNecessary(uiNote);
     }
     else
     {
-        //dump("Unnecessary\n");
-        uiNote.eastDeck.setAttribute("selectedIndex", 0);
-        uiNote.textArea.scrollTop = 0;
+        var shouldHideEastDeck = false;
+        
+        if (hasScrollbar)
+        {
+            uiNote.eastDeck.setAttribute("selectedIndex", 1);
+        }
+        else
+        {
+            uiNote.eastDeck.setAttribute("selectedIndex", 0);
+            uiNote.textArea.scrollTop = 0;
+        }
     }
+    
+    // Make sure east deck has correct displayed status, and update text area to compensate.
+    this.utils.setDisplayed(uiNote.eastDeck, !shouldHideEastDeck);
+    this.fixTextArea(uiNote, null);
 },
 
 isMinimized: function(uiNote)
@@ -791,7 +817,7 @@ createFlipButton: function(doc, uiNote, onFlip)
 createResizeHandle: function(doc, uiNote, onResizeStart)
 {
     var canvas = uiNote.resizeHandle = this.utils.createHTMLElement("canvas", doc, "internote-resize" + uiNote.num);
-    var context = canvas.getContext("2d");  
+    var context = canvas.getContext("2d");
     
     canvas.width  = this.NOTE_OUTER_SIZE;
     canvas.height = this.NOTE_OUTER_SIZE;
@@ -824,7 +850,7 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart)
     
     textArea.value = uiNote.note.text;
     
-    //if (!this.prefs.shouldUseScrollbar()) textArea.style.overflow = "hidden";
+    //if (!this.prefs.shouldUseNativeScrollbar()) textArea.style.overflow = "hidden";
 
     //textArea.oninput = onEdit;
     //if (onEdit != null)
