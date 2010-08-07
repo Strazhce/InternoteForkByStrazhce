@@ -1438,6 +1438,8 @@ chromePrepareShowOnMenuSites: function(note, isSite)
             if (index == -1) break;
             
             site = site.substr(index + 1);
+            
+            if (!this.utils.isValidSite(site)) break;
         }
     }
 },

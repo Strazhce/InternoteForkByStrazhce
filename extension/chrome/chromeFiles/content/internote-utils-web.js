@@ -84,6 +84,32 @@ getURLSite: function(url)
     }
 },
 
+isValidSite: function(site)
+{
+    var tlds = ["aero", "asia", "biz", "cat", "com", "coop", "edu", "gov", "info", "int", "jobs", "mil", "mobi",
+                "museum", "name", "net", "org", "pro", "tel", "travel"];
+    
+    var firstPos = site.indexOf(".");
+    var lastPos  = site.lastIndexOf(".");
+    
+    if (firstPos == -1)
+    {
+        // No dots.
+        return false;
+    }
+    else if (firstPos != lastPos)
+    {
+        // At least two dots.
+        return true;
+    }
+    else
+    {
+        // One dot, valid as long as it ends with a TLD and not a country code.
+        var possibleTLD = site.substr(lastPos + 1);
+        return tlds.indexOf(possibleTLD) != -1;
+    }
+},
+
 dumpXML: function(node, level)
 {
     if (level == null) level = 0;
