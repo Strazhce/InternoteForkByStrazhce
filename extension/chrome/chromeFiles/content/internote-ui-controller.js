@@ -1484,9 +1484,11 @@ screenCreateNote: function(uiNote, shouldAnimate)
         this.addPageListeners();
     }
     
-    var posOnViewport  = this.screenCalcNotePosOnViewport(uiNote);
+    var posOnViewport = this.screenCalcNotePosOnViewport(uiNote);
     
-    this.displayUI.addNote(uiNote, posOnViewport);
+    this.utils.assertError(this.utils.isCoordPair(posOnViewport), "Bad pos on viewport1.", pos);
+    
+    this.displayUI.addNote(uiNote, posOnViewport, this.storage.getDims(uiNote.note));
     
     // Animation should be the very last thing so it doesn't get interrupted by other CPU tasks.
     if (shouldAnimate && this.utils.supportsTranslucentPopups())
@@ -1494,8 +1496,6 @@ screenCreateNote: function(uiNote, shouldAnimate)
         var animation = internoteAnimation.getFadeAnimation(this.utils, uiNote.noteElt, true);
         this.startNoteAnimation(uiNote, animation, this.CREATE_ANIMATION_TIME);
     }
-    
-    //this.displayUI.readyToShowNote(uiNote, posOnViewport, this.storage.getDims(uiNote.note));
 },
 
 screenRemoveNote: function(uiNote)
@@ -1768,7 +1768,7 @@ screenCalcNotePosOnViewport: function(uiNote)
     if (note.isMinimized)
     {
         var viewportDims = this.screenGetViewportDims();
-        var top  = viewportDims[1] - this.noteUI.MINIMIZED_HEIGHT;
+        var top = viewportDims[1] - this.noteUI.MINIMIZED_HEIGHT;
         
         this.utils.assertError(uiNote.minimizePos != null, "Missing minimize pos.");
         var left = uiNote.minimizePos * (this.noteUI.MINIMIZED_WIDTH + this.WIDTH_BETWEEN_MINIMIZED)
@@ -1785,7 +1785,7 @@ screenCalcNotePosOnViewport: function(uiNote)
         
         //dump("  TopLeft   = " + this.utils.compactDumpString(topLeftOnPage) + "\n");
         //dump("  ScrollPos = " + this.utils.compactDumpString(scrollPos    ) + "\n");
-        //dump("  TopLeft2  = " + this.utils.compactDumpString(topLeftOnPage) + "\n");
+        //dump("  TopLeft2  = " + this.utils.compactDumpString(topLeftOnViewport) + "\n");
         
         return topLeftOnViewport;
     }

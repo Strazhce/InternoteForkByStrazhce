@@ -476,7 +476,7 @@ loadXML: function(file)
     
     if (doc.documentElement.tagName == "parsererror")
     {
-        throw new Error("XML parsing storage failed.");
+        throw new Error("XML parsing storage from file failed.");
     }
     else
     {
@@ -484,6 +484,21 @@ loadXML: function(file)
     }
 },
 
+loadXMLFromString: function(string)
+{
+    var parser = new DOMParser();
+    
+    var doc = parser.parseFromString(string, "text/xml");
+    
+    if (doc.documentElement.tagName == "parsererror")
+    {
+        throw new Error("XML parsing storage from string failed.");
+    }
+    else
+    {
+        return doc;
+    }
+},
 
 getNoteNum: function(elementOrEvent)
 {

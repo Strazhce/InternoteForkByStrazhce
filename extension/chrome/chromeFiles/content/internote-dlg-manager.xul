@@ -60,11 +60,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <menuitem id="resetSelected"  label="&internote.resetSelectedCmd.label;"   oncommand="internoteManager.userResetsNotes(true);"
 		          accesskey="&internote.resetSelectedCmd.accesskey;"/>
         <menuseparator />
-        <menuitem id="importNotes" label="&internote.importV2Cmd.label;..."        oncommand="internoteManager.userImportsNotesInV2();"
-		          accesskey="&internote.importV2Cmd.accesskey;"/>
+        <menu id="import" label="&internote.importCmd.label;..." accesskey="&internote.importCmd.accesskey;">
+          <menupopup>
+            <menuitem id="importV3" label="&internote.fromV3Cmd.label;..." accesskey="&internote.fromV3Cmd.accesskey;"
+                      oncommand="internoteManager.userImportsNotesInV3();" />
+			<menuitem id="importV2" label="&internote.fromV2Cmd.label;..." accesskey="&internote.fromV2Cmd.accesskey;"
+                      oncommand="internoteManager.userImportsNotesInV2();" />
+          </menupopup>
+		</menu>
         <menuseparator />
         <menu id="exportAll" label="&internote.exportAllCmd.label;..." accesskey="&internote.exportAllCmd.accesskey;">
           <menupopup>
+            <menuitem id="exportAllV3"        label="&internote.toV3Cmd.label;..." accesskey="&internote.toV3Cmd.accesskey;"
+                      oncommand="internoteManager.userExportsNotesInV3(false);" />
             <menuitem id="exportAllHTML"      label="&internote.toHTMLCmd.label;..." accesskey="&internote.toHTMLCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInHTML(false);" />
             <menuitem id="exportAllText"      label="&internote.toTextCmd.label;..." accesskey="&internote.toTextCmd.accesskey;"
@@ -77,6 +85,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         </menu>
         <menu id="exportSelected" label="&internote.exportSelectedCmd.label;..." accesskey="&internote.exportSelectedCmd.accesskey;" >
           <menupopup>
+            <menuitem id="exportSelectedV3"        label="&internote.toV3Cmd.label;..." accesskey="&internote.toV3Cmd.accesskey;"
+                      oncommand="internoteManager.userExportsNotesInV3(true);" />
             <menuitem id="exportSelectedHTML"      label="&internote.toHTMLCmd.label;..." accesskey="&internote.toHTMLCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInHTML(true);" />
             <menuitem id="exportSelectedText"      label="&internote.toTextCmd.label;..." accesskey="&internote.toTextCmd.accesskey;"

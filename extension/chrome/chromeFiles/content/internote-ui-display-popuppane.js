@@ -72,9 +72,17 @@ doesNoteExist: function(noteNum)
 
 addNote: function(uiNote, pos, dims)
 {
+    //dump("internoteDisplayUI.addNote\n");
+    
+    this.utils.assertError(uiNote != null, "Null UINote.", uiNote);
+    this.utils.assertError(this.utils.isCoordPair(pos),        "Bad pos on viewport.",  pos );
+    this.utils.assertError(this.utils.isNonNegCoordPair(dims), "Bad dims on viewport.", dims);
+    
     this.noteUI.addFocusListener(uiNote, this.utils.bind(this, this.onNoteFocused));
     
     this.createInsertionContainer();
+    
+    this.adjustNote(uiNote, pos, dims);
     
     for (var i = 0; i < this.innerContainer.childNodes.length; i++)
     {
@@ -86,8 +94,6 @@ addNote: function(uiNote, pos, dims)
             return;
         }
     }
-    
-    this.adjustNote(uiNote, pos, dims);
     
     this.innerContainer.appendChild(uiNote.noteElt);
 },
@@ -106,8 +112,11 @@ raiseNote: function(uiNote)
 {
     if (uiNote.noteElt != this.innerContainer.lastChild)
     {
+        var pos  = this.getScreenPosition(uiNote);
+        var dims = this.noteUI.getDims(uiNote);
+        
         this.removeNote(uiNote);
-        this.addNote(uiNote);
+        this.addNote(uiNote, pos, dims);
     }
 },
 
@@ -345,6 +354,13 @@ flipStep: function(uiNote, offsetX)
 
 adjustNote: function(uiNote, newPosOnViewport, newDims)
 {
+    //dump("internoteDisplayUI.adjustNote " + this.utils.arrayToString(newPosOnViewport) + " " +
+    //     this.utils.arrayToString(newDims) + "\n");
+    
+    this.utils.assertError(uiNote != null, "Null UINote.", uiNote);
+    this.utils.assertError(newPosOnViewport == null || this.utils.isCoordPair(newPosOnViewport), "Bad pos on viewport.",  newPosOnViewport);
+    this.utils.assertError(newDims          == null || this.utils.isNonNegCoordPair(newDims),    "Bad dims on viewport.", newDims         );
+    
     if (newPosOnViewport != null)
     {
         this.utils.assertError(this.utils.isPair(newPosOnViewport), "Invalid pos (1).", newPosOnViewport);

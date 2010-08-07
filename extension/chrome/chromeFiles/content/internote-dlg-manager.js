@@ -1049,13 +1049,13 @@ openURL : function ()
     }
 },
 
-userImportsNotes: function(fileType, titleID, filter)
+userImportsNotes: function(fileType, filter)
 {
     try
     {
         var nsIFilePicker = this.utils.getCIInterface("nsIFilePicker");
         var picker = this.utils.getCCInstance("@mozilla.org/filepicker;1", "nsIFilePicker");
-
+        
         var title = this.utils.getLocaleString("OpenTitle");
         var fileDesc = this.utils.getLocaleString("FileType" + fileType);
         title = title.replace("%1", fileDesc);
@@ -1074,7 +1074,12 @@ userImportsNotes: function(fileType, titleID, filter)
             
             if (fileType == "InternoteV2")
             {
-                notes = this.storage.importInternoteV2(text);
+                notes = this.storage.loadInternoteV2(text);
+            }
+            else if (fileType == "InternoteV3")
+            {
+                var storageDoc = this.utils.loadXMLFromString(text);
+                notes = this.storage.loadInternoteV3(storageDoc, false);
             }
             else
             {
@@ -1083,7 +1088,7 @@ userImportsNotes: function(fileType, titleID, filter)
             }
             
             var [addedCount, foundCount] = this.storage.addImportedNotes(notes);
-    
+            
             var messageType;
             if (addedCount == 0 && foundCount == 0)
             {
@@ -1211,6 +1216,19 @@ userSelectsAll: function()
     this.treeView.selection.selectAll();
 },
 
+userImportsNotesInV3: function ()
+{
+    try
+    {
+        var filter = this.utils.getCIConstant("nsIFilePicker", "filterXML");
+        this.userImportsNotes("InternoteV3", filter);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when attempting to import V3 notes.", ex);
+    }
+},
+
 userImportsNotesInV2: function ()
 {
     try
@@ -1221,6 +1239,20 @@ userImportsNotesInV2: function ()
     {
         this.utils.handleException("Exception caught when attempting to import V2 notes.", ex);
     }        
+},
+
+userExportsNotesInV3: function (shouldExportOnlySelected)
+{
+    try
+    {
+        var fileName = this.utils.getLocaleString("ExportDefaultFileName") + ".xml";
+        var selection = this.getNotesToActUpon(shouldExportOnlySelected);
+        this.userExportsNotes(this.storage.generateNotesInV3(selection), "InternoteV3", null, null, fileName);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when attempting to export V2 notes.", ex);
+    }
 },
 
 userExportsNotesInV2: function (shouldExportOnlySelected)
