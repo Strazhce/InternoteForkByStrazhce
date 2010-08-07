@@ -1,21 +1,26 @@
 <!-- Main Menus -->
 
 <!ENTITY internote.appName.label              "Internote">
-<!ENTITY internote.appName.accessKey          "I">
+<!ENTITY internote.appName.accesskey          "N">
 
 <!ENTITY internote.newNoteCmd.label           "Add New Internote">
 
 <!ENTITY internote.openManagerCmd.label       "Internote Manager">
-<!ENTITY internote.helpCmd.label              "Internote Help">
 <!ENTITY internote.openPrefsCmd.label         "Internote Preferences">
+<!ENTITY internote.helpCmd.label              "Internote Help">
 
 <!ENTITY internote.displayNotesCmd.label      "Display Internotes">
 
 <!ENTITY internote.minimizeAllCmd.label       "Minimise This Page's Notes">
 <!ENTITY internote.unminimizeAllCmd.label     "Restore This Page's Notes">
 
-<!ENTITY internote.newNoteCmd.accessKey       "N">
-<!ENTITY internote.openManagerCmd.accessKey   "M">
+<!ENTITY internote.newNoteCmd.accesskey       "N">
+<!ENTITY internote.openManagerCmd.accesskey   "M">
+<!ENTITY internote.openPrefsCmd.accesskey     "P">
+<!ENTITY internote.helpCmd.accesskey          "H">
+<!ENTITY internote.displayNotesCmd.accesskey  "D">
+<!ENTITY internote.minimizeAllCmd.accesskey   "E">
+<!ENTITY internote.unminimizeAllCmd.accesskey "E">
 
 <!-- Note Context Menu -->
 
@@ -28,13 +33,29 @@
 <!ENTITY internote.deleteNoteCmd.label        "Delete Note">
 <!ENTITY internote.flipNoteCmd.label          "Flip Note">
 <!ENTITY internote.minimizeNoteCmd.label      "Minimise Note">
-<!ENTITY internote.restoreNoteCmd.label       "Restore Note">
+<!ENTITY internote.unminimizeNoteCmd.label    "Restore Note">
 <!ENTITY internote.viewInOpenManagerCmd.label "View in Manager">
 
 <!ENTITY internote.showsOnMenuCmd.label       "Shows On">
 <!ENTITY internote.showsOnPageCmd.label       "This Page Only">
 <!ENTITY internote.showsOnAllCmd.label        "All Pages">
 <!ENTITY internote.showsRegexpCmd.label       "Pages Matching Regular Expression">
+
+<!ENTITY internote.cutTextCmd.accesskey       "T">
+<!ENTITY internote.copyTextCmd.accesskey      "C">
+<!ENTITY internote.pasteTextCmd.accesskey     "P">
+<!ENTITY internote.deleteTextCmd.accesskey    "D">
+<!ENTITY internote.selectAllCmd.accesskey     "A">
+<!ENTITY internote.deleteNoteCmd.accesskey    "L">
+<!ENTITY internote.flipNoteCmd.accesskey      "F">
+<!ENTITY internote.minimizeNoteCmd.accesskey  "E">
+<!ENTITY internote.unminimizeNoteCmd.accesskey "E">
+<!ENTITY internote.viewInOpenManagerCmd.accesskey "V">
+
+<!ENTITY internote.showsOnMenuCmd.accesskey   "H">
+<!ENTITY internote.showsOnPageCmd.accesskey   "G">
+<!ENTITY internote.showsOnAllCmd.accesskey    "A">
+<!ENTITY internote.showsRegexpCmd.accesskey   "R">
 
 <!-- Prefs/Manager Colors -->
 
@@ -130,11 +151,13 @@
 
 <!-- Manager Menu Commands -->
 
-<!ENTITY internote.importV2Cmd.label          "Import from Internote v2">
+<!ENTITY internote.importCmd.label            "Import">
 
-<!ENTITY internote.selectAllCmd.label         "Select All">
 <!ENTITY internote.expandSelectedCmd.label    "Expand Selected">
 <!ENTITY internote.collapseSelectedCmd.label  "Collapse Selected">
+
+<!ENTITY internote.deleteSelectedCmd.label    "Delete Selected">
+<!ENTITY internote.resetSelectedCmd.label     "Reset Position of Selected">
 
 <!ENTITY internote.printSelectedCmd.label     "Print Selected">
 <!ENTITY internote.exportSelectedCmd.label    "Export Selected">
@@ -142,18 +165,39 @@
 <!ENTITY internote.printAllCmd.label          "Print All">
 <!ENTITY internote.exportAllCmd.label         "Export All">
 
-<!ENTITY internote.toV2Cmd.label              "To Internote v2">
+<!ENTITY internote.fromV3Cmd.label            "From Internote v3"> 
+<!ENTITY internote.fromV2Cmd.label            "From Old Internote v2">
+
+<!ENTITY internote.toV3Cmd.label              "To Internote v3"> 
+<!ENTITY internote.toV2Cmd.label              "To Old Internote v2">
 <!ENTITY internote.toBookmarksCmd.label       "To Bookmarks">
 <!ENTITY internote.toTextCmd.label            "To Text">
 <!ENTITY internote.toHTMLCmd.label            "To HTML">
 
-<!ENTITY internote.actionsCmd.label           "Actions">
+<!ENTITY internote.importCmd.accesskey        "I">
+<!ENTITY internote.expandSelectedCmd.accesskey "X">
+<!ENTITY internote.collapseSelectedCmd.accesskey "C">
+<!ENTITY internote.deleteSelectedCmd.accesskey "D">
+<!ENTITY internote.resetSelectedCmd.accesskey "R">
+<!ENTITY internote.printSelectedCmd.accesskey "S">
+<!ENTITY internote.exportSelectedCmd.accesskey "L">
+<!ENTITY internote.printAllCmd.accesskey      "P">
+<!ENTITY internote.exportAllCmd.accesskey     "E">
+<!ENTITY internote.fromV3Cmd.accesskey        "3"> 
+<!ENTITY internote.fromV2Cmd.accesskey        "2">
+<!ENTITY internote.toV3Cmd.accesskey          "3">
+<!ENTITY internote.toV2Cmd.accesskey          "2">
+<!ENTITY internote.toBookmarksCmd.accesskey   "B">
+<!ENTITY internote.toTextCmd.accesskey        "T">
+<!ENTITY internote.toHTMLCmd.accesskey        "H">
 
+<!ENTITY internote.actionsCmd.label           "Actions">
 <!ENTITY internote.deleteCurrentCmd.label     "Delete Note">
 <!ENTITY internote.resetCurrentCmd.label      "Reset Position">
 
-<!ENTITY internote.deleteSelectedCmd.label    "Delete Selected">
-<!ENTITY internote.resetSelectedCmd.label     "Reset Position of Selected">
+<!ENTITY internote.actionsCmd.accesskey       "A">
+<!ENTITY internote.deleteCurrentCmd.accesskey "D">
+<!ENTITY internote.resetCurrentCmd.accesskey  "R">
 
 <!-- Manager Tooltips -->
 
