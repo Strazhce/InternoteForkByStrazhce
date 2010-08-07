@@ -1678,7 +1678,8 @@ screenGetViewportDims: function()
     
     try
     {
-        if (contentDoc.documentElement != null)
+		// We sometimes get height == 0, in particular temporarily when dragging tabs into new windows ...
+        if (contentDoc.documentElement != null && viewportDims[1] > 0)
         {
             if (contentDoc instanceof ImageDocument)
             {
