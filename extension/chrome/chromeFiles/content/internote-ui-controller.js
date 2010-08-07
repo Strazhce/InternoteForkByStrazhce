@@ -1485,8 +1485,7 @@ screenCreateNote: function(uiNote, shouldAnimate)
     }
     
     var posOnViewport = this.screenCalcNotePosOnViewport(uiNote);
-    
-    this.utils.assertError(this.utils.isCoordPair(posOnViewport), "Bad pos on viewport1.", pos);
+    this.utils.assertError(this.utils.isCoordPair(posOnViewport), "Bad pos on viewport.", posOnViewport);
     
     this.displayUI.addNote(uiNote, posOnViewport, this.storage.getDims(uiNote.note));
     
