@@ -17,11 +17,13 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 internoteUtilities.incorporate({
-    ScrollHandler: function(utils, element, idSuffix, width, lineColor, buttonColor)
+    ScrollHandler: function(utils, prefs, element, idSuffix, width, lineColor, buttonColor)
     {
         dump("internoteUtilities.ScrollHandler.ScrollHandler\n");
         
         this.utils   = utils;
+        this.prefs   = prefs;
+        
         this.element = element;
         this.width   = width;
         
@@ -52,7 +54,7 @@ internoteUtilities.incorporate({
         var scrollLineWrapper = this.scrollLineWrapper =
             this.utils.createXULElement("vbox", doc, "internote-scrolllinewrapper" + idSuffix);
         
-        if (this.utils.hasCombinedScrollButtons())
+        if (this.hasCombinedScrollButtons())
         {
             scrollbar.appendChild(scrollLineWrapper);
             scrollbar.appendChild(this.utils.createXULSpacer(doc, width, width/2));
@@ -109,6 +111,19 @@ paintUI: function()
     this.drawUpScrollButton();
     this.drawDownScrollButton();
     this.drawScrollLine();
+},
+
+hasCombinedScrollButtons: function()
+{
+    var pref = this.prefs.shouldCombineScrollButtons();
+    if (pref === null)
+    {
+        return this.utils.hasCombinedScrollButtons();
+    }
+    else
+    {
+        return pref;
+    }
 },
 
 setHeight: function(height)

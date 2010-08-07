@@ -75,18 +75,12 @@ supportsTransparentClickThru: function()
 
 hasCombinedScrollButtons: function()
 {
-    var platform = this.getPlatform();
-    if (platform == "mac")
-    {
-        return true;
-    }
-    else if (platform == "win" || platform == "unix")
-    {
-        return false;
-    }
-    else
-    {
-        this.assertWarnNotHere("Unknown platform when testing transparent clickthru.", platform);
-        return false;
-    }},
+    return this.getPlatform() == "mac";
+},
+
+hasLeftAlignedTopButtons: function()
+{
+    return this.getPlatform() == "mac";
+},
+
 });

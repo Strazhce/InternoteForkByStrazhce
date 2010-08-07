@@ -50,8 +50,8 @@ FLIPPED_PAGE: 1,
 
 init: function(prefs, utils, consts)
 {
-    this.prefs   = prefs;
     this.utils   = utils;
+    this.prefs   = prefs;
     this.consts  = consts;
         
     // XXX Can't find a constructor for this?
@@ -118,6 +118,19 @@ noteShown: function(uiNote)
     this.updateScrollbarType(uiNote);
 },
 
+hasLeftAlignedTopButtons: function()
+{
+    var pref = this.prefs.shouldLeftAlignTopButtons();
+    if (pref === null)
+    {
+        return this.utils.hasLeftAlignedTopButtons();
+    }
+    else
+    {
+        return pref;
+    }
+},
+
 // createXULElement is used here rather than createElement so that we can create the element
 // inside the about:blank HTML doc in the scratch IFrame used for static images.
 createNewNote: function(note, callbacks, doc, initialOpacity)
@@ -158,7 +171,7 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
     var textArea = this.createTextArea(doc, uiNote, callbacks.onEdit, callbacks.onMoveStart, callbacks.onFocus)
     
     var scrollbarHandler = uiNote.scrollHandler =
-        new this.utils.ScrollHandler(this.utils, uiNote.textArea, uiNote.num,
+        new this.utils.ScrollHandler(this.utils, this.prefs, uiNote.textArea, uiNote.num,
                                      this.NOTE_OUTER_SIZE, this.getBorderColor(uiNote), this.getButtonColor(uiNote));
     
     var scrollbar = uiNote.scrollbar = scrollbarHandler.getScrollbar();
@@ -182,19 +195,38 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
     foreground.style.margin = this.NOTE_BORDER_SIZE + "px";
     foreground.flex = "1";
     
-    topBox.appendChild(topStack);
-    topBox.appendChild(minimizeButton);
-    topBox.appendChild(this.createHorzSpacer(doc));
-    topBox.appendChild(closeButton);
-    
+	if (this.hasLeftAlignedTopButtons())
+	{
+		topBox.appendChild(closeButton);
+		topBox.appendChild(this.createHorzSpacer(doc));
+		topBox.appendChild(minimizeButton);
+		topBox.appendChild(topStack);
+	}
+	else
+	{
+		topBox.appendChild(topStack);
+		topBox.appendChild(minimizeButton);
+		topBox.appendChild(this.createHorzSpacer(doc));
+		topBox.appendChild(closeButton);
+	}
+	
     topStack.appendChild(dragNorth);
     topStack.appendChild(minimizedTop);
     topStack.style.overflow = "hidden";
     topStack.flex = "1";
     
-    minimizedTop.appendChild(this.createHorzSpacer(doc));
-    minimizedTop.appendChild(littleText);
-    minimizedTop.appendChild(this.createHorzSpacer(doc, true));
+    if (this.hasLeftAlignedTopButtons())
+    {
+        minimizedTop.appendChild(this.createHorzSpacer(doc, true));
+        minimizedTop.appendChild(littleText);
+        minimizedTop.appendChild(this.createHorzSpacer(doc));
+    }
+    else
+    {
+        minimizedTop.appendChild(this.createHorzSpacer(doc));
+        minimizedTop.appendChild(littleText);
+        minimizedTop.appendChild(this.createHorzSpacer(doc, true));
+    }
     
     midBotBox.appendChild(midBox);
     midBotBox.appendChild(botBox);

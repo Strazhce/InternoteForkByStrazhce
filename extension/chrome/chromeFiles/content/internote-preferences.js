@@ -40,6 +40,21 @@ getBoolPref: function(prefName, defaultValue)
     }
 },                  
 
+getOptionalBoolPref: function(prefName)
+{
+    if (this.prefs.getPrefType(prefName) != 0)
+    {
+        if (this.prefs.getBoolPref(prefName))
+            return true;
+        else
+            return false;
+    }
+    else
+    {
+        return null;
+    }
+},
+
 getCharPref: function(prefName, defaultValue)
 {
     if (this.prefs.getPrefType(prefName) !=0)
@@ -94,8 +109,10 @@ shouldUseNativeScrollbar: function() { return this.getBoolPref("usenativescroll"
 shouldUseOtherSaveLoc   : function() { return this.getBoolPref("changelocation",  false); },
 shouldAskBeforeDelete   : function() { return this.getBoolPref("askbeforedelete", false); },
 
-// This is a hidden preference for the purpose of debugging.
-isInDebugMode: function() { return this.getBoolPref("debugmode", false); },
+// Hidden Prefencences
+isInDebugMode:              function() { return this.getBoolPref("debugmode", false); },
+shouldCombineScrollButtons: function() { return this.getOptionalBoolPref("usecombinedscrollbuttons"); },
+shouldLeftAlignTopButtons:  function() { return this.getOptionalBoolPref("useleftalignedtopbuttons"); },
 
 setSaveLocationPref: function(path)
 {
