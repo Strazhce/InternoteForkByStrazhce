@@ -127,7 +127,8 @@
 <!ENTITY internote.thisNoteActions.caption    "Actions on This Note">
 
 <!ENTITY internote.noteURL.label              "URL">
-<!ENTITY internote.noteURLPrefix.label        "URL Prefix">
+<!ENTITY internote.noteURLPrefix.label        "URL Starts with">
+<!ENTITY internote.noteSiteSuffix.label       "Site Ends with">
 <!ENTITY internote.noteURLRegexp.label        "URL RegExp">
 
 <!ENTITY internote.noteMatchType.label        "On which pages?">
@@ -145,7 +146,8 @@
 <!ENTITY internote.closeButton.label          "Close">
 
 <!ENTITY internote.urlMatchExact.value        "One Only">
-<!ENTITY internote.urlMatchStarts.value       "Those Starting with a URL Prefix">
+<!ENTITY internote.urlMatchStarts.value       "Those Starting with ...">
+<!ENTITY internote.urlMatchSite.value         "On Sites Ending with ...">
 <!ENTITY internote.urlMatchAll.value          "All (Universal Note)">
 <!ENTITY internote.urlMatchRegexp.value       "Matching RegExp (Advanced)">
 
