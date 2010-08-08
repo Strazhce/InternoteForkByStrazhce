@@ -27,7 +27,7 @@ createShiftingPanel: function(suffix, containee)
     popupPanel.setAttribute("noautohide", "true");
     
     // We need this stack because you can position in stacks but not panels.
-    container = document.createElement("stack");
+    var container = document.createElement("stack");
     container.setAttribute("id", "internote-shiftcontainer" + suffix);
     container.setAttribute("style", "overflow: hidden; background-color: transparent;");
     
