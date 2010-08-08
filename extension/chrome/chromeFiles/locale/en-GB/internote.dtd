@@ -38,6 +38,7 @@
 
 <!ENTITY internote.showsOnMenuCmd.label       "Shows On">
 <!ENTITY internote.showsOnPageCmd.label       "This Page Only">
+<!ENTITY internote.showsOnSiteCmd.label       "This Site Only">
 <!ENTITY internote.showsOnAllCmd.label        "All Pages">
 <!ENTITY internote.showsRegexpCmd.label       "Pages Matching Regular Expression">
 
@@ -54,6 +55,7 @@
 
 <!ENTITY internote.showsOnMenuCmd.accesskey   "H">
 <!ENTITY internote.showsOnPageCmd.accesskey   "G">
+<!ENTITY internote.showsOnSiteCmd.accesskey   "S">
 <!ENTITY internote.showsOnAllCmd.accesskey    "A">
 <!ENTITY internote.showsRegexpCmd.accesskey   "R">
 
@@ -127,6 +129,7 @@
 <!ENTITY internote.thisNoteActions.caption    "Actions on This Note">
 
 <!ENTITY internote.noteURL.label              "URL">
+<!ENTITY internote.noteSite.label             "Site">
 <!ENTITY internote.noteURLPrefix.label        "URL Starts with">
 <!ENTITY internote.noteSiteSuffix.label       "Site Ends with">
 <!ENTITY internote.noteURLRegexp.label        "URL RegExp">
@@ -146,8 +149,9 @@
 <!ENTITY internote.closeButton.label          "Close">
 
 <!ENTITY internote.urlMatchExact.value        "One Only">
+<!ENTITY internote.urlMatchSite.value         "On This Site Only">
 <!ENTITY internote.urlMatchStarts.value       "Those Starting with ...">
-<!ENTITY internote.urlMatchSite.value         "On Sites Ending with ...">
+<!ENTITY internote.urlMatchSuffix.value       "On Sites Ending with ...">
 <!ENTITY internote.urlMatchAll.value          "All (Universal Note)">
 <!ENTITY internote.urlMatchRegexp.value       "Matching RegExp (Advanced)">
 

@@ -141,8 +141,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <menuseparator />
         <menu label="&internote.showsOnMenuCmd.label;" accesskey="&internote.showsOnMenuCmd.accesskey;">
             <menupopup id="internote-showson-menu-popup" onpopupshowing="internoteUIController.chromePrepareShowOnMenu(popupNode);">
-                <menuitem label="&internote.showsOnPageCmd.label;" type="radio" name="showson" id="internote-match-single"
-                          oncommand="internoteUIController.userChoosesMatchExact(popupNode);" accesskey="&internote.showsOnPageCmd.accesskey;" />
+                <menuitem label="&internote.showsOnPageCmd.label;" type="radio" name="showson" id="internote-match-url"
+                          oncommand="internoteUIController.userChoosesMatchURL(popupNode);" accesskey="&internote.showsOnPageCmd.accesskey;" />
+                <menuitem label="&internote.showsOnSiteCmd.label;" type="radio" name="showson" id="internote-match-site"
+                          oncommand="internoteUIController.userChoosesMatchSite(popupNode);" accesskey="&internote.showsOnSiteCmd.accesskey;" />
                 <menuitem label="&internote.showsOnAllCmd.label;"  type="radio" name="showson" id="internote-match-all"
                           oncommand="internoteUIController.userChoosesMatchAll(popupNode);" accesskey="&internote.showsOnAllCmd.accesskey;" />
                 <menuitem label="&internote.showsRegexpCmd.label;" type="radio" name="showson" id="internote-match-regexp"

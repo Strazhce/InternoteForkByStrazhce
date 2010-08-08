@@ -168,11 +168,12 @@ LOADED_FROM_SCRATCH: 2,
 LOADED_FROM_LEGACY: 3,
 LOADED_FROM_BACKUP: 4,
 
-URL_MATCH_EXACT:  0,
+URL_MATCH_URL:    0,
 URL_MATCH_REGEXP: 1,
 URL_MATCH_PREFIX: 2,
 URL_MATCH_SITE:   3,
-URL_MATCH_ALL:    4,
+URL_MATCH_SUFFIX: 4,
+URL_MATCH_ALL:    5,
 
 areNotesDisplaying: true,
 
@@ -548,7 +549,7 @@ loadInternoteV3: function(storageDoc, includeXML)
             // Handle old alpha1 isURLRegexp field, remove this eventually.
             var matchType = this.utils.getXMLBoolean(element, "isURLRegexp", false)
                           ? this.URL_MATCH_REGEXP
-                          : this.URL_MATCH_EXACT;
+                          : this.URL_MATCH_URL;
         }
         
         var url         = element.getAttribute("url");
@@ -625,7 +626,7 @@ addSimpleNote: function(url, text, noteTopLeft, noteDims)
     var zIndex       = this.getMaxZIndex() + 1;
     var isMinimized  = false;
     var isHTML       = false;
-    var matchType = this.URL_MATCH_EXACT;
+    var matchType = this.URL_MATCH_URL;
     
     url = this.utils.canonicalizeURL(url);
     
@@ -750,7 +751,7 @@ matchesURL: function(note, pageURL)
 {
     var noteURLCanon = this.utils.canonicalizeURL(note.url);
     var pageURLCanon = this.utils.canonicalizeURL(pageURL);
-    if (note.matchType == this.URL_MATCH_EXACT)
+    if (note.matchType == this.URL_MATCH_URL)
     {
         return pageURLCanon == noteURLCanon;
     }
@@ -766,6 +767,13 @@ matchesURL: function(note, pageURL)
                this.utils.startsWith(pageURLCanon, note.url);
     }
     else if (note.matchType == this.URL_MATCH_SITE)
+    {
+        var site = this.utils.getURLSite(pageURL);
+        var noteSite = note.url;
+        
+        return site == noteSite;
+    }
+    else if (note.matchType == this.URL_MATCH_SUFFIX)
     {
         var site = this.utils.getURLSite(pageURL);
         var noteSite = note.url;
@@ -1247,7 +1255,7 @@ makeNoteFromV2Line: function(line)
     var createTime   = this.utils.parseOptionalDate(attributeArray[9]);
     var modfnTime    = null;
     var isMinimized  = false;
-    var matchType = this.URL_MATCH_EXACT;
+    var matchType    = this.URL_MATCH_URL;
     var isHTML       = false;
     var zIndex       = 1;
     

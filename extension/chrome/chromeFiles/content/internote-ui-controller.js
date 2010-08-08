@@ -1141,18 +1141,33 @@ userSelectsAll: function()
     document.getElementById("cmd_selectAll").doCommand();
 },
 
-userChoosesMatchExact: function(element)
+userChoosesMatchURL: function(element)
 {
-    //dump("userChoosesMatchExact\n");
+    //dump("userChoosesMatchURL\n");
     
     try
     {
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
-        this.storage.setMatch(note, this.currentURL, this.storage.URL_MATCH_EXACT);
+        this.storage.setMatch(note, this.currentURL, this.storage.URL_MATCH_URL);
     }
     catch (ex)
     {
-        this.utils.handleException("Exception caught when selecting match exact.", ex);
+        this.utils.handleException("Exception caught when selecting match URL.", ex);
+    }
+},
+
+userChoosesMatchSite: function(element)
+{
+    //dump("userChoosesMatchSite\n");
+    
+    try
+    {
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];
+        this.storage.setMatch(note, this.utils.getURLSite(this.currentURL), this.storage.URL_MATCH_SITE);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when selecting match site.", ex);
     }
 },
 
@@ -1195,7 +1210,7 @@ userChoosesSiteSuffix: function(ev, element)
     {
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         var site = ev.target.getUserData("internote-data");
-        this.storage.setMatch(note, site, this.storage.URL_MATCH_SITE);
+        this.storage.setMatch(note, site, this.storage.URL_MATCH_SUFFIX);
     }
     catch (ex)
     {
@@ -1354,24 +1369,27 @@ chromePrepareShowOnMenu: function(element)
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];        
         
         // First set the radio checkboxes for the static items.
-        var singleItem = document.getElementById("internote-match-single");
+        var urlItem    = document.getElementById("internote-match-url");
+        var siteItem   = document.getElementById("internote-match-site");
         var allItem    = document.getElementById("internote-match-all");
         var regexpItem = document.getElementById("internote-match-regexp");
         
-        var isExact  = (note.matchType == this.storage.URL_MATCH_EXACT );
-        var isAll    = (note.matchType == this.storage.URL_MATCH_ALL   );
-        var isRegexp = (note.matchType == this.storage.URL_MATCH_REGEXP);
-        var isPrefix = (note.matchType == this.storage.URL_MATCH_PREFIX);
-        var isSite   = (note.matchType == this.storage.URL_MATCH_SITE  );
+        var isURL        = (note.matchType == this.storage.URL_MATCH_URL   );
+        var isSite       = (note.matchType == this.storage.URL_MATCH_SITE  );
+        var isAll        = (note.matchType == this.storage.URL_MATCH_ALL   );
+        var isRegexp     = (note.matchType == this.storage.URL_MATCH_REGEXP);
+        var isURLPrefix  = (note.matchType == this.storage.URL_MATCH_PREFIX);
+        var isSiteSuffix = (note.matchType == this.storage.URL_MATCH_SUFFIX);
         
         this.utils.setDisplayed(regexpItem, isRegexp);
         
-        if (isExact ) singleItem.setAttribute("checked", "true")
-        if (isAll   ) allItem   .setAttribute("checked", "true")
-        if (isRegexp) regexpItem.setAttribute("checked", "true")
+        if (isURL   ) urlItem   .setAttribute("checked", "true");
+        if (isSite  ) siteItem  .setAttribute("checked", "true");
+        if (isAll   ) allItem   .setAttribute("checked", "true");
+        if (isRegexp) regexpItem.setAttribute("checked", "true");
         
-        this.chromePrepareShowOnMenuPages(note, isPrefix);
-        this.chromePrepareShowOnMenuSites(note, isSite  );
+        this.chromePrepareShowOnMenuPages(note, isURLPrefix );
+        this.chromePrepareShowOnMenuSites(note, isSiteSuffix);
     }
     catch (ex)
     {
@@ -1379,7 +1397,7 @@ chromePrepareShowOnMenu: function(element)
     }
 },
 
-chromePrepareShowOnMenuPages: function(note, isPrefix)
+chromePrepareShowOnMenuPages: function(note, isURLPrefix)
 {
     var menuSeparator = document.getElementById("internote-showon-menu-pages-sep");
     var startsWithLabel = this.utils.getLocaleString("PageStartsWithMenuItem");
@@ -1388,7 +1406,7 @@ chromePrepareShowOnMenuPages: function(note, isPrefix)
     this.utils.clearAfterMenuSeparator(menuSeparator);
     
     // Add an existing prefix item, if relevant.
-    if (isPrefix && !this.utils.endsWith(note.url, "/"))
+    if (isURLPrefix && !this.utils.endsWith(note.url, "/"))
     {
         var text = startsWithLabel.replace("%1", url);
         this.chromePrepareShowOnCreateItem(menuSeparator, text, url, true, null);
@@ -1406,7 +1424,7 @@ chromePrepareShowOnMenuPages: function(note, isPrefix)
         url = url.substr(0, index + 1);
         
         var text = startsWithLabel.replace("%1", url);
-        var isChecked = (isPrefix && url == note.url);
+        var isChecked = (isURLPrefix && url == note.url);
         this.chromePrepareShowOnCreateItem(menuSeparator, text, url, isChecked,
                                            "internoteUIController.userChoosesPagePrefix(event, popupNode)");
         
@@ -1414,7 +1432,7 @@ chromePrepareShowOnMenuPages: function(note, isPrefix)
     }
 },
 
-chromePrepareShowOnMenuSites: function(note, isSite)
+chromePrepareShowOnMenuSites: function(note, isSiteSuffix)
 {
     var menuSeparator = document.getElementById("internote-showon-menu-sites-sep");
     var endsWithLabel = this.utils.getLocaleString("SiteEndsWithMenuItem");
@@ -1437,7 +1455,7 @@ chromePrepareShowOnMenuSites: function(note, isSite)
             while (true)
             {
                 var text = endsWithLabel.replace("%1", site);
-                var isChecked = (isSite && site == note.url);
+                var isChecked = (isSiteSuffix && site == note.url);
                 this.chromePrepareShowOnCreateItem(menuSeparator, text, site, isChecked,
                                                    "internoteUIController.userChoosesSiteSuffix(event, popupNode)");
                 
@@ -1574,7 +1592,7 @@ screenCreateNote: function(uiNote, shouldAnimate)
 
 screenRemoveNote: function(uiNote)
 {
-    dump("screenRemoveNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
+    //dump("screenRemoveNote " + uiNote.num + " " + this.utils.compactDumpString(uiNote.note.text) + "\n");
     
     this.utils.assertError(uiNote != null, "Note is not on-screen when attempting to remove animatedly.");
     this.utils.assertError(this.utils.isSpecificJSClass(uiNote, "UINote"), "Not a UINote when calling screenRemoveNote.");

@@ -490,7 +490,7 @@ configureURLSection: function(note)
     urlText     .removeAttribute("disabled");
     goToLink    .removeAttribute("disabled");
     
-    if (note.matchType == this.storage.URL_MATCH_EXACT)
+    if (note.matchType == this.storage.URL_MATCH_URL)
     {
         urlLabelDeck.setAttribute("selectedIndex", "0");
     }
@@ -514,6 +514,10 @@ configureURLSection: function(note)
     else if (note.matchType == this.storage.URL_MATCH_SITE)
     {
         urlLabelDeck.setAttribute("selectedIndex", "3");
+    }
+    else if (note.matchType == this.storage.URL_MATCH_SUFFIX)
+    {
+        urlLabelDeck.setAttribute("selectedIndex", "4");
     }
     else
     {
