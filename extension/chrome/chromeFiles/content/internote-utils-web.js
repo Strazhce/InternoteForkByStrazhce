@@ -84,6 +84,11 @@ getURLSite: function(url)
     }
 },
 
+isIPAddress: function(site)
+{
+    return site.match(/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/) != null;
+},
+
 isValidSite: function(site)
 {
     var tlds = ["aero", "asia", "biz", "cat", "com", "coop", "edu", "gov", "info", "int", "jobs", "mil", "mobi",

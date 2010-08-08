@@ -1423,23 +1423,32 @@ chromePrepareShowOnMenuSites: function(note, isSite)
     // Now remove any existing prefix items.
     this.utils.clearAfterMenuSeparator(menuSeparator);
     
-    // Add sites derived from the URL.
-    if (site != null)
+    if (this.utils.isIPAddress(site))
     {
-        while (true)
+        var text = this.utils.getLocaleString("NoSitesMessage");
+        var menuItem = this.chromePrepareShowOnCreateItem(menuSeparator, text, site, false, null);
+        menuItem.setAttribute("disabled", "true");
+    }
+    else
+    {
+        // Add sites derived from the site in the URL.
+        if (site != null)
         {
-            var text = endsWithLabel.replace("%1", site);
-            var isChecked = (isSite && site == note.url);
-            this.chromePrepareShowOnCreateItem(menuSeparator, text, site, isChecked,
-                                               "internoteUIController.userChoosesSiteSuffix(event, popupNode)");
-            
-            var index = site.indexOf(".");
-            
-            if (index == -1) break;
-            
-            site = site.substr(index + 1);
-            
-            if (!this.utils.isValidSite(site)) break;
+            while (true)
+            {
+                var text = endsWithLabel.replace("%1", site);
+                var isChecked = (isSite && site == note.url);
+                this.chromePrepareShowOnCreateItem(menuSeparator, text, site, isChecked,
+                                                   "internoteUIController.userChoosesSiteSuffix(event, popupNode)");
+                
+                var index = site.indexOf(".");
+                
+                if (index == -1) break;
+                
+                site = site.substr(index + 1);
+                
+                if (!this.utils.isValidSite(site)) break;
+            }
         }
     }
 },
@@ -1466,6 +1475,8 @@ chromePrepareShowOnCreateItem: function(menuSeparator, text, data, isChecked, on
     }
     
     menuSeparator.parentNode.insertBefore(menuItem, menuSeparator.nextSibling);
+    
+    return menuItem;
 },
 
 // For debugging purposes, only runs in debug mode.
