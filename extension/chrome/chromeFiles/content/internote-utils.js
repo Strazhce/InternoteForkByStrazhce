@@ -471,7 +471,14 @@ startsWith: function(str, prefix)
 
 endsWith: function(str, suffix)
 {
-    return str.lastIndexOf(suffix) == (str.length - suffix.length);
+    if (str.length < suffix.length)
+    {
+        return false;
+    }
+    else
+    {
+        return str.lastIndexOf(suffix) == (str.length - suffix.length);
+    }
 },
 
 prefixAllLines: function(arr, prefix)
