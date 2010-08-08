@@ -372,38 +372,38 @@ onPressRepeatingButton: function(ev, executeFunc)
     //dump("internoteUtilities.Scrollbar.onPressRepeatingButton\n");
     
     if (ev.button == 0)
-	{
-		executeFunc.call(this);
-		
-		var onMouseUp = this.utils.bind(this, function()
-		{
-			if (this.delayTimeout != null)
-			{
-				clearTimeout(this.delayTimeout);
-				this.delayTimeout = null;
-			}
-			
-			if (this.repeatInterval != null)
-			{
-				clearInterval(this.repeatInterval);
-				this.repeatInterval = null;
-			}
-			
-			document.removeEventListener("mouseup", onMouseUp, false);
-			onMouseUp = null;
-		});
-		
-		document.addEventListener("mouseup", onMouseUp, false);
-		
-		this.delayTimeout = setTimeout(this.utils.bind(this, function()
-		{
-			this.delayTimeout = null;
-			this.repeatInterval = setInterval(this.utils.bind(this, function()
-			{
-				executeFunc.call(this);
-			}), this.REPEAT_INTERVAL);
-		}), this.REPEAT_DELAY);
-	}
+    {
+        executeFunc.call(this);
+        
+        var onMouseUp = this.utils.bind(this, function()
+        {
+            if (this.delayTimeout != null)
+            {
+                clearTimeout(this.delayTimeout);
+                this.delayTimeout = null;
+            }
+            
+            if (this.repeatInterval != null)
+            {
+                clearInterval(this.repeatInterval);
+                this.repeatInterval = null;
+            }
+            
+            document.removeEventListener("mouseup", onMouseUp, false);
+            onMouseUp = null;
+        });
+        
+        document.addEventListener("mouseup", onMouseUp, false);
+        
+        this.delayTimeout = setTimeout(this.utils.bind(this, function()
+        {
+            this.delayTimeout = null;
+            this.repeatInterval = setInterval(this.utils.bind(this, function()
+            {
+                executeFunc.call(this);
+            }), this.REPEAT_INTERVAL);
+        }), this.REPEAT_DELAY);
+    }
 },
 
 onStartDragSlider: function(event)
