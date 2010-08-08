@@ -46,7 +46,7 @@ function InternoteStorageWatcher(storage, filterFn, extraReevaluateEvents, extra
     this.noteMap                  = {};
     this.count                    = 0;
     this.random                   = Math.random();
-
+    
     this.initEventDispatcher();
     
     for each (var note in storage.allNotes)
@@ -97,7 +97,7 @@ InternoteStorageWatcher.prototype.destroy = function(event)
 
 InternoteStorageWatcher.prototype.getCount = function(event)
 {
-    return this.count;  
+    return this.count;
 },
 
 InternoteStorageWatcher.prototype.addNote = function(event)
@@ -111,7 +111,7 @@ InternoteStorageWatcher.prototype.addNote = function(event)
 
 InternoteStorageWatcher.prototype.removeNote = function(event)
 {
-    //dump("InternoteStorageWatcher.remove " + event.name + "\n");
+    //dump("InternoteStorageWatcher.removeNote " + event.name + "\n");
     
     delete this.noteMap[event.note.num];
     this.count--;
