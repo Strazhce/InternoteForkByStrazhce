@@ -452,7 +452,7 @@ setNoteData: function(noteNum)
             }
             else
             {
-                return utils.convertSecondsToDate(time).toString();
+                return utils.convertSecondsToDate(time).toLocaleString();
             }
         }
         

@@ -191,11 +191,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <rows>
                     <row align="center">
                         <label class="editlabel" value="&internote.createTime.label;:" style="font-weight: bold;" width="100px" />
-                        <label id="noteCreateTime" value="" />
+                        <label id="noteCreateTime" value="" crop="end" />
                     </row>
                     <row align="center">
                         <label class="editlabel" control="noteModfnTime" value="&internote.modfnTime.label;:" style="font-weight: bold;" width="100px" />
-                        <label id="noteModfnTime" value="" />
+                        <label id="noteModfnTime" value="" crop="end" />
                     </row>
                     <row align="center">
                         <label class="editlabel" value="&internote.backColor.label;:" control="colorEntryBox" style="font-weight: bold;" width="100px" />
