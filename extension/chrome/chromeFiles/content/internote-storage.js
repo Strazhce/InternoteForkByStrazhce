@@ -772,7 +772,7 @@ isURLPresent: function(searchURL)
 matchesURL: function(note, pageURL)
 {
     var noteURL = note.url;
-
+    
     if (this.areIgnoresApplicable(note))
     {
         pageURL = this.utils.cleanUpURL(pageURL, note.ignoreAnchor, note.ignoreParams);
@@ -807,15 +807,19 @@ matchesURL: function(note, pageURL)
     }
     else if (note.matchType == this.URL_MATCH_SITE)
     {
+        var parsedNoteURL = this.utils.parseURL(note.url);
+        var noteSite = (parsedNoteURL != null) ? parsedNoteURL.site : noteURL;
+        
         var site = this.utils.getURLSite(pageURL);
-        var noteSite = noteURL;
         
         return site == noteSite;
     }
     else if (note.matchType == this.URL_MATCH_SUFFIX)
     {
+        var parsedNoteURL = this.utils.parseURL(note.url);
+        var noteSite = (parsedNoteURL != null) ? parsedNoteURL.site : noteURL;
+        
         var site = this.utils.getURLSite(pageURL);
-        var noteSite = noteURL;
         
         if (site == noteSite)
         {

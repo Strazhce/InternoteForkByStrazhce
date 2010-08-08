@@ -21,9 +21,47 @@ internoteUtilities.incorporate({
 
 canonicalizeURL: function(url)
 {
-    url = url.replace(/(index|home|default)\.(html|htm|asp|php|cgi|cfm|aspx)$/i, "");
-    url = url.replace(/\/$/, "");
-    return url;
+    this.assertError(typeof(url) == "string", "Bad URL type when canonicalizing URL.", url);
+    
+    if (this.parseURL(url) == null)
+    {
+        return url;
+    }
+    else
+    {
+        url = url.replace(/(index|home|default)\.(html|htm|asp|php|cgi|cfm|aspx)$/i, "");
+        url = url.replace(/\/$/, "");
+        return url;
+    }
+},
+
+// This is fairly rudimentary, it may let thru some invalid URLs.
+parseURL: function(url)
+{
+    this.assertError(typeof(url) == "string", "Bad URL type when parsing URL.", url);
+    
+    var protocolRegexp = "([^:]+):///?";
+    var userNameRegexp = "([^:@]*:)?";
+    var passwordRegexp = "([^@]@)?";
+    var siteRegexp     = "([^:/]+)";
+    var portRegexp     = "(:[0-9]+)?";
+    var pathRegexp     = "(/[^\\?#]*)?";
+    var paramsRegexp   = "(\\?[^#]*)?";
+    var anchorRegexp   = "(#.*)?";
+    
+    var regexp = "^" + protocolRegexp + userNameRegexp + passwordRegexp + siteRegexp + portRegexp + pathRegexp + paramsRegexp + anchorRegexp + "$";
+    
+    var regexpResults = new RegExp(regexp).exec(url);
+    
+    if (regexpResults == null)
+    {
+        return null;
+    }
+    else
+    {
+        return { protocol: regexpResults[1], userName: regexpResults[2], password: regexpResults[3], site: regexpResults[4],
+                 port: regexpResults[5], path: regexpResults[6], params: regexpResults[7], anchor: regexpResults[8] };
+    }
 },
 
 cleanUpURL: function(url, removeAnchor, removeParams)
@@ -128,6 +166,11 @@ isIPAddress: function(site)
 
 isValidSite: function(site)
 {
+    if (site.match(/^[A-Za-z0-9\-][A-Za-z0-9\-\.]*$/) == null)
+    {
+        return false;
+    }
+    
     var tlds = ["aero", "asia", "biz", "cat", "com", "coop", "edu", "gov", "info", "int", "jobs", "mil", "mobi",
                 "museum", "name", "net", "org", "pro", "tel", "travel"];
     

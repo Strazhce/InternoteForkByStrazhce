@@ -461,6 +461,10 @@ changePage: function(newURL, isNewPageLoading)
     
     if (this.allowNotesOnThisPage(newURL))
     {
+        // Check that URL parsing works properly ... just an internal warning to detect problems.
+        var parsedURL = this.utils.parseURL(newURL);
+        this.utils.assertWarn(parsedURL != null && this.utils.isValidSite(parsedURL.site), "Invalid URL/Site?", newURL);
+        
         this.displayUI.setBrowser(this.currentBrowser, this.screenGetViewportDims());
     }
     else

@@ -546,6 +546,22 @@ configureURLSection: function(note)
         ignoreAnchor.setAttribute("disabled", "true");
         ignoreParams.setAttribute("disabled", "true");        
     }
+    
+    if (!this.isValidURLOrSite())
+    {
+        document.getElementById("goToLink").style.color  = "gray";
+        document.getElementById("goToLink").style.cursor = "";
+    }
+},
+
+isValidURLOrSite: function()
+{
+    var url = this.storage.getEffectiveURL(this.noteBeingEdited);
+    var parsedURL = this.utils.parseURL(url);
+    
+    var isValidURL = (parsedURL != null && this.utils.isValidSite(parsedURL.site));
+    
+    return isValidURL ? true : this.utils.isValidSite(url);
 },
 
 setMenuListToCustom: function(menuListID)
@@ -685,7 +701,7 @@ userEditsData: function(event)
             this.storage.setIgnoreAnchor    (this.noteBeingEdited,   ignoreAnchor);
             this.storage.setIgnoreParams    (this.noteBeingEdited,   ignoreParams);
             
-            this.configureURLSection(this.noteBeingEdited);            
+            this.configureURLSection(this.noteBeingEdited);
         }
     }
     catch (ex)
@@ -807,10 +823,17 @@ getURLDescription: function(url)
     }
     else
     {
-        var strippedURL = url.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
-        strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
-        if (strippedURL == "") strippedURL = url;
-        return strippedURL;
+        if (this.utils.parseURL(url) == null)
+        {
+            return url;
+        }
+        else
+        {
+            var strippedURL = url.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
+            strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
+            if (strippedURL == "") strippedURL = url;
+            return strippedURL;
+        }
     }
 },
 
@@ -1054,7 +1077,7 @@ updateSearchResults: function()
 
 openURL : function ()
 {
-    if (this.noteBeingEdited != null && this.storage.getEffectiveURL(this.noteBeingEdited) != "")
+    if (this.noteBeingEdited != null && this.isValidURLOrSite())
     {
         var noteURL = document.getElementById("noteURL").value;
         
