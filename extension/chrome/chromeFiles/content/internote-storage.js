@@ -1121,7 +1121,12 @@ generateNotesInV3: function(notes)
     
     for (var i = 0; i < notes.length; i++)
     {
-        notesNode.appendChild(storageDoc.importNode(notes[i].xml, true));
+        var note = notes[i];
+        
+        if (note != null)
+        {
+            notesNode.appendChild(storageDoc.importNode(note.xml, true));
+        }
     }
     
     var serializer = new this.serializer();

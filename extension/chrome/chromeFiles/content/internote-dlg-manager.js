@@ -1286,7 +1286,7 @@ userExportsNotesInV3: function (shouldExportOnlySelected)
     }
     catch (ex)
     {
-        this.utils.handleException("Exception caught when attempting to export V2 notes.", ex);
+        this.utils.handleException("Exception caught when attempting to export V3 notes.", ex);
     }
 },
 
