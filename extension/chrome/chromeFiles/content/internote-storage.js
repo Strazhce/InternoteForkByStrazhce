@@ -316,6 +316,9 @@ indicateDataChanged: function(note)
     note.xml.setAttribute("isMinimized",  note.isMinimized);
     note.xml.setAttribute("isHTML",       note.isHTML     );
     
+    // XXX Delete next version - for downgrade compatibility
+    note.xml.setAttribute("isURLRegexp",  note.matchType == this.URL_MATCH_REGEXP);
+    
     var textNode = this.getXMLTextNode(note.xml);
     if (textNode == null)
     {
@@ -698,6 +701,9 @@ addNote: function(note)
     note.xml.setAttribute("zIndex",       note.zIndex      );
     note.xml.setAttribute("isMinimized",  note.isMinimized );
     note.xml.setAttribute("isHTML",       note.isHTML      );
+    
+    // XXX Delete next version - for downgrade compatibility
+    note.xml.setAttribute("isURLRegexp",  note.matchType == this.URL_MATCH_REGEXP);
     
     var textNode = this.doc.createTextNode(note.text);
     note.xml.appendChild(textNode);
