@@ -31,8 +31,8 @@ isRelocating: false,
 
 noteBeingEdited: null,
 
-editingFields: ["noteURL", "colorEntryBox", "textColorEntryBox", "isMinimized",
-                "deleteCurrentNote", "resetCurrentNote", "matchTypeEntryBox"],
+editingFields: ["noteURL", "colorEntryBox", "textColorEntryBox", "ignoreAnchor", "ignoreParams",
+                "deleteCurrentNote", "resetCurrentNote", "matchTypeEntryBox", "isMinimized"],
 
 actions: ["deleteSelected", "resetSelected", "exportSelected", "printSelected"],
 
@@ -93,7 +93,7 @@ initTreeView: function()
         var note = this.storage.allNotes[i];
         if (note != null)
         {
-            var url = this.utils.canonicalizeURL(this.storage.getURL(note));
+            var url = this.utils.canonicalizeURL(this.storage.getEffectiveURL(note));
             urls[url] = 1;
         }
     }
@@ -137,7 +137,7 @@ viewNote: function(note)
     
     if (noteTreeIndex == -1)
     {
-        var urlTreeIndex = this.getURLTreeIndex(this.storage.getURL(note));
+        var urlTreeIndex = this.getURLTreeIndex(this.storage.getEffectiveURL(note));
         this.utils.assertError(urlTreeIndex != -1, "Couldn't find URL when trying to view note.");
         
         this.treeView.toggleOpenState(urlTreeIndex);
@@ -166,7 +166,7 @@ onNoteRemoved: function(event)
 {
     try
     {
-        this.treeRemoveNote(event.note, this.storage.getURL(event.note));
+        this.treeRemoveNote(event.note, this.storage.getEffectiveURL(event.note));
         
         if (event.note == this.noteBeingEdited)
         {
@@ -203,44 +203,51 @@ onNoteEdited: function(event)
     }
 },
 
+checkForLocationChange: function(event)
+{
+    // First check it's not just a change within URL canonicalization.
+    // XXX This is a bit ridiculous, it would probably be a lot better to autoset
+    // XXX URL to "" in this mode, but we really need to have undo first because
+    // XXX the user has no way of getting back the URL when ALL is mischosen.
+    
+    var note = event.note;
+    var noteIndex = this.getNoteTreeIndex(note.num);
+    var urlIndex  = this.treeView.getParentIndex(noteIndex);
+    var oldEffectiveURL = this.treeView.treeData[urlIndex][this.treeView.COL_LOOKUP];
+    
+    var newEffectiveURL = this.storage.getEffectiveURL(note);
+    
+    //dump("newURL = " + newEffectiveURL + "\n");
+    //dump("oldURL = " + oldEffectiveURL + "\n");
+    
+    if (this.utils.canonicalizeURL(oldEffectiveURL) == this.utils.canonicalizeURL(newEffectiveURL))
+    {
+        return;
+    }
+    
+    this.isRelocating = true; // Prevent normal select events.
+    
+    // We pass the old URL to remove in case we must delete an old collapsed category.
+    var [wasSelected, wasCategoryOpen] = this.treeRemoveNote(event.note, event.data2[1]);
+    var shouldForceCategoryOpen = wasCategoryOpen || wasSelected;
+    var newIndex = this.treeCreateNote(event.note, shouldForceCategoryOpen);
+    
+    if (wasCategoryOpen && wasSelected)
+    {
+        this.treeView.selection.select(newIndex);
+    }
+    
+    this.isRelocating = false;
+},
+
 onNoteRelocated: function(event)
 {
     //dump("internoteManager.onNoteRelocated\n");
     
     try
     {
-        // First check it's not just a change within URL canonicalization.
-        // XXX This is a bit ridiculous, it would probably be a lot better to autoset
-        // XXX URL to "" in this mode, but we really need to have undo first because
-        // XXX the user has no way of getting back the URL when ALL is mischosen.
-        var newMatchType = event.data1[0];
-        var oldMatchType = event.data2[0];
-        
-        var newURL = (newMatchType == this.storage.URL_MATCH_ALL) ? "" : event.data1[1];
-        var oldURL = (oldMatchType == this.storage.URL_MATCH_ALL) ? "" : event.data2[1];
-        
-        if (this.utils.canonicalizeURL(newURL) == this.utils.canonicalizeURL(oldURL))
-        {
-            return;
-        }
-        
-        var note = event.note;
-        
-        this.isRelocating = true; // Prevent normal select events.
-        
-        // We pass the old URL to remove in case we must delete an old collapsed category.
-        var [wasSelected, wasCategoryOpen] = this.treeRemoveNote(note, event.data2[1]);
-        var shouldForceCategoryOpen = wasCategoryOpen || wasSelected;
-        var newIndex = this.treeCreateNote(note, shouldForceCategoryOpen);
-        
-        if (wasCategoryOpen && wasSelected)
-        {
-            this.treeView.selection.select(newIndex);
-        }
-        
-        this.isRelocating = false;
-        
-        this.setNoteData(note.num);
+        this.checkForLocationChange(event);
+        this.setNoteData(event.note.num);
     }
     catch (ex)
     {
@@ -360,7 +367,9 @@ clearNoteData : function ()
     document.getElementById("textColorEntryBox").value = 0;
     document.getElementById("matchTypeEntryBox").value = 0;
     
-    document.getElementById("isMinimized").checked = "";
+    document.getElementById("isMinimized") .checked = "";
+    document.getElementById("ignoreAnchor").checked = "";
+    document.getElementById("ignoreParams").checked = "";
     
     this.utils.disableMultiple(this.editingFields);
     this.utils.disableMultiple(document.getElementsByClassName("editlabel"));
@@ -397,7 +406,7 @@ setNoteData: function(noteNum)
     
     if (note != null)
     {
-        if (this.storage.getURL(note) == "") // XXX Should be a valid URL check.
+        if (this.storage.getEffectiveURL(note) == "") // XXX Should be a valid URL check.
         {
             document.getElementById("goToLink").style.color  = "gray";
             document.getElementById("goToLink").style.cursor = "";
@@ -455,7 +464,9 @@ setNoteData: function(noteNum)
         this.updateValue("colorEntryBox",     backColor);
         this.updateValue("textColorEntryBox", foreColor);
         
-        this.updateCheck("isMinimized",       note.isMinimized);
+        this.updateCheck("isMinimized",       note.isMinimized );
+        this.updateCheck("ignoreAnchor",      note.ignoreAnchor);
+        this.updateCheck("ignoreParams",      note.ignoreParams);
         
         this.utils.enableMultiple(this.editingFields);
         this.utils.enableMultiple(document.getElementsByClassName("editlabel"));
@@ -485,10 +496,14 @@ configureURLSection: function(note)
     var mainURLLabel = document.getElementById("mainURLLabel");
     var urlText      = document.getElementById("noteURL");
     var goToLink     = document.getElementById("goToLink");
+    var ignoreAnchor = document.getElementById("ignoreAnchor");
+    var ignoreParams = document.getElementById("ignoreParams");
     
     mainURLLabel.removeAttribute("disabled");
     urlText     .removeAttribute("disabled");
     goToLink    .removeAttribute("disabled");
+    ignoreAnchor.removeAttribute("disabled");
+    ignoreParams.removeAttribute("disabled");
     
     if (note.matchType == this.storage.URL_MATCH_URL)
     {
@@ -497,9 +512,10 @@ configureURLSection: function(note)
     else if (note.matchType == this.storage.URL_MATCH_ALL)
     {
         urlLabelDeck.setAttribute("selectedIndex", "0");
+        
         mainURLLabel.setAttribute("disabled", "true");
         urlText     .setAttribute("disabled", "true");
-    
+        
         goToLink.style.color = "gray";
         goToLink.style.cursor = "";
     }
@@ -523,6 +539,12 @@ configureURLSection: function(note)
     {
         this.utils.assertWarnNotHere("Unknown match type when setting URL label deck.", note.matchType);
         urlLabelDeck.setAttribute("selectedIndex", "0");
+    }
+    
+    if (!this.storage.areIgnoresApplicable(note))
+    {
+        ignoreAnchor.setAttribute("disabled", "true");
+        ignoreParams.setAttribute("disabled", "true");        
     }
 },
 
@@ -648,7 +670,11 @@ userEditsData: function(event)
             var noteTextVal  = document.getElementById("noteText").value;
             var backColorVal = document.getElementById("colorEntryBox").value;
             var foreColorVal = document.getElementById("textColorEntryBox").value;
-            var isMinimized  = document.getElementById("isMinimized").checked;
+            
+            var isMinimized  = document.getElementById("isMinimized") .checked;
+            var ignoreAnchor = document.getElementById("ignoreAnchor").checked;
+            var ignoreParams = document.getElementById("ignoreParams").checked;
+            
             var matchType    = parseInt(document.getElementById("matchTypeEntryBox").value, 10);
             
             this.storage.setMatch           (this.noteBeingEdited,   noteURLVal, matchType);
@@ -656,6 +682,8 @@ userEditsData: function(event)
             this.storage.setBackColor       (this.noteBeingEdited,   this.consts.BACKGROUND_COLOR_SWABS[backColorVal]);
             this.storage.setForeColor       (this.noteBeingEdited,   this.consts.FOREGROUND_COLOR_SWABS[foreColorVal]);
             this.storage.setIsMinimizedMulti([this.noteBeingEdited], isMinimized);
+            this.storage.setIgnoreAnchor    (this.noteBeingEdited,   ignoreAnchor);
+            this.storage.setIgnoreParams    (this.noteBeingEdited,   ignoreParams);
             
             this.configureURLSection(this.noteBeingEdited);            
         }
@@ -807,7 +835,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
 {
     //dump("internoteManager.treeCreateNote\n");
     
-    var urlTreeIndex = this.getURLTreeIndex(this.storage.getURL(note));
+    var urlTreeIndex = this.getURLTreeIndex(this.storage.getEffectiveURL(note));
     
     if (urlTreeIndex != -1)
     {
@@ -832,7 +860,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
         
         // URL category doesn't exist, create it collapsed.
         var newTreeIndex = this.treeView.treeData.length; // XXX This assumes adding to the end.
-        var url = this.utils.canonicalizeURL(this.storage.getURL(note));
+        var url = this.utils.canonicalizeURL(this.storage.getEffectiveURL(note));
         this.treeView.treeData.push(this.makeURLRow(url));
         this.treeView.treeBox.rowCountChanged(newTreeIndex, 1);
         
@@ -1026,7 +1054,7 @@ updateSearchResults: function()
 
 openURL : function ()
 {
-    if (this.noteBeingEdited != null && this.storage.getURL(this.noteBeingEdited) != "")
+    if (this.noteBeingEdited != null && this.storage.getEffectiveURL(this.noteBeingEdited) != "")
     {
         var noteURL = document.getElementById("noteURL").value;
         
@@ -1454,7 +1482,7 @@ treeView : {
             item[this.COL_IS_OPEN] = true;
             
             var url = this.treeData[idx][this.COL_LOOKUP];
-            var notesToInsert = internoteManager.storage.getNotesForURL(url);
+            var notesToInsert = internoteManager.storage.getNotesForEffectiveURL(url);
             //var newData = notesToInsert.map(this.makeNoteRow);
             
             var data = [];

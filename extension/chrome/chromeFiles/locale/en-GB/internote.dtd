@@ -42,6 +42,12 @@
 <!ENTITY internote.showsOnAllCmd.label        "All Pages">
 <!ENTITY internote.showsRegexpCmd.label       "Pages Matching Regular Expression">
 
+<!ENTITY internote.ignoreParamsCmd.label      "Ignore Parameters">
+<!ENTITY internote.ignoreAnchorCmd.label      "Ignore Anchor">
+
+<!ENTITY internote.ignoreParamsCmd.label2     "After ? Symbol">
+<!ENTITY internote.ignoreAnchorCmd.label2     "After # Symbol">
+
 <!ENTITY internote.cutTextCmd.accesskey       "T">
 <!ENTITY internote.copyTextCmd.accesskey      "C">
 <!ENTITY internote.pasteTextCmd.accesskey     "P">
@@ -58,6 +64,9 @@
 <!ENTITY internote.showsOnSiteCmd.accesskey   "S">
 <!ENTITY internote.showsOnAllCmd.accesskey    "A">
 <!ENTITY internote.showsRegexpCmd.accesskey   "R">
+
+<!ENTITY internote.ignoreParamsCmd.accesskey  "P">
+<!ENTITY internote.ignoreAnchorCmd.accesskey  "C">
 
 <!-- Prefs/Manager Colors -->
 
@@ -153,7 +162,7 @@
 <!ENTITY internote.urlMatchStarts.value       "Those Starting with ...">
 <!ENTITY internote.urlMatchSuffix.value       "On Sites Ending with ...">
 <!ENTITY internote.urlMatchAll.value          "All (Universal Note)">
-<!ENTITY internote.urlMatchRegexp.value       "Matching RegExp (Advanced)">
+<!ENTITY internote.urlMatchRegexp.value       "Matching RegExp">
 
 <!-- Manager Menu Commands -->
 

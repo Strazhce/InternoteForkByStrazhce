@@ -140,7 +140,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <hbox align="center">
                 <label control="matchTypeEntryBox" value="&internote.noteMatchType.label;"
                        style="font-weight: bold;" class="editlabel" />
-                <menulist id="matchTypeEntryBox" align="center">
+                <menulist id="matchTypeEntryBox" align="center" flex="1">
                     <menupopup>
                         <menuitem value="0" label="&internote.urlMatchExact.value;" />
                         <menuitem value="2" label="&internote.urlMatchStarts.value;" />
@@ -169,6 +169,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                        onclick="internoteManager.openURL();" />
             </hbox>
             <textbox id="noteURL" oninput="internoteManager.userEditsData()" />
+            <hbox>
+                <checkbox id="ignoreAnchor" flex="1" oncommand="internoteManager.userEditsData()" style="font-weight: bold;" width="100px"
+                          label="&internote.ignoreAnchorCmd.label;" tooltiptext="&internote.ignoreAnchorCmd.label; (&internote.ignoreAnchorCmd.label2;)" />
+                <checkbox id="ignoreParams" flex="1" oncommand="internoteManager.userEditsData()" style="font-weight: bold;" width="100px"
+                          label="&internote.ignoreParamsCmd.label;" tooltiptext="&internote.ignoreParamsCmd.label; (&internote.ignoreParamsCmd.label2;)" />
+            </hbox>
             </groupbox>
             <groupbox flex="1">
             <caption label="&internote.noteData.caption;"/>

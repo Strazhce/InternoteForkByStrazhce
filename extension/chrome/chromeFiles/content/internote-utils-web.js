@@ -26,6 +26,43 @@ canonicalizeURL: function(url)
     return url;
 },
 
+cleanUpURL: function(url, removeAnchor, removeParams)
+{
+    if (!removeAnchor && !removeParams)
+    {
+        return url;
+    }
+
+    var startRegexp  = "([^\\?#]+)";
+    var paramsRegexp = "(\\?[^#]*)?";
+    var anchorRegexp = "(#.*)?";
+    
+    var regexp = "^" + startRegexp + paramsRegexp + anchorRegexp + "$";
+    
+    var regexpResults = new RegExp(regexp).exec(url);
+    
+    if (regexpResults == null)
+    {
+        return null;
+    }
+    else
+    {
+        var result = regexpResults[1];
+        
+        if (!removeParams)
+        {
+            result += regexpResults[2];
+        }
+        
+        if (!removeAnchor)
+        {
+            result += regexpResults[3];
+        }
+        
+        return result;        
+    }
+},
+
 removeAllChildNodes: function(elt)
 {
     while (elt.hasChildNodes())

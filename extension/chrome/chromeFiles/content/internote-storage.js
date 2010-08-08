@@ -115,12 +115,15 @@ StorageEvent: function(note, data1, data2)
     this.data2 = data2;
 },
 
-InternoteNote: function(url, matchType, text, left, top, width, height, backColor, foreColor, createTime, modfnTime, zIndex, isMinimized, isHTML)
+InternoteNote: function(url, matchType, ignoreAnchor, ignoreParams, text, left, top, width, height, backColor, foreColor, createTime, modfnTime, zIndex, isMinimized, isHTML)
 {
     if (arguments.length >= 1)
     {
         this.url          = url;
         this.matchType    = matchType;
+        this.ignoreAnchor = ignoreAnchor;
+        this.ignoreParams = ignoreParams;
+        
         this.text         = text;
         this.left         = left;
         this.top          = top;
@@ -250,7 +253,11 @@ checkInvariant: function(note, shouldCheckNum)
         {
             this.utils.assertError(this.utils.isNonNegativeNumber(note.num   ),  "Note.num is invalid");
         }
-        this.utils.assertError(typeof(note.url   ) == "string",             "Note.url is invalid",         note.url);
+        this.utils.assertError(typeof(note.url   ) == "string",                "Note.url is invalid",          note.url);
+        this.utils.assertError(this.utils.isNonNegativeNumber(note.matchType), "Note.matchType is invalid",    note.matchType);
+        this.utils.assertError(this.utils.isBoolean(note.ignoreAnchor),        "Note.ignoreAnchor is invalid", note.ignoreAnchor);
+        this.utils.assertError(this.utils.isBoolean(note.ignoreParams),        "Note.ignoreParams is invalid", note.ignoreParams);
+        
         this.utils.assertError(typeof(note.text  ) == "string",             "Note.text is invalid",        note.text);
         this.utils.assertError(this.utils.isNonNegativeNumber(note.left  ), "Note.left is invalid",        note.left);
         this.utils.assertError(this.utils.isNonNegativeNumber(note.top   ), "Note.top is invalid",         note.top);
@@ -294,8 +301,10 @@ indicateDataChanged: function(note)
     note.modfnTime = new Date().getTime();
     
     note.xml.setAttribute("url",          note.url        );
-    note.xml.setAttribute("matchType",    note.matchType);
-    //note.xml.setAttribute("text",        note.text       );
+    note.xml.setAttribute("matchType",    note.matchType  );
+    note.xml.setAttribute("ignoreAnchor", note.ignoreAnchor);
+    note.xml.setAttribute("ignoreParams", note.ignoreParams);
+    
     note.xml.setAttribute("left",         note.left       );
     note.xml.setAttribute("top",          note.top        );
     note.xml.setAttribute("width",        note.width      );
@@ -304,7 +313,7 @@ indicateDataChanged: function(note)
     note.xml.setAttribute("foreColor",    note.foreColor  );
     note.xml.setAttribute("modfnTime",    note.modfnTime  );
     note.xml.setAttribute("zIndex",       note.zIndex     );
-    note.xml.setAttribute("isMinimized",  note.isMinimized   );
+    note.xml.setAttribute("isMinimized",  note.isMinimized);
     note.xml.setAttribute("isHTML",       note.isHTML     );
     
     var textNode = this.getXMLTextNode(note.xml);
@@ -553,6 +562,8 @@ loadInternoteV3: function(storageDoc, includeXML)
         }
         
         var url         = element.getAttribute("url");
+        var ignoreAnchor= this.utils.getXMLBoolean(element, "ignoreAnchor", false);
+        var ignoreParams= this.utils.getXMLBoolean(element, "ignoreParams", false);
         
         var left        = this.utils.getXMLInt(element, "left", 0);
         var top         = this.utils.getXMLInt(element, "top", 0);
@@ -566,7 +577,7 @@ loadInternoteV3: function(storageDoc, includeXML)
         var isMinimized = this.utils.getXMLBoolean(element, "isMinimized", false);
         var isHTML      = this.utils.getXMLBoolean(element, "isHTML",      false);
         
-        var note = new this.InternoteNote(url, matchType, text,
+        var note = new this.InternoteNote(url, matchType, ignoreAnchor, ignoreParams, text,
                                           left, top, noteWidth, noteHeight, backColor, foreColor,
                                           createTime, modfnTime, zIndex, isMinimized, isHTML);
         if (includeXML)
@@ -595,11 +606,13 @@ addWelcomeNote: function()
     var matchType    = this.URL_MATCH_ALL;
     var isHTML       = false;
     var url          = "";
+    var ignoreAnchor = false;
+    var ignoreParams = false;
     
     var left = 10;
     var top  = 10;
     
-    return this.addNote(new this.InternoteNote(url, matchType, welcomeText, left, top, noteWidth, noteHeight,
+    return this.addNote(new this.InternoteNote(url, matchType, ignoreAnchor, ignoreParams, welcomeText, left, top, noteWidth, noteHeight,
                                                backColor, foreColor, currTime, currTime, zIndex, isMinimized, isHTML));
 },
 
@@ -615,6 +628,8 @@ getDefaultDims: function()
 
 addSimpleNote: function(url, text, noteTopLeft, noteDims)
 {
+    //dump("InternoteStorage.addSimpleNote\n");
+    
     this.utils.assertError(this.utils.isNonNegCoordPair(noteTopLeft), "NoteTopLeft not a coordinate.", noteTopLeft);
     this.utils.assertError(this.utils.isPositiveCoordPair(noteDims),  "NoteDims not dimensions.", noteDims);
     
@@ -626,11 +641,13 @@ addSimpleNote: function(url, text, noteTopLeft, noteDims)
     var zIndex       = this.getMaxZIndex() + 1;
     var isMinimized  = false;
     var isHTML       = false;
-    var matchType = this.URL_MATCH_URL;
+    var matchType    = this.URL_MATCH_URL;
+    var ignoreAnchor = true;
+    var ignoreParams = true;
     
     url = this.utils.canonicalizeURL(url);
     
-    return this.addNote(new this.InternoteNote(url, matchType, text,
+    return this.addNote(new this.InternoteNote(url, matchType, ignoreAnchor, ignoreParams, text,
                                                noteTopLeft[0], noteTopLeft[1], noteDims[0], noteDims[1],
                                                backColor, foreColor,
                                                currTime, currTime, zIndex, isMinimized, isHTML));
@@ -652,6 +669,8 @@ addNoteToList: function(note)
 // legacy conversion.
 addNote: function(note)
 {
+    //dump("InternoteStorage.addNote\n");
+    
     this.utils.assertError(note.xml == null,     "Tried to add note with XML existing.");
     
     this.addNoteToList(note);
@@ -665,6 +684,9 @@ addNote: function(note)
     
     note.xml.setAttribute("url",          note.url         );
     note.xml.setAttribute("matchType",    note.matchType   );
+    note.xml.setAttribute("ignoreAnchor", note.ignoreAnchor);
+    note.xml.setAttribute("ignoreParams", note.ignoreParams);
+    
     note.xml.setAttribute("left",         note.left        );
     note.xml.setAttribute("top",          note.top         );
     note.xml.setAttribute("width",        note.width       );
@@ -749,7 +771,24 @@ isURLPresent: function(searchURL)
 
 matchesURL: function(note, pageURL)
 {
-    var noteURLCanon = this.utils.canonicalizeURL(note.url);
+    var noteURL = note.url;
+
+    if (this.areIgnoresApplicable(note))
+    {
+        pageURL = this.utils.cleanUpURL(pageURL, note.ignoreAnchor, note.ignoreParams);
+        this.utils.assertError(pageURL != null, "Page URL did not parse when trying to match URL.");
+        
+        if (note.matchType != this.URL_MATCH_REGEXP)
+        {
+            noteURL = this.utils.cleanUpURL(noteURL, note.ignoreAnchor, note.ignoreParams);
+            if (noteURL == null)
+            {
+                return false;
+            }
+        }
+    }
+    
+    var noteURLCanon = this.utils.canonicalizeURL(noteURL);
     var pageURLCanon = this.utils.canonicalizeURL(pageURL);
     if (note.matchType == this.URL_MATCH_URL)
     {
@@ -757,26 +796,26 @@ matchesURL: function(note, pageURL)
     }
     else if (note.matchType == this.URL_MATCH_REGEXP)
     {
-        return pageURL     .match(note.url    ) ? true : false ||
-               pageURLCanon.match(note.url    ) ? true : false ||
+        return pageURL     .match(noteURL     ) ? true : false ||
+               pageURLCanon.match(noteURL     ) ? true : false ||
                pageURLCanon.match(noteURLCanon) ? true : false;
     }
     else if (note.matchType == this.URL_MATCH_PREFIX)
     {
         return pageURLCanon == noteURLCanon ||
-               this.utils.startsWith(pageURLCanon, note.url);
+               this.utils.startsWith(pageURLCanon, noteURL);
     }
     else if (note.matchType == this.URL_MATCH_SITE)
     {
         var site = this.utils.getURLSite(pageURL);
-        var noteSite = note.url;
+        var noteSite = noteURL;
         
         return site == noteSite;
     }
     else if (note.matchType == this.URL_MATCH_SUFFIX)
     {
         var site = this.utils.getURLSite(pageURL);
-        var noteSite = note.url;
+        var noteSite = noteURL;
         
         if (site == noteSite)
         {
@@ -784,9 +823,9 @@ matchesURL: function(note, pageURL)
         }
         else
         {
-            if (note.url.charAt(0) != ".")
+            if (noteURL.charAt(0) != ".")
             {
-                noteSite = "." + note.url;
+                noteSite = "." + noteURL;
             }
             
             return this.utils.endsWith(site, noteSite);
@@ -837,7 +876,39 @@ setMatch: function(note, newURL, newMatchType)
         note.matchType = newMatchType;
         this.indicateDataChanged(note);
         
-        this.dispatchEvent("noteRelocated", new this.StorageEvent(note, [newMatchType, newURL], [oldMatchType, oldURL]));
+        var event = new this.StorageEvent(note, [newMatchType, newURL, note.ignoreAnchor, note.ignoreParams],
+                                                [oldMatchType, oldURL, note.ignoreAnchor, note.ignoreParams]);
+        this.dispatchEvent("noteRelocated", event);
+    }
+},
+
+setIgnoreAnchor: function(note, newIgnoreAnchor)
+{
+    this.utils.assertError(this.utils.isBoolean(newIgnoreAnchor), "Trying to set ignore anchor to a non-boolean.");
+    if (note.ignoreAnchor != newIgnoreAnchor)
+    {
+        var oldIgnoreAnchor = note.ignoreAnchor;
+        note.ignoreAnchor = newIgnoreAnchor;
+        this.indicateDataChanged(note);
+        
+        var event = new this.StorageEvent(note, [note.matchType, note.url, newIgnoreAnchor, note.ignoreParams],
+                                                [note.matchType, note.url, oldIgnoreAnchor, note.ignoreParams]);
+        this.dispatchEvent("noteRelocated", event);
+    }
+},
+
+setIgnoreParams: function(note, newIgnoreParams)
+{
+    this.utils.assertError(this.utils.isBoolean(newIgnoreParams), "Trying to set ignore params to a non-boolean.");
+    if (note.ignoreParams != newIgnoreParams)
+    {
+        var oldIgnoreParams = note.ignoreParams;
+        note.ignoreParams = newIgnoreParams;
+        this.indicateDataChanged(note);
+        
+        var event = new this.StorageEvent(note, [note.matchType, note.url, note.ignoreAnchor, newIgnoreParams],
+                                                [note.matchType, note.url, note.ignoreAnchor, oldIgnoreParams]);
+        this.dispatchEvent("noteRelocated", event);
     }
 },
 
@@ -954,11 +1025,22 @@ resetNote: function(note)
     }
 },
 
-getURL: function(note)
+areIgnoresApplicable: function(note)
+{
+    return note.matchType == this.URL_MATCH_URL ||
+           note.matchType == this.URL_MATCH_PREFIX ||
+           note.matchType == this.URL_MATCH_REGEXP;
+},
+
+getEffectiveURL: function(note)
 {
     if (note.matchType == this.URL_MATCH_ALL)
     {
         return "";
+    }
+    else if (this.areIgnoresApplicable(note))
+    {
+        return this.utils.cleanUpURL(note.url, note.ignoreAnchor, note.ignoreParams);
     }
     else
     {
@@ -993,7 +1075,7 @@ getMaxZIndex: function()
     return maxZ;
 },
 
-getNotesForURL: function(searchURL)
+getNotesForEffectiveURL: function(searchURL)
 {
     var results = [];
     
@@ -1005,7 +1087,7 @@ getNotesForURL: function(searchURL)
         
         if (note != null)
         {
-            if (this.utils.canonicalizeURL(this.getURL(note)) == searchURL2)
+            if (this.utils.canonicalizeURL(this.getEffectiveURL(note)) == searchURL2)
             {
                 results.push(note);
             }
@@ -1258,8 +1340,10 @@ makeNoteFromV2Line: function(line)
     var matchType    = this.URL_MATCH_URL;
     var isHTML       = false;
     var zIndex       = 1;
+    var ignoreAnchor = false;
+    var ignoreParams = false;
     
-    var note = new this.InternoteNote(url, matchType, text,
+    var note = new this.InternoteNote(url, matchType, ignoreAnchor, ignoreParams, text,
                                       left, top, noteWidth, noteHeight, backColor, foreColor,
                                       createTime, modfnTime, zIndex, isMinimized, isHTML);
     this.checkInvariant(note, false);

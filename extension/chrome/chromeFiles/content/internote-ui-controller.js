@@ -680,6 +680,9 @@ userCreatesNote: function()
             var note = this.storage.addSimpleNote(loc, "", noteTopLeft, noteDims);
             this.utils.assertError(note != null, "Note not found when creating.");
             
+            // This should have been added by callbacks, we check.
+            this.utils.assertError(this.uiNoteLookup[note.num] != null, "UINote not created properly.", note);
+            
             // Now attempt to focus new note.  We do it here as we only focus notes created in this window,
             // not those created on page load, on another window or due to manager changes.
             var uiNote = this.uiNoteLookup[note.num];
@@ -1218,6 +1221,32 @@ userChoosesSiteSuffix: function(ev, element)
     }
 },
 
+userIgnoresAnchor: function(ev, element)
+{
+    try
+    {
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];
+        this.storage.setIgnoreAnchor(note, ev.target.getAttribute("checked") == "true");
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when ignoring anchor.", ex);
+    }
+},
+
+userIgnoresParams: function(ev, element)
+{
+    try
+    {
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];
+        this.storage.setIgnoreParams(note, ev.target.getAttribute("checked") == "true");
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when ignoring params.", ex);
+    }
+},
+
 //////////////////////
 // Chrome Manipulation
 //////////////////////
@@ -1373,6 +1402,8 @@ chromePrepareShowOnMenu: function(element)
         var siteItem   = document.getElementById("internote-match-site");
         var allItem    = document.getElementById("internote-match-all");
         var regexpItem = document.getElementById("internote-match-regexp");
+        var anchorItem = document.getElementById("internote-ignore-anchor");
+        var paramsItem = document.getElementById("internote-ignore-params");
         
         var isURL        = (note.matchType == this.storage.URL_MATCH_URL   );
         var isSite       = (note.matchType == this.storage.URL_MATCH_SITE  );
@@ -1383,10 +1414,18 @@ chromePrepareShowOnMenu: function(element)
         
         this.utils.setDisplayed(regexpItem, isRegexp);
         
+        var areIgnoresApplicable = this.storage.areIgnoresApplicable(note);
+        this.utils.setEnabled(anchorItem, areIgnoresApplicable);
+        this.utils.setEnabled(paramsItem, areIgnoresApplicable);
+        
         if (isURL   ) urlItem   .setAttribute("checked", "true");
         if (isSite  ) siteItem  .setAttribute("checked", "true");
         if (isAll   ) allItem   .setAttribute("checked", "true");
         if (isRegexp) regexpItem.setAttribute("checked", "true");
+        
+        this.utils.dumpTraceData(note);
+        if (note.ignoreAnchor) anchorItem.setAttribute("checked", "true");
+        if (note.ignoreParams) paramsItem.setAttribute("checked", "true");
         
         this.chromePrepareShowOnMenuPages(note, isURLPrefix );
         this.chromePrepareShowOnMenuSites(note, isSiteSuffix);
