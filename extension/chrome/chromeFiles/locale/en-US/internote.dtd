@@ -160,7 +160,7 @@
 <!ENTITY internote.urlMatchExact.value        "One Only">
 <!ENTITY internote.urlMatchSite.value         "On This Site Only">
 <!ENTITY internote.urlMatchStarts.value       "Where URL Starts with ...">
-<!ENTITY internote.urlMatchSite.value         "On Sites Ending with ...">
+<!ENTITY internote.urlMatchSuffix.value       "On Sites Ending with ...">
 <!ENTITY internote.urlMatchAll.value          "All (Universal Note)">
 <!ENTITY internote.urlMatchRegexp.value       "Matching RegExp">
 
