@@ -321,11 +321,11 @@ onPressScrollLine: function(ev)
             
             if (location > 0)
             {
-                this.onPressRepeatingButton(ev.target, this.onScrollDownPage);
+                this.onPressRepeatingButton(ev, this.onScrollDownPage);
             }
             else if (location < 0)
             {
-                this.onPressRepeatingButton(ev.target, this.onScrollUpPage);
+                this.onPressRepeatingButton(ev, this.onScrollUpPage);
             }
             else
             {
@@ -345,7 +345,7 @@ onPressUpArrow: function(ev)
     
     try
     {
-        this.onPressRepeatingButton(ev.target, this.onScrollUpLine);
+        this.onPressRepeatingButton(ev, this.onScrollUpLine);
     }
     catch (ex)
     {
@@ -359,7 +359,7 @@ onPressDownArrow: function(ev)
     
     try
     {
-        this.onPressRepeatingButton(ev.target, this.onScrollDownLine);    
+        this.onPressRepeatingButton(ev, this.onScrollDownLine);    
     }
     catch (ex)
     {
@@ -367,40 +367,43 @@ onPressDownArrow: function(ev)
     }
 },
 
-onPressRepeatingButton: function(target, executeFunc)
+onPressRepeatingButton: function(ev, executeFunc)
 {
     //dump("internoteUtilities.Scrollbar.onPressRepeatingButton\n");
     
-    executeFunc.call(this);
-    
-    var onMouseUp = this.utils.bind(this, function()
-    {
-        if (this.delayTimeout != null)
-        {
-            clearTimeout(this.delayTimeout);
-            this.delayTimeout = null;
-        }
-        
-        if (this.repeatInterval != null)
-        {
-            clearInterval(this.repeatInterval);
-            this.repeatInterval = null;
-        }
-        
-        document.removeEventListener("mouseup", onMouseUp, false);
-        onMouseUp = null;
-    });
-    
-    document.addEventListener("mouseup", onMouseUp, false);
-    
-    this.delayTimeout = setTimeout(this.utils.bind(this, function()
-    {
-        this.delayTimeout = null;
-        this.repeatInterval = setInterval(this.utils.bind(this, function()
-        {
-            executeFunc.call(this);
-        }), this.REPEAT_INTERVAL);
-    }), this.REPEAT_DELAY);
+    if (ev.button == 0)
+	{
+		executeFunc.call(this);
+		
+		var onMouseUp = this.utils.bind(this, function()
+		{
+			if (this.delayTimeout != null)
+			{
+				clearTimeout(this.delayTimeout);
+				this.delayTimeout = null;
+			}
+			
+			if (this.repeatInterval != null)
+			{
+				clearInterval(this.repeatInterval);
+				this.repeatInterval = null;
+			}
+			
+			document.removeEventListener("mouseup", onMouseUp, false);
+			onMouseUp = null;
+		});
+		
+		document.addEventListener("mouseup", onMouseUp, false);
+		
+		this.delayTimeout = setTimeout(this.utils.bind(this, function()
+		{
+			this.delayTimeout = null;
+			this.repeatInterval = setInterval(this.utils.bind(this, function()
+			{
+				executeFunc.call(this);
+			}), this.REPEAT_INTERVAL);
+		}), this.REPEAT_DELAY);
+	}
 },
 
 onStartDragSlider: function(event)
