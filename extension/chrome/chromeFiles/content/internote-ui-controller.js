@@ -1423,7 +1423,6 @@ chromePrepareShowOnMenu: function(element)
         if (isAll   ) allItem   .setAttribute("checked", "true");
         if (isRegexp) regexpItem.setAttribute("checked", "true");
         
-        this.utils.dumpTraceData(note);
         if (note.ignoreAnchor) anchorItem.setAttribute("checked", "true");
         if (note.ignoreParams) paramsItem.setAttribute("checked", "true");
         
