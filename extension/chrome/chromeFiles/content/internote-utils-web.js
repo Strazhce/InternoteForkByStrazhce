@@ -171,8 +171,9 @@ isValidSite: function(site)
         return false;
     }
     
-    var tlds = ["aero", "asia", "biz", "cat", "com", "coop", "edu", "gov", "info", "int", "jobs", "mil", "mobi",
-                "museum", "name", "net", "org", "pro", "tel", "travel"];
+    // Not all country code domains are required to have at least three domains, eg ro isn't.
+    // List those where we can exclude two domains, eg com.au.
+    var threeComponentTLDs = ["au", "uk"];
     
     var firstPos = site.indexOf(".");
     var lastPos  = site.lastIndexOf(".");
@@ -189,9 +190,9 @@ isValidSite: function(site)
     }
     else
     {
-        // One dot, valid as long as it ends with a TLD and not a country code.
+        // One dot, valid as long as it's not a country code that has subdomains.
         var possibleTLD = site.substr(lastPos + 1);
-        return tlds.indexOf(possibleTLD) != -1;
+        return threeComponentTLDs.indexOf(possibleTLD) == -1;
     }
 },
 
