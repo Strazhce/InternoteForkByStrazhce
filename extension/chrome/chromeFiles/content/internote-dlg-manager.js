@@ -559,7 +559,7 @@ isValidURLOrSite: function()
     var url = this.storage.getEffectiveURL(this.noteBeingEdited);
     var parsedURL = this.utils.parseURL(url);
     
-    var isValidURL = (parsedURL != null && this.utils.isValidSite(parsedURL.site));
+    var isValidURL = (parsedURL != null && this.utils.isValidURLSite(parsedURL.site, parsedURL.protocol));
     
     return isValidURL ? true : this.utils.isValidSite(url);
 },

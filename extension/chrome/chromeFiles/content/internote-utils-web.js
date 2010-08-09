@@ -40,10 +40,10 @@ parseURL: function(url)
 {
     this.assertError(typeof(url) == "string", "Bad URL type when parsing URL.", url);
     
-    var protocolRegexp = "([^:]+):///?";
-    var userNameRegexp = "([^:@]*:)?";
-    var passwordRegexp = "([^@]@)?";
-    var siteRegexp     = "([^:/]+)";
+    var protocolRegexp = "([^:]+)://";
+    var userNameRegexp = "([^:@/]*:)?";
+    var passwordRegexp = "([^@/]@)?";
+    var siteRegexp     = "([^:/]*)";
     var portRegexp     = "(:[0-9]+)?";
     var pathRegexp     = "(/[^\\?#]*)?";
     var paramsRegexp   = "(\\?[^#]*)?";
@@ -61,6 +61,20 @@ parseURL: function(url)
     {
         return { protocol: regexpResults[1], userName: regexpResults[2], password: regexpResults[3], site: regexpResults[4],
                  port: regexpResults[5], path: regexpResults[6], params: regexpResults[7], anchor: regexpResults[8] };
+    }
+},
+
+isValidURLSite: function(site, protocol)
+{
+    var compulsorySiteProtocols = ["http", "https", "ftp"];
+    var siteIsCompulsory = (compulsorySiteProtocols.indexOf(protocol) != -1);
+    if (!siteIsCompulsory && site == "")
+    {
+        return true;
+    }
+    else
+    {
+        return this.isValidSite(site);
     }
 },
 
