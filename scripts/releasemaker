@@ -1,0 +1,5 @@
+#!/usr/bin/csh -f
+
+rm -Rf svn-export internote-$1.xpi
+svn export trunk/extension svn-export
+(cd svn-export; zip -9 -r ../internote-$1.xpi *)
