@@ -103,12 +103,12 @@ cleanUpURL: function(url, removeAnchor, removeParams)
         
         if (!removeParams)
         {
-            result += regexpResults[2];
+            result += this.ifNull(regexpResults[2], "");
         }
         
         if (!removeAnchor)
         {
-            result += regexpResults[3];
+            result += this.ifNull(regexpResults[3], "");
         }
         
         return result;        

@@ -46,6 +46,11 @@ incorporate: function(obj)
     }
 },
 
+ifNull: function(value, defaultVal)
+{
+    return (value == null) ? defaultVal : value;
+},
+
 getLocaleString: function(strName)
 {
     //dump("internoteUtilities.getLocaleString " + strName + "\n");
