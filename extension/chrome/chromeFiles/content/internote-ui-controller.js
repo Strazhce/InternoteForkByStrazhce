@@ -1831,6 +1831,11 @@ screenGetViewportDims: function()
             {
                 this.screenXMLUpdateViewportDims(contentDoc, viewportDims);
             }
+            else if (contentDoc instanceof XULDocument)
+            {
+                // XXX Should possibly do something.
+                // Do nothing.
+            }
             else
             {
                 this.utils.assertWarnNotHere("Unhandled document type.", this.utils.getJSClassName());
