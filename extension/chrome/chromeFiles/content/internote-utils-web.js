@@ -180,7 +180,12 @@ isIPAddress: function(site)
 
 isValidSite: function(site)
 {
-    if (site.match(/^[A-Za-z0-9\-][A-Za-z0-9\-\.]*$/) == null)
+    // Domain names with diacritics exist, support them.
+    var alpha = "A-Za-zÀ-ÖØ-öø-ÿ";
+    var char  = alpha + "0-9";
+    var regexp = "^[" + char + "][" + char + "\\.\\-]*$";
+    
+    if (site.match(regexp) == null)
     {
         return false;
     }
