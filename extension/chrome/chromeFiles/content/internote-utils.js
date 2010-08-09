@@ -373,13 +373,20 @@ getBoundVersion: function(obj, propertyName)
 
 getJSClassName: function(obj)
 {
-    var prototype = obj.__proto__;
-    if (prototype == null)
+    if (obj == null)
     {
-        return "";
+        return null;
     }
-    else {
-        return prototype.constructor.name;
+    else
+    {
+        var prototype = obj.__proto__;
+        if (prototype == null)
+        {
+            return "";
+        }
+        else {
+            return prototype.constructor.name;
+        }
     }
 },
 
