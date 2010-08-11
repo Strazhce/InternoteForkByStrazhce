@@ -73,6 +73,11 @@ supportsTransparentClickThru: function()
     }
 },
 
+hasMinimizeIconCentered: function()
+{
+    return this.getPlatform() == "mac";
+},
+
 hasCombinedScrollButtons: function()
 {
     return this.getPlatform() == "mac";

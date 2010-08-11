@@ -1196,15 +1196,17 @@ drawMinimizeButton: function(uiNote)
     var w = uiNote.minimizeButton.width;
     var h = uiNote.minimizeButton.height;
     
+    var WIDTH_PROPORTION = 0.3;
     context.clearRect(0, 0, w, h);
     
-    context.lineWidth = 0.3 * w;
+    context.lineWidth = WIDTH_PROPORTION * w;
     context.lineCap = "round";
     //context.strokeStyle = "rgb(46,46,46)";
     context.strokeStyle = this.getButtonColor(uiNote);
     
+    var yPos = this.utils.hasMinimizeIconCentered() ? 0.5 : (1 - WIDTH_PROPORTION / 2);
     context.beginPath();
-    context.moveTo(0.10 * w, 0.50 * h); context.lineTo(0.90 * w, 0.50 * h);
+    context.moveTo(0.10 * w, yPos * h); context.lineTo(0.90 * w, yPos * h);
     context.stroke();
 },
 
