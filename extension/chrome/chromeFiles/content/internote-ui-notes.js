@@ -372,6 +372,8 @@ disableUI: function(uiNote)
     uiNote.noteElt.addEventListener("keydown",   this.utils.blockEvent, true);
     uiNote.noteElt.addEventListener("keyup",     this.utils.blockEvent, true);
     
+    this.paintUI(uiNote); // get rid of hover effects
+    
     for (var element in this.pointers)
     {
         uiNote[element].style.cursor = "default";
