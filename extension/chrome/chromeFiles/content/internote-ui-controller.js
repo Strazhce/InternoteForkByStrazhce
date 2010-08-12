@@ -214,7 +214,7 @@ init: function()
         key.setAttribute("key",       "g");
         key.setAttribute("modifiers", "alt");
         key.setAttribute("oncommand", "internoteUIController.activateDebugFunction()");
-
+        
         var keySet = document.getElementById("mainKeyset");
         keySet.appendChild(key);
     }
@@ -752,6 +752,11 @@ userResizesNote: function(event)
     
     try
     {
+        this.utils.assertError(event != null, "Null event when starting drag.");
+    
+        var noteNum = this.utils.getNoteNum(event.target);
+        var uiNote = this.uiNoteLookup[noteNum];
+    
         var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
             // XXX Limit resize to viewport?
             this.screenSetModifiedNoteDims(uiNote, offset);
@@ -777,7 +782,7 @@ userResizesNote: function(event)
             }
         });
         
-        this.userStartsDrag(event, this.DRAG_MODE_RESIZE, onDragMouseMoved, onDragFinished);  
+        this.userStartsDrag(event, uiNote, this.DRAG_MODE_RESIZE, onDragMouseMoved, onDragFinished);  
     }
     catch (ex)
     {
@@ -789,6 +794,11 @@ userMovesNote: function(event)
 {
     try
     {
+        this.utils.assertError(event != null, "Null event when starting drag.");
+        
+        var noteNum = this.utils.getNoteNum(event.target);
+        var uiNote = this.uiNoteLookup[noteNum];
+        
         var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
             this.utils.assertError(this.utils.isCoordPair(offset), "Invalid offset.");
             var newPosOnViewport = this.screenCalcDraggedPos(uiNote, offset);
@@ -796,6 +806,8 @@ userMovesNote: function(event)
         });
         
         var onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote) {
+            this.displayUI.moveEnd(uiNote);
+            
             // Store any changes.
             if (wasCompleted && wasDrag)
             {
@@ -811,7 +823,10 @@ userMovesNote: function(event)
             }
         });
         
-        this.userStartsDrag(event, this.DRAG_MODE_MOVE, onDragMouseMoved, onDragFinished);  
+        this.userStartsDrag(event, uiNote, this.DRAG_MODE_MOVE, onDragMouseMoved, onDragFinished);
+        
+        // Set up the drag handler before this, because doing this can mess with the event object screen positions.
+        this.displayUI.moveStart(uiNote);
     }
     catch (ex)
     {
@@ -819,14 +834,9 @@ userMovesNote: function(event)
     }
 },
 
-userStartsDrag: function(event, dragMode, onDragMouseMoved, onDragFinished)
+userStartsDrag: function(event, uiNote, dragMode, onDragMouseMoved, onDragFinished)
 {
     //dump("userStartsDrag\n");
-    
-    this.utils.assertError(event != null, "Null event when starting drag.");
-    
-    var noteNum = this.utils.getNoteNum(event.target);
-    var uiNote = this.uiNoteLookup[noteNum];
     
     if (uiNote.note.isMinimized)
     {

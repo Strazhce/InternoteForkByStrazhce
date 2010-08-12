@@ -117,8 +117,10 @@ destroy: function(uiNote)
 
 noteShown: function(uiNote)
 {
-    uiNote.scrollHandler.drawScrollLine();
+    //dump("internoteNoteUI.noteShown\n");
+    
     this.updateScrollbarType(uiNote);
+    uiNote.scrollHandler.drawScrollLine();
 },
 
 hasLeftAlignedTopButtons: function()
@@ -806,7 +808,7 @@ createLittleText: function(doc, uiNote)
 
 createButton: function(doc, uiNote, onClick, fieldName, id, redrawFuncName)
 {
-    var onRedraw = this.utils.bind(this, function(effectMode) { dump("A" + effectMode + "\n"); this[redrawFuncName].call(this, uiNote, effectMode); });
+    var onRedraw = this.utils.bind(this, function(effectMode) { this[redrawFuncName].call(this, uiNote, effectMode); });
     var isEnabledFunc = function() { return uiNote.isEnabled; }
     var canvas = uiNote[fieldName] =
         this.utils.createSimpleButton(doc, id + uiNote.num, this.NOTE_OUTER_SIZE, this.NOTE_OUTER_SIZE, onRedraw, onClick, isEnabledFunc);

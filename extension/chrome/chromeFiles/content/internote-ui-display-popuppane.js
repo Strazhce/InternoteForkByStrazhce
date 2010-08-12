@@ -371,4 +371,12 @@ adjustNote: function(uiNote, newPosOnViewport, newDims)
     }
 },
 
+moveStart: function(uiNote)
+{
+},
+
+moveEnd: function(uiNote)
+{
+},
+
 };

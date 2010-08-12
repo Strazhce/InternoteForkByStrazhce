@@ -485,6 +485,12 @@ internoteAnimation.getMoveOrResizeAnimation = function(utils, noteUI, displayUI,
     {
         // We delay this until start in case an existing animation on the note has not yet been hurried.
         startPair = isResize ? noteUI.getDims(uiNote) : displayUI.getScreenPosition(uiNote);
+        displayUI.moveStart(uiNote);
+    };
+    
+    animation.onComplete = function()
+    {
+        displayUI.moveEnd(uiNote);
     };
     
     animation.doStep = function(timeRatioDone)
@@ -526,6 +532,13 @@ internoteAnimation.getMoveAndResizeAnimation = function(utils, noteUI, displayUI
         
         startNWPos = displayUI.getScreenPosition(uiNote);
         startSEPos = utils.makeRectFromDims(startNWPos, startDims).bottomRight;
+        
+        displayUI.moveStart(uiNote);
+    };
+    
+    animation.onComplete = function()
+    {
+        displayUI.moveEnd(uiNote);
     };
     
     animation.doStep = function(timeRatioDone)

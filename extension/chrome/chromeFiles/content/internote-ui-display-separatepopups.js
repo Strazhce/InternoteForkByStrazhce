@@ -23,10 +23,12 @@
 var internoteDisplayUISeparatePopups = {
 
 autoFocusNote:  null,
+noteBeingMoved: null,
+
 posLookup:        [],
 dimsLookup:       [],
 actualDimsLookup: [],
-noteOrder: [], // We use this to avoid unnecessary reopens.
+noteOrder:        [], // We use this to avoid unnecessary reopens.
 
 init: function(prefs, utils, noteUI)
 {
@@ -101,9 +103,12 @@ addNote: function(uiNote, pos)
     
     popup.openPopup(this.browser, "overlap", actualPos[0], actualPos[1], false, false);
     
-    this.utils.addBoundDOMEventListener(popup, "popupshown", this, "popupShown", false);
+    popup.addEventListener("popupshown", this.utils.bind(this, function(ev)
+    {
+        this.popupShown(ev, uiNote);
+    }), false);
     
-    this.addNoteToOrder(uiNote);    
+    this.addNoteToOrder(uiNote);
 },
 
 removeNote: function(uiNote)
@@ -183,14 +188,8 @@ focusNote: function(uiNote)
     }
     else
     {
-        if (this.autoFocusNote == null)
-        {
-            this.utils.addBoundDOMEventListener(popup, "popupshown", this, "popupShown", false);            
-        }
-        
-        // The panel is not on-screen, but it should be coming because of the previous call
-        // to createInsertionContainer.  If this is the first note, set it for later autofocus.
-        // If it's a later note, make this the new autofocus note.
+        // The panel is not on-screen, but it should be coming.  If this is the first note, set
+        // it for later autofocus. If it's a later note, make this the new autofocus note.
         this.autoFocusNote = uiNote;
     }
 },
@@ -205,7 +204,7 @@ periodicCheck: function()
 },
 
 // A callback for when the popup panel appears.
-popupShown: function(event)
+popupShown: function(event, uiNote)
 {
     //dump("internoteDisplayUI.popupShown\n");
     
@@ -221,6 +220,8 @@ popupShown: function(event)
                 this.autoFocusNote = null;
             }
         }
+        
+        this.noteUI.noteShown(uiNote);
     }
     catch (ex)
     {
@@ -273,14 +274,19 @@ getScreenPosition: function(uiNote)
 reopenNote: function(uiNote)
 {
     //dump("internoteDisplayUI.reopenNote \"" + uiNote.note.text + "\"\n");
+    if (this.noteBeingMoved == uiNote)
+    {
+        this.assertWarnNotHere("Tried to reopen note during move operation.");
+        this.noteBeingMoved = null;
+    }
     
     var popup = document.getElementById("internote-popup" + uiNote.num);
     
-    var pos = this.actualPosLookup[uiNote.num];
+    var actualPos = this.actualPosLookup[uiNote.num];
     var wasFocused = this.noteUI.isFocused(uiNote);
     
     popup.hidePopup();
-    popup.openPopup(this.browser, "overlap", pos[0], pos[1], false, false);
+    popup.openPopup(this.browser, "overlap", actualPos[0], actualPos[1], false, false);
     
     if (wasFocused)
     {
@@ -351,14 +357,12 @@ adjustNote: function(uiNote, newPos, newDims, shouldForceReopen)
     if (!this.utils.areCoordPairsEqual(offset, oldOffset))
     {
         //dump("  Shifting " + oldOffset + " -> " + offset + "\n");
-        
         this.utils.shiftShiftingPanel(popup, offset);
     }
     
     if (!this.utils.areCoordPairsEqual(actualDims, oldActualDims))
     {
         //dump("  Resizing " + oldActualDims + " -> " + actualDims + "\n");
-        
         this.actualDimsLookup[uiNote.num] = actualDims;
         this.utils.resizeShiftingPanel(popup, actualDims);
     }
@@ -368,14 +372,26 @@ adjustNote: function(uiNote, newPos, newDims, shouldForceReopen)
         shouldForceReopen = false;
     }
     
-    if (!this.utils.areCoordPairsEqual(actualPos, oldActualPos) || shouldForceReopen)
+    var isPosDifferent = !this.utils.areCoordPairsEqual(actualPos, oldActualPos);
+    var isDragging     = (this.noteBeingMoved == uiNote);
+    
+    if (isPosDifferent)
     {
         //dump("  Moving " + oldActualPos + " -> " + actualPos + "\n");
-        
         this.actualPosLookup[uiNote.num] = actualPos;
+    }
+    
+    if (shouldForceReopen || (isPosDifferent && !isDragging))
+    {
         this.reopenNote(uiNote);
-        
         return true;
+    }
+    else if (isPosDifferent)
+    {
+        var popup = document.getElementById("internote-popup" + uiNote.num);
+        var viewportPos = this.utils.getScreenPos(this.browser.boxObject);
+        popup.moveTo(actualPos[0] + viewportPos[0], actualPos[1] + viewportPos[1]);
+        return false;
     }
     else
     {
@@ -445,6 +461,21 @@ flipStep: function(uiNote, offsetX)
 {
     var popup = document.getElementById("internote-popup" + uiNote.num);
     this.utils.shiftShiftingPanel(popup, [this.flipStartOffset[0] + offsetX, this.flipStartOffset[1]]);
+},
+
+moveStart: function(uiNote)
+{
+    // Change to non-anchored so moving the note will switch to an unanchored popup.
+    // We use this temporarily because moveTo works properly with it and we prefer to avoid flickery reopens.
+    this.noteBeingMoved = uiNote;
+    this.adjustNote(uiNote, null, null, false); // We don't need to reopen the note, move will unanchor it.
+},
+
+moveEnd: function(uiNote)
+{
+    // Change to anchored.
+    this.noteBeingMoved = null;
+    this.adjustNote(uiNote, null, null, true);
 },
 
 };
