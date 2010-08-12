@@ -31,7 +31,7 @@ NOTE_SPACING_LITTLE: 4,
 
 NOTE_ALPHA:  0.85,
 
-noteFlipButton: new Image(),
+noteFlipImage: new Image(),
 
 SWAB_LEFT: 5,
 SWAB_TITLE_HEIGHT: 16,
@@ -55,7 +55,7 @@ init: function(prefs, utils, consts)
     this.consts  = consts;
         
     // XXX Can't find a constructor for this?
-    this.noteFlipButton.src = "chrome://internote/content/arrow.png";
+    this.noteFlipImage.src = "chrome://internote/content/arrow.png";
     
     this.SWAB_DISTANCE = this.SWAB_WIDTH + this.SWAB_X_SPACING,
     
@@ -71,16 +71,19 @@ init: function(prefs, utils, consts)
     
     this.MINIMIZED_WIDTH  = this.consts.MIN_NOTE_WIDTH;
     this.MINIMIZED_HEIGHT = 2 * this.NOTE_BORDER_SIZE + this.NOTE_OUTER_SIZE;
+    
+    this.HOVER_COLOR = [0, 0, 0];
+    this.PRESS_COLOR = [this.utils.MAX_INTENSITY, this.utils.MAX_INTENSITY, this.utils.MAX_INTENSITY];
 },
 
 waitForImageLoad: function(onLoad)
 {
-    this.noteFlipButton.addEventListener("load", onLoad, false);
+    this.noteFlipImage.addEventListener("load", onLoad, false);
 },
 
 areImagesLoaded: function()
 {
-    return this.noteFlipButton.complete;
+    return this.noteFlipImage.complete;
 },
 
 addFocusListener: function(uiNote, func)
@@ -170,9 +173,12 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
         this.createLittleText(doc, uiNote);
     var textArea = this.createTextArea(doc, uiNote, callbacks.onEdit, callbacks.onMoveStart, callbacks.onFocus)
     
+    var isEnabledFunc = function() { return uiNote.isEnabled; }
     var scrollbarHandler = uiNote.scrollHandler =
         new this.utils.ScrollHandler(this.utils, this.prefs, uiNote.textArea, uiNote.num,
-                                     this.NOTE_OUTER_SIZE, this.getBorderColor(uiNote), this.getButtonColor(uiNote));
+                                     this.NOTE_OUTER_SIZE, this.getBorderColor(uiNote), this.getButtonColor(uiNote),
+                                     this.utils.formatHexColor(this.HOVER_COLOR),
+                                     this.utils.formatHexColor(this.PRESS_COLOR), isEnabledFunc);
     
     var scrollbar = uiNote.scrollbar = scrollbarHandler.getScrollbar();
     
@@ -365,7 +371,7 @@ disableUI: function(uiNote)
     uiNote.noteElt.addEventListener("keypress",  this.utils.blockEvent, true);
     uiNote.noteElt.addEventListener("keydown",   this.utils.blockEvent, true);
     uiNote.noteElt.addEventListener("keyup",     this.utils.blockEvent, true);
-
+    
     for (var element in this.pointers)
     {
         uiNote[element].style.cursor = "default";
@@ -692,9 +698,26 @@ getInternalCoordinates: function(uiNote, event)
 // Helper functions
 /////////////////////////////////
 
-getButtonColor: function(uiNote)
+getButtonColor: function(uiNote, mode)
 {
-    return this.utils.formatHexColor(this.utils.darken(uiNote.backColorArray, 0.4));
+    return this.utils.formatHexColor(this.getRawButtonColor(uiNote, mode));
+},
+
+getRawButtonColor: function(uiNote, mode)
+{
+    if (mode == this.utils.EFFECT_MODE_PRESS)
+    {
+        return this.PRESS_COLOR;
+    }
+    else if (mode == this.utils.EFFECT_MODE_HOVER)
+    {
+        return this.HOVER_COLOR;
+    }
+    else
+    {
+        // This might be undefined mode which equals normal. 
+        return this.utils.darken(uiNote.backColorArray, 0.4);
+    }
 },
 
 getBorderColor: function(uiNote)
@@ -779,18 +802,12 @@ createLittleText: function(doc, uiNote)
     return littleText;
 },
 
-createButton: function(doc, uiNote, onClick, fieldName, id, drawMethod)
+createButton: function(doc, uiNote, onClick, fieldName, id, redrawFuncName)
 {
-    var canvas = uiNote[fieldName] = this.utils.createHTMLCanvas(doc, id + uiNote.num, this.NOTE_OUTER_SIZE, this.NOTE_OUTER_SIZE);
-    
-    if (onClick != null)
-    {
-        canvas.onclick = function(event)
-        {
-            if (uiNote.isEnabled) onClick(event, uiNote);
-        };
-    }
-    
+    var onRedraw = this.utils.bind(this, function(effectMode) { dump("A" + effectMode + "\n"); this[redrawFuncName].call(this, uiNote, effectMode); });
+    var isEnabledFunc = function() { return uiNote.isEnabled; }
+    var canvas = uiNote[fieldName] =
+        this.utils.createSimpleButton(doc, id + uiNote.num, this.NOTE_OUTER_SIZE, this.NOTE_OUTER_SIZE, onRedraw, onClick, isEnabledFunc);
     return canvas;
 },
 
@@ -822,8 +839,18 @@ createFlipButton: function(doc, uiNote, onFlip)
 
 createFlipButton: function(doc, uiNote, onFlip)
 {
-    var canvas = uiNote.flipButton = this.utils.createHTMLElement("canvas", doc, "internote-flip" + uiNote.num);
+    var canvas = this.createButton(doc, uiNote, onFlip, "flipButton", "internote-flip", "colorFlipArrow");
     var context = canvas.getContext("2d");  
+    var [w, h] = [canvas.width, canvas.height];
+    context.drawImage(this.noteFlipImage, 0.0 * w, 0.0 * h, 1.0 * w, 1.0 * h);
+    this.colorFlipArrow(uiNote);
+    return canvas;
+},
+
+/*
+createFlipButton: function(doc, uiNote, onFlip)
+{
+    var canvas = uiNote.flipButton = this.utils.createHTMLElement("canvas", doc, "internote-flip" + uiNote.num);
     
     canvas.width  = this.NOTE_OUTER_SIZE;
     canvas.height = this.NOTE_OUTER_SIZE;
@@ -831,7 +858,7 @@ createFlipButton: function(doc, uiNote, onFlip)
     var w = canvas.width;
     var h = canvas.height;
     
-    context.drawImage(this.noteFlipButton, 0.0 * w, 0.0 * h, 1.0 * w, 1.0 * h);
+    context.drawImage(this.noteFlipImage, 0.0 * w, 0.0 * h, 1.0 * w, 1.0 * h);
     
     this.colorFlipArrow(uiNote);
     
@@ -845,6 +872,7 @@ createFlipButton: function(doc, uiNote, onFlip)
     
     return canvas;
 },
+*/
 
 createResizeHandle: function(doc, uiNote, onResizeStart)
 {
@@ -1170,9 +1198,11 @@ drawNoteBackSide: function(uiNote)
     }
 },
 
-drawCloseButton: function(uiNote)
+drawCloseButton: function(uiNote, mode)
 {
     var context = uiNote.closeButton.getContext("2d");
+    
+    if (mode == null) mode = this.MODE_NORMAL;
     
     var w = uiNote.closeButton.width;
     var h = uiNote.closeButton.height;
@@ -1181,16 +1211,19 @@ drawCloseButton: function(uiNote)
     
     context.lineWidth = 0.3 * w;
     context.lineCap = "round";
-    //context.strokeStyle = "darkred";
-    context.strokeStyle = this.getButtonColor(uiNote);
+    context.strokeStyle = this.getButtonColor(uiNote, mode);
     context.beginPath();
     context.moveTo(0.10 * w, 0.10 * h); context.lineTo(0.90 * w, 0.90 * h);
     context.moveTo(0.90 * w, 0.10 * h); context.lineTo(0.10 * w, 0.90 * h);
     context.stroke();
 },
 
-drawMinimizeButton: function(uiNote)
+drawMinimizeButton: function(uiNote, mode)
 {
+    //dump("internoteNoteUI.drawMinimizeButton " + mode + "\n");
+
+    if (mode == null) mode = this.MODE_NORMAL;
+    
     var context = uiNote.minimizeButton.getContext("2d");
     
     var w = uiNote.minimizeButton.width;
@@ -1201,8 +1234,7 @@ drawMinimizeButton: function(uiNote)
     
     context.lineWidth = WIDTH_PROPORTION * w;
     context.lineCap = "round";
-    //context.strokeStyle = "rgb(46,46,46)";
-    context.strokeStyle = this.getButtonColor(uiNote);
+    context.strokeStyle = this.getButtonColor(uiNote, mode);
     
     var yPos = this.utils.hasMinimizeIconCentered() ? 0.5 : (1 - WIDTH_PROPORTION / 2);
     context.beginPath();
@@ -1228,15 +1260,17 @@ drawResizeHandle: function(uiNote)
     context.stroke();
 },
 
-colorFlipArrow: function(uiNote)
+colorFlipArrow: function(uiNote, mode)
 {
+    if (mode == null) mode = this.MODE_NORMAL;
+    
     var context = uiNote.flipButton.getContext("2d");
     
     var w = uiNote.flipButton.width;
     var h = uiNote.flipButton.height;
     
     var imageData = context.getImageData(0, 0, w, h);
-    var color = this.utils.darken(this.utils.parseHexColor(uiNote.note.backColor), 0.4);
+    var color = this.getRawButtonColor(uiNote, mode);
     
     for (var x = 0; x < w; x++) {
         for (var y = 0; y < h; y++) {

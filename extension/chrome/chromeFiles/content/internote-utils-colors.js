@@ -24,6 +24,8 @@ GREEN_COMP: 1,
 BLUE_COMP : 2,
 ALPHA_COMP: 3,
 
+MAX_INTENSITY: 255,
+
 convertRGBToHex : function(color)
 {
     var colorArray = this.parseRGBColor(color);
@@ -69,9 +71,9 @@ lighten : function(colorArray, proportion)
     this.assertError(colorArray.length == 3, "Not a proper RGB array when lightening.");
     this.assertError(typeof(proportion) == "number" && this.isBetween(proportion, 0, 1), "Trying to lighten invalid proportion.");
     
-    var rDistance = 255 - colorArray[this.RED_COMP  ];
-    var gDistance = 255 - colorArray[this.GREEN_COMP];
-    var bDistance = 255 - colorArray[this.BLUE_COMP ];
+    var rDistance = this.MAX_INTENSITY - colorArray[this.RED_COMP  ];
+    var gDistance = this.MAX_INTENSITY - colorArray[this.GREEN_COMP];
+    var bDistance = this.MAX_INTENSITY - colorArray[this.BLUE_COMP ];
     
     var r = Math.ceil(colorArray[this.RED_COMP  ] + proportion * rDistance);
     var g = Math.ceil(colorArray[this.GREEN_COMP] + proportion * gDistance);

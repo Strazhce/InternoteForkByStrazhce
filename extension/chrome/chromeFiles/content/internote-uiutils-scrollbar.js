@@ -17,7 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 internoteUtilities.incorporate({
-    ScrollHandler: function(utils, prefs, element, idSuffix, width, lineColor, buttonColor)
+    ScrollHandler: function(utils, prefs, element, idSuffix, width, lineColor, buttonColor, hoverColor, pressColor, isEnabledFunc)
     {
         //dump("internoteUtilities.ScrollHandler.ScrollHandler\n");
         
@@ -27,8 +27,12 @@ internoteUtilities.incorporate({
         this.element = element;
         this.width   = width;
         
+        this.isEnabledFunc = isEnabledFunc;
+        
         this.lineColor   = lineColor;
         this.buttonColor = buttonColor;
+        this.hoverColor  = hoverColor;
+        this.pressColor  = pressColor;
         
         var doc = element.ownerDocument;
         var scrollbar = this.utils.createXULElement("vbox", doc, "internote-scrollbar" + idSuffix);
@@ -37,20 +41,15 @@ internoteUtilities.incorporate({
         var onScrollDownLine  = this.utils.bind(this, this.onScrollDownLine);
         
         var onPressScrollLine = this.utils.bind(this, this.onPressScrollLine);
-        var onPressUpArrow    = this.utils.bind(this, this.onPressUpArrow   );
-        var onPressDownArrow  = this.utils.bind(this, this.onPressDownArrow );
         
-        var upButton   = this.upButton   =
-            this.utils.createHTMLCanvas(doc, "internote-upscroll"   + idSuffix, width, width);
-        var downButton = this.downButton = 
-            this.utils.createHTMLCanvas(doc, "internote-downscroll" + idSuffix, width, width);
+        var upButton   = this.upButton   = this.createButton(doc, onScrollUpLine,   "internote-upscroll"   + idSuffix, "drawUpScrollButton"  );
+        var downButton = this.downButton = this.createButton(doc, onScrollDownLine, "internote-downscroll" + idSuffix, "drawDownScrollButton");
+        
         var scrollLine = this.scrollLine = 
             this.utils.createHTMLCanvas(doc, "internote-scrollline" + idSuffix, width, width);
         
-        upButton  .addEventListener("mousedown", onPressUpArrow,    false);
-        downButton.addEventListener("mousedown", onPressDownArrow,  false);
         scrollLine.addEventListener("mousedown", onPressScrollLine, false);
-        
+
         var scrollLineWrapper = this.scrollLineWrapper =
             this.utils.createXULElement("vbox", doc, "internote-scrolllinewrapper" + idSuffix);
         
@@ -155,10 +154,10 @@ updateColors: function(lineColor, buttonColor)
     this.buttonColor = buttonColor;
 },
 
-drawUpScrollButton:   function() { this.drawScrollButton(true ); },
-drawDownScrollButton: function() { this.drawScrollButton(false); },
+drawUpScrollButton:   function(effectMode) { this.drawScrollButton(effectMode, true ); },
+drawDownScrollButton: function(effectMode) { this.drawScrollButton(effectMode, false); },
 
-drawScrollButton: function(isUp)
+drawScrollButton: function(effectMode, isUp)
 {
     var canvas = isUp ? this.upButton : this.downButton;
     var context = canvas.getContext("2d");
@@ -168,7 +167,19 @@ drawScrollButton: function(isUp)
     
     context.clearRect(0, 0, w, h);
     
-    context.strokeStyle = this.buttonColor;
+    if (effectMode == this.utils.EFFECT_MODE_PRESS)
+    {
+        context.strokeStyle = this.pressColor;
+    }
+    else if (effectMode == this.utils.EFFECT_MODE_HOVER)
+    {
+        context.strokeStyle = this.hoverColor;
+    }
+    else
+    {
+        context.strokeStyle = this.buttonColor;
+    }
+    
     context.lineWidth = 0.3 * w;
     context.lineCap   = "round";
     
@@ -292,6 +303,15 @@ onScrollDownLine: function() { this.onOffsetScroll(+this.lineHeight); },
 onScrollUpPage:   function() { this.onOffsetScroll(-this.lineHeight * this.getPageSize()); },
 onScrollDownPage: function() { this.onOffsetScroll(+this.lineHeight * this.getPageSize()); },
 
+createButton: function(doc, onClick, id, redrawFuncName)
+{
+    var redrawFunc = this[redrawFuncName];
+    var onRedraw = this.utils.bind(this, function(effectMode) { redrawFunc.call(this, effectMode); });
+    var canvas = this.utils.createRepeatingButton(doc, id, this.width, this.width, onRedraw, onClick,
+                                                  this.isEnabledFunc, this.REPEAT_DELAY, this.REPEAT_INTERVAL);
+    return canvas;
+},
+
 // Returns a negative, zero or positive value depending on click proximity to the slider.
 getScrollLineLocation: function(event)
 {
@@ -336,34 +356,6 @@ onPressScrollLine: function(ev)
     catch (ex)
     {
         this.utils.handleException("Exception caught when pressing scroll line.", ex);
-    }
-},
-
-onPressUpArrow: function(ev)
-{
-    //dump("internoteUtilities.Scrollbar.onPressUpArrow\n");
-    
-    try
-    {
-        this.onPressRepeatingButton(ev, this.onScrollUpLine);
-    }
-    catch (ex)
-    {
-        this.utils.handleException("Exception caught when pressing up arrow.", ex);
-    }
-},
-
-onPressDownArrow: function(ev)
-{
-    //dump("internoteUtilities.Scrollbar.onPressDownArrow\n");
-    
-    try
-    {
-        this.onPressRepeatingButton(ev, this.onScrollDownLine);    
-    }
-    catch (ex)
-    {
-        this.utils.handleException("Exception caught when pressing up arrow.", ex);
     }
 },
 
