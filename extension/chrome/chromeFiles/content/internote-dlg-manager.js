@@ -1264,7 +1264,11 @@ userChangesExpandOnSelected: function(shouldBeExpanded)
     {
         if (this.treeView.isContainerOpen(selected[i]) != shouldBeExpanded)
         {
-            this.treeView.toggleOpenState(selected[i]);
+            var changedCount = this.treeView.toggleOpenState(selected[i]);
+            if (shouldBeExpanded)
+            {
+                selection.rangedSelect(selected[i] + 1, selected[i] + changedCount, true);            
+            }
         }
     }    
 },
@@ -1499,6 +1503,8 @@ treeView : {
                 this.treeData.splice        (idx + 1, deleteCount);
                 this.treeBox.rowCountChanged(idx + 1, -deleteCount);
             }
+            
+            return deleteCount;
         }
         else {
             // Open a closed URL, add the notes to the tree.
@@ -1518,6 +1524,8 @@ treeView : {
             // It will be quicker to splice them all at once rather than several inserts in the middle.
             this.treeData.splice.apply(this.treeData, [idx + 1, 0].concat(data));
             this.treeBox.rowCountChanged(idx + 1, notesToInsert.length);
+            
+            return notesToInsert.length;
         }
         //this.treeBox.invalidate();
     },
