@@ -78,6 +78,25 @@ init: function()
                 this.viewNote(this.storage.allNotes[parseInt(event.data)]);
             }
         }), true);
+        
+        this.tree.addEventListener("keypress", this.utils.bind(this, function(ev)
+        {
+            try
+            {
+                if (ev.keyCode == ev.DOM_VK_DELETE)
+                {
+                    this.userDeletesNotes(true);
+                }
+                else if (ev.ctrlKey && String.fromCharCode(ev.charCode).toUpperCase() == "A")
+                {
+                    this.userSelectsAll();
+                }
+            }
+            catch (ex)
+            {
+                this.utils.handleException("Exception caught when key pressed.", ex);
+            }
+        }), false);
     }
     catch (ex)
     {
