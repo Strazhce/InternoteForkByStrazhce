@@ -3121,7 +3121,7 @@ progressListener: {
                 else {
                     // First check it's the right address, and not an IFrame, etc.
                     var newURL = location.spec.toString();
-                    var currentURL = gBrowser.currentURI.spec.toString()
+                    var currentURL = gBrowser.currentURI.spec.toString();
                     
                     if (newURL == currentURL)
                     {

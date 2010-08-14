@@ -548,6 +548,8 @@ flipNote: function(uiNote, newIsFlipped)
 
 focusNote: function(uiNote)
 {
+    //dump("internoteNoteUI.focusNote\n");
+    
     this.utils.assertError(uiNote != null, "Null UINote when trying to focus.");
     uiNote.textArea.focus();
 },

@@ -110,6 +110,7 @@ removeNote: function(uiNote)
 
 raiseNote: function(uiNote)
 {
+    // XXX This should check the note has the biggest Z-order.
     if (uiNote.noteElt != this.innerContainer.lastChild)
     {
         var pos  = this.getScreenPosition(uiNote);
@@ -231,7 +232,7 @@ createInsertionContainer: function()
         this.popupPanel = this.utils.createShiftingPanel("pane", this.innerContainer);
         
         this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown",   this, "popupPanelShown",   false);
-
+        
         this.isPanelCreated = true;
         this.positionPane();
     }
