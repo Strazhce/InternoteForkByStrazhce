@@ -1,17 +1,17 @@
 // Internote Extension
 // Coordinate Utilities
 // Copyright (C) 2010 Matthew Tuck
-// 
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -40,17 +40,17 @@ coordPairMultiply: function(c, a)
 
 coordPairMin: function(a, b)
 {
-    return [Math.min(a[0], b[0]), Math.min(a[1], b[1])];    
+    return [Math.min(a[0], b[0]), Math.min(a[1], b[1])];
 },
 
 coordPairMax: function(a, b)
 {
-    return [Math.max(a[0], b[0]), Math.max(a[1], b[1])];    
+    return [Math.max(a[0], b[0]), Math.max(a[1], b[1])];
 },
 
 areCoordPairsEqual: function(a, b)
 {
-    return a[0] == b[0] && a[1] == b[1];    
+    return a[0] == b[0] && a[1] == b[1];
 },
 
 roundCoordPair: function(pair)

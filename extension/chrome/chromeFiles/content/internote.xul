@@ -83,7 +83,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-main"
                       oncommand="internoteUIController.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;" />
         </menupopup>
-    </menu>    
+    </menu>
 </menupopup>
 
 <toolbarpalette id="BrowserToolbarPalette">
@@ -129,7 +129,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <menuitem label="&internote.selectAllCmd.label;"  id="internote-context-select-all"
                   oncommand="internoteUIController.userSelectsAll();" accesskey="&internote.selectAllCmd.accesskey;" />
         <menuseparator />
-        <menuitem label="&internote.deleteNoteCmd.label;"        id="internote-context-delete-note" 
+        <menuitem label="&internote.deleteNoteCmd.label;"        id="internote-context-delete-note"
                   oncommand="internoteUIController.userRemovesNote(popupNode);" accesskey="&internote.deleteNoteCmd.accesskey;" />
         <menuitem label="&internote.flipNoteCmd.label;"          id="internote-context-flip-note"
                   oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.flipNoteCmd.accesskey;" />

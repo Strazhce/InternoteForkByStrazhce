@@ -8,7 +8,7 @@ internoteUtilities.incorporate({
     },
 });
 
-internoteUtilities.PressHoverHandler.prototype = 
+internoteUtilities.PressHoverHandler.prototype =
 {
     registerHandlers: function()
     {

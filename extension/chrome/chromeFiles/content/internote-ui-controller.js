@@ -2,17 +2,17 @@
 // Main Application Controller
 // Copyright (C) 2010 Matthew Tuck
 // Copyright (C) 2006 Tim Horton
-// 
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -249,7 +249,7 @@ setUpInternote: function()
 tearDownInternote: function()
 {
     this.tearDownOldPage();
-    getBrowser().removeProgressListener(this.progressListener, 
+    getBrowser().removeProgressListener(this.progressListener,
                                         this.utils.getCIConstant("nsIWebProgress", "NOTIFY_STATE_DOCUMENT"));
 },
 
@@ -280,7 +280,7 @@ handleCatastrophicFailure: function(alertMessageName)
     {
         try
         {
-            this.utils.handleException("Failure when trying to give a catastrophic alert.", ex); 
+            this.utils.handleException("Failure when trying to give a catastrophic alert.", ex);
         }
         catch (ex2) { /* Nothing we can do. */ }
     }
@@ -294,7 +294,7 @@ handleCatastrophicFailure: function(alertMessageName)
     {
         try
         {
-            this.utils.handleException("Failure when trying to remove status bar icon.", ex); 
+            this.utils.handleException("Failure when trying to remove status bar icon.", ex);
         }
         catch (ex2) { /* Nothing we can do. */ }
     }
@@ -308,7 +308,7 @@ handleCatastrophicFailure: function(alertMessageName)
     {
         try
         {
-            this.utils.handleException("Failure when trying to disable main menu.", ex); 
+            this.utils.handleException("Failure when trying to disable main menu.", ex);
         }
         catch (ex2) { /* Nothing we can do. */ }
     }
@@ -431,7 +431,7 @@ tearDownOldPage: function()
         this.removePageListeners();
     }
     
-    this.currentURL = null;    
+    this.currentURL = null;
 },
 
 uiNoteAdd: function(uiNote)
@@ -782,7 +782,7 @@ userResizesNote: function(event)
             }
         });
         
-        this.userStartsDrag(event, uiNote, this.DRAG_MODE_RESIZE, onDragMouseMoved, onDragFinished);  
+        this.userStartsDrag(event, uiNote, this.DRAG_MODE_RESIZE, onDragMouseMoved, onDragFinished);
     }
     catch (ex)
     {
@@ -940,14 +940,14 @@ userEditsNote: function(event)
     }
     catch (ex)
     {
-        this.utils.handleException("Exception caught when user edited note.", ex);      
+        this.utils.handleException("Exception caught when user edited note.", ex);
     }
 },
 
 userClicksBackSideOfNote: function(event)
 {
     try
-    {   
+    {
         var noteNum = this.utils.getNoteNum(event.target);
         var uiNote = this.uiNoteLookup[noteNum];
         
@@ -983,7 +983,7 @@ userFocusesNote: function(event)
     
     /*
     try
-    {   
+    {
         var noteNum = this.utils.getNoteNum(event.target);
         var uiNote = this.uiNoteLookup[noteNum];
         this.storage.raiseNote(uiNote.note);
@@ -1039,7 +1039,7 @@ userOpensManager: function(message)
         }
         else
         {
-            this.managerDialog = window.openDialog('chrome://internote/content/internote-dlg-manager.xul', 
+            this.managerDialog = window.openDialog('chrome://internote/content/internote-dlg-manager.xul',
                                                    'internotemanager', 'centerscreen, chrome, all', window);
             if (this.managerDialog == null)
             {
@@ -1107,7 +1107,7 @@ userOpensAbout: function()
 userOpensHelp: function()
 {
     gBrowser.selectedTab = gBrowser.addTab(this.consts.HELP_PAGE);
-},    
+},
 
 userMinimizesAll: function(shouldBeMinimized)
 {
@@ -1410,7 +1410,7 @@ chromePrepareShowOnMenu: function(element)
 {
     try
     {
-        var note = this.storage.allNotes[this.utils.getNoteNum(element)];        
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         
         // First set the radio checkboxes for the static items.
         var urlItem    = document.getElementById("internote-match-url");
@@ -1594,7 +1594,8 @@ chromeActiveWarning: function()
     }
     catch (ex)
     {
-        try {
+        try
+        {
             clearInterval(this.activeWarningInterval);
         }
         catch (ex2)
@@ -1787,7 +1788,7 @@ screenHTMLUpdateViewportDims: function(browser, contentDoc, startDims)
         // Determine vertical scrollbar.
         var docWidth = contentDoc.width + parseInt(bodyStyle.marginLeft,  10) +
                                         + parseInt(bodyStyle.marginRight, 10);
-        vertScrollbarDetected = docWidth < browser.contentWindow.innerWidth;    
+        vertScrollbarDetected = docWidth < browser.contentWindow.innerWidth;
         
         if (horzScrollbarDetected) startDims[1] -= this.SCROLLBAR_SIZE;
         if (vertScrollbarDetected) startDims[0] -= this.SCROLLBAR_SIZE;
@@ -1879,7 +1880,7 @@ screenGetViewportDims: function()
     // Now restrict the earlier calculated dimensions.
     viewportDims = this.utils.coordPairMin(viewportDims, viewportPotentialDims);
     
-    this.utils.assertError(this.utils.isCoordPair(viewportDims), "Bad adjusted viewport dims", viewportDims);    
+    this.utils.assertError(this.utils.isCoordPair(viewportDims), "Bad adjusted viewport dims", viewportDims);
     
     //dump("  ViewportDims  = " + this.utils.compactDumpString(viewportDims) + "\n");
     
@@ -2705,7 +2706,7 @@ onNoteAdded: function(event)
             this.screenInsertMinimizedNotes([uiNote], this.CREATE_ANIMATION_TIME);
         }
         
-        this.screenCreateNote(uiNote, true);    
+        this.screenCreateNote(uiNote, true);
     }
     catch (ex)
     {
@@ -3009,7 +3010,7 @@ onScrollbarPrefSet: function()
     catch (ex)
     {
         this.utils.handleException("Exception caught when attempting to change scrollbar preference.", ex);
-    }        
+    }
 },
 
 onStatusbarPrefSet: function()
@@ -3021,7 +3022,7 @@ onStatusbarPrefSet: function()
     catch (ex)
     {
         this.utils.handleException("Exception caught when attempting to change statusbar preference.", ex);
-    }        
+    }
 },
 
 onInternoteStorageFailed: function(ex)
@@ -3142,7 +3143,7 @@ progressListener: {
             {
                 internoteUtilities.handleException("Exception caught when reporting location change.", ex);
             }
-        }        
+        }
     },
     
     onProgressChange    : function(a,b,c,d,e,f) {},

@@ -2,17 +2,17 @@
 // General Utilities
 // Copyright (C) 2010 Matthew Tuck
 // Copyright (C) 2006 Tim Horton
-// 
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -166,7 +166,7 @@ clipToRange : function(x, min, max)
     else               return x;
 },
 
-isBetween : function(x, min, max) 
+isBetween : function(x, min, max)
 {
     return min <= x && x <= max;
 },
@@ -204,7 +204,8 @@ getStack : function(toRemove)
     toRemove += 2; // remove the header and the element for this function
     
     // XXX Is there a better way of getting the stack?
-    try {
+    try
+    {
         throw new Error("FakeError");
     }
     catch (ex)
@@ -299,7 +300,7 @@ assertErrorNotHere : function(msg, obj)
 
 handleException: function(msg, ex, obj)
 {
-    var errorMsg = "Exception Caught." + "\n" + 
+    var errorMsg = "Exception Caught." + "\n" +
                    msg + "\n" +
                    "Exception: " + ex.message + "(" + ex.fileName + ":" + ex.lineNumber + ")\n" +
                    "Stack:\n" + ex.stack;
@@ -448,7 +449,7 @@ parseOptionalDate: function(numStr)
 
 isBoolean: function(num)
 {
-    return typeof(num) == "boolean";    
+    return typeof(num) == "boolean";
 },
 
 // trim() not built in to FF3.0, added in 3.5
@@ -487,7 +488,7 @@ convertSecondsToDate: function(inDate)
 
 startsWith: function(str, prefix)
 {
-    return str.indexOf(prefix) == 0;    
+    return str.indexOf(prefix) == 0;
 },
 
 endsWith: function(str, suffix)
@@ -619,7 +620,8 @@ traceData: function(data, maxLineLength, maxLevels)
                 var prefix = idx + ": ";
                 
                 var prop;
-                try {
+                try
+                {
                     prop = data[idx]; // Certain DOM properties seem to trigger not-implemented errors upon access.
                 }
                 catch (ex)
@@ -641,7 +643,7 @@ traceData: function(data, maxLineLength, maxLevels)
                     if (elementData[0].match(/^([A-Za-z_]+)?{\.\.\.}/))
                     {
                         attributes.push(prefix + elementData[0]);
-                    }               
+                    }
                     else if (elementData[0].match(/^([A-Za-z_]+)?{/))
                     {
                         simpleSubobjects.push(prefix + elementData[0]);
@@ -649,7 +651,7 @@ traceData: function(data, maxLineLength, maxLevels)
                     else
                     {
                         attributes.push(prefix + elementData[0]);
-                    }                   
+                    }
                 }
                 else {
                     complexSubobjects[idx] = elementData;
@@ -735,7 +737,7 @@ traceSimpleData: function (data)
     else
     {
         return "UNKNOWN TYPE " + typeof(data);
-    }   
+    }
 },
 
 getSortedKeys: function(object, sortFunc)
@@ -834,7 +836,7 @@ getRangeIntersection: function(range1, range2)
     }
     else
     {
-        return [range2[0], range1[1]];      
+        return [range2[0], range1[1]];
     }
 },
 
@@ -936,7 +938,7 @@ filterMap: function(arr, func)
             results.push(val);
         }
     }
-    return results; 
+    return results;
 },
 
 sgn: function(x)
@@ -985,7 +987,7 @@ generateIdentifier: function()
 {
     if (this.generator == null)
     {
-        this.generator = this.getCCService("@mozilla.org/uuid-generator;1", "nsIUUIDGenerator"); 
+        this.generator = this.getCCService("@mozilla.org/uuid-generator;1", "nsIUUIDGenerator");
     }
     
     return this.generator.generateUUID();

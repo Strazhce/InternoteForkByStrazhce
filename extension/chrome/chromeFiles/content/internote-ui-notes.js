@@ -2,17 +2,17 @@
 // Note User Interface
 // Copyright (C) 2010 Matthew Tuck
 // Copyright (C) 2006 Tim Horton
-// 
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -719,7 +719,7 @@ getRawButtonColor: function(uiNote, mode)
     }
     else
     {
-        // This might be undefined mode which equals normal. 
+        // This might be undefined mode which equals normal.
         return this.utils.darken(uiNote.backColorArray, 0.4);
     }
 },
@@ -844,7 +844,7 @@ createFlipButton: function(doc, uiNote, onFlip)
 createFlipButton: function(doc, uiNote, onFlip)
 {
     var canvas = this.createButton(doc, uiNote, onFlip, "flipButton", "internote-flip", "colorFlipArrow");
-    var context = canvas.getContext("2d");  
+    var context = canvas.getContext("2d");
     var [w, h] = [canvas.width, canvas.height];
     context.drawImage(this.noteFlipImage, 0.0 * w, 0.0 * h, 1.0 * w, 1.0 * h);
     this.colorFlipArrow(uiNote);

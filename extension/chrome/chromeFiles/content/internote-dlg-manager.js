@@ -2,17 +2,17 @@
 // Manager Dialog Controller
 // Copyright (C) 2010 Matthew Tuck
 // Copyright (C) 2006 Tim Horton
-// 
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -134,7 +134,7 @@ destroy: function()
 
 viewNote: function(note)
 {
-    var noteTreeIndex = this.getNoteTreeIndex(note.num);    
+    var noteTreeIndex = this.getNoteTreeIndex(note.num);
     
     if (noteTreeIndex == -1)
     {
@@ -160,7 +160,7 @@ onNoteAdded: function(event)
     catch (ex)
     {
         this.utils.handleException("Exception caught when attempting to add note to tree.", ex);
-    }        
+    }
 },
 
 onNoteRemoved: function(event)
@@ -547,7 +547,7 @@ configureURLSection: function(note)
     if (!this.storage.areIgnoresApplicable(note))
     {
         ignoreAnchor.setAttribute("disabled", "true");
-        ignoreParams.setAttribute("disabled", "true");        
+        ignoreParams.setAttribute("disabled", "true");
     }
     
     if (!this.isValidURLOrSite())
@@ -911,7 +911,7 @@ treeRemoveNote: function(note, url)
 {
     //dump("internoteManager.treeRemoveNote\n");
     
-    // XXX Do something about when the note is open for editing.    
+    // XXX Do something about when the note is open for editing.
     var treeIndex = this.getNoteTreeIndex(note.num);
     
     var isCategoryOpen = (treeIndex != -1);
@@ -990,7 +990,7 @@ onSearchNoteAdded: function(event)
     catch (ex)
     {
         this.utils.handleException("Exception caught when attempting to add note to search.", ex);
-    }        
+    }
 },
 
 onSearchNoteRemoved: function(event)
@@ -1010,7 +1010,7 @@ onSearchNoteRemoved: function(event)
     catch (ex)
     {
         this.utils.handleException("Exception caught when attempting to remove note from search.", ex);
-    }        
+    }
 },
 
 onSearchNoteEdited: function(event)
@@ -1029,7 +1029,7 @@ onSearchNoteEdited: function(event)
     catch (ex)
     {
         this.utils.handleException("Exception caught when attempting to edit note text in search.", ex);
-    }        
+    }
 },
 
 initSearchResults: function(searchTerm)
@@ -1059,7 +1059,7 @@ destroySearchResults: function()
     while (searchResultsPane.hasChildNodes())
     {
         searchResultsPane.removeChild(searchResultsPane.firstChild);
-    }   
+    }
     
     this.searchNotes.destroy();
     this.searchNotes = null;
@@ -1277,10 +1277,10 @@ userChangesExpandOnSelected: function(shouldBeExpanded)
             var changedCount = this.treeView.toggleOpenState(selected[i]);
             if (shouldBeExpanded)
             {
-                selection.rangedSelect(selected[i] + 1, selected[i] + changedCount, true);            
+                selection.rangedSelect(selected[i] + 1, selected[i] + changedCount, true);
             }
         }
-    }    
+    }
 },
 
 userSelectsAll: function()
@@ -1310,7 +1310,7 @@ userImportsNotesInV2: function ()
     catch (ex)
     {
         this.utils.handleException("Exception caught when attempting to import V2 notes.", ex);
-    }        
+    }
 },
 
 userExportsNotesInV3: function (shouldExportOnlySelected)
@@ -1452,7 +1452,8 @@ treeView : {
     
     isContainerOpen: function(idx)
     {
-        try {
+        try
+        {
             if (this.treeData[idx]) return this.treeData[idx][this.COL_IS_OPEN];
             else return false;
         }
