@@ -1382,6 +1382,22 @@ loadInternoteV2: function(allLines)
     return notes;
 },
 
+getDescription: function(note)
+{
+    this.utils.assertError(note != null, "Note is null when trying to get description.");
+    
+    var text = this.utils.trim(note.text);
+    if (text == "")
+    {
+        var emptyTextMessage = this.utils.getLocaleString("EmptyTextMessage");
+        return "--- " + emptyTextMessage + " ---";
+    }
+    else
+    {
+        return this.utils.innerTrim(text.replace(/\n/g, " "));
+    }
+},
+
 };
 
 // Remember to catch exceptions that come out of here.

@@ -27,7 +27,7 @@ searchMapping: [],
 searchNotes: null,
 
 isUpdating: false,
-isRelocating: false,
+suppressSelectionChangeEvents: false,
 
 noteBeingEdited: null,
 
@@ -187,8 +187,7 @@ onNoteEdited: function(event)
         // Update the tree on the left.
         if (treeIndex != -1)
         {
-            var description = this.getDescription(note);
-            this.treeView.treeData[treeIndex][this.treeView.COL_TEXT] = description;
+            this.treeView.treeData[treeIndex][this.treeView.COL_TEXT] = this.storage.getDescription(note);
             this.treeView.treeBox.invalidateRow(treeIndex);
         }
         
@@ -223,7 +222,7 @@ checkForLocationChange: function(event)
         return;
     }
     
-    this.isRelocating = true; // Prevent normal select events.
+    this.suppressSelectionChangeEvents = true; // Prevent normal select events.
     
     // We pass the old URL to remove in case we must delete an old collapsed category.
     var [wasSelected, wasCategoryOpen] = this.treeRemoveNote(event.note, event.data2[1]);
@@ -235,7 +234,7 @@ checkForLocationChange: function(event)
         this.treeView.selection.select(newIndex);
     }
     
-    this.isRelocating = false;
+    this.suppressSelectionChangeEvents = false;
 },
 
 onNoteRelocated: function(event)
@@ -605,11 +604,26 @@ userSelectsElement: function(mainTree, otherTree, getNotesFunc)
     
     try
     {
-        if (this.isRelocating) return;
+        if (this.suppressSelectionChangeEvents) return;
         
         var mainSelection = mainTree.selection;
         
         this.utils.setEnabled(this.actions, mainSelection.count > 0);
+        
+        // First deselect other tree.
+        // XXX Should probably support Ctrl-Click not deselecting the other tree, so they work together.
+        if (otherTree != null)
+        {
+            var otherSelection = otherTree.selection;
+            // XXX Check first to prevent infinite recursion when selection changes.
+            if (otherSelection.count > 0)
+            {
+                // Suppress reloads until when we are done.
+                this.suppressSelectionChangeEvents = true;
+                otherSelection.clearSelection();
+                this.suppressSelectionChangeEvents = false;
+            }
+        }
         
         if (mainSelection.count == 1)
         {
@@ -627,18 +641,6 @@ userSelectsElement: function(mainTree, otherTree, getNotesFunc)
         {
             this.clearNoteData();
         }
-        
-        // Deselect other tree.
-        // XXX Should probably support Ctrl-Click not deselecting the other tree, so they work together.
-        if (otherTree != null)
-        {
-            var otherSelection = otherTree.selection;
-            // XXX Check first to prevent infinite recursion when selection changes.
-            if (otherSelection.count > 0)
-            {
-                otherSelection.clearSelection();
-            }
-        }
     }
     catch (ex)
     {
@@ -654,8 +656,9 @@ userSelectsTreeElement: function()
 
 userSelectsSearchElement: function()
 {
+    dump("C\n");
     var resultsList = document.getElementById("resultsList");
-    this.userSelectsElement(resultsList.view, this.treeView, this.this.utils.bind(this, this.getNotesFromSearch));
+    this.userSelectsElement(resultsList.view, this.treeView, this.utils.bind(this, this.getNotesFromSearch));
 },
 
 userEditsData: function(event)
@@ -926,7 +929,7 @@ onSearchNoteAdded: function(event)
         var tr = document.createElement("treerow");
         var tc = document.createElement("treecell");
         
-        tc.setAttribute("label", this.getDescription(note));
+        tc.setAttribute("label", this.storage.getDescription(note));
         tr.appendChild(tc);
         ti.appendChild(tr);
         
@@ -969,7 +972,7 @@ onSearchNoteEdited: function(event)
         {
             var searchResultsPane = document.getElementById("searchResultChildren");
             var rowNode = searchResultsPane.childNodes[treeIndex];
-            rowNode.firstChild.firstChild.setAttribute("label", this.getDescription(note));
+            rowNode.firstChild.firstChild.setAttribute("label", this.storage.getDescription(note));
         }
     }
     catch (ex)
@@ -1540,21 +1543,7 @@ treeView : {
     
     makeNoteRow: function(note)
     {
-        //var note = this.storage.allNotes[noteNum];
-        this.utils.assertError(note != null, "Note is null when trying to update in manager.");
-        
-        var text = this.utils.trim(note.text);
-        if (text == "")
-        {
-            var emptyTextMessage = this.utils.getLocaleString("EmptyTextMessage");
-            var noteDesc = "--- " + emptyTextMessage + " ---";
-        }
-        else
-        {
-            var noteDesc = this.utils.innerTrim(text.replace(/\n/g, " "));
-        }
-        
-        return [noteDesc, false, false, note.num];
+        return [this.storage.getDescription(note), false, false, note.num];
     },
     
     addURLRow: function(url)
