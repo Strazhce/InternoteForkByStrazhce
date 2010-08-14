@@ -127,18 +127,17 @@ dragFailure: function(msg, ex)
     }
 },
 
-dragKeyPressed: function(event)
+dragKeyPressed: function(ev)
 {
     //dump("internoteUtilities.DragHandler.dragKeyPressed\n");
     
     try
     {
-        const VK_ESCAPE = 27;
-        if (event.keyCode == VK_ESCAPE)
+        if (ev.keyCode == ev.DOM_VK_ESCAPE)
         {
             this.dragFinished(false, null, null, this.data);
-            event.stopPropagation();
-            event.preventDefault();
+            ev.stopPropagation();
+            ev.preventDefault();
         }
     }
     catch (ex)
