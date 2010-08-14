@@ -54,8 +54,8 @@ init: function()
         InternoteEventDispatcher.prototype.incorporateED(InternoteStorageWatcher.prototype);
         
         this.storage = InternoteStorage.makeStorage();
-        
-        this.initTreeView();
+        this.treeView.init(this.utils, this.storage);
+        this.registerStorageListeners();
         
         var foreColorBox = document.getElementById("textColorEntryBox");
         var backColorBox = document.getElementById("colorEntryBox"    );
@@ -85,30 +85,8 @@ init: function()
     }
 },
 
-initTreeView: function()
+registerStorageListeners: function()
 {
-    var urls = {};
-    
-    for (var i = 0; i < this.storage.allNotes.length; i++)
-    {
-        var note = this.storage.allNotes[i];
-        if (note != null)
-        {
-            var url = this.utils.canonicalizeURL(this.storage.getEffectiveURL(note));
-            urls[url] = 1;
-        }
-    }
-    
-    var sortedURLs = this.utils.getSortedKeys(urls);
-    
-    this.treeView.treeData = [];
-    
-    for (var i = 0; i < sortedURLs.length; i++)
-    {
-        var urls = sortedURLs[i];
-        this.treeView.treeData.push(this.makeURLRow(sortedURLs[i]));
-    }
-    
     this.storage.addBoundEventListener("noteAdded",           this, "onNoteAdded");
     this.storage.addBoundEventListener("noteRemoved",         this, "onNoteRemoved");
     this.storage.addBoundEventListener("noteEdited",          this, "onNoteEdited");
@@ -274,18 +252,6 @@ onNoteUpdateData: function(event)
     {
         this.utils.handleException("Exception caught when attempting update note data in right panel.", ex);
     }
-},
-
-makeURLRow: function(url)
-{
-    var description = this.getURLDescription(url);
-    return [description, true, false, url];
-},
-
-makeNoteRow: function(note)
-{
-    var description = this.getDescription(note);
-    return [description, false, false, note.num];
 },
 
 // This does a linear search.
@@ -740,7 +706,7 @@ getViewSelectedNotes: function(treeView, getNotesFunc)
         selection.getRangeAt(t, start, end);
         for (var v = start.value; v <= end.value; v++)
         {
-            internoteUtilities.pushArray(selectedNotes, getNotesFunc(v));
+            this.utils.pushArray(selectedNotes, getNotesFunc(v));
         }
     }
     
@@ -824,46 +790,6 @@ userDeletesNotes: function (shouldDeleteAllSelected)
     }
 },
 
-getURLDescription: function(url)
-{
-    if (url == "")
-    {
-        var emptyURLMessage = this.utils.getLocaleString("EmptyURLMessage");
-        return "--- " + emptyURLMessage + " ---";
-    }
-    else
-    {
-        if (this.utils.parseURL(url) == null)
-        {
-            return url;
-        }
-        else
-        {
-            var strippedURL = url.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
-            strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
-            if (strippedURL == "") strippedURL = url;
-            return strippedURL;
-        }
-    }
-},
-
-getDescription: function(note)
-{
-    //var note = this.storage.allNotes[noteNum];
-    this.utils.assertError(note != null, "Note is null when trying to update in manager.");
-    
-    var text = this.utils.trim(note.text);
-    if (text == "")
-    {
-        var emptyTextMessage = this.utils.getLocaleString("EmptyTextMessage");
-        return "--- " + emptyTextMessage + " ---";
-    }
-    else
-    {
-        return this.utils.innerTrim(text.replace(/\n/g, " "));
-    }
-},
-
 treeCreateNote: function(note, shouldForceCategoryOpen)
 {
     //dump("internoteManager.treeCreateNote\n");
@@ -894,7 +820,8 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
         // URL category doesn't exist, create it collapsed.
         var newTreeIndex = this.treeView.treeData.length; // XXX This assumes adding to the end.
         var url = this.utils.canonicalizeURL(this.storage.getEffectiveURL(note));
-        this.treeView.treeData.push(this.makeURLRow(url));
+
+        this.treeView.addURLRow(url);
         this.treeView.treeBox.rowCountChanged(newTreeIndex, 1);
         
         if (shouldForceCategoryOpen)
@@ -1424,9 +1351,27 @@ treeView : {
     COL_IS_OPEN:      2,
     COL_LOOKUP:       3,
     
-    treeData: null,
+    treeData: [],
     treeBox: null,
     selection: null,
+    
+    init: function(utils, storage)
+    {
+        this.utils   = utils;
+        this.storage = storage;
+        
+        var urls = this.storage.allNotes.map(function(note)
+        {
+            return this.utils.canonicalizeURL(this.storage.getEffectiveURL(note));
+        }, this);
+        
+        var sortedURLs = this.utils.getSortedUniqueValues(urls);
+        
+        for (var i = 0; i < sortedURLs.length; i++)
+        {
+            this.addURLRow(sortedURLs[i]);
+        }
+    },
     
     get rowCount()                     { return this.treeData.length; },
     setTree: function(treeBox)         { this.treeBox = treeBox; },
@@ -1526,18 +1471,17 @@ treeView : {
                 item[this.COL_IS_OPEN] = true;
                 
                 var url = this.treeData[idx][this.COL_LOOKUP];
-                var notesToInsert = internoteManager.storage.getNotesForEffectiveURL(url);
-                //var newData = notesToInsert.map(this.makeNoteRow);
+                var notesToInsert = this.storage.getNotesForEffectiveURL(url);
                 
                 var data = [];
                 for (var i = 0; i < notesToInsert.length; i++)
                 {
-                    data.push(internoteManager.makeNoteRow(notesToInsert[i]));
+                    data.push(this.makeNoteRow(notesToInsert[i]));
                 }
                 
                 // We need to apply because we have an array and need to pass multi-args to splice.
                 // It will be quicker to splice them all at once rather than several inserts in the middle.
-                internoteUtilities.pushArray(this.treeData, data, idx + 1);
+                this.utils.pushArray(this.treeData, data, idx + 1);
                 this.treeBox.rowCountChanged(idx + 1, notesToInsert.length);
                 
                 return notesToInsert.length;
@@ -1546,8 +1490,57 @@ treeView : {
         }
         catch (ex)
         {
-            internoteUtilities.handleException("Exception caught when toggling state.", ex);
+            this.utils.handleException("Exception caught when toggling state.", ex);
         }
+    },
+    
+    makeURLRow: function(url)
+    {
+        if (url == "")
+        {
+            var emptyURLMessage = this.utils.getLocaleString("EmptyURLMessage");
+            var urlDesc = "--- " + emptyURLMessage + " ---";
+        }
+        else
+        {
+            if (this.utils.parseURL(url) == null)
+            {
+                var urlDesc = url;
+            }
+            else
+            {
+                var strippedURL = url.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
+                strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
+                if (strippedURL == "") strippedURL = url;
+                var urlDesc = strippedURL;
+            }
+        }
+        
+        return [urlDesc, true, false, url];
+    },
+    
+    makeNoteRow: function(note)
+    {
+        //var note = this.storage.allNotes[noteNum];
+        this.utils.assertError(note != null, "Note is null when trying to update in manager.");
+        
+        var text = this.utils.trim(note.text);
+        if (text == "")
+        {
+            var emptyTextMessage = this.utils.getLocaleString("EmptyTextMessage");
+            var noteDesc = "--- " + emptyTextMessage + " ---";
+        }
+        else
+        {
+            var noteDesc = this.utils.innerTrim(text.replace(/\n/g, " "));
+        }
+        
+        return [noteDesc, false, false, note.num];
+    },
+    
+    addURLRow: function(url)
+    {
+        this.treeData.push(this.makeURLRow(url));
     },
     
     getImageSrc: function(idx, column) {},
@@ -1556,21 +1549,6 @@ treeView : {
     cycleHeader: function(col, elem) {},
     selectionChanged: function () {},
     cycleCell: function(idx, column) {},
-    
-    performAction: function(action)
-    {
-        // This doesn't seem to work, it looks like FF doesn't support it properly.
-        if (action == "delete")
-        {
-            internoteManager.deleteNote();
-        }
-        else
-        {
-            internoteUtilities.assertNotHere("Unknown action " + action);
-        }
-    },
-    
-    performActionOnCell: function(action, index, column) {},
     getRowProperties: function(idx, column, prop) {},
     getCellProperties: function(idx, column, prop) {},
     getColumnProperties: function(column, element, prop) {}

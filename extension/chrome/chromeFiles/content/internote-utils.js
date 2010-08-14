@@ -740,6 +740,21 @@ traceSimpleData: function (data)
     }
 },
 
+getSortedUniqueValues: function(object, sortFunc)
+{
+    var values = {};
+    
+    for (var i = 0; i < object.length; i++)
+    {
+        if (object[i] != null)
+        {
+            values[object[i]] = 1;
+        }
+    }
+    
+    return this.getSortedKeys(values, sortFunc);
+},
+
 getSortedKeys: function(object, sortFunc)
 {
     var arr = [];
@@ -992,5 +1007,6 @@ generateIdentifier: function()
     
     return this.generator.generateUUID();
 },
+
 
 };
