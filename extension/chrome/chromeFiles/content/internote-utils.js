@@ -90,6 +90,15 @@ getFile: function(path)
     return dir;
 },
 
+pushArray: function(target, source, targetIndex)
+{
+    if (targetIndex == null) targetIndex = target.length;
+    
+    // We need to apply because we have an array and need to pass multi-args to splice.
+    // It will be quicker to splice them all at once rather than several inserts in the middle.
+    target.splice.apply(target, [targetIndex, 0].concat(source));
+},
+
 // Use to open a URL from a dialog.
 openURL: function(url)
 {

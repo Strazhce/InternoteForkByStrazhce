@@ -34,7 +34,8 @@ noteBeingEdited: null,
 editingFields: ["noteURL", "colorEntryBox", "textColorEntryBox", "ignoreAnchor", "ignoreParams",
                 "deleteCurrentNote", "resetCurrentNote", "matchTypeEntryBox", "isMinimized"],
 
-actions: ["deleteSelected", "resetSelected", "exportSelected", "printSelected"],
+actions: ["deleteSelected", "resetSelected", "exportSelected",
+          "printSelected", "expandSelected", "collapseSelected"],
 
 init: function()
 {
@@ -247,7 +248,7 @@ onNoteRelocated: function(event)
     try
     {
         this.checkForLocationChange(event);
-        this.setNoteData(event.note.num);
+        this.setNoteData(event.note);
     }
     catch (ex)
     {
@@ -266,7 +267,7 @@ onNoteUpdateData: function(event)
                               : event.note == this.noteBeingEdited;
         if (isNoteBeingEdited)
         {
-            this.setNoteData(this.noteBeingEdited.num);
+            this.setNoteData(this.noteBeingEdited);
         }
     }
     catch (ex)
@@ -396,11 +397,13 @@ updateCheck: function(id, isChecked)
     }
 },
 
-setNoteData: function(noteNum)
+setNoteData: function(note)
 {
     //dump("internoteManager.setNoteData\n");
     
-    var note = this.noteBeingEdited = this.storage.allNotes[noteNum];
+    this.noteBeingEdited = note;
+    
+    this.utils.assertError(note != null, "Note is null", note);
     
     this.isUpdating = true;
     
@@ -603,73 +606,71 @@ isValidTreeIndex: function(treeIndex)
     return (0 <= treeIndex && this.treeView.treeData[treeIndex] != null);
 },
 
-userSelectsTreeElement: function()
+getSingleSelectedRow: function(selection)
+{
+    var treeIndex = {};
+    var scratchVar = {};
+    selection.getRangeAt(0, treeIndex, scratchVar);
+    return treeIndex.value;
+},
+
+userSelectsElement: function(mainTree, otherTree, getNotesFunc)
 {
     //dump("internoteManager.userSelectsTreeElement\n");
     
     try
     {
-    
         if (this.isRelocating) return;
         
-        var currentTreeIndex = this.tree.currentIndex;
-        var isContainer = this.treeView.isContainer(currentTreeIndex);
+        var mainSelection = mainTree.selection;
         
-        // Load the data into the editing panel.
-        // XXX Should probably disable for multiple.
-        if (!isContainer && this.isValidTreeIndex(currentTreeIndex))
+        this.utils.setEnabled(this.actions, mainSelection.count > 0);
+        
+        if (mainSelection.count == 1)
         {
-            var noteNum = this.treeView.treeData[currentTreeIndex][this.treeView.COL_LOOKUP];
-            this.setNoteData(noteNum);
-            this.utils.enableMultiple(this.actions);
+            var treeIndex = this.getSingleSelectedRow(mainSelection);
+            if (!mainTree.isContainer(treeIndex))
+            {
+                this.setNoteData(getNotesFunc(treeIndex)[0]);
+            }
+            else
+            {
+                this.clearNoteData();
+            }
         }
         else
         {
-            this.utils.disableMultiple(this.actions);
             this.clearNoteData();
         }
         
-        // Deselect search tree.  Check first to prevent infinite recursion when selection changes.
+        // Deselect other tree.
         // XXX Should probably support Ctrl-Click not deselecting the other tree, so they work together.
-        var resultsList = document.getElementById("resultsList");
-        if (resultsList.view != null)
+        if (otherTree != null)
         {
-            var selection = resultsList.view.selection;
-            if (selection.getRangeCount() != 0)
+            var otherSelection = otherTree.selection;
+            // XXX Check first to prevent infinite recursion when selection changes.
+            if (otherSelection.count > 0)
             {
-                selection.clearSelection();
+                otherSelection.clearSelection();
             }
         }
     }
     catch (ex)
     {
-        this.utils.handleException("Except caught when user selected tree element.", ex);
+        this.utils.handleException("Except caught when user selected element.", ex);
     }
+},
+
+userSelectsTreeElement: function()
+{
+    var resultsList = document.getElementById("resultsList");
+    this.userSelectsElement(this.treeView, resultsList.view, this.utils.bind(this, this.getNotesFromTree));
 },
 
 userSelectsSearchElement: function()
 {
-    try
-    {
-        var currentTreeIndex = document.getElementById("resultsList").currentIndex;
-        var noteNum = this.searchMapping[currentTreeIndex];
-
-        // Load the data into the editing panel.
-        // XXX Should probably disable for multiple.
-        this.setNoteData(noteNum);
-        this.utils.enableMultiple(this.actions);
-
-        // Deselect main tree.  Check first to prevent infinite recursion when selection changes.
-        var selection = this.treeView.selection;
-        if (selection.getRangeCount() != 0)
-        {
-            selection.clearSelection();
-        }
-    }
-    catch (ex)
-    {
-        this.utils.handleException("Except caught when user selected search element.", ex);
-    }
+    var resultsList = document.getElementById("resultsList");
+    this.userSelectsElement(resultsList.view, this.treeView, this.this.utils.bind(this, this.getNotesFromSearch));
 },
 
 userEditsData: function(event)
@@ -723,8 +724,10 @@ userResetsNotes: function(shouldResetAllSelected)
     }
 },
 
-getViewSelectedNotes: function(treeView, getNoteFunc)
+getViewSelectedNotes: function(treeView, getNotesFunc)
 {
+    //dump("internoteManager.getViewSelectedNotes\n");
+    
     // Convert a list of selected ranges of notes to a straight list of notes.
     var start = {};
     var end   = {};
@@ -737,8 +740,7 @@ getViewSelectedNotes: function(treeView, getNoteFunc)
         selection.getRangeAt(t, start, end);
         for (var v = start.value; v <= end.value; v++)
         {
-            var note = getNoteFunc(v);
-            if (note != null) selectedNotes.push(note);
+            internoteUtilities.pushArray(selectedNotes, getNotesFunc(v));
         }
     }
     
@@ -747,34 +749,36 @@ getViewSelectedNotes: function(treeView, getNoteFunc)
     return selectedNotes;
 },
 
+getNotesFromTree: function(treeIndex)
+{
+    if (this.treeView.isContainer(treeIndex))
+    {
+        var url = this.treeView.treeData[treeIndex][this.treeView.COL_LOOKUP];
+        return this.storage.getNotesForEffectiveURL(url);
+    }
+    else
+    {
+        return [this.getRowNote(treeIndex)];
+    }
+},
+
+getNotesFromSearch: function(treeIndex)
+{
+    var noteNum = this.searchMapping[treeIndex];
+    return [this.storage.allNotes[noteNum]];
+},
+
+// XXX What a ridiculous kludge.
 getAllSelectedNotes: function()
 {
-    // XXX What a ridiculous kludge.
-    function getNoteFromTree(treeIndex)
-    {
-        if (this.treeView.isContainer(treeIndex))
-        {
-            return null;
-        }
-        else
-        {
-            return this.getRowNote(treeIndex);
-        }
-    }
-    
-    var selectedNotes = this.getViewSelectedNotes(this.treeView, this.utils.bind(this, getNoteFromTree));
+    var selectedNotes = this.getViewSelectedNotes(this.treeView, this.utils.bind(this, this.getNotesFromTree));
     
     if (selectedNotes.length == 0)
     {
         var resultsList = document.getElementById("resultsList");
         if (resultsList.view != null)
         {
-            function getNoteFromSearch(treeIndex)
-            {
-                var noteNum = this.searchMapping[treeIndex];
-                return this.storage.allNotes[noteNum];
-            }
-            selectedNotes = this.getViewSelectedNotes(resultsList.view, this.utils.bind(this, getNoteFromSearch));
+            selectedNotes = this.getViewSelectedNotes(resultsList.view, this.utils.bind(this, this.getNotesFromSearch));
         }
     }
     
@@ -783,34 +787,40 @@ getAllSelectedNotes: function()
 
 userDeletesNotes: function (shouldDeleteAllSelected)
 {
-    var notesToDelete = shouldDeleteAllSelected ? this.getAllSelectedNotes() : [ this.noteBeingEdited ];
-    
-    if (notesToDelete.length != 1)
-    {
-        // If there are multiple notes, we confirm regardless of the preference, due to the
-        // danger.  This could be removed once there is undo.
-        var confirmMessage = this.utils.getLocaleString("DeleteMultipleConfirm");
-        var isConfirmed = confirm(confirmMessage);
-    }
-    else if (this.prefs.shouldAskBeforeDelete())
-    {
-        var confirmMessage = this.utils.getLocaleString("DeleteSingleConfirm");
-        var isConfirmed = confirm(confirmMessage);
-    }
-    else
-    {
-        var isConfirmed = true;
-    }
-    
-    if (isConfirmed)
+    try
     {
         var notesToDelete = shouldDeleteAllSelected ? this.getAllSelectedNotes() : [ this.noteBeingEdited ];
         
-        for (var i = 0; i < notesToDelete.length; i++)
+        if (notesToDelete.length != 1)
         {
-            var note = notesToDelete[i];
-            this.storage.removeNote(note);
+            // If there are multiple notes, we confirm regardless of the preference, due to the
+            // danger.  This could be removed once there is undo.
+            var confirmMessage = this.utils.getLocaleString("DeleteMultipleConfirm");
+            var isConfirmed = confirm(confirmMessage);
         }
+        else if (this.prefs.shouldAskBeforeDelete())
+        {
+            var confirmMessage = this.utils.getLocaleString("DeleteSingleConfirm");
+            var isConfirmed = confirm(confirmMessage);
+        }
+        else
+        {
+            var isConfirmed = true;
+        }
+        
+        if (isConfirmed)
+        {
+            var notesToDelete = shouldDeleteAllSelected ? this.getAllSelectedNotes() : [ this.noteBeingEdited ];
+            
+            for (var i = 0; i < notesToDelete.length; i++)
+            {
+                this.storage.removeNote(notesToDelete[i]);
+            }
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when deleting notes.", ex);
     }
 },
 
@@ -1473,7 +1483,7 @@ treeView : {
         var thisLevel = this.getLevel(idx);
         for (var t = idx + 1; t < this.treeData.length; t++)
         {
-            var nextLevel = this.getLevel(t)
+            var nextLevel = this.getLevel(t);
             if (nextLevel == thisLevel) return true;
             else if (nextLevel < thisLevel) return false;
         }
@@ -1482,52 +1492,61 @@ treeView : {
     
     toggleOpenState: function(idx)
     {
-        var item = this.treeData[idx];
-        
-        if (!item[this.COL_IS_CONTAINER]) return;
-        
-        if (item[this.COL_IS_OPEN])
+        try
         {
-            // Close an open URL, delete the notes from the tree.
-            item[this.COL_IS_OPEN] = false;
+            var item = this.treeData[idx];
             
-            var thisLevel = this.getLevel(idx);
-            var deleteCount = 0;
-            for (var t = idx + 1; t < this.treeData.length; t++)
-            {
-                if (!this.isContainer(t)) deleteCount++;
-                else break;
-            }
-            if (0 < deleteCount)
-            {
-                this.treeData.splice        (idx + 1, deleteCount);
-                this.treeBox.rowCountChanged(idx + 1, -deleteCount);
-            }
+            if (!item[this.COL_IS_CONTAINER]) return;
             
-            return deleteCount;
+            if (item[this.COL_IS_OPEN])
+            {
+                // Close an open URL, delete the notes from the tree.
+                item[this.COL_IS_OPEN] = false;
+                
+                var thisLevel = this.getLevel(idx);
+                var deleteCount = 0;
+                for (var t = idx + 1; t < this.treeData.length; t++)
+                {
+                    if (!this.isContainer(t)) deleteCount++;
+                    else break;
+                }
+                
+                if (0 < deleteCount)
+                {
+                    this.treeData.splice        (idx + 1, deleteCount);
+                    this.treeBox.rowCountChanged(idx + 1, -deleteCount);
+                }
+                
+                return deleteCount;
+            }
+            else
+            {
+                // Open a closed URL, add the notes to the tree.
+                item[this.COL_IS_OPEN] = true;
+                
+                var url = this.treeData[idx][this.COL_LOOKUP];
+                var notesToInsert = internoteManager.storage.getNotesForEffectiveURL(url);
+                //var newData = notesToInsert.map(this.makeNoteRow);
+                
+                var data = [];
+                for (var i = 0; i < notesToInsert.length; i++)
+                {
+                    data.push(internoteManager.makeNoteRow(notesToInsert[i]));
+                }
+                
+                // We need to apply because we have an array and need to pass multi-args to splice.
+                // It will be quicker to splice them all at once rather than several inserts in the middle.
+                internoteUtilities.pushArray(this.treeData, data, idx + 1);
+                this.treeBox.rowCountChanged(idx + 1, notesToInsert.length);
+                
+                return notesToInsert.length;
+            }
+            //this.treeBox.invalidate();
         }
-        else {
-            // Open a closed URL, add the notes to the tree.
-            item[this.COL_IS_OPEN] = true;
-            
-            var url = this.treeData[idx][this.COL_LOOKUP];
-            var notesToInsert = internoteManager.storage.getNotesForEffectiveURL(url);
-            //var newData = notesToInsert.map(this.makeNoteRow);
-            
-            var data = [];
-            for (var i = 0; i < notesToInsert.length; i++)
-            {
-                data.push(internoteManager.makeNoteRow(notesToInsert[i]));
-            }
-            
-            // We need to apply because we have an array and need to pass multi-args to splice.
-            // It will be quicker to splice them all at once rather than several inserts in the middle.
-            this.treeData.splice.apply(this.treeData, [idx + 1, 0].concat(data));
-            this.treeBox.rowCountChanged(idx + 1, notesToInsert.length);
-            
-            return notesToInsert.length;
+        catch (ex)
+        {
+            internoteUtilities.handleException("Exception caught when toggling state.", ex);
         }
-        //this.treeBox.invalidate();
     },
     
     getImageSrc: function(idx, column) {},
