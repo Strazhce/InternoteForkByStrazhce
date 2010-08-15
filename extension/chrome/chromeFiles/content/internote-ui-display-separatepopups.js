@@ -322,6 +322,7 @@ getScreenPosition: function(uiNote)
 reopenNote: function(uiNote)
 {
     //dump("internoteDisplayUI.reopenNote \"" + uiNote.note.text + "\"\n");
+    
     if (this.noteBeingMoved == uiNote)
     {
         this.utils.assertWarnNotHere("Tried to reopen note during move operation.");
@@ -513,6 +514,11 @@ flipStep: function(uiNote, offsetX)
 
 moveStart: function(uiNote)
 {
+    // First we kludgily raise/reopen the note, because if we do it once the move has started,
+    // that creates problems for the current code, as we can't reopen during move.  Any
+    // subsequent raise will be a null op because it's already on top.
+    this.raiseNote(uiNote);
+    
     // Change to non-anchored so moving the note will switch to an unanchored popup.
     // We use this temporarily because moveTo works properly with it and we prefer to avoid flickery reopens.
     this.noteBeingMoved = uiNote;
