@@ -890,5 +890,47 @@ getPageDims: function(browser)
     }
 },
 
+scrollToShowRect: function(browser, noteRect)
+{
+    //dump("internoteUtilities.scrollToShowRect\n");
+    
+    var viewportRect = this.getViewportRect(browser);
+    
+    function findNewPos(noteRectMin, noteRectMax, viewportSize, viewportRectMin, viewportRectMax)
+    {
+        var SPACING = 5;
+        
+        if (noteRectMax < viewportRectMin)
+        {
+            return noteRectMin - 5;
+        }
+        else if (viewportRectMax < noteRectMin)
+        {
+            return noteRectMax + 5 - viewportSize;
+        }
+        else
+        {
+            return viewportRectMin;
+        }
+    }
+    
+    //dump("  Checking InRect\n");
+    if (!this.isRectInRect(noteRect, viewportRect))
+    {
+        //dump("  InRect\n");
+        var newScrollX = findNewPos(noteRect.topLeft[0], noteRect.bottomRight[0],
+                                    viewportRect.dims[0], viewportRect.topLeft[0], viewportRect.bottomRight[0]);
+        var newScrollY = findNewPos(noteRect.topLeft[1], noteRect.bottomRight[1],
+                                    viewportRect.dims[1], viewportRect.topLeft[1], viewportRect.bottomRight[1]);
+        var contentWin = browser.contentWindow;
+        
+        //dump("  Checking Changed ScrollPos\n");
+        if (contentWin.scrollX != newScrollX || contentWin.scrollY != newScrollY)
+        {
+            //dump("  Changed ScrollPos\n");
+            contentWin.scrollTo(newScrollX, newScrollY);
+        }
+    }
+},
 
 });

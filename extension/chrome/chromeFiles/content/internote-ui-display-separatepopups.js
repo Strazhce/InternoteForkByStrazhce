@@ -222,6 +222,54 @@ popupShown: function(event, uiNote)
         }
         
         this.noteUI.noteShown(uiNote);
+        
+        uiNote.textArea.addEventListener("keypress", this.utils.bind(this, function(ev)
+        {
+            try
+            {
+                if (ev.keyCode == ev.DOM_VK_TAB)
+                {
+                    this.utils.assertError(!uiNote.note.isMinimized, "Tabbed from minimized note.", uiNote.note);
+                    
+                    var index = this.allUINotes.indexOf(uiNote);
+                    var len = this.allUINotes.length;
+                    var nextUINote;
+                    
+                    if (ev.shiftKey)
+                    {
+                        do
+                        {
+                            index = (index - 1 + len) % len;
+                            nextUINote = this.allUINotes[index];
+                        }
+                        while (nextUINote.note.isMinimized);
+                    }
+                    else
+                    {
+                        do
+                        {
+                            index = (index + 1) % len;
+                            nextUINote = this.allUINotes[index];
+                        }
+                        while (nextUINote.note.isMinimized);
+                    }
+                    
+                    // Check whether off-page.
+                    var currNoteRect = this.utils.makeRectFromDims(nextUINote.note.getPos(), nextUINote.note.getDims());
+                    this.utils.scrollToShowRect(this.browser, currNoteRect);
+                    
+                    this.focusNote(nextUINote);
+                    this.raiseNote(nextUINote);
+                    
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
+            }
+            catch (ex)
+            {
+                this.utils.handleException("Exception caught when handling key press.", ex);
+            }
+        }), false);
     }
     catch (ex)
     {
@@ -276,7 +324,7 @@ reopenNote: function(uiNote)
     //dump("internoteDisplayUI.reopenNote \"" + uiNote.note.text + "\"\n");
     if (this.noteBeingMoved == uiNote)
     {
-        this.assertWarnNotHere("Tried to reopen note during move operation.");
+        this.utils.assertWarnNotHere("Tried to reopen note during move operation.");
         this.noteBeingMoved = null;
     }
     
