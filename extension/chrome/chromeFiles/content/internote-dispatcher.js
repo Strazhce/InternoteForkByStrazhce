@@ -115,6 +115,8 @@ InternoteEventDispatcher.prototype.createEvent = function(eventName)
 
 InternoteEventDispatcher.prototype.dispatchEvent = function(eventName, eventObj)
 {
+    //dump("InternoteEventDispatcher.dispatchEvent " + eventName + "\n");
+    
     this.utils.assertError(eventObj.name == null || eventObj.name == eventName, "Tried to dispatch an already used event object.", eventObj);
     
     // We're overwriting .name, but we just checked it wasn't already there, so that's cool.
