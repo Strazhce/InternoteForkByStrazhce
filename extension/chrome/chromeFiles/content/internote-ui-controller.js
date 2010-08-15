@@ -471,6 +471,12 @@ changePage: function(newURL, isPageLoaded)
         this.displayUI.setBrowser(null, null);
     }
     
+    // XXX These two should probably be distinguished.  It's possible that
+    // XXX the page is loaded but the message hasn't been shown, because
+    // XXX the user changed tabs.
+    this.isPageLoaded    = isPageLoaded;
+    this.hasMsgBeenShown = isPageLoaded;    
+    
     if (newURL == this.currentURL)
     {
         //dump("Redo " + this.currentURL + " " + newURL + "\n");
@@ -495,12 +501,6 @@ changePage: function(newURL, isPageLoaded)
 
         if (this.allowNotesOnThisPage(newURL))
         {
-            // XXX These two should probably be distinguished.  It's possible that
-            // XXX the page is loaded but the message hasn't been shown, because
-            // XXX the user changed tabs.
-            this.isPageLoaded    = isPageLoaded;
-            this.hasMsgBeenShown = isPageLoaded;
-            
             this.configureStorageWatcher(this.currentURL);
             
             for each (var note in this.pageWatcher.noteMap)
