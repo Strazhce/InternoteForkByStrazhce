@@ -719,4 +719,176 @@ clearAfterMenuSeparator: function(menuSeparator)
     }
 },
 
+
+updateViewportDimsForImage: function(contentDoc, startDims)
+{
+    if (contentDoc.body.clientHeight < contentDoc.body.scrollHeight)
+    {
+        startDims[0] -= this.SCROLLBAR_SIZE;
+    }
+    
+    if (contentDoc.body.clientWidth < contentDoc.body.scrollWidth)
+    {
+        startDims[1] -= this.SCROLLBAR_SIZE;
+    }
+},
+
+// Ridiculous but seemingly necessary.  Don't replace without wide testing
+// on a variety of sites.
+updateViewportDimsForHTML: function(browser, contentDoc, startDims)
+{
+    var horzScrollbarDetected = false;
+    var vertScrollbarDetected = false;
+    
+    if (this.scrollbarSize == null)
+    {
+        this.scrollbarSize = this.calcScrollbarWidth();
+    }        
+    
+    if (contentDoc.documentElement != null && contentDoc.body != null) // During loading ...
+    {
+        var bodyStyle = browser.contentWindow.getComputedStyle(contentDoc.body,            null);
+        var htmlStyle = browser.contentWindow.getComputedStyle(contentDoc.documentElement, null);
+        
+        // Determine horizontal scrollbar.
+        if (htmlStyle.overflowX == "hidden" || bodyStyle.overflowX == "hidden")
+        {
+            horzScrollbarDetected = false;
+        }
+        else if (htmlStyle.overflowX == "scroll" || bodyStyle.overflowX == "scroll")
+        {
+            horzScrollbarDetected = true;
+        }
+        else
+        {
+            horzScrollbarDetected = contentDoc.body           .clientWidth < contentDoc.body           .scrollWidth ||
+                                    contentDoc.documentElement.clientWidth < contentDoc.documentElement.scrollWidth;
+        }
+        
+        // Determine vertical scrollbar.
+        var docWidth = contentDoc.width + parseInt(bodyStyle.marginLeft,  10) +
+                                        + parseInt(bodyStyle.marginRight, 10);
+        vertScrollbarDetected = docWidth < browser.contentWindow.innerWidth;
+        
+        if (horzScrollbarDetected) startDims[1] -= this.scrollbarSize;
+        if (vertScrollbarDetected) startDims[0] -= this.scrollbarSize;
+    }
+    
+},
+
+updateViewportDimsForXML: function(contentDoc, startDims)
+{
+    if (contentDoc.documentElement.clientHeight < contentDoc.documentElement.scrollHeight)
+    {
+        //dump("Remove X\n");
+        startDims[0] -= this.SCROLLBAR_SIZE;
+    }
+    
+    if (contentDoc.documentElement.clientWidth < contentDoc.documentElement.scrollWidth)
+    {
+        //dump("Remove Y\n");
+        startDims[1] -= this.SCROLLBAR_SIZE;
+    }
+},
+
+// We attempt to calculate the size of the viewport minus any scrollbars.
+// In particular we can't just take the minimums of viewport and page because a page might
+// have less height than the viewport, and also image URLs might have less width and height.
+getViewportDims: function(browser)
+{
+    this.assertError(browser != null, "Null browser", browser);
+    
+    var contentDoc = browser.contentDocument;
+    
+    var viewportDims = this.getDims(browser.boxObject);
+    
+    this.assertError(this.isCoordPair(viewportDims), "Bad original viewport dims", viewportDims);
+    
+    try
+    {
+        // We sometimes get height == 0, in particular temporarily when dragging tabs into new windows ...
+        if (contentDoc.documentElement != null && viewportDims[1] > 0)
+        {
+            if (contentDoc instanceof ImageDocument)
+            {
+                this.updateViewportDimsForImage(contentDoc, viewportDims);
+            }
+            else if (contentDoc instanceof HTMLDocument)
+            {
+                //dump("PRE  = " + viewportDims[0] + " " + viewportDims[1] + "\n");
+                this.updateViewportDimsForHTML(browser, contentDoc, viewportDims);
+                //dump("POST = " + viewportDims[0] + " " + viewportDims[1] + "\n");
+            }
+            else if (contentDoc instanceof XMLDocument)
+            {
+                this.updateViewportDimsForXML(contentDoc, viewportDims);
+            }
+            else if (contentDoc instanceof XULDocument)
+            {
+                // XXX Should possibly do something.
+                // Do nothing.
+            }
+            else
+            {
+                this.assertWarnNotHere("Unhandled document type.", this.getJSClassName());
+                this.dumpXML(contentDoc);
+            }
+        }
+    }
+    catch (ex)
+    {
+        this.handleException("Exception caught when trying to compensate for scrollbars.", ex);
+    }
+    
+    this.assertError(this.isCoordPair(viewportDims), "Bad modified viewport dims", viewportDims);
+    
+    //this.dumpTraceData(viewportDims, 110, 1);
+    
+    // Next we handle really small windows, where the window is smaller than the browser box!
+    // In this case we calculate the biggest the viewport could be, given the window dimensions.
+    // If this is smaller than what we've already calculated, truncate it.
+    var windowTopLeft = this.getScreenPos(document.documentElement.boxObject);
+    //dump("  WTopLeft      = " + this.compactDumpString(windowTopLeft) + "\n");
+    var windowDims = [window.innerWidth, window.innerHeight];
+    //dump("  WindowDims    = " + this.compactDumpString(windowDims) + "\n");
+    var viewportTopLeft = this.getScreenPos(browser.boxObject);
+    //dump("  VTopLeft      = " + this.compactDumpString(viewportTopLeft) + "\n");
+    var viewportTopLeftOnWindow = this.coordPairSubtract(viewportTopLeft, windowTopLeft);
+    //dump("  VWTopLeft     = " + this.compactDumpString(viewportTopLeftOnWindow) + "\n");
+    var viewportPotentialDims = this.coordPairSubtractNonNeg(windowDims, viewportTopLeftOnWindow);
+    //dump("  PotentialDims = " + this.compactDumpString(viewportPotentialDims) + "\n\n\n");
+    
+    // Now restrict the earlier calculated dimensions.
+    viewportDims = this.coordPairMin(viewportDims, viewportPotentialDims);
+    
+    this.assertError(this.isCoordPair(viewportDims), "Bad adjusted viewport dims", viewportDims);
+    
+    //dump("  ViewportDims  = " + this.compactDumpString(viewportDims) + "\n");
+    
+    return viewportDims;
+},
+
+getViewportRect: function(browser)
+{
+    var contentWin = browser.contentWindow;
+    
+    var viewportDims = this.getViewportDims(browser);
+    var scrollPos = [contentWin.scrollX, contentWin.scrollY];
+    return this.makeRectFromDims(scrollPos, viewportDims);
+},
+
+getPageDims: function(browser)
+{
+    var contentDoc = browser.contentDocument;
+    if (contentDoc.documentElement == null)
+    {
+        return [0, 0];
+    }
+    else
+    {
+        return [contentDoc.documentElement.scrollWidth, contentDoc.documentElement.scrollHeight];
+    }
+},
+
+
 });

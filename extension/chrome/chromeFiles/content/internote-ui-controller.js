@@ -203,8 +203,6 @@ init: function()
         this.noteUI.waitForImageLoad(this.utils.bind(this, this.imageLoadCheck));
     }
     
-    this.SCROLLBAR_SIZE = this.utils.calcScrollbarWidth();
-    
     if (this.prefs.isInDebugMode())
     {
         this.activeWarnInterval =
@@ -466,7 +464,7 @@ changePage: function(newURL, isNewPageLoading)
         this.utils.assertWarn(parsedURL != null, "Invalid URL?", newURL);
         this.utils.assertWarn(this.utils.isValidURLSite(parsedURL.site, parsedURL.protocol), "Invalid Site?", parsedURL.site);
         
-        this.displayUI.setBrowser(this.currentBrowser, this.screenGetViewportDims());
+        this.displayUI.setBrowser(this.currentBrowser, this.utils.getViewportDims(this.currentBrowser));
     }
     else
     {
@@ -602,14 +600,7 @@ activateDebugFunction: function()
 {
     //dump("\n\n\n\n\nactivateDebugFunction\n");
     
-    //var viewportDims = this.utils.getDims(this.currentBrowser.boxObject);
-    //var pageDims = this.screenGetPageDims();
-    //
-    //dump("  PageDims     = " + this.utils.compactDumpString(pageDims) + "\n");
-    //dump("  ViewportDims = " + this.utils.compactDumpString(viewportDims) + "\n");
-    //
-    
-    this.displayUI.createInsertionContainer(this.screenGetViewportDims());
+    this.displayUI.createInsertionContainer(this.utils.getViewportDims(this.currentBrowser));
     this.displayUI.showPopupPane();
     
     this.utils.assertWarnNotHere("--- Test Warning ---");
@@ -676,7 +667,7 @@ userCreatesNote: function()
         
         if (this.storage.areNotesDisplaying)
         {
-            var viewportRect = this.screenGetViewportRect();
+            var viewportRect = this.utils.getViewportRect(this.currentBrowser);
             var noteDims = this.storage.getDefaultDims();
             var noteTopLeft = this.screenCalcNewNotePos(viewportRect, noteDims);
             
@@ -1702,8 +1693,8 @@ screenCalcNotePosOnPage: function(uiNote, offset)
         return pos;
     }
     
-    var viewportDims  = this.screenGetViewportDims();
-    var pageDims      = this.screenGetPageDims();
+    var viewportDims  = this.utils.getViewportDims(this.currentBrowser);
+    var pageDims      = this.utils.getPageDims(this.currentBrowser);
     var effectiveDims = this.utils.coordPairMax(viewportDims, pageDims);
     
     //dump("  ScrollHeight  = " + this.currentBrowser.contentDocument.documentElement.scrollHeight + "\n");
@@ -1743,170 +1734,6 @@ screenCalcNotePosOnPage: function(uiNote, offset)
     return restrictedPos;
 },
 
-screenImageUpdateViewportDims: function(contentDoc, startDims)
-{
-    if (contentDoc.body.clientHeight < contentDoc.body.scrollHeight)
-    {
-        startDims[0] -= this.SCROLLBAR_SIZE;
-    }
-    
-    if (contentDoc.body.clientWidth < contentDoc.body.scrollWidth)
-    {
-        startDims[1] -= this.SCROLLBAR_SIZE;
-    }
-},
-
-// Ridiculous but seemingly necessary.  Don't replace without wide testing
-// on a variety of sites.
-screenHTMLUpdateViewportDims: function(browser, contentDoc, startDims)
-{
-    var horzScrollbarDetected = false;
-    var vertScrollbarDetected = false;
-    
-    if (contentDoc.documentElement != null && contentDoc.body != null) // During loading ...
-    {
-        var bodyStyle = browser.contentWindow.getComputedStyle(contentDoc.body,            null);
-        var htmlStyle = browser.contentWindow.getComputedStyle(contentDoc.documentElement, null);
-        
-        // Determine horizontal scrollbar.
-        if (htmlStyle.overflowX == "hidden" || bodyStyle.overflowX == "hidden")
-        {
-            horzScrollbarDetected = false;
-        }
-        else if (htmlStyle.overflowX == "scroll" || bodyStyle.overflowX == "scroll")
-        {
-            horzScrollbarDetected = true;
-        }
-        else
-        {
-            horzScrollbarDetected = contentDoc.body           .clientWidth < contentDoc.body           .scrollWidth ||
-                                    contentDoc.documentElement.clientWidth < contentDoc.documentElement.scrollWidth;
-        }
-        
-        // Determine vertical scrollbar.
-        var docWidth = contentDoc.width + parseInt(bodyStyle.marginLeft,  10) +
-                                        + parseInt(bodyStyle.marginRight, 10);
-        vertScrollbarDetected = docWidth < browser.contentWindow.innerWidth;
-        
-        if (horzScrollbarDetected) startDims[1] -= this.SCROLLBAR_SIZE;
-        if (vertScrollbarDetected) startDims[0] -= this.SCROLLBAR_SIZE;
-    }
-    
-},
-
-screenXMLUpdateViewportDims: function(contentDoc, startDims)
-{
-    if (contentDoc.documentElement.clientHeight < contentDoc.documentElement.scrollHeight)
-    {
-        //dump("Remove X\n");
-        startDims[0] -= this.SCROLLBAR_SIZE;
-    }
-    
-    if (contentDoc.documentElement.clientWidth < contentDoc.documentElement.scrollWidth)
-    {
-        //dump("Remove Y\n");
-        startDims[1] -= this.SCROLLBAR_SIZE;
-    }
-},
-
-// We attempt to calculate the size of the viewport minus any scrollbars.
-// In particular we can't just take the minimums of viewport and page because a page might
-// have less height than the viewport, and also image URLs might have less width and height.
-screenGetViewportDims: function()
-{
-    var browser = this.currentBrowser;
-    var contentDoc = browser.contentDocument;
-    
-    var viewportDims = this.utils.getDims(browser.boxObject);
-    
-    this.utils.assertError(this.utils.isCoordPair(viewportDims), "Bad original viewport dims", viewportDims);
-    
-    try
-    {
-        // We sometimes get height == 0, in particular temporarily when dragging tabs into new windows ...
-        if (contentDoc.documentElement != null && viewportDims[1] > 0)
-        {
-            if (contentDoc instanceof ImageDocument)
-            {
-                this.screenImageUpdateViewportDims(contentDoc, viewportDims);
-            }
-            else if (contentDoc instanceof HTMLDocument)
-            {
-                //dump("PRE  = " + viewportDims[0] + " " + viewportDims[1] + "\n");
-                this.screenHTMLUpdateViewportDims(browser, contentDoc, viewportDims);
-                //dump("POST = " + viewportDims[0] + " " + viewportDims[1] + "\n");
-            }
-            else if (contentDoc instanceof XMLDocument)
-            {
-                this.screenXMLUpdateViewportDims(contentDoc, viewportDims);
-            }
-            else if (contentDoc instanceof XULDocument)
-            {
-                // XXX Should possibly do something.
-                // Do nothing.
-            }
-            else
-            {
-                this.utils.assertWarnNotHere("Unhandled document type.", this.utils.getJSClassName());
-                this.utils.dumpXML(contentDoc);
-            }
-        }
-    }
-    catch (ex)
-    {
-        this.utils.handleException("Exception caught when trying to compensate for scrollbars.", ex);
-    }
-    
-    this.utils.assertError(this.utils.isCoordPair(viewportDims), "Bad modified viewport dims", viewportDims);
-    
-    //this.utils.dumpTraceData(viewportDims, 110, 1);
-    
-    // Next we handle really small windows, where the window is smaller than the browser box!
-    // In this case we calculate the biggest the viewport could be, given the window dimensions.
-    // If this is smaller than what we've already calculated, truncate it.
-    var windowTopLeft = this.utils.getScreenPos(document.documentElement.boxObject);
-    //dump("  WTopLeft      = " + this.utils.compactDumpString(windowTopLeft) + "\n");
-    var windowDims = [window.innerWidth, window.innerHeight];
-    //dump("  WindowDims    = " + this.utils.compactDumpString(windowDims) + "\n");
-    var viewportTopLeft = this.utils.getScreenPos(this.currentBrowser.boxObject);
-    //dump("  VTopLeft      = " + this.utils.compactDumpString(viewportTopLeft) + "\n");
-    var viewportTopLeftOnWindow = this.utils.coordPairSubtract(viewportTopLeft, windowTopLeft);
-    //dump("  VWTopLeft     = " + this.utils.compactDumpString(viewportTopLeftOnWindow) + "\n");
-    var viewportPotentialDims = this.utils.coordPairSubtractNonNeg(windowDims, viewportTopLeftOnWindow);
-    //dump("  PotentialDims = " + this.utils.compactDumpString(viewportPotentialDims) + "\n\n\n");
-    
-    // Now restrict the earlier calculated dimensions.
-    viewportDims = this.utils.coordPairMin(viewportDims, viewportPotentialDims);
-    
-    this.utils.assertError(this.utils.isCoordPair(viewportDims), "Bad adjusted viewport dims", viewportDims);
-    
-    //dump("  ViewportDims  = " + this.utils.compactDumpString(viewportDims) + "\n");
-    
-    return viewportDims;
-},
-
-screenGetViewportRect: function()
-{
-    var contentWin = this.currentBrowser.contentWindow;
-    
-    var viewportDims = this.screenGetViewportDims();
-    var scrollPos = [contentWin.scrollX, contentWin.scrollY];
-    return this.utils.makeRectFromDims(scrollPos, viewportDims);
-},
-
-screenGetPageDims: function()
-{
-    var contentDoc = this.currentBrowser.contentDocument;
-    if (contentDoc.documentElement == null)
-    {
-        return [0, 0];
-    }
-    else
-    {
-        return [contentDoc.documentElement.scrollWidth, contentDoc.documentElement.scrollHeight];
-    }
-},
-
 screenCalcNotePosOnViewport: function(uiNote)
 {
     //dump("screenCalcNotePosOnViewport\n");
@@ -1917,7 +1744,7 @@ screenCalcNotePosOnViewport: function(uiNote)
     
     if (note.isMinimized)
     {
-        var viewportDims = this.screenGetViewportDims();
+        var viewportDims = this.utils.getViewportDims(this.currentBrowser);
         var top = viewportDims[1] - this.noteUI.MINIMIZED_HEIGHT;
         
         this.utils.assertError(uiNote.minimizePos != null, "Missing minimize pos.");
@@ -1959,7 +1786,7 @@ screenCalcDraggedPos: function(uiNote, offset)
     
     this.utils.assertError(note != null, "Note is null when calculating note position.");
     
-    var viewportDims = this.screenGetViewportDims();
+    var viewportDims = this.utils.getViewportDims(this.currentBrowser);
     
     var noteDims     = this.storage.getDims(note);
     
@@ -2019,7 +1846,7 @@ screenCalcModifiedNoteDims: function(uiNote, offset)
     var newDims = this.utils.coordPairAdd(noteDims, offset);
     
     var posOnViewport = this.screenCalcNotePosOnViewport(uiNote);
-    var viewportDims = this.screenGetViewportDims();
+    var viewportDims = this.utils.getViewportDims(this.currentBrowser);
     
     //dump("NP " + this.utils.compactDumpString(posOnViewport) + "\n");
     //dump("VD " + this.utils.compactDumpString(viewportDims) + "\n");
@@ -2244,8 +2071,8 @@ screenCheckAspects: function(ev)
         var newLeft    = this.currentBrowser.boxObject.screenX;
         var newTop     = this.currentBrowser.boxObject.screenY;
         
-        var [newWidth,     newHeight]      = this.screenGetViewportDims();
-        var [newPageWidth, newPageHeight]  = this.screenGetPageDims();
+        var [newWidth,     newHeight]      = this.utils.getViewportDims(this.currentBrowser);
+        var [newPageWidth, newPageHeight]  = this.utils.getPageDims(this.currentBrowser);
         
         var viewportMoved   = (this.currentLeft      != newLeft      || this.currentTop        != newTop       );
         var viewportResized = (this.currentWidth     != newWidth     || this.currentHeight     != newHeight    );
@@ -2263,7 +2090,7 @@ screenCheckAspects: function(ev)
             this.currentPageWidth  = newPageWidth;
             this.currentPageHeight = newPageHeight;
             
-            var viewportDims = viewportResized ? this.screenGetViewportDims() : null;
+            var viewportDims = viewportResized ? this.utils.getViewportDims(this.currentBrowser) : null;
             var posFunc = this.utils.bind(this, this.screenGetUpdatedPosFunc);
             
             this.displayUI.handleChangedAspects(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized);
@@ -2579,7 +2406,7 @@ hasHTMLNotes: function()
 
 hasOffscreenNotes: function()
 {
-    var viewportRect = this.screenGetViewportRect();
+    var viewportRect = this.utils.getViewportRect(this.currentBrowser);
     
     for (var i = 0; i < this.allUINotes.length; i++)
     {
@@ -3059,7 +2886,6 @@ onPageContentArrived: function()
         // Update notes as content comes in ...
         this.screenCheckAspects();
         //this.screenAdjustAllNotes();
-        //this.displayUI.viewportMovedOrResized(this.screenGetViewportDims(), this.uiNoteLookup);
     }
 },
 
