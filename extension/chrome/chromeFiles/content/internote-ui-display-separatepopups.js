@@ -23,8 +23,8 @@
 var internoteDisplayUISeparatePopups = {
 
 autoFocusNote:  null,
-noteBeingMoved: null,
 
+notesBeingMoved:  [],
 posLookup:        [],
 dimsLookup:       [],
 actualDimsLookup: [],
@@ -201,6 +201,7 @@ onNoteFocused: function()
 
 periodicCheck: function()
 {
+    // Do nothing in this implementation.
 },
 
 // A callback for when the popup panel appears.
@@ -323,10 +324,11 @@ reopenNote: function(uiNote)
 {
     //dump("internoteDisplayUI.reopenNote \"" + uiNote.note.text + "\"\n");
     
-    if (this.noteBeingMoved == uiNote)
+    var isMoving = (this.notesBeingMoved.indexOf(uiNote) != -1);
+    if (isMoving)
     {
         this.utils.assertWarnNotHere("Tried to reopen note during move operation.");
-        this.noteBeingMoved = null;
+        this.utils.spliceFirstInstance(this.notesBeingMoved, uiNote);
     }
     
     var popup = document.getElementById("internote-popup" + uiNote.num);
@@ -422,7 +424,7 @@ adjustNote: function(uiNote, newPos, newDims, shouldForceReopen)
     }
     
     var isPosDifferent = !this.utils.areCoordPairsEqual(actualPos, oldActualPos);
-    var isDragging     = (this.noteBeingMoved == uiNote);
+    var isMoving       = (this.notesBeingMoved.indexOf(uiNote) != -1);
     
     if (isPosDifferent)
     {
@@ -430,7 +432,7 @@ adjustNote: function(uiNote, newPos, newDims, shouldForceReopen)
         this.actualPosLookup[uiNote.num] = actualPos;
     }
     
-    if (shouldForceReopen || (isPosDifferent && !isDragging))
+    if (shouldForceReopen || (isPosDifferent && !isMoving))
     {
         this.reopenNote(uiNote);
         return true;
@@ -521,14 +523,14 @@ moveStart: function(uiNote)
     
     // Change to non-anchored so moving the note will switch to an unanchored popup.
     // We use this temporarily because moveTo works properly with it and we prefer to avoid flickery reopens.
-    this.noteBeingMoved = uiNote;
+    this.notesBeingMoved.push(uiNote);
     this.adjustNote(uiNote, null, null, false); // We don't need to reopen the note, move will unanchor it.
 },
 
 moveEnd: function(uiNote)
 {
     // Change to anchored.
-    this.noteBeingMoved = null;
+    this.utils.spliceFirstInstance(this.notesBeingMoved, uiNote);
     this.adjustNote(uiNote, null, null, true);
 },
 
