@@ -602,7 +602,7 @@ addWelcomeNote: function()
     var currTime     = new Date().getTime();
     var backColor    = this.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
     var foreColor    = this.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
-    var zIndex       = this.getMaxZIndex() + 1;
+    var zIndex       = this.getMaxZIndex()[0] + 1;
     var noteWidth    = 280;
     var noteHeight   = 300;
     var isMinimized  = false;
@@ -641,7 +641,7 @@ addSimpleNote: function(url, text, noteTopLeft, noteDims)
     var currTime     = new Date().getTime();
     var backColor    = this.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
     var foreColor    = this.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
-    var zIndex       = this.getMaxZIndex() + 1;
+    var zIndex       = this.getMaxZIndex()[0] + 1;
     var isMinimized  = false;
     var isHTML       = false;
     var matchType    = this.URL_MATCH_URL;
@@ -745,15 +745,18 @@ removeNote: function(note)
 
 raiseNote: function(note)
 {
-    var zIndex = this.getMaxZIndex() + 1;
+    var [maxZIndex, maxZIndexCount] = this.getMaxZIndex();
     
-    if (note.zIndex != zIndex)
+    if (note.zIndex < maxZIndex || maxZIndexCount != 1)
     {
-        note.zIndex = zIndex;
+        var newZIndex = maxZIndex + 1;
+        var oldZIndex = note.zIndex;
+        note.zIndex = newZIndex;
         
+        this.indicateDataChanged(note);
         this.scheduleXMLSave();
         
-        this.dispatchEvent("noteRaised", new this.StorageEvent(note, zIndex));
+        this.dispatchEvent("noteRaised", new this.StorageEvent(note, newZIndex, oldZIndex));
     }
 },
 
@@ -1076,13 +1079,22 @@ getMaxZIndex: function()
                               //.reduce(Math.max, -1);
     
     var maxZ = -1;
+    var maxCount = 0;
     
     for (var i = 0; i < arr.length; i++)
     {
-        maxZ = Math.max(maxZ, arr[i]);
+        if (maxZ < arr[i])
+        {
+            maxZ = arr[i];
+            maxCount = 1;
+        }
+        else if (maxZ == arr[i])
+        {
+            maxCount++;
+        }
     }
     
-    return maxZ;
+    return [maxZ, maxCount];
 },
 
 getNotesForEffectiveURL: function(searchURL)

@@ -981,7 +981,6 @@ userFocusesNote: function(event)
     // raising would lose focus and cause problems here.
     //dump("userFocusesNote\n");
     
-    /*
     try
     {
         var noteNum = this.utils.getNoteNum(event.target);
@@ -992,7 +991,6 @@ userFocusesNote: function(event)
     {
         this.utils.handleException("Exception caught when user focused note.", ex);
     }
-    */
 },
 
 userTogglesDisplay: function(note)
@@ -2894,19 +2892,7 @@ onNoteRaised: function(event)
         var uiNote = this.uiNoteLookup[note.num];
         this.utils.assertError(uiNote != null, "UINote is null trying to raise note.");
         
-        var isFocused = this.noteUI.isFocused(uiNote);
-        
         this.displayUI.raiseNote(uiNote);
-        
-        // We need to focus explicitly because any focus may be lost when we just did the raiseNote because
-        // it removes the note from and readds it to the DOM.  This isn't entirely desirable given it may affect
-        // the focus in other windows but it seems to be the best solution as long as the notes are in a stack.
-        if (isFocused)
-        {
-            //dump("  Refocusing.\n");
-            
-            uiNote.textArea.focus();
-        }
     }
     catch (ex)
     {

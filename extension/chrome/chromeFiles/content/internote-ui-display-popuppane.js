@@ -116,8 +116,28 @@ raiseNote: function(uiNote)
         var pos  = this.getScreenPosition(uiNote);
         var dims = this.noteUI.getDims(uiNote);
         
+        var isFocused = this.noteUI.isFocused(uiNote);
+        var selectionStart = uiNote.textArea.selectionStart;
+        var selectionEnd   = uiNote.textArea.selectionEnd;
+        
         this.removeNote(uiNote);
         this.addNote(uiNote, pos, dims);
+        
+        // This delay seems necessary to get the field to focus if we raised the note
+        // as a result of tabbing between notes.
+        setTimeout(this.utils.bind(this, function() {
+            // We need to focus and reselect explicitly because any focus may be lost when we just did the raiseNote because
+            // it removes the note from and readds it to the DOM.  This isn't entirely desirable given it may affect
+            // the focus in other windows but it seems to be the best solution as long as the notes are in a stack.
+            if (isFocused)
+            {
+                //dump("  Refocusing.\n");
+                this.focusNote(uiNote);
+            }
+            
+            uiNote.textArea.selectionStart = selectionStart;
+            uiNote.textArea.selectionEnd   = selectionEnd;
+        }), 0);
     }
 },
 
