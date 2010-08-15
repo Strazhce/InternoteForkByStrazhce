@@ -446,7 +446,7 @@ uiNoteRemove: function(uiNote)
     this.utils.spliceFirstInstance(this.allUINotes, uiNote);
 },
 
-changePage: function(newURL, isNewPageLoading)
+changePage: function(newURL, isPageLoaded)
 {
     // We might tab change to the same page, so we still need this ...
     
@@ -498,8 +498,8 @@ changePage: function(newURL, isNewPageLoading)
             // XXX These two should probably be distinguished.  It's possible that
             // XXX the page is loaded but the message hasn't been shown, because
             // XXX the user changed tabs.
-            this.isPageLoaded    = isNewPageLoading;
-            this.hasMsgBeenShown = isNewPageLoading;
+            this.isPageLoaded    = isPageLoaded;
+            this.hasMsgBeenShown = isPageLoaded;
             
             this.configureStorageWatcher(this.currentURL);
             
