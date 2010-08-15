@@ -977,7 +977,7 @@ getViewportDims: function(browser)
     
     this.assertError(this.isCoordPair(viewportDims), "Bad modified viewport dims", viewportDims);
     
-    //this.dumpTraceData(viewportDims, 110, 1);
+    //this.dumpTraceData(viewportDims);
     
     // Next we handle really small windows, where the window is smaller than the browser box!
     // In this case we calculate the biggest the viewport could be, given the window dimensions.
