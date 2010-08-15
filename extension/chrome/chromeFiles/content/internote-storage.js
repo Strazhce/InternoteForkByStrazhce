@@ -778,71 +778,104 @@ isURLPresent: function(searchURL)
     return false;
 },
 
-matchesURL: function(note, pageURL)
+getEffectiveURL: function(note)
 {
-    var noteURL = note.url;
-    
-    if (this.areIgnoresApplicable(note))
+    if (note.effectiveURL == null)
     {
-        pageURL = this.utils.cleanUpURL(pageURL, note.ignoreAnchor, note.ignoreParams);
-        this.utils.assertError(pageURL != null, "Page URL did not parse when trying to match URL.");
-        
-        if (note.matchType != this.URL_MATCH_REGEXP)
+        // Store it to save time because we have to process each note whenever we load a page.
+        note.effectiveURL = this.processEffectiveURL(note.url, note.matchType, note.ignoreAnchor, note.ignoreParams);
+    }
+    return note.effectiveURL;
+},
+
+getEffectiveSite: function(note)
+{
+    if (note.matchType == this.URL_MATCH_SITE || note.matchType == this.URL_MATCH_SUFFIX)
+    {
+        var parsedNoteURL = this.utils.parseURL(note.url);
+        return (parsedNoteURL != null) ? parsedNoteURL.site : note.url;
+    }
+    else
+    {
+        return null;
+    }
+},
+
+processEffectiveURL: function(url, matchType, ignoreAnchor, ignoreParams)
+{
+    //dump("internoteStorage.processEffectiveURL " + url + "\n");
+    
+    if (matchType == this.URL_MATCH_ALL  || matchType == this.URL_MATCH_REGEXP ||
+        matchType == this.URL_MATCH_SITE || matchType == this.URL_MATCH_SUFFIX)
+    {
+        return null;
+    }
+    else
+    {
+        var parsedURL = this.utils.parseURL(url);
+        if (parsedURL == null)
         {
-            noteURL = this.utils.cleanUpURL(noteURL, note.ignoreAnchor, note.ignoreParams);
-            if (noteURL == null)
+            return null;
+        }
+        else
+        {
+            if (this.areIgnoresApplicable(matchType))
             {
-                return false;
+                if (ignoreAnchor)
+                {
+                    parsedURL.anchor = null;
+                }
+                
+                if (ignoreParams)
+                {
+                    parsedURL.params = null;
+                }
             }
+            
+            this.utils.canonicalizeParsedURL(parsedURL);
+            
+            return this.utils.formatURL(parsedURL);
         }
     }
+},
+
+matchesURL: function(note, pageURL)
+{
+    //dump("InternoteStorage.matchesURL\n");
     
-    var noteURLCanon = this.utils.canonicalizeURL(noteURL);
-    var pageURLCanon = this.utils.canonicalizeURL(pageURL);
+    var noteURL = note.url;
+    var noteURLCanon = this.getEffectiveURL(note);
+    var pageURLCanon = this.processEffectiveURL(pageURL, this.URL_MATCH_URL, note.ignoreAnchor, note.ignoreParams);
+    
+    this.utils.assertError(pageURLCanon != null, "Page URL was not valid when canonicalizing.", pageURL);
+    
     if (note.matchType == this.URL_MATCH_URL)
     {
         return pageURLCanon == noteURLCanon;
     }
     else if (note.matchType == this.URL_MATCH_REGEXP)
     {
-        return pageURL     .match(noteURL     ) ? true : false ||
-               pageURLCanon.match(noteURL     ) ? true : false ||
-               pageURLCanon.match(noteURLCanon) ? true : false;
+        return pageURL     .match(noteURL) ||
+               pageURLCanon.match(noteURL);
     }
     else if (note.matchType == this.URL_MATCH_PREFIX)
     {
-        return pageURLCanon == noteURLCanon ||
-               this.utils.startsWith(pageURLCanon, noteURL);
+        return pageURLCanon == noteURL      ||
+               pageURLCanon == noteURLCanon ||
+               this.utils.startsWith(pageURLCanon, noteURL     ) ||
+               this.utils.startsWith(pageURLCanon, noteURLCanon);
     }
     else if (note.matchType == this.URL_MATCH_SITE)
     {
-        var parsedNoteURL = this.utils.parseURL(note.url);
-        var noteSite = (parsedNoteURL != null) ? parsedNoteURL.site : noteURL;
-        
-        var site = this.utils.getURLSite(pageURL);
-        
-        return site == noteSite;
+        var noteSite = this.getEffectiveSite(note);
+        var pageSite = this.utils.getURLSite(pageURL);
+        return pageSite == noteSite;
     }
     else if (note.matchType == this.URL_MATCH_SUFFIX)
     {
-        var parsedNoteURL = this.utils.parseURL(note.url);
-        var noteSite = (parsedNoteURL != null) ? parsedNoteURL.site : noteURL;
-        
-        var site = this.utils.getURLSite(pageURL);
-        
-        if (site == noteSite)
-        {
-            return true;
-        }
-        else
-        {
-            if (noteURL.charAt(0) != ".")
-            {
-                noteSite = "." + noteURL;
-            }
-            
-            return this.utils.endsWith(site, noteSite);
-        }
+        var noteSite = this.getEffectiveSite(note);
+        var pageSite = this.utils.getURLSite(pageURL);
+        return this.utils.isSiteSuffix(pageSite, noteSite);
     }
     else if (note.matchType == this.URL_MATCH_ALL)
     {
@@ -887,6 +920,7 @@ setMatch: function(note, newURL, newMatchType)
         var oldMatchType = note.matchType;
         note.url       = newURL;
         note.matchType = newMatchType;
+        note.effectiveURL = null;
         this.indicateDataChanged(note);
         
         var event = new this.StorageEvent(note, [newMatchType, newURL, note.ignoreAnchor, note.ignoreParams],
@@ -902,6 +936,7 @@ setIgnoreAnchor: function(note, newIgnoreAnchor)
     {
         var oldIgnoreAnchor = note.ignoreAnchor;
         note.ignoreAnchor = newIgnoreAnchor;
+        note.effectiveURL = null;
         this.indicateDataChanged(note);
         
         var event = new this.StorageEvent(note, [note.matchType, note.url, newIgnoreAnchor, note.ignoreParams],
@@ -917,6 +952,7 @@ setIgnoreParams: function(note, newIgnoreParams)
     {
         var oldIgnoreParams = note.ignoreParams;
         note.ignoreParams = newIgnoreParams;
+        note.effectiveURL = null;
         this.indicateDataChanged(note);
         
         var event = new this.StorageEvent(note, [note.matchType, note.url, note.ignoreAnchor, newIgnoreParams],
@@ -1038,27 +1074,11 @@ resetNote: function(note)
     }
 },
 
-areIgnoresApplicable: function(note)
+areIgnoresApplicable: function(matchType)
 {
-    return note.matchType == this.URL_MATCH_URL ||
-           note.matchType == this.URL_MATCH_PREFIX ||
-           note.matchType == this.URL_MATCH_REGEXP;
-},
-
-getEffectiveURL: function(note)
-{
-    if (note.matchType == this.URL_MATCH_ALL)
-    {
-        return "";
-    }
-    else if (this.areIgnoresApplicable(note))
-    {
-        return this.utils.cleanUpURL(note.url, note.ignoreAnchor, note.ignoreParams);
-    }
-    else
-    {
-        return note.url;
-    }
+    return matchType == this.URL_MATCH_URL ||
+           matchType == this.URL_MATCH_PREFIX ||
+           matchType == this.URL_MATCH_REGEXP;
 },
 
 getPos: function(note)
@@ -1095,27 +1115,6 @@ getMaxZIndex: function()
     }
     
     return [maxZ, maxCount];
-},
-
-getNotesForEffectiveURL: function(searchURL)
-{
-    var results = [];
-    
-    var searchURL2 = this.utils.canonicalizeURL(searchURL);
-    
-    for (var i in this.allNotes)
-    {
-        var note = this.allNotes[i];
-        
-        if (note != null)
-        {
-            if (this.utils.canonicalizeURL(this.getEffectiveURL(note)) == searchURL2)
-            {
-                results.push(note);
-            }
-        }
-    }
-    return results;
 },
 
 formatTextForOutput: function(text)

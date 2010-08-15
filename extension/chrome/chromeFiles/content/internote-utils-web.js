@@ -23,16 +23,101 @@ canonicalizeURL: function(url)
 {
     this.assertError(typeof(url) == "string", "Bad URL type when canonicalizing URL.", url);
     
-    if (this.parseURL(url) == null)
+    var parsedURL = this.parseURL(url);
+    
+    if (parsedURL == null)
     {
         return url;
     }
     else
     {
-        url = url.replace(/(index|home|default)\.(html|htm|asp|php|cgi|cfm|aspx)$/i, "");
-        url = url.replace(/\/$/, "");
-        return url;
+        this.canonicalizeParsedURL(parsedURL);
+        return this.formatURL(parsedURL);
     }
+},
+
+getDefaultPort: function(protocol)
+{
+    if      (protocol == "http" ) return 80;
+    else if (protocol == "https") return 443;
+    else if (protocol == "ftp"  ) return 21;
+    else return null;
+},
+
+isSiteSuffix: function(site, suffix)
+{
+    if (site == suffix)
+    {
+        return true;
+    }
+    else
+    {
+        if (suffix.charAt(0) != ".")
+        {
+            suffix = "." + suffix;
+        }
+        
+        return this.endsWith(site, suffix);
+    }
+},
+
+canonicalizeParsedURL: function(parsedURL)
+{
+    if (parsedURL.path.length > 0)
+    {
+        var lastPathComponent = parsedURL.path[parsedURL.path.length - 1];
+        if (lastPathComponent.match(/^(index|home|default)\.(html|htm|asp|php|cgi|cfm|aspx)$/i))
+        {
+            parsedURL.path.pop();
+        }
+    }
+    
+    var index = parsedURL.path.indexOf(".");
+    while (index != -1)
+    {
+        parsedURL.path.splice(index, 1);
+        index = parsedURL.path.indexOf(".");
+    }
+    
+    index = parsedURL.path.lastIndexOf("..");
+    while (index > 0) // Don't handle .. in first component.
+    {
+        parsedURL.path.splice(index - 1, 2);
+        index = parsedURL.path.lastIndexOf("..");
+    }
+    
+    index = parsedURL.path.indexOf("");
+    while (index != -1)
+    {
+        parsedURL.path.splice(index, 1);
+        index = parsedURL.path.indexOf("");
+    }    
+    
+    if (parsedURL.params == "")
+    {
+        parsedURL.params = null;
+    }
+    
+    if (parsedURL.port == this.getDefaultPort(parsedURL.protocol))
+    {
+        parsedURL.port = null;
+    }
+    
+    parsedURL.protocol = parsedURL.protocol.toLowerCase();
+    parsedURL.site     = parsedURL.site.    toLowerCase();
+},
+
+formatURL: function(parsedURL)
+{
+    var userNameComponent = (parsedURL.userName != null) ? (parsedURL.userName + ":") : "";
+    var passwordComponent = (parsedURL.password != null) ? (parsedURL.password + "@") : "";
+    var portComponent     = (parsedURL.port     != null) ? (":" + parsedURL.port    ) : "";
+    var paramsComponent   = (parsedURL.params   != null) ? ("?" + encodeURIComponent(parsedURL.params)) : "";
+    var anchorComponent   = (parsedURL.anchor   != null) ? ("#" + encodeURIComponent(parsedURL.anchor)) : "";
+    var pathComponent     = "/" + parsedURL.path.map(encodeURIComponent).join("/");
+    return parsedURL.protocol + "://" + userNameComponent + passwordComponent +
+           parsedURL.site + portComponent + pathComponent +
+           paramsComponent + anchorComponent;
 },
 
 // This is fairly rudimentary, it may let thru some invalid URLs.
@@ -40,27 +125,77 @@ parseURL: function(url)
 {
     this.assertError(typeof(url) == "string", "Bad URL type when parsing URL.", url);
     
-    var protocolRegexp = "([^:]+)://";
-    var userNameRegexp = "([^:@/]*:)?";
-    var passwordRegexp = "([^@/]@)?";
-    var siteRegexp     = "([^:/]*)";
-    var portRegexp     = "(:[0-9]+)?";
-    var pathRegexp     = "(/[^\\?#]*)?";
-    var paramsRegexp   = "(\\?[^#]*)?";
-    var anchorRegexp   = "(#.*)?";
-    
-    var regexp = "^" + protocolRegexp + userNameRegexp + passwordRegexp + siteRegexp + portRegexp + pathRegexp + paramsRegexp + anchorRegexp + "$";
-    
-    var regexpResults = new RegExp(regexp).exec(url);
-    
-    if (regexpResults == null)
+    try
     {
-        return null;
+        var protocolRegexp = "([A-Za-z]+)://";
+        var userNameRegexp = "([^:@/]*:)?";
+        var passwordRegexp = "([^@/]@)?";
+        var siteRegexp     = "([^:/]*)";
+        var portRegexp     = "(:[0-9]+)?";
+        var pathRegexp     = "(/[^\\?#]*)?";
+        var paramsRegexp   = "(\\?[^#]*)?";
+        var anchorRegexp   = "(#.*)?";
+        
+        var regexp = "^" + protocolRegexp + userNameRegexp + passwordRegexp + siteRegexp + portRegexp + pathRegexp + paramsRegexp + anchorRegexp + "$";
+        
+        var regexpResults = new RegExp(regexp).exec(url);
+        
+        if (regexpResults == null)
+        {
+            return null;
+        }
+        else
+        {
+            var userName = (regexpResults[2] == null)
+                         ? null
+                         : regexpResults[2].replace(/:$/, "");
+            
+            var password = (regexpResults[3] == null)
+                         ? null
+                         : regexpResults[3].replace(/@$/, "");
+            
+            var port     = (regexpResults[5] == null)
+                         ? null
+                         : regexpResults[5].replace(/^:/, "");
+            
+            var path     = (regexpResults[6] == null)
+                         ? "/"
+                         : regexpResults[6];
+            
+            var params   = (regexpResults[7] == null)
+                         ? null
+                         : decodeURIComponent(regexpResults[7].replace(/^\?/, ""));
+            
+            var anchor   = (regexpResults[8] == null)
+                         ? null
+                         : decodeURIComponent(regexpResults[8].replace(/^#/, ""));
+            
+            var isValidPath = (path.charAt(0) == "/");
+            var isValidPort = (regexpResults[5] == null) || this.isValidPortString(regexpResults[5]);
+            if (isValidPort)
+            {
+                var path = (path == "/") ? [] : (path.replace(/^\//, "").split("/").map(decodeURIComponent));
+                port = (port == null) ? null : parseInt(port, 10);
+                return { protocol: regexpResults[1], userName: userName, password: password, site: regexpResults[4],
+                         port: port, path: path, params: params, anchor: anchor };
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
-    else
+    catch (ex)
     {
-        return { protocol: regexpResults[1], userName: regexpResults[2], password: regexpResults[3], site: regexpResults[4],
-                 port: regexpResults[5], path: regexpResults[6], params: regexpResults[7], anchor: regexpResults[8] };
+        if (ex.name == "URIError")
+        {
+            return null;
+        }
+        else
+        {
+            this.handleException("Unknown error when parsing URL.", ex);
+            return null;
+        }
     }
 },
 

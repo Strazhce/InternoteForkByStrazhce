@@ -462,7 +462,10 @@ changePage: function(newURL, isPageLoaded)
         // Check that URL parsing works properly ... just an internal warning to detect problems.
         var parsedURL = this.utils.parseURL(newURL);
         this.utils.assertWarn(parsedURL != null, "Invalid URL?", newURL);
-        this.utils.assertWarn(this.utils.isValidURLSite(parsedURL.site, parsedURL.protocol), "Invalid Site?", parsedURL.site);
+        if (parsedURL != null)
+        {
+            this.utils.assertWarn(this.utils.isValidURLSite(parsedURL.site, parsedURL.protocol), "Invalid Site?", parsedURL.site);
+        }
         
         this.displayUI.setBrowser(this.currentBrowser, this.utils.getViewportDims(this.currentBrowser));
     }
@@ -1420,7 +1423,7 @@ chromePrepareShowOnMenu: function(element)
         
         this.utils.setDisplayed(regexpItem, isRegexp);
         
-        var areIgnoresApplicable = this.storage.areIgnoresApplicable(note);
+        var areIgnoresApplicable = this.storage.areIgnoresApplicable(note.matchType);
         this.utils.setEnabled(anchorItem, areIgnoresApplicable);
         this.utils.setEnabled(paramsItem, areIgnoresApplicable);
         

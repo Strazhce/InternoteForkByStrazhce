@@ -135,7 +135,7 @@ viewNote: function(note)
     
     if (noteTreeIndex == -1)
     {
-        var urlTreeIndex = this.getURLTreeIndex(this.storage.getEffectiveURL(note));
+        var urlTreeIndex = this.getURLTreeIndex(this.treeView.getManagerURL(note));
         this.utils.assertError(urlTreeIndex != -1, "Couldn't find URL when trying to view note.");
         
         this.treeView.toggleOpenState(urlTreeIndex);
@@ -164,7 +164,7 @@ onNoteRemoved: function(event)
 {
     try
     {
-        this.treeRemoveNote(event.note, this.storage.getEffectiveURL(event.note));
+        this.treeRemoveNote(event.note, this.treeView.getManagerURL(event.note));
         
         if (event.note == this.noteBeingEdited)
         {
@@ -212,12 +212,12 @@ checkForLocationChange: function(event)
     var urlIndex  = this.treeView.getParentIndex(noteIndex);
     var oldEffectiveURL = this.treeView.treeData[urlIndex][this.treeView.COL_LOOKUP];
     
-    var newEffectiveURL = this.storage.getEffectiveURL(note);
+    var newEffectiveURL = this.treeView.getManagerURL(note);
     
     //dump("newURL = " + newEffectiveURL + "\n");
     //dump("oldURL = " + oldEffectiveURL + "\n");
     
-    if (this.utils.canonicalizeURL(oldEffectiveURL) == this.utils.canonicalizeURL(newEffectiveURL))
+    if (oldEffectiveURL == newEffectiveURL)
     {
         return;
     }
@@ -296,14 +296,13 @@ getNoteTreeIndex: function(searchNoteNum, startPoint)
 // This does a linear search.
 getURLTreeIndex: function(searchURL)
 {
-    var searchURL2 = this.utils.canonicalizeURL(searchURL);
     for (var i = 0; i < this.treeView.treeData.length; i++)
     {
         var isContainer = this.treeView.treeData[i][this.treeView.COL_IS_CONTAINER];
         if (isContainer)
         {
-            var currentURL = this.utils.canonicalizeURL(this.treeView.treeData[i][this.treeView.COL_LOOKUP]);
-            if (searchURL2 == currentURL)
+            var currentURL = this.treeView.treeData[i][this.treeView.COL_LOOKUP];
+            if (searchURL == currentURL)
             {
                 return i;
             }
@@ -393,7 +392,7 @@ setNoteData: function(note)
     
     if (note != null)
     {
-        if (this.storage.getEffectiveURL(note) == "") // XXX Should be a valid URL check.
+        if (this.treeView.getManagerURL(note) != "")
         {
             document.getElementById("goToLink").style.color  = "gray";
             document.getElementById("goToLink").style.cursor = "";
@@ -528,7 +527,7 @@ configureURLSection: function(note)
         urlLabelDeck.setAttribute("selectedIndex", "0");
     }
     
-    if (!this.storage.areIgnoresApplicable(note))
+    if (!this.storage.areIgnoresApplicable(note.matchType))
     {
         ignoreAnchor.setAttribute("disabled", "true");
         ignoreParams.setAttribute("disabled", "true");
@@ -543,7 +542,7 @@ configureURLSection: function(note)
 
 isValidURLOrSite: function()
 {
-    var url = this.storage.getEffectiveURL(this.noteBeingEdited);
+    var url = this.treeView.getManagerURL(this.noteBeingEdited);
     var parsedURL = this.utils.parseURL(url);
     
     var isValidURL = (parsedURL != null && this.utils.isValidURLSite(parsedURL.site, parsedURL.protocol));
@@ -742,7 +741,7 @@ getNotesFromTree: function(treeIndex)
     if (this.treeView.isContainer(treeIndex))
     {
         var url = this.treeView.treeData[treeIndex][this.treeView.COL_LOOKUP];
-        return this.storage.getNotesForEffectiveURL(url);
+        return this.treeView.getNotesForManagerURL(url);
     }
     else
     {
@@ -816,7 +815,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
 {
     //dump("internoteManager.treeCreateNote\n");
     
-    var urlTreeIndex = this.getURLTreeIndex(this.storage.getEffectiveURL(note));
+    var urlTreeIndex = this.getURLTreeIndex(this.treeView.getManagerURL(note));
     
     if (urlTreeIndex != -1)
     {
@@ -830,7 +829,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
         else if (this.treeView.isContainerOpen(urlTreeIndex))
         {
             //dump("  Category is already open.\n");
-            this.treeView.treeData.splice        (urlTreeIndex + 1, 0, this.makeNoteRow(note));
+            this.treeView.treeData.splice        (urlTreeIndex + 1, 0, this.treeView.makeNoteRow(note));
             this.treeView.treeBox.rowCountChanged(urlTreeIndex + 1, 1);
             return urlTreeIndex + 1; // XXX This assumption will be wrong when the tree becomes sorted.
         }
@@ -841,7 +840,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
         
         // URL category doesn't exist, create it collapsed.
         var newTreeIndex = this.treeView.treeData.length; // XXX This assumes adding to the end.
-        var url = this.utils.canonicalizeURL(this.storage.getEffectiveURL(note));
+        var url = this.treeView.getManagerURL(note);
 
         this.treeView.addURLRow(url);
         this.treeView.treeBox.rowCountChanged(newTreeIndex, 1);
@@ -1384,7 +1383,7 @@ treeView : {
         
         var urls = this.storage.allNotes.map(function(note)
         {
-            return this.utils.canonicalizeURL(this.storage.getEffectiveURL(note));
+            return this.getManagerURL(note);
         }, this);
         
         var sortedURLs = this.utils.getSortedUniqueValues(urls);
@@ -1493,7 +1492,7 @@ treeView : {
                 item[this.COL_IS_OPEN] = true;
                 
                 var url = this.treeData[idx][this.COL_LOOKUP];
-                var notesToInsert = this.storage.getNotesForEffectiveURL(url);
+                var notesToInsert = this.getNotesForManagerURL(url);
                 
                 var data = [];
                 for (var i = 0; i < notesToInsert.length; i++)
@@ -1516,6 +1515,43 @@ treeView : {
         }
     },
     
+    getManagerURL: function(note)
+    {
+        if (note.matchType == this.storage.URL_MATCH_REGEXP)
+        {
+            return note.url;
+        }
+        else if (note.matchType == this.storage.URL_MATCH_SITE ||
+                 note.matchType == this.storage.URL_MATCH_SUFFIX)
+        {
+            return this.storage.getEffectiveSite(note);
+        }
+        else
+        {
+            var effectiveURL = this.storage.getEffectiveURL(note);
+            return this.utils.ifNull(effectiveURL, "");
+        }
+    },
+    
+    getNotesForManagerURL: function(searchURL)
+    {
+        var results = [];
+        
+        for (var i in this.storage.allNotes)
+        {
+            var note = this.storage.allNotes[i];
+            
+            if (note != null)
+            {
+                if (this.getManagerURL(note) == searchURL)
+                {
+                    results.push(note);
+                }
+            }
+        }
+        return results;
+    },
+
     makeURLRow: function(url)
     {
         if (url == "")
