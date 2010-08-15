@@ -57,7 +57,7 @@ RECOLOR_ANIMATION_TIME: 250,
 
 WIDTH_BETWEEN_MINIMIZED: 2,
 
-ACTIVE_WARNING_INTERVAL: 5000,
+ACTIVE_WARNING_INTERVAL: 500,
 CHECK_VIEWPORT_INTERVAL: 50,
 
 dragMode:            this.DRAG_MODE_NONE,
@@ -783,6 +783,8 @@ userResizesNote: function(event)
 
 userMovesNote: function(event)
 {
+    //dump("userMovesNote\n");
+    
     try
     {
         this.utils.assertError(event != null, "Null event when starting drag.");
@@ -2853,6 +2855,7 @@ onInternoteStorageFailed: function(ex)
 // otherwise onPageLoadStart() will be called.
 onTabChange: function(newURL)
 {
+    //dump("onTabChange\n");
     this.changePage(newURL, true);
 },
 
