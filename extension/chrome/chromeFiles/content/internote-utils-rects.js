@@ -140,6 +140,12 @@ isInRect: function(pos, rect)
            this.isBetween(pos[1], rect.topLeft[1], rect.bottomRight[1]);
 },
 
+isRectInRect: function(innerRect, outerRect)
+{
+    return this.isInRect(innerRect.topLeft,     outerRect) &&
+           this.isInRect(innerRect.bottomRight, outerRect);
+},
+
 /*
 formatRect: function(left, top, right, bottom)
 {
