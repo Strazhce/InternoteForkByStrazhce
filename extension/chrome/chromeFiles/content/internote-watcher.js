@@ -135,7 +135,15 @@ InternoteStorageWatcher.prototype.doesPassFilter = function(note)
     }
     else
     {
-        return this.filterFn(note);
+        try
+        {
+            return this.filterFn(note);
+        }
+        catch (ex)
+        {
+            this.utils.handleException("Exception caught when evaluating filter function.", ex);
+            return false;
+        }
     }
 };
 
