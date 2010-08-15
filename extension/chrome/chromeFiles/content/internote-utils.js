@@ -230,7 +230,7 @@ assertWarn: function(condition, msg, obj)
         if (obj != null)
         {
             this.doubleDump("Extra Data: ");
-            this.doubleDumpTraceData(obj, 80, 1);
+            this.doubleDumpTraceData(obj);
         }
         
         this.doubleDump("\n");
@@ -247,7 +247,7 @@ assertError: function(condition, msg, obj)
         this.doubleDump("\n\n" + errorMsg + "\n\n");
         
         this.doubleDump("Extra Data: ");
-        this.doubleDumpTraceData(obj, 80, 1);
+        this.doubleDumpTraceData(obj);
         
         this.doubleDump("\n");
         
@@ -272,7 +272,7 @@ assertWarnNotHere : function(msg, obj)
     if (obj != null)
     {
         this.doubleDump("Extra Data: ");
-        this.doubleDumpTraceData(obj, 80, 1);
+        this.doubleDumpTraceData(obj);
     }
     
     this.doubleDump("\n");
@@ -290,7 +290,7 @@ assertErrorNotHere : function(msg, obj)
     if (obj != null)
     {
         this.doubleDump("Extra Data: ");
-        this.doubleDumpTraceData(obj, 80, 1);
+        this.doubleDumpTraceData(obj);
     }
     
     this.doubleDump("\n");
@@ -311,7 +311,7 @@ handleException: function(msg, ex, obj)
     if (obj != null)
     {
         this.doubleDump("Extra Data: ");
-        this.doubleDumpTraceData(obj, 80, 1);
+        this.doubleDumpTraceData(obj);
     }
     
     this.doubleDump("\n");
@@ -549,27 +549,27 @@ formatStringsIntoLines: function(strings, maxLineLength, terminatorStr)
 },
 
 // This tool allows you to dump the contents of an object including referred objects recursively.
-dumpTraceData: function(data, maxLineLength, maxLevels)
+dumpTraceData: function(data, maxLevels, maxLineLength)
 {
-    var data = this.traceData(data, maxLineLength || 110, maxLevels || 3);
+    var data = this.traceData(data, maxLevels, maxLineLength);
     for (var i = 0; i < data.length; i++)
     {
         dump(data[i] + "\n");
     }
 },
 
-doubleDumpTraceData: function(data, maxLineLength, maxLevels)
+doubleDumpTraceData: function(data, maxLevels, maxLineLength)
 {
-    var data = this.traceData(data, maxLineLength || 110, maxLevels || 3);
+    var data = this.traceData(data, maxLevels, maxLineLength);
     for (var i = 0; i < data.length; i++)
     {
         this.doubleDump(data[i] + "\n");
     }
 },
 
-compactDumpString: function(data)
+compactDumpString: function(data, levels)
 {
-    var data = this.traceData(data, 1000, 1);
+    var data = this.traceData(data, levels, 1000);
     var str = "";
     for (var i = 0; i < data.length; i++)
     {
@@ -578,16 +578,14 @@ compactDumpString: function(data)
     return this.innerTrim(str);
 },
 
-traceData: function(data, maxLineLength, maxLevels)
+traceData: function(data, maxLevels, maxLineLength)
 {
     try
     {
         var SPACER = "  ";
         
-        if (arguments.length == 1)
-        {
-            maxLineLength = 80;
-        }
+        if (maxLevels     == null) maxLevels     = 1;
+        if (maxLineLength == null) maxLineLength = 120;
         
         if (data == null)
         {
@@ -634,7 +632,7 @@ traceData: function(data, maxLineLength, maxLevels)
                     attributes.push(prefix + "SAME-OBJECT");
                 }
                 
-                var elementData = this.traceData(prop, maxLineLength - prefix.length - SPACER.length, maxLevels - 1);
+                var elementData = this.traceData(prop, maxLevels - 1, maxLineLength - prefix.length - SPACER.length);
                 
                 this.assertError(this.isArray(elementData), "Element data not an array when dumping", elementData);
                 

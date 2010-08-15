@@ -334,7 +334,6 @@ paintUI: function(uiNote)
 // Does not work ... resize event not emitted.
 getFlexingCanvas: function(uiNote, canvas, redrawFunc)
 {
-    //this.utils.dumpTraceData(canvas, 110, 1);
     var box = canvas.ownerDocument.createElement("box");
     box.flex = "1";
     box.appendChild(canvas);

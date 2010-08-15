@@ -2034,8 +2034,6 @@ screenSetModifiedNoteDims: function(uiNote, offset)
     
     var newDims = this.screenCalcModifiedNoteDims(uiNote, offset);
     
-    //dump("DEF " + this.utils.compactDumpString(newDims, 110, 1) + "\n");
-    
     // Deal with noteUI before displayUI because the display UI might care.
     this.noteUI.adjustDims(uiNote, newDims);
     this.displayUI.adjustNote(uiNote, null, newDims);
