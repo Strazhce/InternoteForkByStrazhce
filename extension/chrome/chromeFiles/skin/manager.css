@@ -1,0 +1,12 @@
+treechildren::-moz-tree-cell-text(url_category) {
+    font-weight: bold;
+}
+
+treechildren::-moz-tree-cell-text(empty_data)
+{
+    font-style: italic;
+}
+
+treechildren::-moz-tree-cell-text(url_regexp) {
+    font-weight: bold;
+}

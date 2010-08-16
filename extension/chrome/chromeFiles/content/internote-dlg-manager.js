@@ -135,7 +135,7 @@ viewNote: function(note)
     
     if (noteTreeIndex == -1)
     {
-        var urlTreeIndex = this.getURLTreeIndex(this.treeView.getManagerURL(note));
+        var urlTreeIndex = this.getURLTreeIndex(this.treeView.getManagerURLData(note));
         this.utils.assertError(urlTreeIndex != -1, "Couldn't find URL when trying to view note.");
         
         this.treeView.toggleOpenState(urlTreeIndex);
@@ -164,7 +164,7 @@ onNoteRemoved: function(event)
 {
     try
     {
-        this.treeRemoveNote(event.note, this.treeView.getManagerURL(event.note));
+        this.treeRemoveNote(event.note, this.treeView.getManagerURLData(event.note));
         
         if (event.note == this.noteBeingEdited)
         {
@@ -187,8 +187,7 @@ onNoteEdited: function(event)
         // Update the tree on the left.
         if (treeIndex != -1)
         {
-            this.treeView.treeData[treeIndex][this.treeView.COL_TEXT] = this.storage.getDescription(note);
-            this.treeView.treeBox.invalidateRow(treeIndex);
+            this.treeView.updateText(treeIndex, note);
         }
         
         // And maybe the data on the right ...
@@ -210,14 +209,14 @@ checkForLocationChange: function(event)
     var note = event.note;
     var noteIndex = this.getNoteTreeIndex(note.num);
     var urlIndex  = this.treeView.getParentIndex(noteIndex);
-    var oldEffectiveURL = this.treeView.treeData[urlIndex][this.treeView.COL_LOOKUP];
+    var oldEffectiveURLData = this.treeView.treeData[urlIndex][this.treeView.COL_LOOKUP];
     
-    var newEffectiveURL = this.treeView.getManagerURL(note);
+    var newEffectiveURLData = this.treeView.getManagerURLData(note);
     
     //dump("newURL = " + newEffectiveURL + "\n");
     //dump("oldURL = " + oldEffectiveURL + "\n");
     
-    if (oldEffectiveURL == newEffectiveURL)
+    if (oldEffectiveURLData == newEffectiveURLData)
     {
         return;
     }
@@ -225,7 +224,7 @@ checkForLocationChange: function(event)
     this.suppressSelectionChangeEvents = true; // Prevent normal select events.
     
     // We pass the old URL to remove in case we must delete an old collapsed category.
-    var [wasSelected, wasCategoryOpen] = this.treeRemoveNote(event.note, event.data2[1]);
+    var [wasSelected, wasCategoryOpen] = this.treeRemoveNote(event.note, oldEffectiveURLData);
     var shouldForceCategoryOpen = wasCategoryOpen || wasSelected;
     var newIndex = this.treeCreateNote(event.note, shouldForceCategoryOpen);
     
@@ -392,7 +391,10 @@ setNoteData: function(note)
     
     if (note != null)
     {
-        if (this.treeView.getManagerURL(note) != "")
+        var urlData = this.treeView.getManagerURLData(note);
+        var [category, url] = this.utils.simpleSplit(urlData, ":");
+        
+        if (category == "regexp" || url == "")
         {
             document.getElementById("goToLink").style.color  = "gray";
             document.getElementById("goToLink").style.cursor = "";
@@ -542,12 +544,21 @@ configureURLSection: function(note)
 
 isValidURLOrSite: function()
 {
-    var url = this.treeView.getManagerURL(this.noteBeingEdited);
-    var parsedURL = this.utils.parseURL(url);
+    var urlData = this.treeView.getManagerURLData(this.noteBeingEdited);
+    var [category, url] = this.utils.simpleSplit(urlData, ":");
     
-    var isValidURL = (parsedURL != null && this.utils.isValidURLSite(parsedURL.site, parsedURL.protocol));
-    
-    return isValidURL ? true : this.utils.isValidSite(url);
+    if (category == "regexp")
+    {
+        return false;
+    }
+    else
+    {
+        var parsedURL = this.utils.parseURL(url);
+        
+        var isValidURL = (parsedURL != null && this.utils.isValidURLSite(parsedURL.site, parsedURL.protocol));
+        
+        return isValidURL ? true : this.utils.isValidSite(url);
+    }
 },
 
 setMenuListToCustom: function(menuListID)
@@ -815,7 +826,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
 {
     //dump("internoteManager.treeCreateNote\n");
     
-    var urlTreeIndex = this.getURLTreeIndex(this.treeView.getManagerURL(note));
+    var urlTreeIndex = this.getURLTreeIndex(this.treeView.getManagerURLData(note));
     
     if (urlTreeIndex != -1)
     {
@@ -829,9 +840,9 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
         else if (this.treeView.isContainerOpen(urlTreeIndex))
         {
             //dump("  Category is already open.\n");
-            this.treeView.treeData.splice        (urlTreeIndex + 1, 0, this.treeView.makeNoteRow(note));
-            this.treeView.treeBox.rowCountChanged(urlTreeIndex + 1, 1);
-            return urlTreeIndex + 1; // XXX This assumption will be wrong when the tree becomes sorted.
+            var newIndex = urlTreeIndex + 1;
+            this.treeView.insertNoteRow(newIndex, note);
+            return newIndex; // XXX This assumption will be wrong when the tree becomes sorted.
         }
     }
     else
@@ -839,11 +850,8 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
         //dump("  Creating category.\n");
         
         // URL category doesn't exist, create it collapsed.
-        var newTreeIndex = this.treeView.treeData.length; // XXX This assumes adding to the end.
-        var url = this.treeView.getManagerURL(note);
-
-        this.treeView.addURLRow(url);
-        this.treeView.treeBox.rowCountChanged(newTreeIndex, 1);
+        var categoryURLData = this.treeView.getManagerURLData(note);
+        var newTreeIndex = this.treeView.addURLRow(categoryURLData);
         
         if (shouldForceCategoryOpen)
         {
@@ -855,7 +863,7 @@ treeCreateNote: function(note, shouldForceCategoryOpen)
     }
 },
 
-treeRemoveNote: function(note, url)
+treeRemoveNote: function(note, urlData)
 {
     //dump("internoteManager.treeRemoveNote\n");
     
@@ -874,15 +882,13 @@ treeRemoveNote: function(note, url)
         {
             //dump("  Delete the category & note.\n");
             // Delete the category and the note.
-            this.treeView.treeData.splice        (treeIndex - 1,  2);
-            this.treeView.treeBox.rowCountChanged(treeIndex - 1, -2);
+            this.treeView.deleteRows(treeIndex - 1, 2);
         }
         else
         {
             //dump("  Delete just the note.\n");
             // Delete just the note.
-            this.treeView.treeData.splice        (treeIndex,  1);
-            this.treeView.treeBox.rowCountChanged(treeIndex, -1);
+            this.treeView.deleteRows(treeIndex, 1);
         }
     }
     else
@@ -891,13 +897,12 @@ treeRemoveNote: function(note, url)
         // We take the URL from the tree, not the note, as this may be called
         // in response to a relocation, where the note URL will have changed.
         
-        var urlTreeIndex = this.getURLTreeIndex(url);
-        if (urlTreeIndex != -1 && !this.storage.isURLPresent(url))
+        var urlTreeIndex = this.getURLTreeIndex(urlData);
+        if (urlTreeIndex != -1 && !this.treeView.areNotesForManagerURLData(urlData))
         {
             //dump("  Removing.\n");
             // Delete the URL heading.
-            this.treeView.treeData.splice        (urlTreeIndex,  1);
-            this.treeView.treeBox.rowCountChanged(urlTreeIndex, -1);
+            this.treeView.deleteRows(urlTreeIndex, 1);
         }
         else
         {
@@ -928,7 +933,8 @@ onSearchNoteAdded: function(event)
         var tr = document.createElement("treerow");
         var tc = document.createElement("treecell");
         
-        tc.setAttribute("label", this.storage.getDescription(note));
+        var [desc, style] = this.getTextDescription(note);
+        tc.setAttribute("label", desc);
         tr.appendChild(tc);
         ti.appendChild(tr);
         
@@ -971,7 +977,8 @@ onSearchNoteEdited: function(event)
         {
             var searchResultsPane = document.getElementById("searchResultChildren");
             var rowNode = searchResultsPane.childNodes[treeIndex];
-            rowNode.firstChild.firstChild.setAttribute("label", this.storage.getDescription(note));
+            var [desc, style] = this.getTextDescription(note)
+            rowNode.firstChild.firstChild.setAttribute("label", desc);
         }
     }
     catch (ex)
@@ -1371,6 +1378,7 @@ treeView : {
     COL_IS_CONTAINER: 1,
     COL_IS_OPEN:      2,
     COL_LOOKUP:       3,
+    COL_STYLE:        4,
     
     treeData: [],
     treeBox: null,
@@ -1381,17 +1389,12 @@ treeView : {
         this.utils   = utils;
         this.storage = storage;
         
-        var urls = this.storage.allNotes.map(function(note)
-        {
-            return this.getManagerURL(note);
-        }, this);
-        
-        var sortedURLs = this.utils.getSortedUniqueValues(urls);
-        
-        for (var i = 0; i < sortedURLs.length; i++)
-        {
-            this.addURLRow(sortedURLs[i]);
-        }
+        // Get all the URL data strings present.
+        var urlDataStrings = this.storage.allNotes.map(this.getManagerURLData, this);
+        // Sort & Remove Dupes
+        var sortedURLDataStrings = this.utils.getSortedUniqueValues(urlDataStrings);
+        // Create the rows.
+        this.treeData = sortedURLDataStrings.map(this.makeURLRow, this);
     },
     
     get rowCount()                     { return this.treeData.length; },
@@ -1480,8 +1483,7 @@ treeView : {
                 
                 if (0 < deleteCount)
                 {
-                    this.treeData.splice        (idx + 1, deleteCount);
-                    this.treeBox.rowCountChanged(idx + 1, -deleteCount);
+                    this.deleteRows(idx + 1, deleteCount);
                 }
                 
                 return deleteCount;
@@ -1491,23 +1493,11 @@ treeView : {
                 // Open a closed URL, add the notes to the tree.
                 item[this.COL_IS_OPEN] = true;
                 
-                var url = this.treeData[idx][this.COL_LOOKUP];
-                var notesToInsert = this.getNotesForManagerURL(url);
-                
-                var data = [];
-                for (var i = 0; i < notesToInsert.length; i++)
-                {
-                    data.push(this.makeNoteRow(notesToInsert[i]));
-                }
-                
-                // We need to apply because we have an array and need to pass multi-args to splice.
-                // It will be quicker to splice them all at once rather than several inserts in the middle.
-                this.utils.pushArray(this.treeData, data, idx + 1);
-                this.treeBox.rowCountChanged(idx + 1, notesToInsert.length);
-                
+                var urlData = this.treeData[idx][this.COL_LOOKUP];
+                var notesToInsert = this.getNotesForManagerURLData(urlData);
+                this.addNotes(idx + 1, notesToInsert);
                 return notesToInsert.length;
             }
-            //this.treeBox.invalidate();
         }
         catch (ex)
         {
@@ -1515,76 +1505,171 @@ treeView : {
         }
     },
     
-    getManagerURL: function(note)
+    getManagerURLData: function(note)
     {
+        this.utils.assertClassError(note, "InternoteNote", "Not a note when getting manager URL data.");
+        
         if (note.matchType == this.storage.URL_MATCH_REGEXP)
         {
-            return note.url;
+            return "regexp:" + note.url;
         }
         else if (note.matchType == this.storage.URL_MATCH_SITE ||
                  note.matchType == this.storage.URL_MATCH_SUFFIX)
         {
-            return this.storage.getEffectiveSite(note);
+            return "category:" + this.storage.getEffectiveSite(note);
         }
         else
         {
             var effectiveURL = this.storage.getEffectiveURL(note);
-            return this.utils.ifNull(effectiveURL, "");
-        }
-    },
-    
-    getNotesForManagerURL: function(searchURL)
-    {
-        var results = [];
-        
-        for (var i in this.storage.allNotes)
-        {
-            var note = this.storage.allNotes[i];
-            
-            if (note != null)
+            if (effectiveURL == null)
             {
-                if (this.getManagerURL(note) == searchURL)
+                if (this.utils.trim(note.url) == "")
                 {
-                    results.push(note);
+                    return "category:";
                 }
-            }
-        }
-        return results;
-    },
-
-    makeURLRow: function(url)
-    {
-        if (url == "")
-        {
-            var emptyURLMessage = this.utils.getLocaleString("EmptyURLMessage");
-            var urlDesc = "--- " + emptyURLMessage + " ---";
-        }
-        else
-        {
-            if (this.utils.parseURL(url) == null)
-            {
-                var urlDesc = url;
+                else
+                {
+                    return "invalidurl:";
+                }
             }
             else
             {
-                var strippedURL = url.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
-                strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
-                if (strippedURL == "") strippedURL = url;
-                var urlDesc = strippedURL;
+                return "category:" + effectiveURL;
+            }
+        }
+    },
+    
+    areNotesForManagerURLData: function(searchURLData)
+    {
+        return this.storage.allNotes.some(function(note)
+        {
+            return note != null && this.getManagerURLData(note) == searchURLData;
+        }, this);
+    },
+    
+    getNotesForManagerURLData: function(searchURLData)
+    {
+        this.utils.assertError(typeof(searchURLData) == "string", "Search URL data is not a string.", searchURLData);
+        
+        return this.storage.allNotes.filter(function(note)
+        {
+            return note != null && this.getManagerURLData(note) == searchURLData;
+        }, this);
+    },
+    
+    makeURLRow: function(urlData)
+    {
+        var [category, url] = this.utils.simpleSplit(urlData, ":");
+        
+        if (category == "regexp")
+        {
+            if (url == "")
+            {
+                var categoryStyle = "empty_data";
+                var urlDesc = this.utils.getLocaleString("EmptyRegexpMessage");
+            }
+            else
+            {
+                var categoryStyle = "url_regexp";
+                var regexpPrefix = this.utils.getLocaleString("RegexpAbbreviation") + ": ";
+                var urlDesc = regexpPrefix + url;
+            }
+        }
+        else if (category == "invalidurl")
+        {
+            var categoryStyle = "empty_data";
+            var urlDesc = this.utils.getLocaleString("InvalidURLMessage");
+        }
+        else
+        {
+            if (url == "")
+            {
+                var categoryStyle = "empty_data";
+                var urlDesc = this.utils.getLocaleString("EmptyURLMessage");
+            }
+            else
+            {
+                var categoryStyle = "url_category";
+                
+                if (this.utils.parseURL(url) == null)
+                {
+                    var urlDesc = url;
+                }
+                else
+                {
+                    var strippedURL = url.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
+                    strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
+                    if (strippedURL == "") strippedURL = url;
+                    var urlDesc = strippedURL;
+                }
             }
         }
         
-        return [urlDesc, true, false, url];
+        return [urlDesc, true, false, urlData, categoryStyle];
     },
     
     makeNoteRow: function(note)
     {
-        return [this.storage.getDescription(note), false, false, note.num];
+        var [desc, style] = this.getTextDescription(note);
+        return [desc, false, false, note.num, style];
     },
     
-    addURLRow: function(url)
+    addURLRow: function(urlData)
     {
-        this.treeData.push(this.makeURLRow(url));
+        var newTreeIndex = this.treeData.length; // XXX This assumes adding to the end.
+        this.treeData.push(this.makeURLRow(urlData));
+        this.treeBox.rowCountChanged(newTreeIndex, 1);
+        return newTreeIndex;
+    },
+    
+    insertNoteRow: function(index, note)
+    {
+        this.treeData.splice        (index, 0, this.makeNoteRow(note));
+        this.treeBox.rowCountChanged(index, 1);
+    },
+    
+    addNotes: function(startIndex, notes)
+    {
+        var rowArray = notes.map(this.makeNoteRow, this);
+        this.utils.pushArray(this.treeData, rowArray, startIndex);
+        this.treeBox.rowCountChanged(startIndex, rowArray.length);
+    },
+    
+    deleteRows: function(startIndex, count)
+    {
+        this.treeData.splice        (startIndex,  count);
+        this.treeBox.rowCountChanged(startIndex, -count);
+    },
+    
+    getTextDescription: function(note)
+    {
+        this.utils.assertError(note != null, "Note is null when trying to get description.");
+        
+        var text = this.utils.trim(note.text);
+        if (text == "")
+        {
+            var emptyTextMessage = this.utils.getLocaleString("EmptyTextMessage");
+            return [emptyTextMessage, "empty_data"];
+        }
+        else
+        {
+            return [this.utils.innerTrim(text.replace(/\n/g, " ")), "text_data"];
+        }
+    },
+    
+    updateText: function(treeIndex, note)
+    {
+        var [desc, style] = this.getTextDescription(note);
+        this.treeData[treeIndex][this.COL_TEXT ] = desc;
+        this.treeData[treeIndex][this.COL_STYLE] = style;
+        this.treeBox.invalidateRow(treeIndex);
+    },
+    
+    getCellProperties: function(row, col, props)
+    {
+        var atomService = this.utils.getCCService("@mozilla.org/atom-service;1", "nsIAtomService");
+        var style = this.treeData[row][this.COL_STYLE];
+        props.AppendElement(atomService.getAtom(style));
     },
     
     getImageSrc: function(idx, column) {},
@@ -1594,7 +1679,6 @@ treeView : {
     selectionChanged: function () {},
     cycleCell: function(idx, column) {},
     getRowProperties: function(idx, column, prop) {},
-    getCellProperties: function(idx, column, prop) {},
     getColumnProperties: function(column, element, prop) {}
 }
 

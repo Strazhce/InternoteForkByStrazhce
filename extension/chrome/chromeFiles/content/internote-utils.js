@@ -1006,5 +1006,20 @@ generateIdentifier: function()
     return this.generator.generateUUID();
 },
 
+// The JS split because the limit parameter interprets separators after the limit and truncates
+// fields.  This will not interpret the second separator and so we use this if the separator
+// character is normal for data in the second half, so splitting it would be wrong.
+simpleSplit: function(text, separator)
+{
+    var index = text.indexOf(separator);
+    if (index == -1)
+    {
+        return [text];
+    }
+    else
+    {
+        return [text.substr(0, index), text.substr(index + 1)];
+    }
+},
 
 };
