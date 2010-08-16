@@ -201,9 +201,9 @@ parseURL: function(url)
 
 isValidURLSite: function(site, protocol)
 {
-    var compulsorySiteProtocols = ["http", "https", "ftp"];
-    var siteIsCompulsory = (compulsorySiteProtocols.indexOf(protocol) != -1);
-    if (!siteIsCompulsory && site == "")
+    var checkSiteProtocols = ["http", "https", "ftp"]; // Don't check file, chrome, resource, etc.
+    var shouldCheckSite = (checkSiteProtocols.indexOf(protocol) != -1);
+    if (!shouldCheckSite)
     {
         return true;
     }
@@ -213,6 +213,7 @@ isValidURLSite: function(site, protocol)
     }
 },
 
+/*
 cleanUpURL: function(url, removeAnchor, removeParams)
 {
     if (!removeAnchor && !removeParams)
@@ -249,6 +250,7 @@ cleanUpURL: function(url, removeAnchor, removeParams)
         return result;
     }
 },
+*/
 
 removeAllChildNodes: function(elt)
 {
