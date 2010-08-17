@@ -410,6 +410,8 @@ setIsEnabled: function(uiNote, newIsEnabled)
 
 fixTextArea: function(uiNote, dims)
 {
+    //dump("internoteNoteUI.fixTextArea\n");
+    
     this.utils.assertError(dims == null || this.utils.isNonNegCoordPair(dims), "Invalid dims fixing text area.", dims);
     
     if (dims == null)
@@ -638,8 +640,12 @@ setText: function(uiNote, newText)
     // find the editable field to have no changes.
     if (newText != uiNote.textArea.value)
     {
-        uiNote.textArea.  value       = newText;
+        uiNote.textArea.value = newText;
     }
+    //if (newText != uiNote.textArea.getAttribute("value"))
+    //{
+    //    uiNote.textArea.setAttribute("value", newText);
+    //}
     if (newText != uiNote.littleText.textContent)
     {
         uiNote.littleText.textContent = this.utils.trim(this.utils.innerTrim(newText));
@@ -816,32 +822,6 @@ createButton: function(doc, uiNote, onClick, fieldName, id, redrawFuncName)
     return canvas;
 },
 
-/*
-createFlipButton: function(doc, uiNote, onFlip)
-{
-    var flipArrowIFrame = document.getElementById("internote-flip-arrow");
-    
-    var canvas = uiNote.flipButton = this.utils.createHTMLElement("canvas", doc);
-    canvas.width  = this.NOTE_OUTER_SIZE;
-    canvas.height = this.NOTE_OUTER_SIZE;
-    canvas.id = "internote-flip" + uiNote.num;
-    
-    var context = canvas.getContext("2d");
-    //context.drawWindow(flipArrowIFrame.contentWindow, 0, 0, this.NOTE_OUTER_SIZE, this.NOTE_OUTER_SIZE, "rgba(0,0,0,0)");
-    
-    if (onFlip != null)
-    {
-        canvas.onclick = function(event)
-        {
-            if (uiNote.isEnabled) onFlip(event);
-        };
-    }
-    
-    return canvas;
-
-},
-*/
-
 createFlipButton: function(doc, uiNote, onFlip)
 {
     var canvas = this.createButton(doc, uiNote, onFlip, "flipButton", "internote-flip", "colorFlipArrow");
@@ -851,33 +831,6 @@ createFlipButton: function(doc, uiNote, onFlip)
     this.colorFlipArrow(uiNote);
     return canvas;
 },
-
-/*
-createFlipButton: function(doc, uiNote, onFlip)
-{
-    var canvas = uiNote.flipButton = this.utils.createHTMLElement("canvas", doc, "internote-flip" + uiNote.num);
-    
-    canvas.width  = this.NOTE_OUTER_SIZE;
-    canvas.height = this.NOTE_OUTER_SIZE;
-    
-    var w = canvas.width;
-    var h = canvas.height;
-    
-    context.drawImage(this.noteFlipImage, 0.0 * w, 0.0 * h, 1.0 * w, 1.0 * h);
-    
-    this.colorFlipArrow(uiNote);
-    
-    if (onFlip != null)
-    {
-        canvas.onclick = function(event)
-        {
-            if (uiNote.isEnabled) onFlip(event);
-        }
-    }
-    
-    return canvas;
-},
-*/
 
 createResizeHandle: function(doc, uiNote, onResizeStart)
 {
@@ -900,28 +853,56 @@ createResizeHandle: function(doc, uiNote, onResizeStart)
     return canvas;
 },
 
-/* // An attempt to use an XUL textarea.
-createTextArea: function(doc, uiNote, onEdit, onMoveStart)
+/*
+// An attempt to use an XUL textarea.  This does not work yet because:
+// (a) there seems to be no way to turn off the native scrollbar
+// (b) there seems to be no way for get the real scrollHeight.
+createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
 {
     var textArea = uiNote.textArea = this.utils.createXULElement("textbox", doc);
-    
-    //dump("textArea:\n");
-    //this.utils.dumpTraceData(textArea, 110, 1);
-    //dump("doc:\n");
-    //this.utils.dumpTraceData(doc, 110, 1);
     
     textArea.setAttribute("multiline", "true");
     textArea.setAttribute("class", "plain");
     
-    textArea.value = uiNote.note.text;
+    textArea.setAttribute("value", uiNote.note.text);
     
-    //if (!this.prefs.shouldUseNativeScrollbar()) textArea.style.overflow = "hidden";
-
-    //textArea.oninput = onEdit;
-    //if (onEdit != null)
-    //{
-    //    textArea.addEventListener("input", onEdit, false);
-    //}
+    textArea.style.color = uiNote.note.foreColor;
+    textArea.style.fontFamily = "helvetica, sans-serif";
+    
+    //if (!this.prefs.shouldUseNativeScrollbar()) textArea.style.overflowY = "hidden";
+    
+    if (uiNote.note.isHTML)
+    {
+        textArea.style.cursor = "default";
+        // We use readOnly instead of disabled so drag move events on the document won't get intercepted by
+        // the text area if the mouse moves over this text area.  Also this allows still selecting and copying.
+        textArea.readOnly = true;
+        textArea.style.backgroundColor = "rgba(0,0,0,0.1)";
+    }    
+    
+    textArea.addEventListener("input", this.utils.bind(this, function()
+    {
+        try
+        {
+            this.checkScrollTop(uiNote);
+            uiNote.scrollHandler.drawScrollLine();
+            this.updateScrollbarPresence(uiNote);
+        }
+        catch (ex)
+        {
+            this.utils.handleException("Exception caught after user input.", ex);
+        }
+    }), false);    
+    
+    if (onEdit != null)
+    {
+        textArea.addEventListener("input", onEdit, false);
+    }
+    
+    if (onFocus != null)
+    {
+        textArea.addEventListener("focus", onFocus, false);
+    }
     
     // Sets up handlers that disable selection and enable dragging for non-highlightable notes.
     if (onMoveStart != null)
@@ -946,7 +927,7 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart)
                 event.preventDefault();
             }
         });
-    
+        
         textArea.onmouseup = this.utils.bind(this, function(event)
         {
             if (uiNote.isEnabled && !this.prefs.shouldAllowHighlighting())
@@ -968,7 +949,6 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
     textArea.autocomplete = "off";
     
     textArea.value = uiNote.note.text;
-    
     textArea.setAttribute("wrap", "yes");
     textArea.setAttribute("timeout", "300");
     
@@ -979,10 +959,9 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
     textArea.style.fontFamily = "helvetica, sans-serif";
     textArea.style.width  = "100%";
     textArea.style.height = "100%";
+    textArea.style.margin = "0px";
     
     if (!this.prefs.shouldUseNativeScrollbar()) textArea.style.overflow = "hidden";
-    
-    textArea.style.margin = "0px";
     
     if (uiNote.note.isHTML)
     {
@@ -1040,7 +1019,7 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
                 event.preventDefault();
             }
         });
-    
+        
         textArea.onmouseup = this.utils.bind(this, function(event)
         {
             if (uiNote.isEnabled && !this.prefs.shouldAllowHighlighting())
