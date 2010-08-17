@@ -912,8 +912,17 @@ userMinimizesNote: function(elementOrEvent)
         
         if (!note.isMinimized)
         {
-            var uiNote = this.uiNoteLookup[noteNum];
-            this.displayUI.focusNote(uiNote);
+            var currNoteRect = this.utils.makeRectFromDims(this.storage.getPos(note), this.storage.getDims(note));
+            var viewportRect = this.utils.getViewportRect(this.currentBrowser);
+            if (this.utils.doRectsOverlap(viewportRect, currNoteRect))
+            {
+                var uiNote = this.uiNoteLookup[noteNum];
+                this.displayUI.focusNote(uiNote);
+            }
+            else
+            {
+                this.showMessage("RestoreOffscreenMessage");
+            }
         }
     }
     catch (ex)
