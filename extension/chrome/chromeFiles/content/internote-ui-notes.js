@@ -986,6 +986,24 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
         }
     }), false);
     
+    /*
+    textArea.addEventListener("keypress", function(ev) {
+        try
+        {
+            if (ev.keyCode == ev.DOM_VK_UP      || ev.keyCode == ev.DOM_VK_DOWN ||
+                ev.keyCode == ev.DOM_VK_PAGE_UP || ev.keyCode == ev.DOM_VK_PAGE_DOWN)
+            {
+                // ???
+                // Should try to make selection on screen.
+            }
+        }
+        catch (ex)
+        {
+            internoteUtilities.handleException("AB", ex);
+        }
+    }, false);
+    */
+    
     if (onEdit != null)
     {
         textArea.addEventListener("input", onEdit, false);
