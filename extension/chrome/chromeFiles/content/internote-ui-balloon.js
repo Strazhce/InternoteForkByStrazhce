@@ -44,7 +44,7 @@ messageQueue: [],
 
 init: function(utils, anim, id, container)
 {
-	dump("internoteBalloonUI.init\n");
+	//dump("internoteBalloonUI.init\n");
 	
     this.utils     = utils;
     this.anim      = anim;
@@ -80,7 +80,7 @@ redrawCloseButton: function(mode)
 
 showMessage: function(message)
 {
-    dump("internoteBalloonUI.showMessage " + this.messageQueue.length + "\n");
+    //dump("internoteBalloonUI.showMessage " + this.messageQueue.length + "\n");
     
     if (this.messageQueue.length == 0)
     {

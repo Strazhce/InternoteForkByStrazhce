@@ -689,8 +689,6 @@ userCreatesNote: function()
             
             this.displayUI.focusNote(uiNote);
         }
-		
-		throw new Error("Test");
     }
     catch (ex)
     {
