@@ -86,7 +86,6 @@ pageWatcher:     null,
 managerDialog:   null,
 prefsDialog:     null,
 
-hasMsgBeenShown: false,
 isPageLoaded:    false,
 
 noteAnimations: {},
@@ -187,6 +186,8 @@ init: function()
     this.storage.addBoundEventListener("scrollbarChanged",    this, "onScrollbarPrefSet");
     this.storage.addBoundEventListener("statusbarChanged",    this, "onStatusbarPrefSet");
     
+	this.utils.addBoundDOMEventListener(window, "focus", this, "onWindowFocused", false);
+	
     this.chromeUpdateStatusBarIconDisplay(false);
     this.chromeUpdateInternoteIcon();
     this.chromeUpdateDisplayCheckbox();
@@ -216,7 +217,7 @@ init: function()
         var keySet = document.getElementById("mainKeyset");
         keySet.appendChild(key);
     }
-    
+	
     dump("Internote startup successful\n");
 },
 
@@ -420,7 +421,7 @@ tearDownOldPage: function()
 {
     //dump("tearDownOldPage\n");
     
-    this.balloonUI.abandonAnimation();
+    this.balloonUI.abandonAllMessages();
     this.abandonAllNoteAnimations();
     this.displayUI.tearDown();
     
@@ -478,7 +479,6 @@ changePage: function(newURL, isPageLoaded)
     // XXX the page is loaded but the message hasn't been shown, because
     // XXX the user changed tabs.
     this.isPageLoaded    = isPageLoaded;
-    this.hasMsgBeenShown = isPageLoaded;    
     
     if (newURL == this.currentURL)
     {
@@ -689,12 +689,14 @@ userCreatesNote: function()
             
             this.displayUI.focusNote(uiNote);
         }
+		
+		throw new Error("Test");
     }
     catch (ex)
     {
         try
         {
-            var links = [{messageName: "ReportBugLabel", func: this.utils.bind(this, function() {
+            this.showMessage("NoteCreationError", "ReportBugLabel", this.utils.bind(this, function() {
                 if (this.bugReportDialog != null && !this.bugReportDialog.closed)
                 {
                     this.bugReportDialog.focus();
@@ -705,8 +707,7 @@ userCreatesNote: function()
                     this.bugReportDialog = window.openDialog('chrome://internote/content/internote-dlg-bugreport.xul',
                                                              'internotebugreport', 'centerscreen, chrome, all', window);
                 }
-            })}];
-            this.showMessage("NoteCreationError", links);
+            }));
         }
         catch (ex2)
         {
@@ -1596,16 +1597,10 @@ chromeActiveWarning: function()
                     panel.setAttribute("style", "-moz-appearance: none; background-color: red;");
                 }
             }
-            else
-            {
-                if (!this.balloonUI.isInitialized)
-                {
-                    var myBody = document.getElementById("main-window");
-                    this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
-                }
-                
-                this.balloonUI.popup("New errors/warnings/messages detected.");
-            }
+			else
+			{
+				this.showMessage(":New errors/warnings/messages detected.");
+			}
         }
     }
     catch (ex)
@@ -2451,6 +2446,22 @@ hasOffscreenNotes: function()
 
 showMessage: function(messageName, linkMessageName, linkFunc)
 {
+	if (!this.balloonUI.isInitialized)
+	{
+		var myBody = document.getElementById("main-window");
+		this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
+	}
+	
+	var links = [];
+	if (linkMessageName != null)
+	{
+		links.push({messageName: linkMessageName, func: linkFunc});
+	}
+	this.balloonUI.showMessage({messageName: messageName, links: links});
+},
+
+showMessageNow: function(messageName, linkMessageName, linkFunc)
+{
     if (!this.balloonUI.isInitialized)
     {
         var myBody = document.getElementById("main-window");
@@ -2458,19 +2469,15 @@ showMessage: function(messageName, linkMessageName, linkFunc)
     }
     
     this.balloonUI.popup(this.utils.getLocaleString(messageName), linkMessageName, linkFunc);
-    
-    this.hasMsgBeenShown = true;
 },
 
 // This is purely for forward compatibility.  HTML notes are not supported as yet.
 maybeShowHTMLMessage: function()
 {
-    //dump("maybeShowHTMLMessage HTML = " + this.hasHTMLNotes() + "\n");
+    //dump("maybeShowHTMLMessage\n");
     
-    if (!this.hasMsgBeenShown && this.hasHTMLNotes())
+    if (this.hasHTMLNotes())
     {
-        //dump("  Showing.\n");
-        
         this.showMessage("HTMLMessage");
     }
 },
@@ -2479,10 +2486,8 @@ maybeShowOffscreenMessage: function()
 {
     //dump("maybeShowOffscreenMessage\n");
     
-    if (!this.hasMsgBeenShown && this.hasOffscreenNotes())
+    if (this.hasOffscreenNotes())
     {
-        //dump("  Showing.\n");
-        
         this.showMessage("OffscreenMessage");
     }
 },
@@ -2868,6 +2873,11 @@ onInternoteStorageFailed: function(ex)
     this.tearDownInternote();
     this.handleCatastrophicFailure("SaveFailedError");
     this.utils.handleException("Caught exception when saving notes.", ex);
+},
+
+onWindowFocused: function()
+{
+	this.balloonUI.checkWhetherToShowMessage();
 },
 
 //////////////////////////

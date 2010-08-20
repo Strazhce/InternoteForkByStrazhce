@@ -55,9 +55,17 @@ getLocaleString: function(strName)
 {
     //dump("internoteUtilities.getLocaleString " + strName + "\n");
     
-    var str = document.getElementById('internote-strings').getString(strName);
-    this.assertError(str != null && str.length > 0, "Empty locale string.", strName);
-    return str;
+	if (strName.charAt(0) == ":")
+	{
+		// Bypass lookup.
+		return strName.substr(1);
+	}
+	else
+	{
+		var str = document.getElementById('internote-strings').getString(strName);
+		this.assertError(str != null && str.length > 0, "Empty locale string.", strName);
+		return str;
+	}
 },
 
 getCIInterface: function(interfaceName)

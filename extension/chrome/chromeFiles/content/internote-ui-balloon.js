@@ -40,8 +40,12 @@ BALLOON_HEIGHT: 60,
 
 CLOSE_SIZE: 10,
 
+messageQueue: [],
+
 init: function(utils, anim, id, container)
 {
+	dump("internoteBalloonUI.init\n");
+	
     this.utils     = utils;
     this.anim      = anim;
     this.id        = id;
@@ -61,17 +65,54 @@ redrawCloseButton: function(mode)
                 "#666666";
     this.utils.drawCloseButton(this.closeButton, color);
 },
-    
-popup: function(text, links)
+
+showMessage: function(message)
 {
-    this.abandonAnimation();
+	dump("internoteBalloonUI.showMessage " + this.messageQueue.length + "\n");
+	
+	if (this.messageQueue.length == 0)
+	{
+		var shouldShowMessage = true;
+	}
+	else
+	{
+		var lastMessage = this.messageQueue[this.messageQueue.length - 1];
+		var shouldShowMessage = (lastMessage.messageName != message.messageName);
+	}
+	
+	if (shouldShowMessage)
+	{
+		this.messageQueue.push(message);
+	}
+	
+	this.checkWhetherToShowMessage();
+},
+
+checkWhetherToShowMessage: function()
+{
+	var isDisplayed = (this.balloonPanel != null);
+	// We avoid showing a message if the window isn't on top because a popup would bring it to front.
+	if (!isDisplayed && document.hasFocus() && this.messageQueue.length > 0)
+	{
+		dump("Start " + this.messageQueue.length + "\n");
+		this.showMessageNow(this.messageQueue[0]);
+		dump("End " + this.messageQueue.length + "\n");
+	}
+},
+
+showMessageNow: function(message)
+{
+    dump("showMessageNow\n");
+	internoteUtilities.dumpTraceData(message, 4);
+	
+	this.abandonAnimation();
     
-    this.links     = this.utils.ifNull(links, {});
+    this.links = this.utils.ifNull(message.links, {});
     
     this.balloonPanel = document.createElement("panel");
     // -moz-appearance seems to be necessary on Linux but not Windows.
     this.balloonPanel.setAttribute("style", "background-color: transparent; border: none; -moz-appearance: none;");
-
+	
     this.balloonPanel.setAttribute("id", this.id);
     this.balloonPanel.setAttribute("noautohide", "true");
     
@@ -99,6 +140,8 @@ popup: function(text, links)
     this.closeButton.setAttribute("style", "float: right; cursor: pointer;");
     this.redrawCloseButton();
     
+	var text = this.utils.getLocaleString(message.messageName);
+	
     var mainPara = this.utils.createHTMLElement("p");
     mainPara.appendChild(this.closeButton);
     mainPara.appendChild(document.createTextNode(text));
@@ -107,10 +150,10 @@ popup: function(text, links)
     
     for (var i in this.links)
     {
-        var text = this.utils.getLocaleString(this.links[i].messageName);
+        var linkText = this.utils.getLocaleString(this.links[i].messageName);
         
         var aPara = this.utils.createHTMLElement("a");
-        aPara.appendChild(document.createTextNode(text));
+        aPara.appendChild(document.createTextNode(linkText));
         aPara.style.color          = "blue";
         aPara.style.cursor         = "pointer";
         aPara.style.textDecoration = "underline";
@@ -160,14 +203,14 @@ popup: function(text, links)
         // so we can then figure out the correct canvas height.
         this.balloonCanvas.height = this.balloonPanel.boxObject.height;
         this.drawCanvas();
-        var displayTime = this.MIN_DISPLAY_TIME + text.length * 100;
+        var displayTime = this.MIN_DISPLAY_TIME + text.length * 75;
         this.startAnimation(displayTime);
     }), false);
     
     if (this.links.length == 0)
     {
         this.balloonDiv.style.cursor = "pointer";
-    
+		
         this.balloonPanel.addEventListener("click", this.utils.bind(this, function()
         {
             if (this.utils.supportsTranslucentPopups())
@@ -179,7 +222,9 @@ popup: function(text, links)
             }
             else
             {
-                this.resetPanel();
+				this.resetPanel();
+				this.messageQueue.shift();
+				this.checkWhetherToShowMessage();
             }
         }), false);
     }
@@ -189,9 +234,17 @@ popup: function(text, links)
     }
 },
 
+abandonAllMessages: function()
+{
+	this.abandonAnimation();
+	this.messageQueue = [];
+},
+
 abandonAnimation: function()
 {
-    if (this.balloonAnimDriver != null)
+    dump("internoteBalloonUI.abandonAnimation\n");
+	
+	if (this.balloonAnimDriver != null)
     {
         this.balloonAnimDriver.abandonTimer();
         this.balloonAnimDriver = null;
@@ -216,8 +269,12 @@ resetPanel: function()
 
 onBalloonAnimComplete: function()
 {
-    this.balloonAnimDriver = null;
+    dump("internoteBalloonUI.onBalloonAnimComplete\n");
+	
+	this.balloonAnimDriver = null;
     this.resetPanel();
+	this.messageQueue.shift();
+	this.checkWhetherToShowMessage();
 },
 
 startAnimation: function(displayTime)
