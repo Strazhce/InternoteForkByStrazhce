@@ -55,7 +55,19 @@ init: function(utils, anim, id, container)
 
 onClose: function()
 {
-    this.balloonAnimDriver.start(this.FADE_OUT_TIME);
+    if (this.utils.supportsTranslucentPopups())
+    {
+        if (!this.balloonAnimDriver.isStarted)
+        {
+            this.balloonAnimDriver.start(this.FADE_OUT_TIME);
+        }
+    }
+    else
+    {
+        this.resetPanel();
+        this.messageQueue.shift();
+        this.checkWhetherToShowMessage();
+    }
 },
 
 redrawCloseButton: function(mode)
@@ -215,19 +227,7 @@ showMessageNow: function(message)
         
         this.balloonPanel.addEventListener("click", this.utils.bind(this, function()
         {
-            if (this.utils.supportsTranslucentPopups())
-            {
-                if (!this.balloonAnimDriver.isStarted)
-                {
-                    this.balloonAnimDriver.start(this.FADE_OUT_TIME);
-                }
-            }
-            else
-            {
-                this.resetPanel();
-                this.messageQueue.shift();
-                this.checkWhetherToShowMessage();
-            }
+            this.onClose();
         }), false);
     }
     else
