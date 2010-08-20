@@ -16,42 +16,26 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-Components.utils.import("resource://internotejs/internote-shared-global.jsm");
-
 var internoteAboutDlg =
 {
 
 init: function()
 {
     this.utils  = internoteUtilities;
-    this.global = internoteSharedGlobal;
     
     internoteUtilities.init();
     
-    this.em = this.utils.getCCService("@mozilla.org/extensions/manager;1", "nsIExtensionManager");
-    
+    var em = this.utils.getCCService("@mozilla.org/extensions/manager;1", "nsIExtensionManager");
     var MY_ID = "{e3631030-7c02-11da-a72b-0800200c9a66}";
     var file = this.em.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
+    var installRDF = this.loadInstallRDF(em);
     
-    if (file.exists())
+    if (installRDF != null)
     {
-        var internoteVersion = null;
-        
-        try
-        {
-            var installRDF = this.utils.loadXML(file);
-            internoteVersion = this.getInternoteVersion(installRDF);
-            
-            this.fixVersionNumber(internoteVersion);
-            this.insertContributors(installRDF);
-            this.fixDescription(installRDF);
-        }
-        catch (ex)
-        {
-            this.utils.handleException("Failure to load install.rdf for about dialog.", ex);
-            this.removeContributors();
-        }
-        
+        var internoteVersion = this.utils.getInternoteVersion(installRDF);
+        this.fixVersionNumber(internoteVersion);
+        this.insertContributors(installRDF);
+        this.fixDescription(installRDF);      
         this.adjustErrorInfo(internoteVersion);
     }
     else
@@ -97,70 +81,6 @@ fixDescription: function(installRDF)
     document.getElementById("app-description").setAttribute("value", descText);
 },
 
-getInternoteVersion: function(installRDF)
-{
-    var versionElt = installRDF.getElementsByTagName("em:version", this.MOZ_RDF_URL)[0];
-    return versionElt.firstChild.data;
-},
-
-getExtensionList: function()
-{
-    try
-    {
-        var TYPE_EXTENSION = this.utils.getCIConstant("nsIUpdateItem", "TYPE_EXTENSION");
-        var extensionCount = {};
-        var extensions = this.em.getItemList(TYPE_EXTENSION, extensionCount);
-        return extensions.map(function(ext) { return ext.name + " [" + ext.version + "]"; });
-    }
-    catch (ex)
-    {
-        return ["Exception " + ex];
-    }
-},
-
-getPlatformString: function()
-{
-    return navigator.platform + " (" + navigator.oscpu + ")";
-},
-
-getBrowserString: function()
-{
-    var xulAppInfo = this.utils.getCCService("@mozilla.org/xre/app-info;1", "nsIXULAppInfo");
-    return xulAppInfo.name + " " + xulAppInfo.version;
-},
-
-adjustErrorInfo: function(internoteVersion)
-{
-    try
-    {
-        var textBox = document.getElementById("errors-text");
-        textBox.readOnly = true;
-        //textBox.style.backgroundColor = "transparent";
-        
-        var text = "";
-        for (var i = 0; i < this.global.dumpData.length; i++)
-        {
-            text += this.global.dumpData[i];
-        }
-        
-        text = text.replace(/\n\n\n+/g, "\n\n");
-        text = this.utils.trim(text);
-        
-        text = "Platform: "   + this.getPlatformString()           + "\n" +
-               "Browser: "    + this.getBrowserString()            + "\n" +
-               "Internote: "  + internoteVersion                   + "\n" +
-               "Extensions: " + this.getExtensionList().join(", ") + "\n" +
-               "Internal Errors/Warnings/Messages: " + ((text == "") ? "None" : "\n\n") +
-               text;
-        
-        textBox.value = text;
-    }
-    catch (ex)
-    {
-        this.utils.handleException("Exception while trying to write dump data.", ex);
-    }
-},
-
 removeContributors: function()
 {
     var contributorsBox = document.getElementById("contributors-group");
@@ -171,6 +91,14 @@ removeContributors: function()
     newNode.appendChild(document.createTextNode(this.utils.getLocaleString("DataLoadError")));
     
     contributorsBox.appendChild(newNode);
+},
+
+adjustErrorInfo(internoteVersion)
+{
+    var text = this.utils.getErrorInfo(internoteVersion);    
+    var textBox = document.getElementById("errors-text");
+    textBox.readOnly = true;
+    textBox.value = text;
 },
 
 copy: function()

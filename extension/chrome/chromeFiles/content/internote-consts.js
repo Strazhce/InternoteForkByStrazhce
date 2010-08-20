@@ -19,6 +19,7 @@
 
 var internoteConstants = {
 
+BUGS_PAGE: "http://internote.sourceforge.net/bugreports.html",
 HELP_PAGE: "http://internote.sourceforge.net/releasenotes/3.0beta1.html",
 
 NOTE_WIDTHS:  [150, 150, 200, 350],

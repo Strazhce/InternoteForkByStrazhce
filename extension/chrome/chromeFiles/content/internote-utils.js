@@ -105,7 +105,7 @@ openURL: function(url)
     var mediator = this.getCCService("@mozilla.org/appshell/window-mediator;1", "nsIWindowMediator");
     var recentWindow = mediator.getMostRecentWindow("navigator:browser");
     
-    if (recentWindow)
+    if (recentWindow != null)
     {
         recentWindow.delayedOpenTab(url);
     }

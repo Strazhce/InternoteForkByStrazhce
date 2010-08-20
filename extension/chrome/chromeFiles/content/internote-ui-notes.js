@@ -1202,22 +1202,9 @@ drawNoteBackSide: function(uiNote)
 
 drawCloseButton: function(uiNote, mode)
 {
-    var context = uiNote.closeButton.getContext("2d");
-    
     if (mode == null) mode = this.MODE_NORMAL;
-    
-    var w = uiNote.closeButton.width;
-    var h = uiNote.closeButton.height;
-    
-    context.clearRect(0, 0, w, h);
-    
-    context.lineWidth = 0.3 * w;
-    context.lineCap = "round";
-    context.strokeStyle = this.getButtonColor(uiNote, mode);
-    context.beginPath();
-    context.moveTo(0.10 * w, 0.10 * h); context.lineTo(0.90 * w, 0.90 * h);
-    context.moveTo(0.90 * w, 0.10 * h); context.lineTo(0.10 * w, 0.90 * h);
-    context.stroke();
+    var color = this.getButtonColor(uiNote, mode);
+    this.utils.drawCloseButton(uiNote.closeButton, color);
 },
 
 drawMinimizeButton: function(uiNote, mode)

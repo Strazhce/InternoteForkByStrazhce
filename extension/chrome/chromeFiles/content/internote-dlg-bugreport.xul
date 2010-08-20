@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://internote/locale/internote.dtd">
+
+<!--
+Internote Extension
+Bug Reporting XUL Dialog
+Copyright (C) 2010 Matthew Tuck
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<dialog id="internoteBugReport"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title="&internote.bugReportDialog.title;"
+        buttons="cancel"
+        buttonlabelcancel="&internote.closeButton.label;"
+        persist="screenX screenY"
+        screenX="24" screenY="24" width="560px" height="700px"
+        onload="internoteBugReportDlg.init();"
+        ondialogaccept="internoteBugReportDlg.submitBug();" >
+    
+    <script type="application/x-javascript" src="chrome://internote/content/internote-consts.js" />
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js" />
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js" />
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils-sysinfo.js" />
+    <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-bugreport.js" />
+    
+    <vbox flex="1">
+        <description>&internote.infoThanks.desc;</description>
+        
+        <description>&internote.reportComments.desc;</description>
+        <textbox id="extra-info" rows="4" columns="40" flex="1" multiline="true" />
+        
+        <description>&internote.infoType.desc; &internote.infoDisclaimer.desc;</description>
+        
+        <!-- XUL expander tag doesn't seem to work properly, it includes a funny button on the right in 3.6.8 Win7,
+             emulate it instead. -->
+        <hbox>
+            <button type="disclosure" id="disclosure" open="false" onclick="internoteBugReportDlg.openDisclosure();" style="cursor: pointer;" />
+            <label flex="1">&internote.infoWhy.desc;</label>
+        </hbox>
+        <vbox id="expanded" style="-moz-padding-start: 30px" collapsed="true">
+            <description>&internote.infoReasons1.desc;</description>
+            <description>&internote.infoReasons2.desc;</description>
+        </vbox>
+        
+        <textbox id="errors-text" style="border: 2px black;" rows="4" columns="40" flex="1" multiline="true" />
+        
+        <description>&internote.reportEmail.desc;</description>
+        <textbox id="email" rows="1" columns="40" />
+    </vbox>
+    
+    <description>&internote.sendInstructions.desc;</description>
+    <hbox align="center">
+        <spacer flex="1" />
+        <label onclick="internoteBugReportDlg.openBugPage();" value="&internote.bugReportDialog.title;"
+               style="color: blue; text-decoration: underline; cursor: pointer;" />
+        <spacer flex="1" />
+        <button label="&internote.aboutCopy.label;" oncommand="internoteBugReportDlg.copy();" style="min-width: 100px;" />
+        <spacer flex="1" />
+    </hbox>
+    
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
+    </stringbundleset>
+</dialog>

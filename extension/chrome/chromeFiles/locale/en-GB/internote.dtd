@@ -218,6 +218,18 @@
 
 <!ENTITY internote.closeResults.tooltip       "Close Search Results">
 
+<!-- Bug Reporting Info -->
+
+<!ENTITY internote.infoThanks.desc            "Thanks for filing a bug report - your report will help make Internote better. Any info you send will only be used to help fix bugs.">
+<!ENTITY internote.infoType.desc              "Below is important automatically-collected info that may help diagnose your problem.">
+<!ENTITY internote.infoDisclaimer.desc        "This includes your installed extensions list, and may sometimes include info about your notes and browsing session.">
+
+<!ENTITY internote.infoWhy.desc               "Why is this info needed?">
+<!ENTITY internote.infoReasons1.desc          "Info about installed extensions is useful in determining whether Internote problems are caused by a conflict with another extension.">
+<!ENTITY internote.infoReasons2.desc          "When problems are recorded, relevant info will be gathered, which could be many different things. For some problems this might include info about your notes and browsing session.">
+
+<!ENTITY internote.infoCopy.label             "Copy All Information">
+
 <!-- About Dialog -->
 
 <!ENTITY internote.aboutDialog.title          "About Internote">
@@ -239,3 +251,14 @@
 <!ENTITY internote.aboutPrivacy.desc          "Note: It's possible that this includes information about your browsing session, such as web page addresses.">
 
 <!ENTITY internote.aboutHomePage.label        "Internote Home Page">
+
+<!-- Bug Report Dialog -->
+
+<!ENTITY internote.bugReportDialog.title      "Reporting an Internote Bug">
+
+<!ENTITY internote.submitBugReportButton.label "Submit Bug Report">
+<!ENTITY internote.cancelButton.label         "Cancel">
+
+<!ENTITY internote.sendInstructions.desc      "Once you have filled out all the information, go to the webpage below to find out where to submit the info that you can copy on the button below.">
+<!ENTITY internote.reportComments.desc        "Please describe any possibly relevant info, such as how the problem occurred.">
+<!ENTITY internote.reportEmail.desc           "If you enter your email here, you can be asked for more info, if it's needed to fix your problem.">

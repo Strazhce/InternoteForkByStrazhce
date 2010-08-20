@@ -248,4 +248,20 @@ internoteUtilities.incorporate({
         this.registerRepeatingButtonHandler(canvas, actionFunc, isEnabledFunc, delayTime, intervalTime);
         return canvas;
     },
+    
+    drawCloseButton: function(canvas, color)
+    {
+        var context = canvas.getContext("2d");
+        var [w, h] = [canvas.width, canvas.height];
+        
+        context.clearRect(0, 0, w, h);
+        
+        context.lineWidth = 0.3 * w;
+        context.lineCap = "round";
+        context.strokeStyle = color;
+        context.beginPath();
+        context.moveTo(0.10 * w, 0.10 * h); context.lineTo(0.90 * w, 0.90 * h);
+        context.moveTo(0.90 * w, 0.10 * h); context.lineTo(0.10 * w, 0.90 * h);
+        context.stroke();
+    }
 });

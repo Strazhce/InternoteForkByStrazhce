@@ -1046,17 +1046,6 @@ openURL : function ()
     {
         var noteURL = document.getElementById("noteURL").value;
         
-        var prefService = this.utils.getCCService("@mozilla.org/preferences-service;1", "nsIPrefService");
-        var prefs = prefService.getBranch("browser.link.");
-        if (prefs.getPrefType("open_external") != 0)
-        {
-            var bloe = prefs.getIntPref("open_external");
-            if (bloe == 1) openInNewWindow = false;
-            else if (bloe == 2) openInNewWindow = true;
-            else if (bloe == 3) openInNewWindow = false;
-            else this.utils.assertErrorShouldNotBeHere("Unknown open_external value.");
-        }
-        
         if (noteURL != null)
         {
             if (this.noteBeingEdited.matchType == this.storage.URL_MATCH_REGEXP)

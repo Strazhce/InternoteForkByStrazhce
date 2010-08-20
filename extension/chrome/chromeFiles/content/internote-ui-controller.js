@@ -694,12 +694,25 @@ userCreatesNote: function()
     {
         try
         {
-            this.showMessage("NoteCreationError");
+            var links = [{messageName: "ReportBugLabel", func: this.utils.bind(this, function() {
+                if (this.bugReportDialog != null && !this.bugReportDialog.closed)
+                {
+                    this.bugReportDialog.focus();
+                    this.bugReportDialog.postMessage("reload", "*");	
+                }
+                else
+                {
+                    this.bugReportDialog = window.openDialog('chrome://internote/content/internote-dlg-bugreport.xul',
+                                                             'internotebugreport', 'centerscreen, chrome, all', window);
+                }
+            })}];
+            this.showMessage("NoteCreationError", links);
         }
-        catch (ex)
+        catch (ex2)
         {
             alert("Sorry, an unanticipated problem prevented your note being created.  " +
                   "Restarting your browser might fix the problem.");
+            this.utils.handleException("Exception caught when user showing message.", ex2);
         }
         
         this.utils.handleException("Exception caught when user created note.", ex);
@@ -2436,7 +2449,7 @@ hasOffscreenNotes: function()
     return false;
 },
 
-showMessage: function(messageName)
+showMessage: function(messageName, linkMessageName, linkFunc)
 {
     if (!this.balloonUI.isInitialized)
     {
@@ -2444,7 +2457,7 @@ showMessage: function(messageName)
         this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
     }
     
-    this.balloonUI.popup(this.utils.getLocaleString(messageName));
+    this.balloonUI.popup(this.utils.getLocaleString(messageName), linkMessageName, linkFunc);
     
     this.hasMsgBeenShown = true;
 },

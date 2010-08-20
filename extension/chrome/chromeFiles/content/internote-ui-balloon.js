@@ -35,8 +35,10 @@ FADE_OUT_TIME: 500,
 ROUNDED_CORNER_SIZE: 15,
 DIAGONAL_HEIGHT: 12,
 DIAGONAL_WIDTH:  5,
-BALLOON_WIDTH: 220,
+BALLOON_WIDTH: 260,
 BALLOON_HEIGHT: 60,
+
+CLOSE_SIZE: 10,
 
 init: function(utils, anim, id, container)
 {
@@ -44,13 +46,27 @@ init: function(utils, anim, id, container)
     this.anim      = anim;
     this.id        = id;
     this.container = container;
-    
     this.STANDARD_MARGIN = Math.floor(this.ROUNDED_CORNER_SIZE / 2);
 },
 
-popup: function(text)
+onClose: function()
+{
+    this.balloonAnimDriver.start(this.FADE_OUT_TIME);
+},
+
+redrawCloseButton: function(mode)
+{
+    var color = (mode == this.utils.EFFECT_MODE_HOVER) ? "#000000" :
+                (mode == this.utils.EFFECT_MODE_PRESS) ? "#BBBBBB" :
+                "#666666";
+    this.utils.drawCloseButton(this.closeButton, color);
+},
+    
+popup: function(text, links)
 {
     this.abandonAnimation();
+    
+    this.links     = this.utils.ifNull(links, {});
     
     this.balloonPanel = document.createElement("panel");
     // -moz-appearance seems to be necessary on Linux but not Windows.
@@ -75,9 +91,44 @@ popup: function(text)
     this.balloonDiv.style.marginRight  = this.STANDARD_MARGIN + "px";
     this.balloonDiv.style.marginTop    = this.STANDARD_MARGIN + "px";
     this.balloonDiv.style.marginBottom = (this.STANDARD_MARGIN + this.DIAGONAL_HEIGHT) + "px";
-    this.balloonDiv.style.cursor       = "pointer";
     
-    this.balloonDiv.appendChild(document.createTextNode(text));
+    this.closeButton = this.utils.createSimpleButton(document, null, this.CLOSE_SIZE, this.CLOSE_SIZE,
+                                                     this.utils.bind(this, this.redrawCloseButton),
+                                                     this.utils.bind(this, this.onClose),
+                                                     function() { return true; });
+    this.closeButton.setAttribute("style", "float: right; cursor: pointer;");
+    this.redrawCloseButton();
+    
+    var mainPara = this.utils.createHTMLElement("p");
+    mainPara.appendChild(this.closeButton);
+    mainPara.appendChild(document.createTextNode(text));
+    mainPara.style.margin = "0px";
+    this.balloonDiv.appendChild(mainPara);
+    
+    for (var i in this.links)
+    {
+        var text = this.utils.getLocaleString(this.links[i].messageName);
+        
+        var aPara = this.utils.createHTMLElement("a");
+        aPara.appendChild(document.createTextNode(text));
+        aPara.style.color          = "blue";
+        aPara.style.cursor         = "pointer";
+        aPara.style.textDecoration = "underline";
+        aPara.style.margin         = "0px";
+        
+        aPara.addEventListener("click", this.utils.bind(this, function()
+        {
+            this.links[i].func();
+            this.onClose();
+        }), false);
+        
+        var linkPara = this.utils.createHTMLElement("p");
+        linkPara.appendChild(aPara);
+        linkPara.style.margin = "0px";
+        linkPara.style.textAlign = "center";
+        linkPara.style.marginTop = "5px";
+        this.balloonDiv.appendChild(linkPara);
+    }
     
     mainStack.appendChild(this.balloonCanvas);
     mainStack.appendChild(this.balloonDiv);
@@ -113,20 +164,29 @@ popup: function(text)
         this.startAnimation(displayTime);
     }), false);
     
-    this.balloonPanel.addEventListener("click", this.utils.bind(this, function()
+    if (this.links.length == 0)
     {
-        if (this.utils.supportsTranslucentPopups())
+        this.balloonDiv.style.cursor = "pointer";
+    
+        this.balloonPanel.addEventListener("click", this.utils.bind(this, function()
         {
-            if (!this.balloonAnimDriver.isStarted)
+            if (this.utils.supportsTranslucentPopups())
             {
-                this.balloonAnimDriver.start(this.FADE_OUT_TIME);
+                if (!this.balloonAnimDriver.isStarted)
+                {
+                    this.balloonAnimDriver.start(this.FADE_OUT_TIME);
+                }
             }
-        }
-        else
-        {
-            this.resetPanel();
-        }
-    }), false);
+            else
+            {
+                this.resetPanel();
+            }
+        }), false);
+    }
+    else
+    {
+        this.balloonDiv.style.cursor = "default";
+    }
 },
 
 abandonAnimation: function()
