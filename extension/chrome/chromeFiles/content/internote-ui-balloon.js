@@ -68,51 +68,50 @@ redrawCloseButton: function(mode)
 
 showMessage: function(message)
 {
-	dump("internoteBalloonUI.showMessage " + this.messageQueue.length + "\n");
-	
-	if (this.messageQueue.length == 0)
-	{
-		var shouldShowMessage = true;
-	}
-	else
-	{
-		var lastMessage = this.messageQueue[this.messageQueue.length - 1];
-		var shouldShowMessage = (lastMessage.messageName != message.messageName);
-	}
-	
-	if (shouldShowMessage)
-	{
-		this.messageQueue.push(message);
-	}
-	
-	this.checkWhetherToShowMessage();
+    dump("internoteBalloonUI.showMessage " + this.messageQueue.length + "\n");
+    
+    if (this.messageQueue.length == 0)
+    {
+        var shouldShowMessage = true;
+    }
+    else
+    {
+        var lastMessage = this.messageQueue[this.messageQueue.length - 1];
+        var shouldShowMessage = (lastMessage.messageName != message.messageName);
+    }
+    
+    if (shouldShowMessage)
+    {
+        this.messageQueue.push(message);
+    }
+    
+    this.checkWhetherToShowMessage();
 },
 
 checkWhetherToShowMessage: function()
 {
-	var isDisplayed = (this.balloonPanel != null);
-	// We avoid showing a message if the window isn't on top because a popup would bring it to front.
-	if (!isDisplayed && document.hasFocus() && this.messageQueue.length > 0)
-	{
-		dump("Start " + this.messageQueue.length + "\n");
-		this.showMessageNow(this.messageQueue[0]);
-		dump("End " + this.messageQueue.length + "\n");
-	}
+    //dump("internoteBalloonUI.checkWhetherToShowMessage\n");
+    
+    var isDisplayed = (this.balloonPanel != null);
+    // We avoid showing a message if the window isn't on top because a popup would bring it to front.
+    if (!isDisplayed && document.hasFocus() && this.messageQueue.length > 0)
+    {
+        this.showMessageNow(this.messageQueue[0]);
+    }
 },
 
 showMessageNow: function(message)
 {
-    dump("showMessageNow\n");
-	internoteUtilities.dumpTraceData(message, 4);
-	
-	this.abandonAnimation();
+    //dump("internoteBalloonUI.showMessageNow\n");
+    
+    this.abandonAnimation();
     
     this.links = this.utils.ifNull(message.links, {});
     
     this.balloonPanel = document.createElement("panel");
     // -moz-appearance seems to be necessary on Linux but not Windows.
     this.balloonPanel.setAttribute("style", "background-color: transparent; border: none; -moz-appearance: none;");
-	
+    
     this.balloonPanel.setAttribute("id", this.id);
     this.balloonPanel.setAttribute("noautohide", "true");
     
@@ -140,8 +139,8 @@ showMessageNow: function(message)
     this.closeButton.setAttribute("style", "float: right; cursor: pointer;");
     this.redrawCloseButton();
     
-	var text = this.utils.getLocaleString(message.messageName);
-	
+    var text = this.utils.getLocaleString(message.messageName);
+    
     var mainPara = this.utils.createHTMLElement("p");
     mainPara.appendChild(this.closeButton);
     mainPara.appendChild(document.createTextNode(text));
@@ -203,14 +202,17 @@ showMessageNow: function(message)
         // so we can then figure out the correct canvas height.
         this.balloonCanvas.height = this.balloonPanel.boxObject.height;
         this.drawCanvas();
-        var displayTime = this.MIN_DISPLAY_TIME + text.length * 75;
-        this.startAnimation(displayTime);
+        if (message.shouldTimeout)
+        {
+            var displayTime = this.MIN_DISPLAY_TIME + text.length * 75;
+            this.startAnimation(displayTime);
+        }
     }), false);
     
     if (this.links.length == 0)
     {
         this.balloonDiv.style.cursor = "pointer";
-		
+        
         this.balloonPanel.addEventListener("click", this.utils.bind(this, function()
         {
             if (this.utils.supportsTranslucentPopups())
@@ -222,9 +224,9 @@ showMessageNow: function(message)
             }
             else
             {
-				this.resetPanel();
-				this.messageQueue.shift();
-				this.checkWhetherToShowMessage();
+                this.resetPanel();
+                this.messageQueue.shift();
+                this.checkWhetherToShowMessage();
             }
         }), false);
     }
@@ -236,15 +238,17 @@ showMessageNow: function(message)
 
 abandonAllMessages: function()
 {
-	this.abandonAnimation();
-	this.messageQueue = [];
+    //dump("internoteBalloonUI.abandonAllMessages\n");
+    
+    this.abandonAnimation();
+    this.messageQueue = [];
 },
 
 abandonAnimation: function()
 {
-    dump("internoteBalloonUI.abandonAnimation\n");
-	
-	if (this.balloonAnimDriver != null)
+    //dump("internoteBalloonUI.abandonAnimation\n");
+    
+    if (this.balloonAnimDriver != null)
     {
         this.balloonAnimDriver.abandonTimer();
         this.balloonAnimDriver = null;
@@ -269,12 +273,12 @@ resetPanel: function()
 
 onBalloonAnimComplete: function()
 {
-    dump("internoteBalloonUI.onBalloonAnimComplete\n");
-	
-	this.balloonAnimDriver = null;
+    //dump("internoteBalloonUI.onBalloonAnimComplete\n");
+    
+    this.balloonAnimDriver = null;
     this.resetPanel();
-	this.messageQueue.shift();
-	this.checkWhetherToShowMessage();
+    this.messageQueue.shift();
+    this.checkWhetherToShowMessage();
 },
 
 startAnimation: function(displayTime)

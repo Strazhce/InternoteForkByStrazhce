@@ -696,7 +696,7 @@ userCreatesNote: function()
     {
         try
         {
-            this.showMessage("NoteCreationError", "ReportBugLabel", this.utils.bind(this, function() {
+            this.showMessage("NoteCreationError", true, "ReportBugLabel", this.utils.bind(this, function() {
                 if (this.bugReportDialog != null && !this.bugReportDialog.closed)
                 {
                     this.bugReportDialog.focus();
@@ -2444,20 +2444,25 @@ hasOffscreenNotes: function()
     return false;
 },
 
-showMessage: function(messageName, linkMessageName, linkFunc)
+showMessage: function(messageName, shouldTimeout, linkMessageName, linkFunc)
 {
-	if (!this.balloonUI.isInitialized)
-	{
-		var myBody = document.getElementById("main-window");
-		this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
-	}
-	
-	var links = [];
-	if (linkMessageName != null)
-	{
-		links.push({messageName: linkMessageName, func: linkFunc});
-	}
-	this.balloonUI.showMessage({messageName: messageName, links: links});
+    if (shouldTimeout == null)
+    {
+        shouldTimeout = true;
+    }
+    
+    if (!this.balloonUI.isInitialized)
+    {
+        var myBody = document.getElementById("main-window");
+        this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
+    }
+    
+    var links = [];
+    if (linkMessageName != null)
+    {
+        links.push({messageName: linkMessageName, func: linkFunc});
+    }
+    this.balloonUI.showMessage({messageName: messageName, links: links, shouldTimeout: shouldTimeout});
 },
 
 showMessageNow: function(messageName, linkMessageName, linkFunc)
