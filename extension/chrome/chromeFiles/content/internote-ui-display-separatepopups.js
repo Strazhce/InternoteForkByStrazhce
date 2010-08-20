@@ -167,6 +167,7 @@ raiseNote: function(uiNote)
     var wasRaised = this.raiseNoteInOrder(uiNote);
     if (wasRaised)
     {
+        //dump("  Reopening note due to raise.\n");
         // Avoid the flickering reopen unless necessary.
         this.reopenNote(uiNote);
     }

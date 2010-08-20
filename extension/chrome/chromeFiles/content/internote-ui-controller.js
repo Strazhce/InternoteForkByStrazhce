@@ -809,14 +809,27 @@ userMovesNote: function(event)
         var noteNum = this.utils.getNoteNum(event.target);
         var uiNote = this.uiNoteLookup[noteNum];
         
+        var wasMoved = false;
+        
         var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
             this.utils.assertError(this.utils.isCoordPair(offset), "Invalid offset.");
+            
+            if (!wasMoved)
+            {
+                wasMoved = true;
+                // Only do this once we've discovered an actual move, rather than at the start.
+                this.displayUI.moveStart(uiNote);
+            }
+            
             var newPosOnViewport = this.screenCalcDraggedPos(uiNote, offset);
             this.displayUI.adjustNote(uiNote, newPosOnViewport, null);
         });
         
         var onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset, uiNote) {
-            this.displayUI.moveEnd(uiNote);
+            if (wasMoved)
+            {
+                this.displayUI.moveEnd(uiNote);
+            }
             
             // Store any changes.
             if (wasCompleted && wasDrag)
@@ -834,9 +847,6 @@ userMovesNote: function(event)
         });
         
         this.userStartsDrag(event, uiNote, this.DRAG_MODE_MOVE, onDragMouseMoved, onDragFinished);
-        
-        // Set up the drag handler before this, because doing this can mess with the event object screen positions.
-        this.displayUI.moveStart(uiNote);
     }
     catch (ex)
     {
