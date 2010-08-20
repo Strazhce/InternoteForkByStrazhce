@@ -254,6 +254,12 @@ abandonAnimation: function()
         this.balloonAnimDriver = null;
     }
     
+    if (this.hurryTimeout != null)
+    {
+        clearTimeout(this.hurryTimeout);
+        this.hurryTimeout = null;
+    }
+    
     this.resetPanel();
 },
 
@@ -295,7 +301,7 @@ startAnimation: function(displayTime)
     }
     else
     {
-        setTimeout(this.utils.bind(this, function() {
+        this.hurryTimeout = setTimeout(this.utils.bind(this, function() {
             this.balloonAnimDriver.hurry();
         }), displayTime + this.FADE_OUT_TIME / 2);
     }
