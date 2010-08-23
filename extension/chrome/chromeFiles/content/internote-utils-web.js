@@ -19,6 +19,9 @@
 
 internoteUtilities.incorporate({
 
+XHTML_NS: "http://www.w3.org/1999/xhtml",
+XUL_NS:   "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
+
 canonicalizeURL: function(url)
 {
     this.assertError(typeof(url) == "string", "Bad URL type when canonicalizing URL.", url);

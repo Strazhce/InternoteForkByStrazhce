@@ -21,9 +21,6 @@ Components.utils.import("resource://internotejs/internote-shared-global.jsm");
 
 var internoteUtilities = {
 
-XHTML_NS: "http://www.w3.org/1999/xhtml",
-XUL_NS:   "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
-
 MAX_DUMP_DATA_SIZE: 10000,
 
 init: function()
@@ -103,11 +100,11 @@ pushArray: function(target, source, targetIndex)
     if (targetIndex == null) targetIndex = target.length;
     
     // We need to apply because we have an array and need to pass multi-args to splice.
-    // It will be quicker to splice them all at once rather than several inserts in the middle.
+    // It should be quicker to splice them all at once rather than several inserts in the middle.
     target.splice.apply(target, [targetIndex, 0].concat(source));
 },
 
-// Use to open a URL from a dialog.
+// Used to open a URL from a dialog.
 openURL: function(url)
 {
     var mediator = this.getCCService("@mozilla.org/appshell/window-mediator;1", "nsIWindowMediator");
@@ -277,11 +274,8 @@ assertWarnNotHere : function(msg, obj)
     
     this.doubleDump("\n\n" + errorMsg + "\n\n");
     
-    if (obj != null)
-    {
-        this.doubleDump("Extra Data: ");
-        this.doubleDumpTraceData(obj);
-    }
+    this.doubleDump("Extra Data: ");
+    this.doubleDumpTraceData(obj);
     
     this.doubleDump("\n");
 },
@@ -295,11 +289,8 @@ assertErrorNotHere : function(msg, obj)
 
     this.doubleDump("\n\n" + errorMsg + "\n\n");
     
-    if (obj != null)
-    {
-        this.doubleDump("Extra Data: ");
-        this.doubleDumpTraceData(obj);
-    }
+    this.doubleDump("Extra Data: ");
+    this.doubleDumpTraceData(obj);
     
     this.doubleDump("\n");
     
@@ -316,48 +307,15 @@ handleException: function(msg, ex, obj)
     
     this.doubleDump("\n\n" + errorMsg + "\n\n");
     
-    if (obj != null)
-    {
-        this.doubleDump("Extra Data: ");
-        this.doubleDumpTraceData(obj);
-    }
+    this.doubleDump("Extra Data: ");
+    this.doubleDumpTraceData(obj);
     
     this.doubleDump("\n");
 },
 
-/*
-changeOrigin : function(n, oldOrigin, newOrigin)
-{
-    this.assertError(oldOrigin == null || this.isNonNegativeNumber(oldOrigin), "oldOrigin invalid");
-    this.assertError(newOrigin == null || this.isNonNegativeNumber(newOrigin), "newOrigin invalid");
-    
-    if (oldOrigin != null)
-    {
-        n += oldOrigin;
-    }
-    if (newOrigin != null)
-    {
-        n -= newOrigin;
-    }
-    
-    return n;
-},
-*/
-
-removeIndexes : function(oldURL)
-{
-    var newURL = oldURL;
-    newURL = newURL.replace(/(index|home|default)\.(html|htm|asp|php|cgi|cfm|aspx)$/i, "");
-    newURL = newURL.replace(/\/$/, "");
-    return newURL;
-},
-
-HEX_DIGITS : ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"],
-
-// XXX Better way?
 hexDigit: function(i)
 {
-    return this.HEX_DIGITS[i];
+    return i.toString(16);
 },
 
 // Creates a bound version of a callback with the correct "this" pointer.
@@ -365,7 +323,6 @@ bind: function(obj, method)
 {
     this.assertError(obj    != null, "Empty object when binding.");
     this.assertError(method != null, "Empty method when binding.");
-    var utils = this;
     return function() { return method.apply(obj, arguments); };
 },
 
@@ -377,7 +334,7 @@ isMinimized: function(win)
 },
 
 // This creates a bound version of a function and places it inside the bound object.
-// This is useful when you want to remove a callback later.
+// This is useful when you want to remove a bound callback later.
 getBoundVersion: function(obj, propertyName)
 {
     if (obj.boundVersions == null) obj.boundVersions = {};
@@ -407,7 +364,8 @@ getJSClassName: function(obj)
         {
             return "";
         }
-        else {
+        else
+        {
             return prototype.constructor.name;
         }
     }
@@ -460,7 +418,7 @@ isBoolean: function(num)
     return typeof(num) == "boolean";
 },
 
-// trim() not built in to FF3.0, added in 3.5
+// trim() not built in to FF3.0, added in 3.5, so we don't use it.
 trim: function(line)
 {
     line = line.replace(/^\s+/, "");
@@ -869,7 +827,7 @@ isArray: function(arr)
     }
     catch (ex)
     {
-        // It seems some objects don't have hasOwnProperty, then they're not arrays.
+        // It seems some objects don't have hasOwnProperty, but then they're not arrays.
         return false;
     }
 },
@@ -1006,17 +964,17 @@ isPair: function(pair)
 
 generateIdentifier: function()
 {
-    if (this.generator == null)
+    if (this.guidGenerator == null)
     {
-        this.generator = this.getCCService("@mozilla.org/uuid-generator;1", "nsIUUIDGenerator");
+        this.guidGenerator = this.getCCService("@mozilla.org/uuid-generator;1", "nsIUUIDGenerator");
     }
     
-    return this.generator.generateUUID();
+    return this.guidGenerator.generateUUID();
 },
 
-// The JS split because the limit parameter interprets separators after the limit and truncates
-// fields.  This will not interpret the second separator and so we use this if the separator
-// character is normal for data in the second half, so splitting it would be wrong.
+// The limit parameter of JS split interprets separators after the limit and truncates fields.
+// This function will not interpret a second separator in the text, so we use this if the separator
+// character is normal for data in the second half, and splitting it would therefore be wrong.
 simpleSplit: function(text, separator)
 {
     var index = text.indexOf(separator);
