@@ -847,16 +847,14 @@ matchesURL: function(note, pageURL)
     var noteURLCanon = this.getEffectiveURL(note);
     var pageURLCanon = this.processEffectiveURL(pageURL, this.URL_MATCH_URL, note.ignoreAnchor, note.ignoreParams);
     
-    this.utils.assertError(pageURLCanon != null, "Page URL was not valid when canonicalizing.", pageURL);
-    
     if (note.matchType == this.URL_MATCH_URL)
     {
         return pageURLCanon == noteURLCanon;
     }
     else if (note.matchType == this.URL_MATCH_REGEXP)
     {
-        return pageURL     .match(noteURL) ||
-               pageURLCanon.match(noteURL);
+        return pageURL.match(noteURL) ||
+               (pageURL != null && pageURLCanon.match(noteURL));
     }
     else if (note.matchType == this.URL_MATCH_PREFIX)
     {
