@@ -1418,10 +1418,14 @@ chromePrepareContextMenu: function(element)
                             "internote-context-delete-text", "internote-context-select-all"];
         
         this.utils.setEnabled(editElements, !isFlipped && !isMinimized);
-        this.utils.setEnabled("internote-context-flip-note", !isMinimized);
         
-        this.utils.setDisplayed("internote-context-minimize-note", !isMinimized);
-        this.utils.setDisplayed("internote-context-unminimize-note",  isMinimized );
+        this.utils.setEnabled  ("internote-context-choose-colors", !isMinimized);
+        this.utils.setDisplayed("internote-context-choose-colors", !isFlipped);
+        this.utils.setDisplayed("internote-context-edit-text",      isFlipped);
+        
+        this.utils.setDisplayed("internote-context-minimize-note",   !isMinimized);
+        this.utils.setDisplayed("internote-context-unminimize-note",  isMinimized);
+        
     }
     catch (ex)
     {

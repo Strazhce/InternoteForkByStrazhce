@@ -5,9 +5,9 @@
 
 <!ENTITY internote.newNoteCmd.label           "Add New Internote">
 
-<!ENTITY internote.openManagerCmd.label       "Internote Manager">
-<!ENTITY internote.openPrefsCmd.label         "Internote Preferences">
-<!ENTITY internote.helpCmd.label              "Internote Help">
+<!ENTITY internote.openManagerCmd.label       "Manage All Internotes">
+<!ENTITY internote.openPrefsCmd.label         "Preferences for Internote">
+<!ENTITY internote.helpCmd.label              "Help for Internote">
 
 <!ENTITY internote.displayNotesCmd.label      "Display Internotes">
 
@@ -31,10 +31,11 @@
 <!ENTITY internote.selectAllCmd.label         "Select All">
 
 <!ENTITY internote.deleteNoteCmd.label        "Delete Note">
-<!ENTITY internote.flipNoteCmd.label          "Flip Note">
+<!ENTITY internote.chooseColorsCmd.label      "Choose New Colours">
+<!ENTITY internote.editTextCmd.label          "Edit Text">
 <!ENTITY internote.minimizeNoteCmd.label      "Minimize Note">
 <!ENTITY internote.unminimizeNoteCmd.label    "Restore Note">
-<!ENTITY internote.viewInOpenManagerCmd.label "View in Manager">
+<!ENTITY internote.viewInOpenManagerCmd.label "Manage Note">
 
 <!ENTITY internote.showsOnMenuCmd.label       "Shows On">
 <!ENTITY internote.showsOnPageCmd.label       "This Page Only">
@@ -54,9 +55,10 @@
 <!ENTITY internote.deleteTextCmd.accesskey    "D">
 <!ENTITY internote.selectAllCmd.accesskey     "A">
 <!ENTITY internote.deleteNoteCmd.accesskey    "L">
-<!ENTITY internote.flipNoteCmd.accesskey      "F">
-<!ENTITY internote.minimizeNoteCmd.accesskey  "E">
-<!ENTITY internote.unminimizeNoteCmd.accesskey "E">
+<!ENTITY internote.chooseColorsCmd.accesskey  "E">
+<!ENTITY internote.editTextCmd.accesskey      "E">
+<!ENTITY internote.minimizeNoteCmd.accesskey  "N">
+<!ENTITY internote.unminimizeNoteCmd.accesskey "N">
 <!ENTITY internote.viewInOpenManagerCmd.accesskey "V">
 
 <!ENTITY internote.showsOnMenuCmd.accesskey   "H">
@@ -86,7 +88,7 @@
 
 <!-- Preferences Dialog -->
 
-<!ENTITY internote.prefsDialog.title          "Internote Preferences">
+<!ENTITY internote.prefsDialog.title          "Preferences for Internote">
 
 <!ENTITY internote.defaultStylePrefs.caption  "Preferences for New Notes">
 <!ENTITY internote.globalStylePrefs.caption   "Preferences for All Notes">
@@ -128,7 +130,7 @@
 
 <!-- Manager Dialog -->
 
-<!ENTITY internote.managerDialog.title        "Internote Manager">
+<!ENTITY internote.managerDialog.title        "Manage Internotes">
 
 <!ENTITY internote.searchQuery.label          "Search">
 <!ENTITY internote.searchResults.label        "Search Results">
