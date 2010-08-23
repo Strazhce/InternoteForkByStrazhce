@@ -131,16 +131,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <menuitem label="&internote.setDefaultColorsCmd.label;" id="internote-context-default-colors" class="internote-color-command"
                   oncommand="internoteUIController.userSetsDefaultColors(popupNode);" accesskey="&internote.setDefaultColorsCmd.accesskey;" />
         <menuseparator />
-        <menuitem label="&internote.deleteNoteCmd.label;"        id="internote-context-delete-note"
+        <menuitem label="&internote.deleteNoteCmd.label;"        id="internote-context-delete-note" class="menuitem-iconic"
                   oncommand="internoteUIController.userRemovesNote(popupNode);" accesskey="&internote.deleteNoteCmd.accesskey;" />
-        <menuitem label="&internote.chooseColorsCmd.label;"      id="internote-context-choose-colors"
-                  oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.chooseColorsCmd.accesskey;" />
-        <menuitem label="&internote.editTextCmd.label;"          id="internote-context-edit-text"
-                  oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.editTextCmd.accesskey;" />
-        <menuitem label="&internote.minimizeNoteCmd.label;"      id="internote-context-minimize-note"
+        <menuitem label="&internote.minimizeNoteCmd.label;"      id="internote-context-minimize-note" class="menuitem-iconic"
                   oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.minimizeNoteCmd.accesskey;" />
         <menuitem label="&internote.unminimizeNoteCmd.label;"    id="internote-context-unminimize-note"
                   oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.unminimizeNoteCmd.accesskey;" style="display: none;" />
+        <menuitem label="&internote.chooseColorsCmd.label;"      id="internote-context-choose-colors"
+                  image="chrome://internote/content/arrow16.png" class="menuitem-iconic"
+                  oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.chooseColorsCmd.accesskey;" />
+        <menuitem label="&internote.editTextCmd.label;"          id="internote-context-edit-text"
+                  image="chrome://internote/content/arrow16.png" class="menuitem-iconic"
+                  oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.editTextCmd.accesskey;" />
         <menuitem label="&internote.viewInOpenManagerCmd.label;" id="internote-view-in-manager"
                   oncommand="internoteUIController.userViewsInManager(popupNode);" accesskey="&internote.viewInOpenManagerCmd.accesskey;" />
         <menuseparator />

@@ -60,6 +60,8 @@ WIDTH_BETWEEN_MINIMIZED: 2,
 ACTIVE_WARNING_INTERVAL: 500,
 CHECK_VIEWPORT_INTERVAL: 50,
 
+MENUICON_SIZE: 16,
+
 dragMode:            this.DRAG_MODE_NONE,
 noteMode:            this.NOTE_NORMAL,
 uiNoteBeingDragged:  null,
@@ -1449,6 +1451,23 @@ chromePrepareContextMenu: function(element)
         
         this.utils.setDisplayed(document.getElementsByClassName("internote-text-command" ), !isFlipped);
         this.utils.setDisplayed(document.getElementsByClassName("internote-color-command"),  isFlipped);
+        
+        var canvas = this.utils.createHTMLCanvas(document, null, this.MENUICON_SIZE, this.MENUICON_SIZE);
+        
+        if (this.closeButtonCanvasURL == null)
+        {
+            this.utils.drawCloseButton(canvas, "black");
+            this.closeButtonCanvasURL = canvas.toDataURL();
+        }
+        
+        if (this.minimizeButtonCanvasURL == null)
+        {
+            this.utils.drawMinimizeButton(canvas, "black");
+            this.minimizeButtonCanvasURL = canvas.toDataURL();
+        }
+        
+        document.getElementById("internote-context-delete-note")  .setAttribute("image", this.closeButtonCanvasURL);
+        document.getElementById("internote-context-minimize-note").setAttribute("image", this.minimizeButtonCanvasURL);
     }
     catch (ex)
     {

@@ -1209,26 +1209,9 @@ drawCloseButton: function(uiNote, mode)
 
 drawMinimizeButton: function(uiNote, mode)
 {
-    //dump("internoteNoteUI.drawMinimizeButton " + mode + "\n");
-
     if (mode == null) mode = this.MODE_NORMAL;
-    
-    var context = uiNote.minimizeButton.getContext("2d");
-    
-    var w = uiNote.minimizeButton.width;
-    var h = uiNote.minimizeButton.height;
-    
-    var WIDTH_PROPORTION = 0.3;
-    context.clearRect(0, 0, w, h);
-    
-    context.lineWidth = WIDTH_PROPORTION * w;
-    context.lineCap = "round";
-    context.strokeStyle = this.getButtonColor(uiNote, mode);
-    
-    var yPos = this.utils.hasMinimizeIconCentered() ? 0.5 : (1 - WIDTH_PROPORTION / 2);
-    context.beginPath();
-    context.moveTo(0.10 * w, yPos * h); context.lineTo(0.90 * w, yPos * h);
-    context.stroke();
+    var color = this.getButtonColor(uiNote, mode);
+    this.utils.drawMinimizeButton(uiNote.minimizeButton, color);
 },
 
 drawResizeHandle: function(uiNote)

@@ -259,9 +259,30 @@ internoteUtilities.incorporate({
         context.lineWidth = 0.3 * w;
         context.lineCap = "round";
         context.strokeStyle = color;
+        
         context.beginPath();
         context.moveTo(0.10 * w, 0.10 * h); context.lineTo(0.90 * w, 0.90 * h);
         context.moveTo(0.90 * w, 0.10 * h); context.lineTo(0.10 * w, 0.90 * h);
         context.stroke();
-    }
+    },
+
+    drawMinimizeButton: function(canvas, color)
+    {
+        var WIDTH_PROPORTION = 0.3;
+        
+        var context = canvas.getContext("2d");
+        var [w, h] = [canvas.width, canvas.height];
+        
+        context.clearRect(0, 0, w, h);
+        
+        context.lineWidth = WIDTH_PROPORTION * w;
+        context.lineCap = "round";
+        context.strokeStyle = color;
+        
+        var yPos = this.hasMinimizeIconCentered() ? 0.5 : (1 - WIDTH_PROPORTION / 2);
+        context.beginPath();
+        context.moveTo(0.10 * w, yPos * h); context.lineTo(0.90 * w, yPos * h);
+        context.stroke();
+    },
+    
 });
