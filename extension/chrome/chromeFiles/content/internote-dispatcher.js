@@ -16,6 +16,13 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+// This differs from nsIObserverService in a couple of ways.
+// (a) It's a part of the object rather than being a global service, so the callbacks
+//     will automatically be deregistered when the object is garbage collected.
+// (b) You must create events before registering observers, so typoes in the
+//     event name will be detected rather than silently failing.
+// (c) There are shorthand methods for using bound versions.
+
 function InternoteEventDispatcher() {}
 
 InternoteEventDispatcher.prototype.incorporateED = function(newPrototype)
