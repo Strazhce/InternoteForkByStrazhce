@@ -607,8 +607,7 @@ activateDebugFunction: function()
 {
     //dump("\n\n\n\n\nactivateDebugFunction\n");
     
-    this.displayUI.createInsertionContainer(this.utils.getViewportDims(this.currentBrowser));
-    this.displayUI.showPopupPane();
+    this.displayUI.activateDebugFunction();
     
     this.utils.assertWarnNotHere("--- Test Warning ---");
     

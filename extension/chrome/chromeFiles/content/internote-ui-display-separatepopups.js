@@ -279,11 +279,6 @@ popupShown: function(event, uiNote)
     }
 },
 
-// For debugging only.  Ctrl-G to activate ... see the main overlay.
-showPopupPane: function()
-{
-},
-
 handleChangedAspects: function(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects " + viewportResized + " " + viewportMoved + " " + scrolled + " " + pageResized + "\n");
@@ -534,5 +529,7 @@ moveEnd: function(uiNote)
     this.utils.spliceFirstInstance(this.notesBeingMoved, uiNote);
     this.adjustNote(uiNote, null, null, true);
 },
+
+activateDebugFunction: function() {},
 
 };

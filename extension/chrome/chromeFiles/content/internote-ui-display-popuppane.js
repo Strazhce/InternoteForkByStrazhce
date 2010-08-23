@@ -80,7 +80,11 @@ addNote: function(uiNote, pos, dims)
     
     this.noteUI.addFocusListener(uiNote, this.utils.bind(this, this.onNoteFocused));
     
-    this.createInsertionContainer();
+    var containerBeingCreated = (this.innerContainer == null);
+    if (containerBeingCreated)
+    {
+        this.createInsertionContainer();
+    }
     
     this.adjustNote(uiNote, pos, dims);
     
@@ -96,6 +100,11 @@ addNote: function(uiNote, pos, dims)
     }
     
     this.innerContainer.appendChild(uiNote.noteElt);
+    
+    if (!containerBeingCreated)
+    {
+        this.noteUI.noteShown(uiNote);
+    }
 },
 
 removeNote: function(uiNote)
@@ -238,32 +247,34 @@ createInsertionContainer: function()
     //dump("internoteDisplayUI.createInsertionContainer\n");
     
     this.utils.assertError(this.utils.isNonNegCoordPair(this.viewportDims), "Invalid dims in createInsertionContainer", this.viewportDims);
+    this.utils.assertError(this.innerContainer == null, "Inner container already exists");
     
-    if (this.innerContainer == null)
-    {
-        //dump("  Creating new popup & container.\n");
-        
-        this.innerContainer = document.createElement("stack");
-        this.innerContainer.id = "internote-displayinnercontainer";
-        this.innerContainer.style.overflow = "hidden";
-        this.innerContainer.style.backgroundColor = "transparent";
-        //this.innerContainer.style.backgroundColor = "rgba(255, 0, 0, 0.1)"
-        
-        this.popupPanel = this.utils.createShiftingPanel("pane", this.innerContainer);
-        
-        this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown",   this, "popupPanelShown",   false);
-        
-        this.isPanelCreated = true;
-        this.positionPane();
-    }
+    //dump("  Creating new popup & container.\n");
+    
+    this.innerContainer = document.createElement("stack");
+    this.innerContainer.id = "internote-displayinnercontainer";
+    this.innerContainer.style.overflow = "hidden";
+    this.innerContainer.style.backgroundColor = "transparent";
+    //this.innerContainer.style.backgroundColor = "rgba(255, 0, 0, 0.1)"
+    
+    this.popupPanel = this.utils.createShiftingPanel("pane", this.innerContainer);
+    
+    this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown",   this, "popupPanelShown",   false);
+    
+    this.isPanelCreated = true;
+    this.positionPane();
     
     this.utils.assertError(document.getElementById("internote-popuppane") != null, "Can't find display popup.");
 },
 
-// For debugging only.  Ctrl-G to activate ... see the main overlay.
-showPopupPane: function()
+activateDebugFunction: function()
 {
-    //dump("internoteDisplayUI.showPopupPane\n");
+    //dump("internoteDisplayUI.activateDebugFunction\n");
+    
+    if (this.innerContainer == null)
+    {
+        this.createInsertionContainer();
+    }
     
     this.innerContainer.style.backgroundColor =
         (this.innerContainer.style.backgroundColor == "transparent") ? "rgba(255, 0, 0, 0.1)" : "transparent";
