@@ -919,13 +919,6 @@ sgn: function(x)
     else            return  0;
 },
 
-// Constructors created anonymously inside an object will have no name when it comes to
-// internoteUtilities.getJSClassName() - this is one way to fix that.
-nameConstructor: function(obj, constructorName)
-{
-    obj[constructorName].name = constructorName;
-},
-
 andFunc: function(a, b)
 {
     return a && b;

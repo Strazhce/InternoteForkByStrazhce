@@ -54,19 +54,17 @@ var internoteAnimation = {
     init: function(utils) { this.utils = utils; }
 };
 
-internoteAnimation.AnimationCompleteEvent = function(animation, data)
+internoteAnimation.AnimationCompleteEvent = function AnimationCompleteEvent(animation, data)
 {
     this.animation = animation;
     this.data = data;
 };
 
-internoteUtilities.nameConstructor(internoteAnimation, "AnimationCompleteEvent");
-
 ////////////////////
 // Basic Animation Class
 ////////////////////
 
-internoteAnimation.Animation = function(type, doStep, onStart, onComplete)
+internoteAnimation.Animation = function Animation(type, doStep, onStart, onComplete)
 {
     this.type       = type; // just for debugging
     
@@ -92,13 +90,11 @@ internoteAnimation.Animation.prototype.indicateComplete = function()
     }
 };
 
-internoteUtilities.nameConstructor(internoteAnimation, "Animation");
-
 ////////////////////////////
 // Parallel Animation Class
 ////////////////////////////
 
-internoteAnimation.ParallelAnimation = function(animations, onStart, onComplete)
+internoteAnimation.ParallelAnimation = function ParallelAnimation(animations, onStart, onComplete)
 {
     this.type = "parallel";
     this.animations = animations;
@@ -106,8 +102,6 @@ internoteAnimation.ParallelAnimation = function(animations, onStart, onComplete)
     this.onStart    = onStart;
     this.onComplete = onComplete;
 };
-
-internoteUtilities.nameConstructor(internoteAnimation, "ParallelAnimation");
 
 internoteAnimation.ParallelAnimation.prototype.indicateStart = function()
 {
@@ -146,7 +140,7 @@ internoteAnimation.ParallelAnimation.prototype.indicateComplete = function()
 // Sequential Animation Class
 //////////////////////////////
 
-internoteAnimation.SequentialAnimation = function(stages, proportions, onStart, onComplete)
+internoteAnimation.SequentialAnimation = function SequentialAnimation(stages, proportions, onStart, onComplete)
 {
     this.type = "multi";
     
@@ -171,8 +165,6 @@ internoteAnimation.SequentialAnimation = function(stages, proportions, onStart, 
     this.onStart    = onStart;
     this.onComplete = onComplete;
 };
-
-internoteUtilities.nameConstructor(internoteAnimation, "SequentialAnimation");
 
 internoteAnimation.SequentialAnimation.prototype.indicateStart = function()
 {
@@ -250,7 +242,7 @@ internoteAnimation.SequentialAnimation.prototype.indicateComplete = function()
 // AnimationDriver
 //////////////////
 
-internoteAnimation.AnimationDriver = function(utils, animation)
+internoteAnimation.AnimationDriver = function AnimationDriver(utils, animation)
 {
     this.utils = utils;
     
@@ -261,8 +253,6 @@ internoteAnimation.AnimationDriver = function(utils, animation)
     this.initEventDispatcher();
     this.createEvent("animationCompleted");
 };
-
-internoteUtilities.nameConstructor(internoteAnimation, "AnimationDriver");
 
 internoteAnimation.AnimationDriver.prototype.stepTime = 50;
 

@@ -61,9 +61,6 @@ function InternoteStorage()
     
     this.loadStorage();
     
-    this.utils.nameConstructor(this, "StorageEvent");
-    this.utils.nameConstructor(this, "InternoteNote");
-    
     this.createEvent("noteDisplayToggled");
     this.createEvent("storageFailed");
     
@@ -108,14 +105,14 @@ function InternoteStorage()
 InternoteStorage.prototype =
 {
 
-StorageEvent: function(note, data1, data2)
+StorageEvent: function StorageEvent(note, data1, data2)
 {
     this.note  = note;
     this.data1 = data1;
     this.data2 = data2;
 },
 
-InternoteNote: function(url, matchType, ignoreAnchor, ignoreParams, text, left, top, width, height, backColor, foreColor, createTime, modfnTime, zIndex, isMinimized, isHTML)
+InternoteNote: function InternoteNote(url, matchType, ignoreAnchor, ignoreParams, text, left, top, width, height, backColor, foreColor, createTime, modfnTime, zIndex, isMinimized, isHTML)
 {
     if (arguments.length >= 1)
     {
