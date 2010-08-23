@@ -121,6 +121,12 @@ noteShown: function(uiNote)
     
     this.updateScrollbarType(uiNote);
     uiNote.scrollHandler.drawScrollLine();
+    
+    // We delay these until note is shown, otherwise they don't work.  No idea why,
+    // or why setButtonTooltip works at all, see the comment there.
+    this.setButtonTooltip(uiNote.closeButton,    "internote-entity-delete-note");
+    this.setMinimizeButtonTooltip(uiNote);
+    this.setFlipButtonTooltip    (uiNote);
 },
 
 hasLeftAlignedTopButtons: function()
@@ -291,6 +297,33 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
 isFocused: function(uiNote)
 {
     return document.activeElement == uiNote.textArea;
+},
+
+setMinimizeButtonTooltip: function(uiNote)
+{
+    this.setButtonTooltip(uiNote.minimizeButton, uiNote.note.isMinimized
+                                               ? "internote-entity-unminimize-note"
+                                               : "internote-entity-minimize-note");
+},
+
+setFlipButtonTooltip: function(uiNote)
+{
+    this.setButtonTooltip(uiNote.flipButton, uiNote.isFlipped
+                                           ? "internote-entity-edit-text"
+                                           : "internote-entity-choose-colors");
+},
+
+// *** VERY WEIRD CODE AHEAD ***
+// This function seems to add a XUL attribute to a HTML element (canvas). Yet using XUL_NS,
+// or the HTML title attribute doesn't work.  removeAttributeNS also seems to be necessary
+// to get it to work, as does only calling it once the panel is shown.  I judged this less
+// of a kludge than using XUL wrappers.
+setButtonTooltip: function(button, entityLabelId)
+{
+    //dump("internoteNoteUI.setButtonTooltip " + entityLabelId + "\n");
+    var tooltipLabel = document.getElementById(entityLabelId).getAttribute("value");
+    button.removeAttributeNS(null, "tooltiptext");
+    button.setAttributeNS(null, "tooltiptext", tooltipLabel);
 },
 
 cloneUINote: function(uiNote, doc)
@@ -497,18 +530,13 @@ forceMinimizedDims: function(uiNote)
     this.utils.fixDOMEltWidth(uiNote.littleText, littleSize);
 },
 
-adjustMinimizing: function(uiNote)
-{
-    this.utils.assertClassError(uiNote, "UINote", "UINote is not correct class when updating minimizing.")
-    
-    this.setMinimizedVisibility(uiNote);
-},
-
 setMinimizedVisibility: function(uiNote)
 {
     this.utils.assertClassError(uiNote, "UINote", "UINote is not correct class when updating minimizing.")
     this.utils.setDisplayed(uiNote.midBotBox,    !uiNote.note.isMinimized);
     this.utils.setDisplayed(uiNote.minimizedTop, uiNote.note.isMinimized );
+    
+    this.setMinimizeButtonTooltip(uiNote);
 },
 
 getDims: function(uiNote)
@@ -544,6 +572,7 @@ flipNote: function(uiNote, newIsFlipped)
         uiNote.textArea.blur();
     }
     
+    this.setFlipButtonTooltip(uiNote);
     this.updateScrollbarPresence(uiNote);
 },
 

@@ -589,7 +589,7 @@ internoteAnimation.getMinimizeAnimation = function(utils, noteUI, displayUI, uiN
     
     var reminimizeFunc = function()
     {
-        noteUI.adjustMinimizing(uiNote);
+        noteUI.setMinimizedVisibility(uiNote);
         noteUI.flipNote(uiNote, false);
     };
     

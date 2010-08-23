@@ -183,6 +183,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <window id="main-window">
     <html:iframe id="internote-scratch-frame" src="about:blank"
                  style="height: 0px; width: 0px; overflow: hidden; border: none; background-color: red;"/>
+    <vbox id="internote-entity-area" style="display: none;">
+        <!-- Used to programatically get entity references because createEntityReference doesn't work in Firefox. -->
+        <label id="internote-entity-delete-note"     value="&internote.deleteNoteCmd.label;" />
+        <label id="internote-entity-minimize-note"   value="&internote.minimizeNoteCmd.label;" />
+        <label id="internote-entity-unminimize-note" value="&internote.unminimizeNoteCmd.label;" />
+        <label id="internote-entity-choose-colors"   value="&internote.chooseColorsCmd.label;" />
+        <label id="internote-entity-edit-text"       value="&internote.editTextCmd.label;" />
+    </vbox>
 </window>
 
 </overlay>
