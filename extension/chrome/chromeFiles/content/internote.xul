@@ -64,7 +64,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 </keyset>
 
 <menupopup id="menu_ToolsPopup">
-    <menu accesskey="&internote.appName.accesskey;" label="&internote.appName.label;" insertafter="javascriptConsole">
+    <menu accesskey="&internote.appName.accesskey;" label="&internote.appName.label;" class="menu-iconic" image="chrome://internote/skin/internote.png" insertafter="javascriptConsole">
         <menupopup id="internote-main-menu" onpopupshowing="internoteUIController.chromePrepareMainMenu();">
             <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accesskey;"
                       oncommand="internoteUIController.userCreatesNote();" />
@@ -137,11 +137,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.minimizeNoteCmd.accesskey;" />
         <menuitem label="&internote.unminimizeNoteCmd.label;"    id="internote-context-unminimize-note"
                   oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.unminimizeNoteCmd.accesskey;" style="display: none;" />
-        <menuitem label="&internote.chooseColorsCmd.label;"      id="internote-context-choose-colors"
-                  image="chrome://internote/content/arrow16.png" class="menuitem-iconic"
+        <menuitem label="&internote.chooseColorsCmd.label;"      id="internote-context-choose-colors" class="menuitem-iconic"
                   oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.chooseColorsCmd.accesskey;" />
-        <menuitem label="&internote.editTextCmd.label;"          id="internote-context-edit-text"
-                  image="chrome://internote/content/arrow16.png" class="menuitem-iconic"
+        <menuitem label="&internote.editTextCmd.label;"          id="internote-context-edit-text" class="menuitem-iconic"
                   oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.editTextCmd.accesskey;" />
         <menuitem label="&internote.viewInOpenManagerCmd.label;" id="internote-view-in-manager"
                   oncommand="internoteUIController.userViewsInManager(popupNode);" accesskey="&internote.viewInOpenManagerCmd.accesskey;" />
@@ -172,7 +170,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 <statusbar id="status-bar">
     <statusbarpanel class="statusbarpanel-iconic" id="internote-panel"
-                    label="&internote.newNoteCmd.label;" src="chrome://internote/content/newnote16.png"
+                    label="&internote.newNoteCmd.label;" src="chrome://internote/skin/newnote16.png"
                     onclick="if (!event.button) internoteUIController.userCreatesNote();"
                     context="internote-popup-menu"
                     tooltip="internote-popup" />

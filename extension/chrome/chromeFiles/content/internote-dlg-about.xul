@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <hbox>
                     <spacer style="min-width: 20px; max-width: 20px;" />
                     <vbox pack="center">
-                        <image src="chrome://internote/content/internote.png" pack="center"
+                        <image src="chrome://internote/skin/internote.png" pack="center"
                                style="min-width: 100px; max-width: 100px; min-height: 100px; max-height: 100px;" />
                     </vbox>
                     <spacer style="min-width: 20px; max-width: 20px;" />

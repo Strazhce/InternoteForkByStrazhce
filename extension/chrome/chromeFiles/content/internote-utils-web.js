@@ -1030,6 +1030,27 @@ getPageDims: function(browser)
     }
 },
 
+colorCanvas: function(canvas, color)
+{
+    var context = canvas.getContext("2d");
+    
+    var [w, h] = [canvas.width, canvas.height];
+    
+    var imageData = context.getImageData(0, 0, w, h);
+    
+    for (var x = 0; x < w; x++) {
+        for (var y = 0; y < h; y++) {
+            var i = 4 * (y * w + x);
+            imageData.data[i + 0] = color[0];
+            imageData.data[i + 1] = color[1];
+            imageData.data[i + 2] = color[2];
+            // Keep alpha the same.
+        }
+    }
+    
+    context.putImageData(imageData, 0, 0);
+},
+
 scrollToShowRect: function(browser, noteRect)
 {
     //dump("internoteUtilities.scrollToShowRect\n");

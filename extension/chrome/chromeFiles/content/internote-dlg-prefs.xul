@@ -38,7 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
     <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-prefs.js"/>
     
-    <prefpane id="internotePreferencesPane" image="chrome://internote/content/prefs.png" flex="1">
+    <prefpane id="internotePreferencesPane" image="chrome://internote/skin/prefs.png" flex="1">
         <preferences>
             <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
             <preference id="backColorPreference"       name="internote.defaultnotecolor" type="string"/>

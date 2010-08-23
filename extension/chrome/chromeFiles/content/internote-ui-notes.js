@@ -31,8 +31,6 @@ NOTE_SPACING_LITTLE: 4,
 
 NOTE_ALPHA:  0.85,
 
-noteFlipImage: new Image(),
-
 SWAB_LEFT: 5,
 SWAB_TITLE_HEIGHT: 16,
 SWAB_TITLE_FONT: 12,
@@ -43,6 +41,8 @@ SWAB_Y_SPACING: 6,
 
 FRONT_PAGE  : 0,
 FLIPPED_PAGE: 1,
+
+noteFlipImage: new Image(),
 
 /////////////////////////////////
 // Externally called methods
@@ -55,7 +55,7 @@ init: function(prefs, utils, consts)
     this.consts  = consts;
         
     // XXX Can't find a constructor for this?
-    this.noteFlipImage.src = "chrome://internote/content/arrow" + this.NOTE_OUTER_SIZE + ".png";
+    this.noteFlipImage.src = "chrome://internote/skin/arrow" + this.NOTE_OUTER_SIZE + ".png";
     
     this.SWAB_DISTANCE = this.SWAB_WIDTH + this.SWAB_X_SPACING,
     
@@ -825,9 +825,7 @@ createButton: function(doc, uiNote, onClick, fieldName, id, redrawFuncName)
 createFlipButton: function(doc, uiNote, onFlip)
 {
     var canvas = this.createButton(doc, uiNote, onFlip, "flipButton", "internote-flip", "colorFlipArrow");
-    var context = canvas.getContext("2d");
-    var [w, h] = [canvas.width, canvas.height];
-    context.drawImage(this.noteFlipImage, 0.0 * w, 0.0 * h, 1.0 * w, 1.0 * h);
+    this.utils.drawImageCanvas(canvas, this.noteFlipImage);
     this.colorFlipArrow(uiNote);
     return canvas;
 },
@@ -1235,26 +1233,8 @@ drawResizeHandle: function(uiNote)
 colorFlipArrow: function(uiNote, mode)
 {
     if (mode == null) mode = this.MODE_NORMAL;
-    
-    var context = uiNote.flipButton.getContext("2d");
-    
-    var w = uiNote.flipButton.width;
-    var h = uiNote.flipButton.height;
-    
-    var imageData = context.getImageData(0, 0, w, h);
     var color = this.getRawButtonColor(uiNote, mode);
-    
-    for (var x = 0; x < w; x++) {
-        for (var y = 0; y < h; y++) {
-            var i = 4 * (y * w + x);
-            imageData.data[i + 0] = color[0];
-            imageData.data[i + 1] = color[1];
-            imageData.data[i + 2] = color[2];
-            // Keep alpha the same.
-        }
-    }
-    
-    context.putImageData(imageData, 0, 0);
+    this.utils.colorCanvas(uiNote.flipButton, color);
 },
 
 getBackColorSwabFromPoint: function(x, y)

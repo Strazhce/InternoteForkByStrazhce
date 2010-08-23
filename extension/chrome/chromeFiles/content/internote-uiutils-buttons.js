@@ -71,6 +71,8 @@ internoteUtilities.PressHoverHandler.prototype =
 
 internoteUtilities.incorporate({
 
+    noteFlipImage: new Image(),
+    
     EFFECT_MODE_NORMAL: 0,
     EFFECT_MODE_HOVER:  1,
     EFFECT_MODE_PRESS:  2,
@@ -265,7 +267,7 @@ internoteUtilities.incorporate({
         context.moveTo(0.90 * w, 0.10 * h); context.lineTo(0.10 * w, 0.90 * h);
         context.stroke();
     },
-
+    
     drawMinimizeButton: function(canvas, color)
     {
         var WIDTH_PROPORTION = 0.3;
@@ -285,4 +287,14 @@ internoteUtilities.incorporate({
         context.stroke();
     },
     
+    drawImageCanvas: function(canvas, image)
+    {
+        var context = canvas.getContext("2d");
+        var [w, h] = [canvas.width, canvas.height];
+        context.clearRect(0, 0, w, h);
+        context.drawImage(image, 0.0 * w, 0.0 * h, 1.0 * w, 1.0 * h);
+        return canvas;
+    },
+    
 });
+

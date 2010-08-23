@@ -62,6 +62,8 @@ CHECK_VIEWPORT_INTERVAL: 50,
 
 MENUICON_SIZE: 16,
 
+menuFlipImage: new Image(),
+
 dragMode:            this.DRAG_MODE_NONE,
 noteMode:            this.NOTE_NORMAL,
 uiNoteBeingDragged:  null,
@@ -218,6 +220,8 @@ init: function()
         keySet.appendChild(key);
     }
 	
+    this.menuFlipImage.src = "chrome://internote/skin/arrow" + this.MENUICON_SIZE + ".png";
+    
     dump("Internote startup successful\n");
 },
 
@@ -1332,11 +1336,11 @@ chromeUpdateInternoteIcon: function()
     {
         if (this.storage.areNotesDisplaying)
         {
-            panel.src = "chrome://internote/content/newnote16.png";
+            panel.src = "chrome://internote/skin/newnote16.png";
         }
         else
         {
-            panel.src = "chrome://internote/content/newnote16bw.png";
+            panel.src = "chrome://internote/skin/newnote16bw.png";
         }
     }
 },
@@ -1454,20 +1458,31 @@ chromePrepareContextMenu: function(element)
         
         var canvas = this.utils.createHTMLCanvas(document, null, this.MENUICON_SIZE, this.MENUICON_SIZE);
         
+        var MENUICON_COLOR = "#907070";
+        
         if (this.closeButtonCanvasURL == null)
         {
-            this.utils.drawCloseButton(canvas, "black");
+            this.utils.drawCloseButton(canvas, MENUICON_COLOR);
             this.closeButtonCanvasURL = canvas.toDataURL();
         }
         
         if (this.minimizeButtonCanvasURL == null)
         {
-            this.utils.drawMinimizeButton(canvas, "black");
+            this.utils.drawMinimizeButton(canvas, MENUICON_COLOR);
             this.minimizeButtonCanvasURL = canvas.toDataURL();
         }
         
+        if (this.flipButtonCanvasURL == null)
+        {
+            this.utils.drawImageCanvas(canvas, this.menuFlipImage);
+            this.utils.colorCanvas(canvas, this.utils.parseHexColor(MENUICON_COLOR));
+            this.flipButtonCanvasURL = canvas.toDataURL();
+        }        
+        
         document.getElementById("internote-context-delete-note")  .setAttribute("image", this.closeButtonCanvasURL);
         document.getElementById("internote-context-minimize-note").setAttribute("image", this.minimizeButtonCanvasURL);
+        document.getElementById("internote-context-choose-colors").setAttribute("image", this.flipButtonCanvasURL);
+        document.getElementById("internote-context-edit-text")    .setAttribute("image", this.flipButtonCanvasURL);
     }
     catch (ex)
     {
