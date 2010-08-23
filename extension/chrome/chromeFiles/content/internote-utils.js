@@ -823,7 +823,7 @@ isArray: function(arr)
 {
     try
     {
-        return typeof(arr) == "object" && arr.hasOwnProperty("length");
+        return typeof(arr) == "object" && typeof(arr.length) == "number";
     }
     catch (ex)
     {

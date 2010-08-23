@@ -118,16 +118,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     
     <menupopup id="internote-note-menu" onpopupshowing="internoteUIController.chromePrepareContextMenu(popupNode);">
         <!-- Don't use command directly so we can disable them separately. -->
-        <menuitem label="&internote.cutTextCmd.label;"    id="internote-context-cut-text"
+        <menuitem label="&internote.cutTextCmd.label;"    id="internote-context-cut-text" class="internote-text-command"
                   oncommand="internoteUIController.userCutsText();" accesskey="&internote.cutTextCmd.accesskey;" />
-        <menuitem label="&internote.copyTextCmd.label;"   id="internote-context-copy-text"
+        <menuitem label="&internote.copyTextCmd.label;"   id="internote-context-copy-text" class="internote-text-command"
                   oncommand="internoteUIController.userCopiesText();" accesskey="&internote.copyTextCmd.accesskey;" />
-        <menuitem label="&internote.pasteTextCmd.label;"  id="internote-context-paste-text"
+        <menuitem label="&internote.pasteTextCmd.label;"  id="internote-context-paste-text" class="internote-text-command"
                   oncommand="internoteUIController.userPastesText();" accesskey="&internote.pasteTextCmd.accesskey;" />
-        <menuitem label="&internote.deleteTextCmd.label;" id="internote-context-delete-text"
+        <menuitem label="&internote.deleteTextCmd.label;" id="internote-context-delete-text" class="internote-text-command"
                   oncommand="internoteUIController.userDeletesText();" accesskey="&internote.deleteTextCmd.accesskey;"/>
-        <menuitem label="&internote.selectAllCmd.label;"  id="internote-context-select-all"
+        <menuitem label="&internote.selectAllCmd.label;"  id="internote-context-select-all" class="internote-text-command"
                   oncommand="internoteUIController.userSelectsAll();" accesskey="&internote.selectAllCmd.accesskey;" />
+        <menuitem label="&internote.setDefaultColorsCmd.label;" id="internote-context-default-colors" class="internote-color-command"
+                  oncommand="internoteUIController.userSetsDefaultColors(popupNode);" accesskey="&internote.setDefaultColorsCmd.accesskey;" />
         <menuseparator />
         <menuitem label="&internote.deleteNoteCmd.label;"        id="internote-context-delete-note"
                   oncommand="internoteUIController.userRemovesNote(popupNode);" accesskey="&internote.deleteNoteCmd.accesskey;" />

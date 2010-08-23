@@ -3,13 +3,13 @@
 <!ENTITY internote.appName.label              "Internote">
 <!ENTITY internote.appName.accesskey          "N">
 
-<!ENTITY internote.newNoteCmd.label           "Add New Internote">
+<!ENTITY internote.newNoteCmd.label           "Add New Note">
 
-<!ENTITY internote.openManagerCmd.label       "Manage All Internotes">
+<!ENTITY internote.openManagerCmd.label       "Manage All Notes">
 <!ENTITY internote.openPrefsCmd.label         "Preferences for Internote">
 <!ENTITY internote.helpCmd.label              "Help for Internote">
 
-<!ENTITY internote.displayNotesCmd.label      "Display Internotes">
+<!ENTITY internote.displayNotesCmd.label      "Display Notes">
 
 <!ENTITY internote.minimizeAllCmd.label       "Minimise This Page's Notes">
 <!ENTITY internote.unminimizeAllCmd.label     "Restore This Page's Notes">
@@ -29,6 +29,8 @@
 <!ENTITY internote.pasteTextCmd.label         "Paste">
 <!ENTITY internote.deleteTextCmd.label        "Delete">
 <!ENTITY internote.selectAllCmd.label         "Select All">
+
+<!ENTITY internote.setDefaultColorsCmd.label  "Use as Default Colors">
 
 <!ENTITY internote.deleteNoteCmd.label        "Delete Note">
 <!ENTITY internote.chooseColorsCmd.label      "Choose New Colours">
@@ -53,13 +55,14 @@
 <!ENTITY internote.copyTextCmd.accesskey      "C">
 <!ENTITY internote.pasteTextCmd.accesskey     "P">
 <!ENTITY internote.deleteTextCmd.accesskey    "D">
+<!ENTITY internote.setDefaultColorsCmd.accesskey "U">
 <!ENTITY internote.selectAllCmd.accesskey     "A">
 <!ENTITY internote.deleteNoteCmd.accesskey    "L">
 <!ENTITY internote.chooseColorsCmd.accesskey  "E">
 <!ENTITY internote.editTextCmd.accesskey      "E">
 <!ENTITY internote.minimizeNoteCmd.accesskey  "N">
 <!ENTITY internote.unminimizeNoteCmd.accesskey "N">
-<!ENTITY internote.viewInOpenManagerCmd.accesskey "V">
+<!ENTITY internote.viewInOpenManagerCmd.accesskey "G">
 
 <!ENTITY internote.showsOnMenuCmd.accesskey   "H">
 <!ENTITY internote.showsOnPageCmd.accesskey   "G">

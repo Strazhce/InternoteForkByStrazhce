@@ -19,9 +19,11 @@
 
 var internotePreferences = {
 
-init: function(utils)
+init: function(utils, consts)
 {
-    this.utils = utils;
+    this.utils  = utils;
+    this.consts = consts;
+    
     this.prefs = this.utils.getCCService("@mozilla.org/preferences-service;1", "nsIPrefService").getBranch("internote.");
 },
 
@@ -102,6 +104,12 @@ getFontSize : function()
     }
 },
 
+setEnumPref: function(prefName, newValue)
+{
+    this.utils.assertError(this.prefs.getPrefType(prefName) != 0, "Not an enum pref.", prefName);
+    var prefValue = this.prefs.setCharPref(prefName, "" + newValue);
+},
+
 shouldUseStatusbar      : function() { return this.getBoolPref("usestatusbar",    true ); },
 shouldUseTransparency   : function() { return this.getBoolPref("transparency",    false); },
 shouldAllowHighlighting : function() { return this.getBoolPref("highlightable",   false); },
@@ -113,20 +121,6 @@ shouldAskBeforeDelete   : function() { return this.getBoolPref("askbeforedelete"
 isInDebugMode:              function() { return this.getBoolPref("debugmode", false); },
 shouldCombineScrollButtons: function() { return this.getOptionalBoolPref("usecombinedscrollbuttons"); },
 shouldLeftAlignTopButtons:  function() { return this.getOptionalBoolPref("useleftalignedtopbuttons"); },
-
-setSaveLocationPref: function(path)
-{
-    if (path == null || path == "")
-    {
-        this.prefs.setBoolPref("changelocation", false)
-        this.prefs.setCharPref("savelocation", "");
-    }
-    else
-    {
-        this.prefs.setBoolPref("changelocation", true);
-        this.prefs.setCharPref("savelocation", path);
-    }
-},
 
 getSaveLocationPref: function()
 {
@@ -177,6 +171,40 @@ detectFirstRun : function()
     
     this.prefs.setBoolPref("firstrun", true);
     return true;
+},
+
+setSaveLocationPref: function(path)
+{
+    if (path == null || path == "")
+    {
+        this.prefs.setBoolPref("changelocation", false)
+        this.prefs.setCharPref("savelocation", "");
+    }
+    else
+    {
+        this.prefs.setBoolPref("changelocation", true);
+        this.prefs.setCharPref("savelocation", path);
+    }
+},
+
+setDefaultColors: function(foreColor, backColor)
+{
+    this.utils.assertError(this.utils.isHexColor(foreColor), "Invalid foreground color.", foreColor);
+    this.utils.assertError(this.utils.isHexColor(backColor), "Invalid background color.", backColor);
+    
+    var foreColorNum = this.consts.FOREGROUND_COLOR_SWABS.indexOf(foreColor);
+    var backColorNum = this.consts.BACKGROUND_COLOR_SWABS.indexOf(backColor);
+    
+    if (foreColorNum >= 0 && backColorNum >= 0)
+    {
+        // XXX Should probably update prefs dialog by observation.
+        this.setEnumPref("defaulttextcolor", foreColorNum);
+        this.setEnumPref("defaultnotecolor", backColorNum);
+    }
+    else
+    {
+        this.assertWarnNotHere("Attempt to set custom colors as defaults.");
+    }
 },
 
 };

@@ -46,7 +46,7 @@ init: function()
     this.consts  = internoteConstants;
     
     this.utils.init();
-    this.prefs.init(this.utils);
+    this.prefs.init(this.utils, this.consts);
     
     try
     {

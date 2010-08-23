@@ -114,7 +114,7 @@ init: function()
     this.global    = internoteSharedGlobal;
     
     this.utils.init();
-    this.prefs.init(this.utils);
+    this.prefs.init(this.utils, this.consts);
     
     this.displayUI = this.chooseDisplayUI();
     
@@ -1285,6 +1285,27 @@ userIgnoresParams: function(ev, element)
     }
 },
 
+userSetsDefaultColors: function(element)
+{
+    try
+    {
+        var note = this.storage.allNotes[this.utils.getNoteNum(element)];
+        this.prefs.setDefaultColors(note.foreColor, note.backColor);
+        
+        var statusbar = document.getElementById("statusbar-display");
+        
+        if (statusbar != null)
+        {
+            var feedbackMessage = this.utils.getLocaleString("DefaultsColorsChangedMessage");
+            statusbar.label = feedbackMessage;
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when setting default colors.", ex);
+    }
+},
+
 //////////////////////
 // Chrome Manipulation
 //////////////////////
@@ -1426,6 +1447,8 @@ chromePrepareContextMenu: function(element)
         this.utils.setDisplayed("internote-context-minimize-note",   !isMinimized);
         this.utils.setDisplayed("internote-context-unminimize-note",  isMinimized);
         
+        this.utils.setDisplayed(document.getElementsByClassName("internote-text-command" ), !isFlipped);
+        this.utils.setDisplayed(document.getElementsByClassName("internote-color-command"),  isFlipped);
     }
     catch (ex)
     {
