@@ -672,7 +672,7 @@ traceData: function(data, maxLevels, maxLineLength)
     catch (ex)
     {
         // Certain system objects seem to give errors when we try to loop over them.
-        return ["<<<INTERNAL-ERROR>>>"];
+        return ["<<<INTERNAL-ERROR:" + ex.name + ">>>"];
     }
 },
 
@@ -821,15 +821,7 @@ getRangeIntersection: function(range1, range2)
 
 isArray: function(arr)
 {
-    try
-    {
-        return typeof(arr) == "object" && typeof(arr.length) == "number";
-    }
-    catch (ex)
-    {
-        // It seems some objects don't have hasOwnProperty, but then they're not arrays.
-        return false;
-    }
+    return typeof(arr) == "object" && typeof(arr.length) == "number";
 },
 
 callSuperconstructor: function(myThis, mySuperclass, argArray)

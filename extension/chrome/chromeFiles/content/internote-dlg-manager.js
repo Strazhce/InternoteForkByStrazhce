@@ -1354,7 +1354,14 @@ userPrintsNotes: function (shouldExportOnlySelected)
         }
         catch (ex)
         {
-            // Abort goes here, so do nothing.
+            if (ex.name == "NS_ERROR_ABORT")
+            {
+                // Do nothing, normal if the user cancels the print dialog.
+            }
+            else
+            {
+                this.utils.handleException("Exception caught from print dialog.", ex);
+            }
         }
     }
     catch (ex)

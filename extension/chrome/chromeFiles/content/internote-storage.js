@@ -352,7 +352,14 @@ scheduleXMLSave: function()
         {
             // Workaround firefox bug #580570.
             this.utils.handleException("Failure to schedule save, falling back to immediate.", ex);
-            this.saveXMLNow();
+            try
+            {
+                this.saveXMLNow();
+            }
+            catch (ex2)
+            {
+                this.utils.handleException("Exception caught when doing fallback save.", ex2);
+            }
         }
     }
     else
