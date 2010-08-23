@@ -27,8 +27,8 @@ init: function()
     
     var em = this.utils.getCCService("@mozilla.org/extensions/manager;1", "nsIExtensionManager");
     var MY_ID = "{e3631030-7c02-11da-a72b-0800200c9a66}";
-    var file = this.em.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
-    var installRDF = this.loadInstallRDF(em);
+    var file = em.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
+    var installRDF = this.utils.loadInstallRDF(em);
     
     if (installRDF != null)
     {
@@ -36,7 +36,7 @@ init: function()
         this.fixVersionNumber(internoteVersion);
         this.insertContributors(installRDF);
         this.fixDescription(installRDF);      
-        this.adjustErrorInfo(internoteVersion);
+        this.adjustErrorInfo(em, internoteVersion);
     }
     else
     {
@@ -93,9 +93,9 @@ removeContributors: function()
     contributorsBox.appendChild(newNode);
 },
 
-adjustErrorInfo(internoteVersion)
+adjustErrorInfo: function(em, internoteVersion)
 {
-    var text = this.utils.getErrorInfo(internoteVersion);    
+    var text = this.utils.getErrorInfo(em, internoteVersion);    
     var textBox = document.getElementById("errors-text");
     textBox.readOnly = true;
     textBox.value = text;
