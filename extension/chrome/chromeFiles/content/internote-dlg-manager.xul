@@ -46,8 +46,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-manager.js"/>
     <script type="application/x-javascript" src="chrome://global/content/printUtils.js"/>
     
-    <label value="&internote.managerDialog.title;" style="font-size: 20px; font-weight: bold; text-align: center; margin-bottom: 5px;" />
-    
     <popupset>
       <popup id="actionsMenu">
         <menuitem id="selectAll"        label="&internote.selectAllCmd.label;" accesskey="&internote.selectAllCmd.accesskey;"
@@ -106,6 +104,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   accesskey="&internote.printSelectedCmd.accesskey;" />
       </popup>
     </popupset>
+    
+    <notificationbox id="notificationBox" flex="1">
     
     <hbox flex="2">
         <vbox flex="3">
@@ -247,6 +247,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </groupbox>
         </vbox>
     </hbox>
+    
+    </notificationbox>
     
     <stringbundleset id="stringbundleset">
         <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>

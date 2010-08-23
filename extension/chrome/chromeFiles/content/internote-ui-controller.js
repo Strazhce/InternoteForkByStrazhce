@@ -139,13 +139,11 @@ init: function()
     }
     else if (this.storage.loadStatus == this.storage.LOADED_FROM_BACKUP)
     {
-        var msg = this.utils.getLocaleString("RestoredBackupMessage");
-        alert(msg);
+        this.showWarning("RestoredBackupMessage");
     }
     else if (this.storage.loadStatus == this.storage.LOAD_LEGACY_FAILED)
     {
-        var msg = this.utils.getLocaleString("LegacyFailedError");
-        alert(msg);
+        this.showWarning("LegacyFailedError");
     }
     else if (this.storage.loadStatus == this.storage.LOADED_FROM_SCRATCH ||
              this.storage.loadStatus == this.storage.LOADED_FROM_LEGACY)
@@ -2450,6 +2448,13 @@ hasOffscreenNotes: function()
         }
     }
     return false;
+},
+
+showWarning: function(messageName)
+{
+    var messageText = this.utils.getLocaleString(messageName);
+    var notifyBox = gBrowser.getNotificationBox();
+    notifyBox.appendNotification(messageText, "warning", null, notifyBox.PRIORITY_WARNING_MEDIUM);
 },
 
 showMessage: function(messageName, shouldTimeout, linkMessageName, linkFunc)

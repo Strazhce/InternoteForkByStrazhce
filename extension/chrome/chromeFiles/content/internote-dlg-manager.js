@@ -1118,7 +1118,8 @@ userImportsNotes: function(fileType, filter)
             var message = this.utils.getLocaleString(messageType);
             message = message.replace("%1", addedCount).replace("%2", foundCount);
             
-            alert(message);
+            var notificationBox = document.getElementById("notificationBox");
+            notificationBox.appendNotification(message, "import_message", null, notificationBox.PRIORITY_INFO_MEDIUM);
         }
     }
     catch (ex)
