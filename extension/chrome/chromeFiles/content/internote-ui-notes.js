@@ -55,7 +55,7 @@ init: function(prefs, utils, consts)
     this.consts  = consts;
         
     // XXX Can't find a constructor for this?
-    this.noteFlipImage.src = "chrome://internote/content/arrow.png";
+    this.noteFlipImage.src = "chrome://internote/content/arrow" + this.NOTE_OUTER_SIZE + ".png";
     
     this.SWAB_DISTANCE = this.SWAB_WIDTH + this.SWAB_X_SPACING,
     
