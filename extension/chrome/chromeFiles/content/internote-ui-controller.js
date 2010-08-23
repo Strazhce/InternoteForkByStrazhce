@@ -62,8 +62,6 @@ CHECK_VIEWPORT_INTERVAL: 50,
 
 MENUICON_SIZE: 16,
 
-menuFlipImage: new Image(),
-
 dragMode:            this.DRAG_MODE_NONE,
 noteMode:            this.NOTE_NORMAL,
 uiNoteBeingDragged:  null,
@@ -220,8 +218,6 @@ init: function()
         keySet.appendChild(key);
     }
 	
-    this.menuFlipImage.src = "chrome://internote/skin/arrow" + this.MENUICON_SIZE + ".png";
-    
     dump("Internote startup successful\n");
 },
 
@@ -1455,27 +1451,31 @@ chromePrepareContextMenu: function(element)
         this.utils.setDisplayed(document.getElementsByClassName("internote-text-command" ), !isFlipped);
         this.utils.setDisplayed(document.getElementsByClassName("internote-color-command"),  isFlipped);
         
-        var canvas = this.utils.createHTMLCanvas(document, null, this.MENUICON_SIZE, this.MENUICON_SIZE);
+        var smallCanvas = this.utils.createHTMLCanvas(document, null, this.noteUI.NOTE_OUTER_SIZE, this.noteUI.NOTE_OUTER_SIZE);
+        var largeCanvas = this.utils.createHTMLCanvas(document, null, this.MENUICON_SIZE, this.MENUICON_SIZE);
         
         var MENUICON_COLOR = "#907070";
         
         if (this.closeButtonCanvasURL == null)
         {
-            this.utils.drawCloseButton(canvas, MENUICON_COLOR);
-            this.closeButtonCanvasURL = canvas.toDataURL();
+            this.utils.drawCloseButton(smallCanvas, MENUICON_COLOR);
+            this.utils.drawCanvasCenteredIntoCanvas(largeCanvas, smallCanvas);
+            this.closeButtonCanvasURL = largeCanvas.toDataURL();
         }
         
         if (this.minimizeButtonCanvasURL == null)
         {
-            this.utils.drawMinimizeButton(canvas, MENUICON_COLOR);
-            this.minimizeButtonCanvasURL = canvas.toDataURL();
+            this.utils.drawMinimizeButton(smallCanvas, MENUICON_COLOR);
+            this.utils.drawCanvasCenteredIntoCanvas(largeCanvas, smallCanvas);
+            this.minimizeButtonCanvasURL = largeCanvas.toDataURL();
         }
         
         if (this.flipButtonCanvasURL == null)
         {
-            this.utils.drawImageCanvas(canvas, this.menuFlipImage);
-            this.utils.colorCanvas(canvas, this.utils.parseHexColor(MENUICON_COLOR));
-            this.flipButtonCanvasURL = canvas.toDataURL();
+            this.utils.drawImageCanvas(smallCanvas, this.noteUI.noteFlipImage);
+            this.utils.colorCanvas(smallCanvas, this.utils.parseHexColor(MENUICON_COLOR));
+            this.utils.drawCanvasCenteredIntoCanvas(largeCanvas, smallCanvas);
+            this.flipButtonCanvasURL = largeCanvas.toDataURL();
         }        
         
         document.getElementById("internote-context-delete-note")  .setAttribute("image", this.closeButtonCanvasURL);

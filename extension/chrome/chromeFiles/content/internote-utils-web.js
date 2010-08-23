@@ -1094,4 +1094,15 @@ scrollToShowRect: function(browser, noteRect)
     }
 },
 
+drawCanvasCenteredIntoCanvas: function(destCanvas, srcCanvas)
+{
+    var diffX = destCanvas.width  - srcCanvas.width;
+    var diffY = destCanvas.height - srcCanvas.height;
+    
+    var destContext = destCanvas.getContext("2d");
+    
+    destContext.clearRect(0, 0, destCanvas.width, destCanvas.height);
+    destContext.drawImage(srcCanvas, diffX / 2, diffY / 2);
+},
+
 });
