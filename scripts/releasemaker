@@ -2,4 +2,7 @@
 
 rm -Rf svn-export internote-$1.xpi
 svn export trunk/extension svn-export
-(cd svn-export; zip -9 -r ../internote-$1.xpi *)
+cd svn-export
+mv chrome.manifest.release chrome.manifest
+(cd chrome; zip -9 --recurse-paths --move internote.jar *)
+zip -9 --recurse-paths ../internote-$1.xpi *
