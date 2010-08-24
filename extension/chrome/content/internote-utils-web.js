@@ -702,7 +702,7 @@ setScratchElement: function(iFrame, freshElement, dims)
     var body = doc.documentElement.getElementsByTagName("body")[0];
     
     // Clear the IFrame.
-    iFrame.contentDocument.location.reload();
+    this.removeAllChildNodes(body);
     body.style.padding = "0px";
     body.style.border  = "none";
     body.style.margin  = "0px";
