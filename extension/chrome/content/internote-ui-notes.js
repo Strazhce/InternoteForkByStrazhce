@@ -326,15 +326,16 @@ setButtonTooltip: function(button, entityLabelId)
 
 cloneUINote: function(uiNote, doc)
 {
-    var tempUINote = this.createNewNote(uiNote.note, {}, doc);
+    return this.createNewNote(uiNote.note, {}, doc);
+},
+
+configureClonedUINote: function(tempUINote, uiNote)
+{
     tempUINote.textArea.scrollTop = uiNote.textArea.scrollTop;
-    tempUINote.hasScrollbar = this.isScrollbarNecessary(uiNote);
     
     // Need to do get the scrollbar right.
     this.updateScrollbarType(tempUINote);
     tempUINote.scrollHandler.drawScrollLine(uiNote.scrollHandler.getScrollInfo());
-    
-    return tempUINote;
 },
 
 pointers: {
@@ -594,13 +595,6 @@ updateFontSize: function(uiNote)
     uiNote.scrollHandler.updateLineHeight(lineHeight);
 },
 
-isScrollbarNecessary: function(uiNote)
-{
-    //dump("isScrollbarNecessary = " + uiNote.scrollHandler.isNecessary() + " " +
-    //     uiNote.isFlipped + "\n");
-    return uiNote.scrollHandler.isNecessary() && !uiNote.isFlipped;
-},
-
 updateScrollbarType: function(uiNote)
 {
     //dump("updateScrollbarType " + uiNote.num + "\n");
@@ -622,24 +616,16 @@ updateScrollbarPresence: function(uiNote)
 {
     //dump("updateScrollbarPresence " + uiNote.num + "\n");
     
-    if (uiNote.hasOwnProperty("hasScrollbar"))
-    {
-        // Used during flipping to avoid checks.
-        var hasScrollbar = uiNote.hasScrollbar;
-    }
-    else
-    {
-        var hasScrollbar = this.isScrollbarNecessary(uiNote);
-    }
+    var hasScrollbar = uiNote.scrollHandler.isNecessary() && !uiNote.isFlipped;
     
     if (this.prefs.shouldUseNativeScrollbar())
     {
-        var shouldHideEastDeck = this.isScrollbarNecessary(uiNote);
+        var shouldHideEastDeck = hasScrollbar;
     }
     else
     {
         var shouldHideEastDeck = false;
-        
+
         if (hasScrollbar)
         {
             uiNote.eastDeck.setAttribute("selectedIndex", 1);
@@ -647,7 +633,11 @@ updateScrollbarPresence: function(uiNote)
         else
         {
             uiNote.eastDeck.setAttribute("selectedIndex", 0);
-            uiNote.textArea.scrollTop = 0;
+            
+            if (!uiNote.scrollHandler.isNecessary())
+            {
+                uiNote.textArea.scrollTop = 0;
+            }
         }
     }
     
@@ -1313,11 +1303,13 @@ makeStaticImage: function(uiNote, dims)
     var tempUINote = this.cloneUINote(uiNote, doc);
     
     if (uiNote.isFlipped) this.flipNote(tempUINote);
+
+    this.utils.setScratchElement(scratchIFrame, tempUINote.noteElt, dims);
     
-    // The dimensions may be different to that on the note due to minimizing, etc, so copy from the uiNote instead.
+    // Can't do this until the clone has been placed in a document.
+    this.configureClonedUINote(tempUINote, uiNote);
     
-    var rawCanvas = uiNote.rawCanvas =
-        this.utils.getCanvasOfElement(scratchIFrame, tempUINote.noteElt, dims);
+    var rawCanvas = uiNote.rawCanvas = this.utils.getWindowCanvas(scratchIFrame.contentWindow, dims);
     rawCanvas.id = "internote-rawcanvas" + uiNote.num;
     
     var scaledCanvas = uiNote.scaledCanvas = this.utils.createHTMLElement("canvas", document, "internote-scaledcanvas" + uiNote.num);
@@ -1326,15 +1318,10 @@ makeStaticImage: function(uiNote, dims)
     this.updateStaticImage(uiNote, dims);
     
     // Hide the UI so we can view the image.
-    uiNote.foreground.style.display = "none";
+    // Background can go away entirely ...
     uiNote.background.style.display = "none";
-    
-    // XXX Why don't these work?
-    //uiNote.foreground.style.visibility = "hidden";
-    //uiNote.background.style.visibility = "hidden";
-    
-    //uiNote.foreground.style.opacity = 0;
-    //uiNote.background.style.opacity = 0;
+    // ... but we must only hide the foreground, to preserve textarea selection, focus, scroll, etc.
+    uiNote.foreground.style.visibility = "hidden";
 },
 
 updateStaticImage: function(uiNote, dims)
@@ -1343,6 +1330,10 @@ updateStaticImage: function(uiNote, dims)
     var context = scaledCanvas.getContext("2d");
     
     this.utils.setDims(scaledCanvas, dims);
+    
+    // The foreground must stick around, so we'll need to adjust its size or it messes things up.
+    var foregroundMargins = [2 * this.NOTE_BORDER_SIZE, 2 * this.NOTE_BORDER_SIZE];
+    this.utils.fixDOMEltDims(uiNote.foreground, this.utils.coordPairSubtract(dims, foregroundMargins));
     
     context.drawImage(uiNote.rawCanvas, 0, 0, scaledCanvas.width, scaledCanvas.height);
 },
@@ -1360,15 +1351,13 @@ makeDynamic: function(uiNote)
     uiNote.scaledCanvas = null;
     
     // Show the main UI again.
-    uiNote.foreground.style.display = "";
     uiNote.background.style.display = "";
-    
-    // Reinstate the fixed DOM dimensions.
-    //uiNote.foreground.style.opacity = 1;
-    //uiNote.background.style.opacity = 1;
-    
-    //uiNote.foreground.style.visibility = "";
-    //uiNote.background.style.visibility = "";
+    uiNote.foreground.style.visibility = "";
+},
+
+isStaticImage: function(uiNote)
+{
+    return uiNote.rawCanvas != null;
 },
 
 };

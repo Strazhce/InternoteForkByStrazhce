@@ -682,39 +682,46 @@ createXULSpacer: function(doc, width, height)
     return spacer;
 },
 
-// Tricky code ... easier to break.
-getCanvasOfElement: function(iFrame, freshElement, dims)
+// getWindowCanvas is usually called after setScratchElement, but we don't put them
+// in one function, because certain things can only be determined when the element is in
+// a document, eg scrollHeight, and this might affect what we do to the element.
+getWindowCanvas: function(window, dims)
 {
-    var doc = iFrame.contentDocument;
-    var body = doc.documentElement.getElementsByTagName("body")[0];
-    
-    this.setDims(iFrame, dims);
-    
-    body.style.padding = "0px";
-    body.style.border  = "none";
-    body.style.margin  = "0px";
-    this.setDims(body.style, dims);
-    body.appendChild(freshElement);
-    
     var canvas = this.createHTMLElement("canvas");
     var context = canvas.getContext("2d");
     this.setDims(canvas, dims);
-    
-    context.drawWindow(iFrame.contentWindow, 0, 0, dims[0], dims[1], "rgba(0,0,0,0)");
+    context.drawWindow(window, 0, 0, dims[0], dims[1], "rgba(0,0,0,0)");
     
     return canvas;
 },
 
+setScratchElement: function(iFrame, freshElement, dims)
+{
+    // Configure.
+    var doc = iFrame.contentDocument;
+    var body = doc.documentElement.getElementsByTagName("body")[0];
+    
+    // Clear the IFrame.
+    iFrame.contentDocument.location.reload();
+    body.style.padding = "0px";
+    body.style.border  = "none";
+    body.style.margin  = "0px";
+    
+    // Set the sizes.
+    this.setDims(iFrame, dims);
+    this.setDims(body.style, dims);
+    
+    // Add the element.
+    body.appendChild(freshElement);
+},
+
 // Tricky code ... easy to break.
-getScratchIFrame: function(doc, src)
+getScratchIFrame: function(doc)
 {
     if (doc == null) doc = document;
-    if (src == null) src = "about:blank";
     
     var iFrame = doc.getElementById("internote-scratch-frame");
     this.assertError(iFrame != null, "Could not find scratch frame.");
-    
-    iFrame.contentDocument.location.reload();
     
     return iFrame;
 },
