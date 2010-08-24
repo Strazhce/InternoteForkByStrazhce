@@ -625,20 +625,16 @@ updateScrollbarPresence: function(uiNote)
     else
     {
         var shouldHideEastDeck = false;
-
-        if (hasScrollbar)
-        {
-            uiNote.eastDeck.setAttribute("selectedIndex", 1);
-        }
-        else
-        {
-            uiNote.eastDeck.setAttribute("selectedIndex", 0);
-            
-            if (!uiNote.scrollHandler.isNecessary())
-            {
-                uiNote.textArea.scrollTop = 0;
-            }
-        }
+    }
+    
+    if (!shouldHideEastDeck)
+    {
+        uiNote.eastDeck.setAttribute("selectedIndex", hasScrollbar ? 1 : 0);
+    }
+    
+    if (!uiNote.scrollHandler.isNecessary())
+    {
+        uiNote.textArea.scrollTop = 0;
     }
     
     // Make sure east deck has correct displayed status, and update text area to compensate.
