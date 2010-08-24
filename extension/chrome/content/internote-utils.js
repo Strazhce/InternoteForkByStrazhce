@@ -590,7 +590,7 @@ traceData: function(data, maxLevels, maxLineLength)
                 }
                 catch (ex)
                 {
-                    attributes.push(prefix + "<<<INTERNAL-ERROR>>>");
+                    attributes.push(prefix + "<<<INTERNAL-ERROR:" + ex.name + ">>>");
                 }
                 
                 if (prop == data)
