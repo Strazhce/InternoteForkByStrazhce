@@ -117,7 +117,6 @@ noteShown: function(uiNote)
     //dump("internoteNoteUI.noteShown\n");
     
     this.updateScrollbarType(uiNote);
-    uiNote.scrollHandler.drawScrollLine();
     
     // We delay these until note is shown, otherwise they don't work.  No idea why,
     // or why setButtonTooltip works at all, see the comment there.
@@ -335,7 +334,6 @@ configureClonedUINote: function(tempUINote, uiNote)
     
     // Need to do get the scrollbar right.
     this.updateScrollbarType(tempUINote);
-    tempUINote.scrollHandler.drawScrollLine(uiNote.scrollHandler.getScrollInfo());
 },
 
 pointers: {
@@ -610,6 +608,8 @@ updateScrollbarType: function(uiNote)
     }
     
     this.updateScrollbarPresence(uiNote);
+    
+    uiNote.scrollHandler.drawScrollLine();
 },
 
 updateScrollbarPresence: function(uiNote)

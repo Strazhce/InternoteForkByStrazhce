@@ -173,16 +173,11 @@ drawScrollButton: function(effectMode, isUp)
     context.stroke();
 },
 
-drawScrollLine: function(scrollInfo)
+drawScrollLine: function()
 {
     //dump("internoteUtilities.ScrollHandler.drawScrollLine\n");
     
-    if (scrollInfo == null)
-    {
-        scrollInfo = this.getScrollInfo();
-    }
-    
-    var [scrollLineTop, scrollLineBot, scrollTopPos, scrollBotPos] = scrollInfo;
+    var [scrollLineTop, scrollLineBot, scrollTopPos, scrollBotPos] = this.getScrollInfo();
     
     var context = this.scrollLine.getContext("2d");
     
