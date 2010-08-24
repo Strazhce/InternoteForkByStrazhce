@@ -17,7 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 internoteUtilities.incorporate({
-    ScrollHandler: function(utils, prefs, element, idSuffix, width, lineColor, buttonColor, hoverColor, pressColor, isEnabledFunc)
+    ScrollHandler: function(utils, prefs, element, idSuffix, width, getLineColorFunc, getButtonColorFunc, isEnabledFunc)
     {
         //dump("internoteUtilities.ScrollHandler.ScrollHandler\n");
         
@@ -29,10 +29,8 @@ internoteUtilities.incorporate({
         
         this.isEnabledFunc = isEnabledFunc;
         
-        this.lineColor   = lineColor;
-        this.buttonColor = buttonColor;
-        this.hoverColor  = hoverColor;
-        this.pressColor  = pressColor;
+        this.getLineColorFunc   = getLineColorFunc;
+		this.getButtonColorFunc = getButtonColorFunc;
         
         var doc = element.ownerDocument;
         var scrollbar = this.utils.createXULElement("vbox", doc, "internote-scrollbar" + idSuffix);
@@ -148,12 +146,6 @@ updateLineHeight: function(lineHeight)
     this.lineHeight = lineHeight;
 },
 
-updateColors: function(lineColor, buttonColor)
-{
-    this.lineColor   = lineColor;
-    this.buttonColor = buttonColor;
-},
-
 drawUpScrollButton:   function(effectMode) { this.drawScrollButton(effectMode, true ); },
 drawDownScrollButton: function(effectMode) { this.drawScrollButton(effectMode, false); },
 
@@ -167,19 +159,7 @@ drawScrollButton: function(effectMode, isUp)
     
     context.clearRect(0, 0, w, h);
     
-    if (effectMode == this.utils.EFFECT_MODE_PRESS)
-    {
-        context.strokeStyle = this.pressColor;
-    }
-    else if (effectMode == this.utils.EFFECT_MODE_HOVER)
-    {
-        context.strokeStyle = this.hoverColor;
-    }
-    else
-    {
-        context.strokeStyle = this.buttonColor;
-    }
-    
+	context.strokeStyle = this.getButtonColorFunc(effectMode);
     context.lineWidth = 0.3 * w;
     context.lineCap   = "round";
     
@@ -211,8 +191,8 @@ drawScrollLine: function(scrollInfo)
     
     context.clearRect(0, 0, w, h);
     
-    context.strokeStyle = this.lineColor;
-    context.fillStyle   = this.buttonColor;
+    context.strokeStyle = this.getLineColorFunc();
+    context.fillStyle   = this.getButtonColorFunc(this.utils.EFFECT_MODE_NORMAL);
     context.lineWidth   = 0.4 * w;
     context.lineCap     = "round";
     
