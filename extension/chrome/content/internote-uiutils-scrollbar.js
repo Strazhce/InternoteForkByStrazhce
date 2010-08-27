@@ -30,7 +30,7 @@ internoteUtilities.incorporate({
         this.isEnabledFunc = isEnabledFunc;
         
         this.getLineColorFunc   = getLineColorFunc;
-		this.getButtonColorFunc = getButtonColorFunc;
+        this.getButtonColorFunc = getButtonColorFunc;
         
         var doc = element.ownerDocument;
         var scrollbar = this.utils.createXULElement("vbox", doc, "internote-scrollbar" + idSuffix);
@@ -159,7 +159,7 @@ drawScrollButton: function(effectMode, isUp)
     
     context.clearRect(0, 0, w, h);
     
-	context.strokeStyle = this.getButtonColorFunc(effectMode);
+    context.strokeStyle = this.getButtonColorFunc(effectMode);
     context.lineWidth = 0.3 * w;
     context.lineCap   = "round";
     

@@ -43,13 +43,13 @@ init: function()
         
         var extraInfo = document.getElementById("extra-info");
         extraInfo.focus();
-		
-		addEventListener("message", this.utils.bind(this, function(event) {
+        
+        addEventListener("message", this.utils.bind(this, function(event) {
             if (event.origin == "chrome://browser" && event.data == "reload")
             {
                 this.adjustErrorInfo(em, this.internoteVersion);
             }
-        }), true);		
+        }), true);        
     }
     catch (ex)
     {

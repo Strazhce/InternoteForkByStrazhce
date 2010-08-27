@@ -180,12 +180,12 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
     var textArea = this.createTextArea(doc, uiNote, callbacks.onEdit, callbacks.onMoveStart, callbacks.onFocus)
     
     var isEnabledFunc      = function() { return uiNote.isEnabled; }
-	var getLineColorFunc   = this.utils.bind(this, function()           { return this.getBorderColor(uiNote); });
-	var getButtonColorFunc = this.utils.bind(this, function(effectMode) { return this.getButtonColor(uiNote, effectMode); });
+    var getLineColorFunc   = this.utils.bind(this, function()           { return this.getBorderColor(uiNote); });
+    var getButtonColorFunc = this.utils.bind(this, function(effectMode) { return this.getButtonColor(uiNote, effectMode); });
     var scrollbarHandler = uiNote.scrollHandler =
         new this.utils.ScrollHandler(this.utils, this.prefs, uiNote.textArea, uiNote.num, this.NOTE_OUTER_SIZE,
-		                             getLineColorFunc, getButtonColorFunc, isEnabledFunc);
-	isEnabledFunc = getLineColorFunc = getButtonColorFunc = null; // prevent leak
+                                     getLineColorFunc, getButtonColorFunc, isEnabledFunc);
+    isEnabledFunc = getLineColorFunc = getButtonColorFunc = null; // prevent leak
     
     var scrollbar = uiNote.scrollbar = scrollbarHandler.getScrollbar();
     

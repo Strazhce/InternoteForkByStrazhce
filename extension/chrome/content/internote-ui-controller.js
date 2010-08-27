@@ -186,8 +186,8 @@ init: function()
     this.storage.addBoundEventListener("scrollbarChanged",    this, "onScrollbarPrefSet");
     this.storage.addBoundEventListener("statusbarChanged",    this, "onStatusbarPrefSet");
     
-	this.utils.addBoundDOMEventListener(window, "focus", this, "onWindowFocused", false);
-	
+    this.utils.addBoundDOMEventListener(window, "focus", this, "onWindowFocused", false);
+    
     this.chromeUpdateStatusBarIconDisplay(false);
     this.chromeUpdateInternoteIcon();
     this.chromeUpdateDisplayCheckbox();
@@ -217,7 +217,7 @@ init: function()
         var keySet = document.getElementById("mainKeyset");
         keySet.appendChild(key);
     }
-	
+    
     dump("Internote startup successful\n");
 },
 
@@ -697,7 +697,7 @@ userCreatesNote: function()
                 if (this.bugReportDialog != null && !this.bugReportDialog.closed)
                 {
                     this.bugReportDialog.focus();
-                    this.bugReportDialog.postMessage("reload", "*");	
+                    this.bugReportDialog.postMessage("reload", "*");    
                 }
                 else
                 {
@@ -1663,10 +1663,10 @@ chromeActiveWarning: function()
                     panel.setAttribute("style", "-moz-appearance: none; background-color: red;");
                 }
             }
-			else
-			{
-				this.showMessage(":New errors/warnings/messages detected.");
-			}
+            else
+            {
+                this.showMessage(":New errors/warnings/messages detected.");
+            }
         }
     }
     catch (ex)
@@ -2959,7 +2959,7 @@ onInternoteStorageFailed: function(ex)
 
 onWindowFocused: function()
 {
-	this.balloonUI.checkWhetherToShowMessage();
+    this.balloonUI.checkWhetherToShowMessage();
 },
 
 //////////////////////////

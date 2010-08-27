@@ -44,8 +44,8 @@ messageQueue: [],
 
 init: function(utils, anim, id, container)
 {
-	//dump("internoteBalloonUI.init\n");
-	
+    //dump("internoteBalloonUI.init\n");
+    
     this.utils     = utils;
     this.anim      = anim;
     this.id        = id;
