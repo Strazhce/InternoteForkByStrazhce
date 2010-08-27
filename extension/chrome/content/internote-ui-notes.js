@@ -1299,7 +1299,7 @@ makeStaticImage: function(uiNote, dims)
     var tempUINote = this.cloneUINote(uiNote, doc);
     
     if (uiNote.isFlipped) this.flipNote(tempUINote);
-
+    
     this.utils.setScratchElement(scratchIFrame, tempUINote.noteElt, dims);
     
     // Can't do this until the clone has been placed in a document.
@@ -1339,6 +1339,9 @@ makeDynamic: function(uiNote)
     this.utils.assertError(uiNote != null, "UINote is null when making note dynamic.");
     
     uiNote.noteElt.removeChild(uiNote.noteElt.lastChild);
+    
+    // Normally this won't be fixed, get rid of it or it will cause problems for minimization.
+    this.utils.unfixDOMEltDims(uiNote.foreground);
     
     delete uiNote.rawCanvas;
     delete uiNote.scaledCanvas;

@@ -614,12 +614,12 @@ fixDOMEltDims: function(elt, dims)
 
 unfixDOMEltDims: function(elt)
 {
-    delete elt.style.width;
-    delete elt.style.height;
-    delete elt.style.maxWidth;
-    delete elt.style.maxHeight;
-    delete elt.style.minWidth;
-    delete elt.style.minHeight;
+    elt.style.width     = "";
+    elt.style.height    = "";
+    elt.style.maxWidth  = "";
+    elt.style.maxHeight = "";
+    elt.style.minWidth  = "";
+    elt.style.minHeight = "";
 },
 
 getDims: function(obj)
