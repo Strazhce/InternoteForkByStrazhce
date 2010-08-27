@@ -48,12 +48,14 @@ noteFlipImage: new Image(),
 // Externally called methods
 /////////////////////////////////
 
-init: function(prefs, utils, consts)
+init: function(prefs, utils, consts, supportsTranslucency)
 {
     this.utils   = utils;
     this.prefs   = prefs;
     this.consts  = consts;
-        
+    
+    this.supportsTranslucency = supportsTranslucency;
+    
     // XXX Can't find a constructor for this?
     this.noteFlipImage.src = "chrome://internote/skin/arrow" + this.NOTE_OUTER_SIZE + ".png";
     
@@ -1091,7 +1093,7 @@ drawNoteBackground: function(uiNote)
     //uiNote.checkInvariant();
     
     var shouldUseTranslucency = this.prefs.shouldUseTransparency()
-                             && this.utils.supportsTranslucentPopups();
+                             && this.supportsTranslucency;
     
     var w = uiNote.background.width;
     var h = uiNote.background.height;

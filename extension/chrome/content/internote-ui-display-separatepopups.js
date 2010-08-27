@@ -39,6 +39,11 @@ init: function(prefs, utils, noteUI)
     this.noteUI  = noteUI;
 },
 
+supportsTranslucency: function()
+{
+    return this.utils.supportsTranslucencyPopups();
+},
+
 setBrowser: function(browser, viewportDims)
 {
     this.browser      = browser;

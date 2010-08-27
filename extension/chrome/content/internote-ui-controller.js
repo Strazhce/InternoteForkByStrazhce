@@ -173,7 +173,7 @@ init: function()
     };
     
     this.displayUI.init(this.prefs, this.utils, this.noteUI);
-    this.noteUI   .init(this.prefs, this.utils, this.consts);
+    this.noteUI   .init(this.prefs, this.utils, this.consts, this.displayUI.supportsTranslucency());
     this.anim     .init(this.utils);
     
     this.utils.addBoundDOMEventListener(window, "unload", this, "destroy", false);
@@ -1714,10 +1714,14 @@ screenCreateNote: function(uiNote, shouldAnimate)
     this.displayUI.addNote(uiNote, posOnViewport, this.storage.getDims(uiNote.note));
     
     // Animation should be the very last thing so it doesn't get interrupted by other CPU tasks.
-    if (shouldAnimate && this.utils.supportsTranslucentPopups())
+    if (shouldAnimate && this.displayUI.supportsTranslucency())
     {
         var animation = internoteAnimation.getFadeAnimation(this.utils, uiNote.noteElt, true);
         this.startNoteAnimation(uiNote, animation, this.CREATE_ANIMATION_TIME);
+    }
+    else
+    {
+        uiNote.noteElt.style.opacity = 1;
     }
 },
 
@@ -1732,7 +1736,7 @@ screenRemoveNote: function(uiNote)
     
     var animation = internoteAnimation.getFadeAnimation(this.utils, uiNote.noteElt, false);
     
-    var shouldSkipAnimation = !this.utils.supportsTranslucentPopups();
+    var shouldSkipAnimation = !this.displayUI.supportsTranslucency();
     this.startNoteAnimation(uiNote, animation, this.REMOVE_ANIMATION_TIME, this.utils.bind(this, function()
     {
         this.screenRemoveNoteNow(uiNote);

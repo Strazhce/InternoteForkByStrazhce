@@ -36,6 +36,11 @@ init: function(prefs, utils, noteUI)
     this.isPanelCreated = false;
 },
 
+supportsTranslucency: function()
+{
+    return this.utils.supportsTranslucencyPopups();
+},
+
 setBrowser: function(browser, viewportDims)
 {
     this.browser = browser;
