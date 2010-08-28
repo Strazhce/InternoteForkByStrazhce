@@ -821,7 +821,7 @@ getRangeIntersection: function(range1, range2)
 
 isArray: function(arr)
 {
-    return typeof(arr) == "object" && typeof(arr.length) == "number";
+    return arr != null && typeof(arr) == "object" && typeof(arr.length) == "number";
 },
 
 callSuperconstructor: function(myThis, mySuperclass, argArray)
