@@ -65,7 +65,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 </keyset>
 
 <menupopup id="menu_ToolsPopup">
-    <menu accesskey="&internote.appName.accesskey;" label="&internote.appName.label;" class="menu-iconic" image="chrome://internote/skin/internote.png" insertafter="javascriptConsole">
+    <menu accesskey="&internote.appName.accesskey;" label="&internote.appName.label;" class="menu-iconic" image="chrome://internote/skin/internote16.png" insertafter="javascriptConsole">
         <menupopup id="internote-main-menu" onpopupshowing="internoteUIController.chromePrepareMainMenu();">
             <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accesskey;"
                       oncommand="internoteUIController.userCreatesNote();" />

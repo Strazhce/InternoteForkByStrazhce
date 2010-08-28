@@ -38,7 +38,7 @@
     <em:aboutURL>chrome://internote/content/internote-dlg-about.xul</em:aboutURL>
     <em:optionsURL>chrome://internote/content/internote-dlg-prefs.xul</em:optionsURL>
     <em:homepageURL>http://internote.sourceforge.net/</em:homepageURL>
-    <em:iconURL>chrome://internote/skin/internote.png</em:iconURL>
+    <em:iconURL>chrome://internote/skin/internote128.png</em:iconURL>
 
     <em:contributor>Ildikó Balla (Internote3, Beta Testing)</em:contributor>
     <em:contributor>Justin Lewis (Internote2, Beta Testing)</em:contributor>
