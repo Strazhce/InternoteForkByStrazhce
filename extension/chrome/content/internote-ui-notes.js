@@ -1103,7 +1103,7 @@ drawNoteBackground: function(uiNote)
     
     var backColor = uiNote.backColor;
     
-    context.lineJoin = "round";
+    context.lineJoin = "miter";
     context.strokeStyle = this.getBorderColor(uiNote);
     context.lineWidth = this.NOTE_BORDER_SIZE;
     
