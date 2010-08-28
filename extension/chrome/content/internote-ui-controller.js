@@ -553,6 +553,8 @@ addPageListeners: function()
     {
         this.arePageListeners = true;
         
+        this.screenInitAspects();
+        
         this.utils.addBoundDOMEventListener(window,              "resize", this, "screenCheckAspects", true);
         this.utils.addBoundDOMEventListener(this.currentBrowser, "resize", this, "screenCheckAspects", true);
         this.utils.addBoundDOMEventListener(this.currentBrowser, "scroll", this, "screenCheckAspects", true);
@@ -2128,6 +2130,14 @@ screenSetModifiedNoteDims: function(uiNote, offset)
     // XXX Changing dimensions might change effective note position and therefore screen position.
 },
 
+screenInitAspects: function()
+{
+    [this.currentScrollX,   this.currentScrollY   ] = [content.scrollX, content.scrollY];
+    [this.currentLeft,      this.currentTop       ] = [this.currentBrowser.boxObject.screenX, this.currentBrowser.boxObject.screenY];
+    [this.currentWidth,     this.currentHeight    ] = this.utils.getViewportDims(this.currentBrowser);
+    [this.currentPageWidth, this.currentPageHeight] = this.utils.getPageDims(this.currentBrowser);
+},
+
 // If the scrollbar has moved, we need to reposition the notes.
 // If the viewport size has changed, we may need to show/hide notes.
 // If the viewport screen position has changed, this could indicate a window move (in which case
@@ -2171,6 +2181,15 @@ screenCheckAspects: function(ev)
         
         if (viewportMoved || viewportResized || scrolled || pageResized)
         {
+            //dump("scrollX: " + this.currentScrollX + " -> " + newScrollX    + "\n");
+            //dump("scrollY: " + this.currentScrollY + " -> " + newScrollY    + "\n");
+            //dump("width:   " + this.width          + " -> " + newWidth      + "\n");
+            //dump("height:  " + this.height         + " -> " + newHeight     + "\n");
+            //dump("left:    " + this.left           + " -> " + newLeft       + "\n");
+            //dump("top:     " + this.top            + " -> " + newTop        + "\n");
+            //dump("pWidth:  " + this.pageWidth      + " -> " + newPageWidth  + "\n");
+            //dump("pHeight: " + this.pageHeight     + " -> " + newPageHeight + "\n");
+            
             this.currentScrollX    = newScrollX;
             this.currentScrollY    = newScrollY;
             this.currentWidth      = newWidth;
