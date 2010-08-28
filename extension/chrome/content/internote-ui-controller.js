@@ -223,7 +223,11 @@ init: function()
 
 chooseDisplayUI: function()
 {
-    if (this.utils.supportsTransparentClickThru())
+    if (this.utils.hasPopupBugs())
+    {
+        return internoteDisplayUIFixedIFrames;
+    }
+    else if (this.utils.supportsTransparentClickThru())
     {
         return internoteDisplayUIPopupPane;
     }

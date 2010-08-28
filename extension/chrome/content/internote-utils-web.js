@@ -1097,6 +1097,11 @@ scrollToShowRect: function(browser, noteRect)
         {
             //dump("  Changed ScrollPos\n");
             contentWin.scrollTo(newScrollX, newScrollY);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 },

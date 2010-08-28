@@ -443,8 +443,7 @@ internoteAnimation.getFlipAnimation = function(utils, noteUI, displayUI, uiNote)
         
         if (width != noteElt.style.width || left != noteElt.left)
         {
-            displayUI.flipStep(uiNote, widthLost/2);
-            //displayUI.moveNote  (uiNote, [left,  null]);
+            displayUI.flipStep(uiNote, widthLost/2, width);
             noteUI.   adjustDims(uiNote, [width, null]);
         }
     };

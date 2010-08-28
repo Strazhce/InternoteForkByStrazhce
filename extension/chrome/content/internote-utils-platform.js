@@ -73,6 +73,24 @@ supportsTransparentClickThru: function()
     }
 },
 
+hasPopupBugs: function()
+{
+    var platform = this.getPlatform();
+    if (platform == "unix")
+    {
+        return true;
+    }
+    else if (platform == "mac" || platform == "win")
+    {
+        return false;
+    }
+    else
+    {
+        this.assertWarnNotHere("Unknown platform when whether plaform has popup bugs.", platform);
+        return true;
+    }
+},
+
 hasMinimizeIconCentered: function()
 {
     return this.getPlatform() == "mac";
