@@ -27,6 +27,7 @@ autoFocusNote:  null,
 notesBeingMoved:  [],
 posLookup:        [],
 dimsLookup:       [],
+actualPosLookup:  [],
 actualDimsLookup: [],
 noteOrder:        [], // We use this to avoid unnecessary reopens.
 
