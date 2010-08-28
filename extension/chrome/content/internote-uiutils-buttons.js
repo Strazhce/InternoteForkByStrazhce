@@ -124,7 +124,7 @@ internoteUtilities.incorporate({
         
         handler.onMouseDown = function(ev)
         {
-            if (isEnabledFunc.call())
+            if (ev.button == 0 && isEnabledFunc.call())
             {
                 this.utils.pressedButton = element;
                 this.redraw();
@@ -157,14 +157,20 @@ internoteUtilities.incorporate({
             this.isInside = false;
         };
         
-        handler.onMouseDown = function(ev) {};
+        handler.onMouseDown = function(ev) {
+            if (ev.button == 0 && isEnabledFunc.call())
+            {
+                this.isPressed = true;
+            }
+        };
         
         handler.onMouseUp = function(ev)
         {
-            if (this.isInside && isEnabledFunc.call())
+            if (this.isInside && this.isPressed)
             {
                 actionFunc.call(this, ev);
             }
+            this.isPressed = false;
         };
         
         handler.registerHandlers();
@@ -216,9 +222,9 @@ internoteUtilities.incorporate({
             this.isHovered = false;
         };
         
-        handler.onMouseDown = function()
+        handler.onMouseDown = function(ev)
         {
-            if (isEnabledFunc.call())
+            if (ev.button == 0 && isEnabledFunc.call())
             {
                 actionFunc.call();
                 this.isPressed = true;
@@ -228,8 +234,11 @@ internoteUtilities.incorporate({
         
         handler.onMouseUp = function()
         {
+            if (this.isPressed)
+            {
+                this.turnOffRepeat();
+            }
             this.isPressed = false;
-            this.turnOffRepeat();
         };
         
         handler.registerHandlers();
