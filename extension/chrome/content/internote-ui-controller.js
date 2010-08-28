@@ -1656,13 +1656,16 @@ chromeActiveWarning: function()
             if (this.prefs.shouldUseStatusbar())
             {
                 var panel = document.getElementById("internote-panel");
-                if (panel.style.backgroundColor == "red")
+                if (panel != null)
                 {
-                    panel.removeAttribute("style");
-                }
-                else
-                {
-                    panel.setAttribute("style", "-moz-appearance: none; background-color: red;");
+                    if (panel.style.backgroundColor == "red")
+                    {
+                        panel.removeAttribute("style");
+                    }
+                    else
+                    {
+                        panel.setAttribute("style", "-moz-appearance: none; background-color: red;");
+                    }
                 }
             }
             else
