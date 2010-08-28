@@ -136,7 +136,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   oncommand="internoteUIController.userRemovesNote(popupNode);" accesskey="&internote.deleteNoteCmd.accesskey;" />
         <menuitem label="&internote.minimizeNoteCmd.label;"      id="internote-context-minimize-note" class="menuitem-iconic"
                   oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.minimizeNoteCmd.accesskey;" />
-        <menuitem label="&internote.unminimizeNoteCmd.label;"    id="internote-context-unminimize-note"
+        <menuitem label="&internote.unminimizeNoteCmd.label;"    id="internote-context-unminimize-note" class="menuitem-iconic"
                   oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.unminimizeNoteCmd.accesskey;" style="display: none;" />
         <menuitem label="&internote.chooseColorsCmd.label;"      id="internote-context-choose-colors" class="menuitem-iconic"
                   oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.chooseColorsCmd.accesskey;" />

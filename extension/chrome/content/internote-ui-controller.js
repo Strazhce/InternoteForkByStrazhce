@@ -1484,10 +1484,11 @@ chromePrepareContextMenu: function(element)
             this.flipButtonCanvasURL = largeCanvas.toDataURL();
         }        
         
-        document.getElementById("internote-context-delete-note")  .setAttribute("image", this.closeButtonCanvasURL);
-        document.getElementById("internote-context-minimize-note").setAttribute("image", this.minimizeButtonCanvasURL);
-        document.getElementById("internote-context-choose-colors").setAttribute("image", this.flipButtonCanvasURL);
-        document.getElementById("internote-context-edit-text")    .setAttribute("image", this.flipButtonCanvasURL);
+        document.getElementById("internote-context-delete-note")    .setAttribute("image", this.closeButtonCanvasURL);
+        document.getElementById("internote-context-minimize-note")  .setAttribute("image", this.minimizeButtonCanvasURL);
+        document.getElementById("internote-context-unminimize-note").setAttribute("image", this.minimizeButtonCanvasURL);
+        document.getElementById("internote-context-choose-colors")  .setAttribute("image", this.flipButtonCanvasURL);
+        document.getElementById("internote-context-edit-text")      .setAttribute("image", this.flipButtonCanvasURL);
     }
     catch (ex)
     {
