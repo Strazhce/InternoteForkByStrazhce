@@ -90,7 +90,7 @@ userSetsSaveLocation: function ()
         
         if (this.prefs.shouldUseOtherSaveLoc())
         {
-            picker.displayDirectory = this.utils.getModifiedSaveLocation();
+            picker.displayDirectory = this.prefs.getModifiedSaveLocation();
         }
         
         picker.appendFilters(nsIFilePicker.filterAll);
