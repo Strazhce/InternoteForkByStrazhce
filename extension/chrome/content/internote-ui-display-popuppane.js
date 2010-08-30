@@ -131,8 +131,12 @@ raiseNote: function(uiNote)
         var dims = this.noteUI.getDims(uiNote);
         
         var isFocused = this.noteUI.isFocused(uiNote);
-        var selectionStart = uiNote.textArea.selectionStart;
-        var selectionEnd   = uiNote.textArea.selectionEnd;
+        
+        if (!uiNote.note.isMinimized)
+        {
+            var selectionStart = uiNote.textArea.selectionStart;
+            var selectionEnd   = uiNote.textArea.selectionEnd;
+        }
         
         this.removeNote(uiNote);
         this.addNote(uiNote, pos, dims);
@@ -149,8 +153,11 @@ raiseNote: function(uiNote)
                 this.focusNote(uiNote);
             }
             
-            uiNote.textArea.selectionStart = selectionStart;
-            uiNote.textArea.selectionEnd   = selectionEnd;
+            if (!uiNote.note.isMinimized)
+            {
+                uiNote.textArea.selectionStart = selectionStart;
+                uiNote.textArea.selectionEnd   = selectionEnd;
+            }
         }), 0);
     }
 },
@@ -160,6 +167,8 @@ raiseNote: function(uiNote)
 // It must be called after createInsertionContainer however.
 focusNote: function(uiNote)
 {
+    //dump("displayUI.focusNote\n");
+    
     if (this.isPanelShown)
     {
         // The panel is already on-screen, just focus the new note.

@@ -922,7 +922,7 @@ userFlipsNote: function(elementOrEvent)
 
 userMinimizesNote: function(elementOrEvent)
 {
-    //dump("userFlipsNote\n");
+    //dump("userMinimizesNote\n");
     
     try
     {
@@ -2819,6 +2819,8 @@ onNoteResized: function(event)
 
 onNotesMinimized: function(event)
 {
+    //dump("onNotesMinimized\n");
+    
     try
     {
         var notesToProcess   = event.note;
