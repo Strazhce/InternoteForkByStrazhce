@@ -21,26 +21,33 @@ var internoteAboutDlg =
 
 init: function()
 {
-    this.utils  = internoteUtilities;
-    
-    internoteUtilities.init();
-    
-    var em = this.utils.getCCService("@mozilla.org/extensions/manager;1", "nsIExtensionManager");
-    var MY_ID = "{e3631030-7c02-11da-a72b-0800200c9a66}";
-    var file = em.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
-    var installRDF = this.utils.loadInstallRDF(em);
-    
-    if (installRDF != null)
+    try
     {
-        var internoteVersion = this.utils.getInternoteVersion(installRDF);
-        this.fixVersionNumber(internoteVersion);
-        this.insertContributors(installRDF);
-        this.fixDescription(installRDF);      
-        this.adjustErrorInfo(em, internoteVersion);
+        this.utils  = internoteUtilities;
+        
+        internoteUtilities.init();
+        
+        var em = this.utils.getCCService("@mozilla.org/extensions/manager;1", "nsIExtensionManager");
+        var MY_ID = "{e3631030-7c02-11da-a72b-0800200c9a66}";
+        var file = em.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
+        var installRDF = this.utils.loadInstallRDF(em);
+        
+        if (installRDF != null)
+        {
+            var internoteVersion = this.utils.getInternoteVersion(installRDF);
+            this.fixVersionNumber(internoteVersion);
+            this.insertContributors(installRDF);
+            this.fixDescription(installRDF);      
+            this.adjustErrorInfo(em, internoteVersion);
+        }
+        else
+        {
+            this.removeContributors();
+        }
     }
-    else
+    catch (ex)
     {
-        this.removeContributors();
+        internoteUtilities.handleException("Exception caught when showing about dialog.", ex);
     }
 },
 
