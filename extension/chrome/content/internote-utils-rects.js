@@ -146,6 +146,23 @@ isRectInRect: function(innerRect, outerRect)
            this.isInRect(innerRect.bottomRight, outerRect);
 },
 
+splitRectVert: function(rect, firstHeight)
+{
+    firstHeight = this.clipToRange(firstHeight, 0, rect.dims[1]);
+    
+    var left   = rect.topLeft[0];
+    var width  = rect.dims   [0];
+    
+    var upperTop = rect.topLeft[1];
+    var lowerTop = rect.topLeft[1] + firstHeight;
+    
+    var upperHeight = lowerTop     - upperTop;
+    var lowerHeight = rect.bottomRight[1] + 1 - lowerTop;
+    
+    return [this.makeRectFromDims([left, upperTop], [width, upperHeight]),
+            this.makeRectFromDims([left, lowerTop], [width, lowerHeight])];
+},
+
 /*
 formatRect: function(left, top, right, bottom)
 {

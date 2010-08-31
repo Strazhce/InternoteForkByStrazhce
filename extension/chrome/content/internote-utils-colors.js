@@ -218,9 +218,9 @@ isRGBAColor : function(color)
 // Linear interpolator between two points.
 interpolateColor: function(proportion, color1, color2)
 {
-    return [this.interpolate(proportion, color1[0], color2[0]),
-            this.interpolate(proportion, color1[1], color2[1]),
-            this.interpolate(proportion, color1[2], color2[2])];
+    return [Math.round(this.interpolate(proportion, color1[0], color2[0])),
+            Math.round(this.interpolate(proportion, color1[1], color2[1])),
+            Math.round(this.interpolate(proportion, color1[2], color2[2]))];
 },
 
 });

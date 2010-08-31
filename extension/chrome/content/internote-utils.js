@@ -973,4 +973,10 @@ simpleSplit: function(text, separator)
     }
 },
 
+getSingleElement: function(arr)
+{
+    this.assertError(this.isArray(arr) && arr.length == 1, "Not a single element array.", arr);
+    return arr[0];
+},
+
 };

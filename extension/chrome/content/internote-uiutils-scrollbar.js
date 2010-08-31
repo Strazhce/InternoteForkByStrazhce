@@ -17,7 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 internoteUtilities.incorporate({
-    ScrollHandler: function(utils, prefs, element, idSuffix, width, getLineColorFunc, getButtonColorFunc, isEnabledFunc)
+    ScrollHandler: function(utils, prefs, element, idSuffix, width, getLineColorFunc, getHandleColorFunc, getButtonColorFunc, isEnabledFunc)
     {
         //dump("internoteUtilities.ScrollHandler.ScrollHandler\n");
         
@@ -30,6 +30,7 @@ internoteUtilities.incorporate({
         this.isEnabledFunc = isEnabledFunc;
         
         this.getLineColorFunc   = getLineColorFunc;
+        this.getHandleColorFunc = getHandleColorFunc;
         this.getButtonColorFunc = getButtonColorFunc;
         
         var doc = element.ownerDocument;
@@ -46,8 +47,30 @@ internoteUtilities.incorporate({
         var scrollLine = this.scrollLine =
             this.utils.createHTMLCanvas(doc, "internote-scrollline" + idSuffix, width, width);
         
+        var onUpperRedrawScrollLine = this.utils.bind(this, function(effectMode)
+        {
+            this.upperLineEffectMode = effectMode;
+            this.drawScrollLine.call(this);
+        });
+        var onLowerRedrawScrollLine = this.utils.bind(this, function(effectMode)
+        {
+            this.lowerLineEffectMode = effectMode;
+            this.drawScrollLine.call(this);
+        });
+        
+        var onScrollUpPage   = this.utils.bind(this, this.onScrollUpPage  );
+        var onScrollDownPage = this.utils.bind(this, this.onScrollDownPage);
+        
+        var [upperLineArea, lowerLineArea] = this.getLineArea();
+        this.upperLineHandler1 = this.utils.registerButtonEffectsHandler(scrollLine, this.isEnabledFunc, onUpperRedrawScrollLine,  upperLineArea);
+        this.lowerLineHandler1 = this.utils.registerButtonEffectsHandler(scrollLine, this.isEnabledFunc, onLowerRedrawScrollLine,  lowerLineArea);
+        this.upperLineHandler2 = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollUpPage,   this.isEnabledFunc,
+                                                                           this.REPEAT_DELAY, this.REPEAT_INTERVAL, upperLineArea);
+        this.lowerLineHandler2 = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollDownPage, this.isEnabledFunc,
+                                                                           this.REPEAT_DELAY, this.REPEAT_INTERVAL, lowerLineArea);
+        
         scrollLine.addEventListener("mousedown", onPressScrollLine, false);
-
+        
         var scrollLineWrapper = this.scrollLineWrapper =
             this.utils.createXULElement("vbox", doc, "internote-scrolllinewrapper" + idSuffix);
         
@@ -81,12 +104,12 @@ internoteUtilities.incorporate({
         
         this.element.addEventListener("scroll", this.utils.bind(this, function()
         {
-            this.drawScrollLine();
+            this.updateScrollLine();
         }), false);
         
         this.element.addEventListener("input", this.utils.bind(this, function()
         {
-            this.drawScrollLine();
+            this.updateScrollLine();
         }), false);
     }
 });
@@ -132,12 +155,29 @@ setHeight: function(height)
     if (scrollLineHeight > 0)
     {
         this.scrollLine.height = scrollLineHeight;
-        this.drawScrollLine();
+        this.updateScrollLine();
     }
     else
     {
         this.scrollLine.height = 0;
     }
+},
+
+updateScrollLine: function()
+{
+    this.drawScrollLine();
+    
+    // If we're pressing the scroll line, we must set the area wider to give the user leeway.
+    var arePressingScrollLine = this.upperLineHandler1.isPressed || this.lowerLineHandler1.isPressed;
+    
+    var [upperLineArea, lowerLineArea] = arePressingScrollLine
+                                       ? this.getActiveLineArea()
+                                       : this.getLineArea();
+    
+    this.upperLineHandler1.setArea(upperLineArea);
+    this.upperLineHandler2.setArea(upperLineArea);
+    this.lowerLineHandler1.setArea(lowerLineArea);
+    this.lowerLineHandler2.setArea(lowerLineArea);
 },
 
 updateLineHeight: function(lineHeight)
@@ -186,8 +226,6 @@ drawScrollLine: function()
     
     context.clearRect(0, 0, w, h);
     
-    context.strokeStyle = this.getLineColorFunc();
-    context.fillStyle   = this.getButtonColorFunc(this.utils.EFFECT_MODE_NORMAL);
     context.lineWidth   = 0.4 * w;
     context.lineCap     = "round";
     
@@ -195,12 +233,20 @@ drawScrollLine: function()
     if (this.width < h)
     {
         //dump("  Drawing Line\n");
+        context.strokeStyle = this.getLineColorFunc(this.upperLineEffectMode);
         context.beginPath();
         context.moveTo(0.5 * w, scrollLineTop);
+        context.lineTo(0.5 * w, scrollTopPos );
+        context.stroke();
+        
+        context.strokeStyle = this.getLineColorFunc(this.lowerLineEffectMode);
+        context.beginPath();
+        context.moveTo(0.5 * w, scrollBotPos );
         context.lineTo(0.5 * w, scrollLineBot);
         context.stroke();
         
         //dump("  Drawing Handle\n");
+        context.fillStyle   = this.getHandleColorFunc(this.handleEffectMode);
         context.beginPath();
         context.arc (0.5 * w, scrollTopPos, 0.5 * w, 0, 2 * Math.PI, false);
         context.arc (0.5 * w, scrollBotPos, 0.5 * w, 0, 2 * Math.PI, false);
@@ -223,22 +269,58 @@ getScrollInfo: function()
     
     if (this.element.scrollHeight <= this.element.offsetHeight)
     {
-        var scrollTopFraction = 0;
-        var scrollBotFraction = 0;
+        var scrollHandleTopFraction = 0;
+        var scrollHandleBotFraction = 0;
     }
     else
     {
         var scrollBot = (this.element.scrollTop + this.element.offsetHeight - 1);
-        var scrollTopFraction = this.utils.clipToRange(this.element.scrollTop / this.element.scrollHeight, 0, 1);
-        var scrollBotFraction = this.utils.clipToRange(scrollBot              / this.element.scrollHeight, 0, 1);
+        var scrollHandleTopFraction = this.utils.clipToRange(this.element.scrollTop / this.element.scrollHeight, 0, 1);
+        var scrollHandleBotFraction = this.utils.clipToRange(scrollBot              / this.element.scrollHeight, 0, 1);
     }
     
     //dump("scrollTop = " + this.element.scrollTop + ", scrollBot = " + scrollBot + ", height = " + this.element.scrollHeight + ", offset = " + this.element.offsetHeight + "\n");
     
-    var scrollTopPos = scrollLineTop + scrollLineLength * scrollTopFraction;
-    var scrollBotPos = scrollLineTop + scrollLineLength * scrollBotFraction;
+    var scrollHandleTop = scrollLineTop + scrollLineLength * scrollHandleTopFraction;
+    var scrollHandleBot = scrollLineTop + scrollLineLength * scrollHandleBotFraction;
     
-    return [scrollLineTop, scrollLineBot, scrollTopPos, scrollBotPos];
+    return [scrollLineTop, scrollLineBot, scrollHandleTop, scrollHandleBot];
+},
+
+// Separates the scroll line rectangle into it's three component rectangles, upper/lower lines and handle.
+// Note that the handle's rounded edges are in the line areas, not the handle area, unless an appropriate
+// handle offset is specified.
+getLineArea: function()
+{
+    //dump("getLineArea\n");
+    
+    var [scrollLineTop, scrollLineBot, scrollHandleTop, scrollHandleBot] = this.getScrollInfo();
+    
+    var area = this.utils.makeRectFromDims([0, 0], [this.width, this.scrollLine.height]);
+    
+    var [upperRect,  area     ] = this.utils.splitRectVert(area, scrollHandleTop                   - this.width / 2);
+    var [handleRect, lowerRect] = this.utils.splitRectVert(area, scrollHandleBot - scrollHandleTop + this.width / 2);
+    
+    return [upperRect, lowerRect, handleRect];
+},
+
+// When the line is being pressed, we use a version of getLineArea that ignores the handle, giving an
+// empty handleRect.  This is because the mouse pos will determine where the repeating stops and
+// we want to give the user some leeway and not stop on the handle's rounded edges.
+getActiveLineArea: function()
+{
+    //dump("getActiveLineArea\n");
+    
+    var [scrollLineTop, scrollLineBot, scrollHandleTop, scrollHandleBot] = this.getScrollInfo();
+    
+    var scrollHandleMid = (scrollHandleTop + scrollHandleBot) / 2;
+    
+    var area = this.utils.makeRectFromDims([0, 0], [this.width, this.scrollLine.height]);
+    
+    var [upperRect,  area     ] = this.utils.splitRectVert(area, scrollHandleMid);
+    var [handleRect, lowerRect] = this.utils.splitRectVert(area, 0);
+    
+    return [upperRect, lowerRect, handleRect];
 },
 
 isNecessary: function()
@@ -251,7 +333,7 @@ onChangeScroll: function(pos)
     //dump("internoteUtilities.ScrollHandler.onChangeScroll\n");
     
     this.element.scrollTop = pos;
-    this.drawScrollLine();
+    this.updateScrollLine();
 },
 
 onOffsetScroll: function(offset)
@@ -259,7 +341,7 @@ onOffsetScroll: function(offset)
     //dump("internoteUtilities.ScrollHandler.onOffsetScroll " + offset + "\n");
     
     this.element.scrollTop = this.element.scrollTop + offset;
-    this.drawScrollLine();
+    this.updateScrollLine();
 },
 
 getPageSize: function()
@@ -314,17 +396,13 @@ onPressScrollLine: function(ev)
         {
             var location = this.getScrollLineLocation(ev);
             
-            if (location > 0)
+            if (location == 0)
             {
-                this.onPressRepeatingButton(ev, this.onScrollDownPage);
-            }
-            else if (location < 0)
-            {
-                this.onPressRepeatingButton(ev, this.onScrollUpPage);
+                this.onStartDragHandle(ev);
             }
             else
             {
-                this.onStartDragSlider(ev);
+                // Do nothing, handled in other handlers.
             }
         }
     }
@@ -334,51 +412,15 @@ onPressScrollLine: function(ev)
     }
 },
 
-onPressRepeatingButton: function(ev, executeFunc)
+onStartDragHandle: function(event)
 {
-    //dump("internoteUtilities.Scrollbar.onPressRepeatingButton\n");
-    
-    if (ev.button == 0)
-    {
-        executeFunc.call(this);
-        
-        var onMouseUp = this.utils.bind(this, function()
-        {
-            if (this.delayTimeout != null)
-            {
-                clearTimeout(this.delayTimeout);
-                this.delayTimeout = null;
-            }
-            
-            if (this.repeatInterval != null)
-            {
-                clearInterval(this.repeatInterval);
-                this.repeatInterval = null;
-            }
-            
-            document.removeEventListener("mouseup", onMouseUp, false);
-            onMouseUp = null;
-        });
-        
-        document.addEventListener("mouseup", onMouseUp, false);
-        
-        this.delayTimeout = setTimeout(this.utils.bind(this, function()
-        {
-            this.delayTimeout = null;
-            this.repeatInterval = setInterval(this.utils.bind(this, function()
-            {
-                executeFunc.call(this);
-            }), this.REPEAT_INTERVAL);
-        }), this.REPEAT_DELAY);
-    }
-},
-
-onStartDragSlider: function(event)
-{
-    //dump("internoteNoteUI.onStartDragSlider\n");
+    //dump("internoteNoteUI.onStartDragHandle\n");
     
     var dragHandler = new this.utils.DragHandler(this.utils);
     var startPos = this.element.scrollTop;
+    
+    this.handleEffectMode = this.utils.EFFECT_MODE_PRESS;
+    this.drawScrollLine();
     
     dragHandler.onDragMouseMoved = this.utils.bind(this, function(event, offset) {
         var [scrollLineTop, scrollLineBot, scrollTopPos, scrollBotPos] = this.getScrollInfo();
@@ -390,9 +432,15 @@ onStartDragSlider: function(event)
     
     dragHandler.onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset)
     {
+        this.handleEffectMode = this.utils.EFFECT_MODE_NORMAL;
+        
         if (!wasCompleted)
         {
             this.onChangeScroll(startPos);
+        }
+        else
+        {
+            this.drawScrollLine(); // Remove press color.
         }
         
         dragHandler = null;

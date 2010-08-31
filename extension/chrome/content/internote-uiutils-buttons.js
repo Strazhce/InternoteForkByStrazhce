@@ -6,6 +6,17 @@ internoteUtilities.incorporate({
         this.utils      = utils;
         this.element    = element;
     },
+    
+    FlexiblePressHoverHandler: function(utils, element, area)
+    {
+        utils.assertError(element != null, "Null element.", element);
+        utils.assertError(area    != null, "Null area.",    area   );
+    
+        this.utils        = utils;
+        this.element      = element;
+        this.area         = area;
+        this.lastLocalPos = [-1, -1]; // Should never be inside.
+    }
 });
 
 internoteUtilities.PressHoverHandler.prototype =
@@ -16,12 +27,18 @@ internoteUtilities.PressHoverHandler.prototype =
         this.utils.addBoundDOMEventListener(this.element, "mouseover", this, "handleMouseOver", false);
     },
     
+    setButtonArea: function(area)
+    {
+        this.area = area;
+        this.handleMouseMove();
+    },
+    
     handleMouseOver: function(ev)
     {
         try
         {
             this.utils.addBoundDOMEventListener(this.element, "mouseout", this, "handleMouseOut", false);
-            this.onMouseOver(ev);
+            this.onMouseOver();
         }
         catch (ex)
         {
@@ -34,7 +51,7 @@ internoteUtilities.PressHoverHandler.prototype =
         try
         {
             this.utils.removeBoundDOMEventListener(this.element, "mouseout", this, "handleMouseOut", false);
-            this.onMouseOut(ev);
+            this.onMouseOut();
         }
         catch (ex)
         {
@@ -47,7 +64,7 @@ internoteUtilities.PressHoverHandler.prototype =
         try
         {
             this.utils.addBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
-            this.onMouseDown(ev);
+            this.onMouseDown(ev.button);
         }
         catch (ex)
         {
@@ -60,12 +77,152 @@ internoteUtilities.PressHoverHandler.prototype =
         try
         {
             this.utils.removeBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
-            this.onMouseUp(ev);
+            this.onMouseUp(ev.button);
         }
         catch (ex)
         {
             this.utils.handleException("Exception caught when mousing up.", ex);
         }
+    },
+};
+
+// This version lets you set a changeable area within the element that is considered the press/hover area.
+internoteUtilities.FlexiblePressHoverHandler.prototype =
+{
+    registerHandlers: function()
+    {
+        this.utils.addBoundDOMEventListener(this.element, "mousedown", this, "handleMouseDown", false);
+        this.utils.addBoundDOMEventListener(this.element, "mouseover", this, "handleMouseOver", false);
+    },
+    
+    setArea: function(area)
+    {
+        //dump("setArea\n");
+        this.area = area;
+        this.checkWhetherMouseInArea();
+    },
+    
+    isInArea: function(localPos)
+    {
+        return this.utils.isInRect(localPos, this.area);
+    },
+    
+    handleMouseOver: function(ev)
+    {
+        //dump("handleMouseOver\n");
+        try
+        {
+            this.utils.addBoundDOMEventListener(this.element, "mouseout",  this, "handleMouseOut",  false);
+            this.utils.addBoundDOMEventListener(this.element, "mousemove", this, "handleMouseMove", false);
+            
+            this.lastLocalPos = this.convertFromClientToLocalCoords([ev.clientX, ev.clientY]);
+            
+            if (this.isInArea(this.lastLocalPos))
+            {
+                //dump("  Entered area.\n");
+                this.wasInArea = true;
+                this.onMouseOver();
+            }
+        }
+        catch (ex)
+        {
+            this.utils.handleException("Exception caught when mousing over.", ex);
+        }
+    },
+    
+    handleMouseMove: function(ev)
+    {
+        //dump("handleMouseMove\n");
+        try
+        {
+            this.lastLocalPos = this.convertFromClientToLocalCoords([ev.clientX, ev.clientY]);
+            this.checkWhetherMouseInArea();
+        }
+        catch (ex)
+        {
+            this.utils.handleException("Exception caught when moving mouse.", ex);
+        }        
+    },
+    
+    handleMouseOut: function(ev)
+    {
+        //dump("handleMouseOut\n");
+        try
+        {
+            this.utils.removeBoundDOMEventListener(this.element, "mouseout",  this, "handleMouseOut",  false);
+            this.utils.removeBoundDOMEventListener(this.element, "mousemove", this, "handleMouseMove", false);
+            
+            // Need to update lastLocalPos so that we'll stay out if setArea is called again.
+            this.lastLocalPos = this.convertFromClientToLocalCoords([ev.clientX, ev.clientY]);
+            
+            if (this.wasInArea)
+            {
+                //dump("  Left area.\n");
+                this.onMouseOut();
+                this.wasInArea = false;
+            }
+        }
+        catch (ex)
+        {
+            this.utils.handleException("Exception caught when mousing out.", ex);
+        }
+    },
+    
+    handleMouseDown: function(ev)
+    {
+        //dump("handleMouseDown\n");
+        try
+        {
+            if (this.wasInArea)
+            {
+                //dump("  Pressed in area.\n");
+                this.utils.addBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
+                this.onMouseDown(ev.button);
+            }
+        }
+        catch (ex)
+        {
+            this.utils.handleException("Exception caught when mousing down.", ex);
+        }
+    },
+    
+    handleMouseUp: function(ev)
+    {
+        //dump("handleMouseUp\n");
+        try
+        {
+            //dump("  Released.\n");
+            this.utils.removeBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
+            this.onMouseUp(ev.button);
+        }
+        catch (ex)
+        {
+            this.utils.handleException("Exception caught when mousing up.", ex);
+        }
+    },
+    
+    checkWhetherMouseInArea: function()
+    {
+        var isInAreaNow = this.isInArea(this.lastLocalPos);
+        
+        if (this.wasInArea && !isInAreaNow)
+        {
+            //dump("  Left area.\n");
+            this.onMouseOut();
+        }
+        else if (!this.wasInArea && isInAreaNow)
+        {
+            //dump("  Entered area.\n");
+            this.onMouseOver();
+        }
+        
+        this.wasInArea = isInAreaNow;
+    },
+    
+    convertFromClientToLocalCoords: function(mouseClientPos)
+    {
+           var elementClientRect = this.utils.getSingleElement(this.element.getClientRects());
+        return this.utils.coordPairSubtract(mouseClientPos, [elementClientRect.left, elementClientRect.top]);
     },
 };
 
@@ -80,13 +237,15 @@ internoteUtilities.incorporate({
     hoveredButton: null,
     pressedButton: null,
     
-    registerButtonEffectsHandler: function(element, isEnabledFunc, redrawFunc)
+    registerButtonEffectsHandler: function(element, isEnabledFunc, redrawFunc, flexibleArea)
     {
         this.assertError(element       != null, "Element is null.",       element      );
         this.assertError(isEnabledFunc != null, "isEnabledFunc is null.", isEnabledFunc);
         this.assertError(redrawFunc    != null, "redrawFunc is null.",    redrawFunc   );
         
-        var handler = new this.PressHoverHandler(this, element);
+        var handler = (flexibleArea != null)
+                    ? new this.FlexiblePressHoverHandler(this, element, flexibleArea)
+                    : new this.PressHoverHandler(this, element);
         
         handler.redraw = function()
         {
@@ -104,7 +263,7 @@ internoteUtilities.incorporate({
             }
         };
         
-        handler.onMouseOver = function(ev)
+        handler.onMouseOver = function()
         {
             if (isEnabledFunc.call())
             {
@@ -113,7 +272,7 @@ internoteUtilities.incorporate({
             }
         };
         
-        handler.onMouseOut = function(ev)
+        handler.onMouseOut = function()
         {
             if (this.utils.hoveredButton == element)
             {
@@ -122,16 +281,16 @@ internoteUtilities.incorporate({
             }
         };
         
-        handler.onMouseDown = function(ev)
+        handler.onMouseDown = function(button)
         {
-            if (ev.button == 0 && isEnabledFunc.call())
+            if (button == 0 && isEnabledFunc.call())
             {
                 this.utils.pressedButton = element;
                 this.redraw();
             }
         };
         
-        handler.onMouseUp = function(ev)
+        handler.onMouseUp = function(button)
         {
             if (this.utils.pressedButton == element)
             {
@@ -141,44 +300,52 @@ internoteUtilities.incorporate({
         };
         
         handler.registerHandlers();
+
+        return handler;
     },
     
-    registerSimpleButtonHandler: function(element, actionFunc, isEnabledFunc)
+    registerSimpleButtonHandler: function(element, actionFunc, isEnabledFunc, flexibleArea)
     {
-        var handler = new this.PressHoverHandler(this, element);
+        var handler = (flexibleArea != null)
+                    ? new this.FlexiblePressHoverHandler(this, element, flexibleArea)
+                    : new this.PressHoverHandler(this, element);
         
-        handler.onMouseOver = function(ev)
+        handler.onMouseOver = function()
         {
             this.isInside = true;
         };
         
-        handler.onMouseOut = function(ev)
+        handler.onMouseOut = function()
         {
             this.isInside = false;
         };
         
-        handler.onMouseDown = function(ev) {
-            if (ev.button == 0 && isEnabledFunc.call())
+        handler.onMouseDown = function(button) {
+            if (button == 0 && isEnabledFunc.call())
             {
                 this.isPressed = true;
             }
         };
         
-        handler.onMouseUp = function(ev)
+        handler.onMouseUp = function(button)
         {
             if (this.isInside && this.isPressed)
             {
-                actionFunc.call(this, ev);
+                actionFunc.call(this);
             }
             this.isPressed = false;
         };
         
         handler.registerHandlers();
+        
+        return handler;
     },
     
-    registerRepeatingButtonHandler: function(element, actionFunc, isEnabledFunc, delayTime, intervalTime)
+    registerRepeatingButtonHandler: function(element, actionFunc, isEnabledFunc, delayTime, intervalTime, flexibleArea)
     {
-        var handler = new this.PressHoverHandler(this, element);
+        var handler = (flexibleArea != null)
+                    ? new this.FlexiblePressHoverHandler(this, element, flexibleArea)
+                    : new this.PressHoverHandler(this, element);
         
         handler.turnOnRepeat = function()
         {
@@ -222,9 +389,9 @@ internoteUtilities.incorporate({
             this.isHovered = false;
         };
         
-        handler.onMouseDown = function(ev)
+        handler.onMouseDown = function(button)
         {
-            if (ev.button == 0 && isEnabledFunc.call())
+            if (button == 0 && isEnabledFunc.call())
             {
                 actionFunc.call();
                 this.isPressed = true;
@@ -232,7 +399,7 @@ internoteUtilities.incorporate({
             }
         };
         
-        handler.onMouseUp = function()
+        handler.onMouseUp = function(button)
         {
             if (this.isPressed)
             {
@@ -242,8 +409,10 @@ internoteUtilities.incorporate({
         };
         
         handler.registerHandlers();
+        
+        return handler;
     },
-
+    
     createSimpleButton: function(doc, id, width, height, redrawFunc, actionFunc, isEnabledFunc)
     {
         var canvas = this.createHTMLCanvas(doc, id, width, height);

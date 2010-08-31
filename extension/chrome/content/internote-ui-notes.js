@@ -180,11 +180,39 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
     var textArea = this.createTextArea(doc, uiNote, callbacks.onEdit, callbacks.onMoveStart, callbacks.onFocus)
     
     var isEnabledFunc      = function() { return uiNote.isEnabled; }
-    var getLineColorFunc   = this.utils.bind(this, function()           { return this.getBorderColor(uiNote); });
     var getButtonColorFunc = this.utils.bind(this, function(effectMode) { return this.getButtonColor(uiNote, effectMode); });
+    var getLineColorFunc   = this.utils.bind(this, function(effectMode)
+    {
+        var borderColor = this.getRawBorderColor(uiNote);
+        if (effectMode == this.utils.EFFECT_MODE_PRESS)
+        {
+            var buttonNormalColor = this.getRawButtonColor(uiNote, this.utils.EFFECT_MODE_NORMAL);
+            var result = this.utils.interpolateColor(0.35, borderColor, buttonNormalColor);
+        }
+        else
+        {
+            var result = borderColor;
+        }
+        return this.utils.formatHexColor(result);
+    });
+    var getHandleColorFunc = this.utils.bind(this, function(effectMode)
+    {
+        var buttonNormalColor = this.getRawButtonColor(uiNote, this.utils.EFFECT_MODE_NORMAL);
+        if (effectMode == this.utils.EFFECT_MODE_PRESS)
+        {
+            var borderColor = this.getRawBorderColor(uiNote);
+            var result = this.utils.interpolateColor(0.65, borderColor, buttonNormalColor);
+        }
+        else
+        {
+            var result = buttonNormalColor;
+        }
+        return this.utils.formatHexColor(result);        
+    });
+    
     var scrollbarHandler = uiNote.scrollHandler =
         new this.utils.ScrollHandler(this.utils, this.prefs, uiNote.textArea, uiNote.num, this.NOTE_OUTER_SIZE,
-                                     getLineColorFunc, getButtonColorFunc, isEnabledFunc);
+                                     getLineColorFunc, getHandleColorFunc, getButtonColorFunc, isEnabledFunc);
     isEnabledFunc = getLineColorFunc = getButtonColorFunc = null; // prevent leak
     
     var scrollbar = uiNote.scrollbar = scrollbarHandler.getScrollbar();
@@ -610,7 +638,7 @@ updateScrollbarType: function(uiNote)
     
     this.updateScrollbarPresence(uiNote);
     
-    uiNote.scrollHandler.drawScrollLine();
+    uiNote.scrollHandler.updateScrollLine();
 },
 
 updateScrollbarPresence: function(uiNote)
@@ -723,11 +751,17 @@ getInternalCoordinates: function(uiNote, event)
 
 getButtonColor: function(uiNote, mode)
 {
-    return this.utils.formatHexColor(this.getRawButtonColor(uiNote.backColorArray, mode));
+    return this.utils.formatHexColor(this.getRawButtonColor(uiNote, mode));
 },
 
-getRawButtonColor: function(baseColor, mode)
+getBorderColor: function(uiNote)
 {
+    return this.utils.formatHexColor(this.getRawBorderColor(uiNote));
+},
+
+getRawButtonColor: function(uiNote, mode)
+{
+    var baseColor = uiNote.backColorArray;
     if (mode == this.utils.EFFECT_MODE_PRESS)
     {
         return this.utils.darken(baseColor, 0.1);
@@ -743,9 +777,9 @@ getRawButtonColor: function(baseColor, mode)
     }
 },
 
-getBorderColor: function(uiNote)
+getRawBorderColor: function(uiNote)
 {
-    return this.utils.formatHexColor(this.utils.darken(uiNote.backColorArray, 0.05));
+    return this.utils.darken(uiNote.backColorArray, 0.05);
 },
 
 createHorzSpacer: function(doc, isLittle)
@@ -895,7 +929,7 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
         try
         {
             this.checkScrollTop(uiNote);
-            uiNote.scrollHandler.drawScrollLine();
+            uiNote.scrollHandler.updateScrollLine();
             this.updateScrollbarPresence(uiNote);
         }
         catch (ex)
@@ -987,7 +1021,7 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
         try
         {
             this.checkScrollTop(uiNote);
-            uiNote.scrollHandler.drawScrollLine();
+            uiNote.scrollHandler.updateScrollLine();
             this.updateScrollbarPresence(uiNote);
         }
         catch (ex)
@@ -1245,7 +1279,7 @@ drawResizeHandle: function(uiNote)
 colorFlipArrow: function(uiNote, mode)
 {
     if (mode == null) mode = this.MODE_NORMAL;
-    var color = this.getRawButtonColor(uiNote.backColorArray, mode);
+    var color = this.getRawButtonColor(uiNote, mode);
     this.utils.colorCanvas(uiNote.flipButton, color);
 },
 
