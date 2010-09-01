@@ -47,27 +47,49 @@ internoteUtilities.incorporate({
         var scrollLine = this.scrollLine =
             this.utils.createHTMLCanvas(doc, "internote-scrollline" + idSuffix, width, width);
         
+        this.upperLineEffectMode = this.utils.EFFECT_MODE_NORMAL;
+        this.lowerLineEffectMode = this.utils.EFFECT_MODE_NORMAL;
+        
         var onUpperRedrawScrollLine = this.utils.bind(this, function(effectMode)
         {
+            var shouldChangeArea = (this.upperLineEffectMode == this.utils.EFFECT_MODE_PRESS ||
+                                    effectMode               == this.utils.EFFECT_MODE_PRESS);
             this.upperLineEffectMode = effectMode;
-            this.drawScrollLine.call(this);
+            if (shouldChangeArea)
+            {
+                this.updateScrollLine();
+            }
+            else if (this.upperLineEffectMode != effectMode)
+            {
+                this.drawScrollLine();
+            }
         });
         var onLowerRedrawScrollLine = this.utils.bind(this, function(effectMode)
         {
+            var shouldChangeArea = (this.lowerLineEffectMode == this.utils.EFFECT_MODE_PRESS ||
+                                    effectMode               == this.utils.EFFECT_MODE_PRESS);
             this.lowerLineEffectMode = effectMode;
-            this.drawScrollLine.call(this);
+            if (shouldChangeArea)
+            {
+                this.updateScrollLine();
+            }
+            else if (this.lowerLineEffectMode != effectMode)
+            {
+                this.drawScrollLine();
+            }
         });
         
         var onScrollUpPage   = this.utils.bind(this, this.onScrollUpPage  );
         var onScrollDownPage = this.utils.bind(this, this.onScrollDownPage);
         
         var [upperLineArea, lowerLineArea] = this.getLineArea();
-        this.upperLineHandler1 = this.utils.registerButtonEffectsHandler(scrollLine, this.isEnabledFunc, onUpperRedrawScrollLine,  upperLineArea);
-        this.lowerLineHandler1 = this.utils.registerButtonEffectsHandler(scrollLine, this.isEnabledFunc, onLowerRedrawScrollLine,  lowerLineArea);
-        this.upperLineHandler2 = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollUpPage,   this.isEnabledFunc,
-                                                                           this.REPEAT_DELAY, this.REPEAT_INTERVAL, upperLineArea);
-        this.lowerLineHandler2 = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollDownPage, this.isEnabledFunc,
-                                                                           this.REPEAT_DELAY, this.REPEAT_INTERVAL, lowerLineArea);
+        this.upperLineHandler = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollUpPage,   this.isEnabledFunc,
+                                                                          this.REPEAT_DELAY, this.REPEAT_INTERVAL, upperLineArea);
+        this.lowerLineHandler = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollDownPage, this.isEnabledFunc,
+                                                                          this.REPEAT_DELAY, this.REPEAT_INTERVAL, lowerLineArea);
+
+        this.utils.registerButtonEffectsHandler(this.upperLineHandler, onUpperRedrawScrollLine);
+        this.utils.registerButtonEffectsHandler(this.lowerLineHandler, onLowerRedrawScrollLine);
         
         scrollLine.addEventListener("mousedown", onPressScrollLine, false);
         
@@ -165,19 +187,20 @@ setHeight: function(height)
 
 updateScrollLine: function()
 {
+    //dump("internoteUtilities.ScrollHandler.updateScrollLine\n");
+    
     this.drawScrollLine();
     
     // If we're pressing the scroll line, we must set the area wider to give the user leeway.
-    var arePressingScrollLine = this.upperLineHandler1.isPressed || this.lowerLineHandler1.isPressed;
+    var arePressingScrollLine = (this.upperLineEffectMode == this.utils.EFFECT_MODE_PRESS) ||
+                                (this.lowerLineEffectMode == this.utils.EFFECT_MODE_PRESS);
     
     var [upperLineArea, lowerLineArea] = arePressingScrollLine
                                        ? this.getActiveLineArea()
                                        : this.getLineArea();
     
-    this.upperLineHandler1.setArea(upperLineArea);
-    this.upperLineHandler2.setArea(upperLineArea);
-    this.lowerLineHandler1.setArea(lowerLineArea);
-    this.lowerLineHandler2.setArea(lowerLineArea);
+    this.upperLineHandler.setArea(upperLineArea);
+    this.lowerLineHandler.setArea(lowerLineArea);
 },
 
 updateLineHeight: function(lineHeight)
@@ -251,7 +274,6 @@ drawScrollLine: function()
         context.arc (0.5 * w, scrollTopPos, 0.5 * w, 0, 2 * Math.PI, false);
         context.arc (0.5 * w, scrollBotPos, 0.5 * w, 0, 2 * Math.PI, false);
         context.rect(0.0 * w, scrollTopPos, 1.0 * w, scrollBotPos - scrollTopPos);
-        
         context.fill();
     }
     else
@@ -292,16 +314,16 @@ getScrollInfo: function()
 // handle offset is specified.
 getLineArea: function()
 {
-    //dump("getLineArea\n");
+    //dump("internoteUtilities.ScrollHandler.getLineArea\n");
     
     var [scrollLineTop, scrollLineBot, scrollHandleTop, scrollHandleBot] = this.getScrollInfo();
     
     var area = this.utils.makeRectFromDims([0, 0], [this.width, this.scrollLine.height]);
     
-    var [upperRect,  area     ] = this.utils.splitRectVert(area, scrollHandleTop                   - this.width / 2);
-    var [handleRect, lowerRect] = this.utils.splitRectVert(area, scrollHandleBot - scrollHandleTop + this.width / 2);
+    var [upperRect, ] = this.utils.splitRectVert(area, Math.floor(scrollHandleTop - this.width / 2));
+    var [, lowerRect] = this.utils.splitRectVert(area, Math.ceil (scrollHandleBot + this.width / 2));
     
-    return [upperRect, lowerRect, handleRect];
+    return [upperRect, lowerRect];
 },
 
 // When the line is being pressed, we use a version of getLineArea that ignores the handle, giving an
@@ -317,10 +339,8 @@ getActiveLineArea: function()
     
     var area = this.utils.makeRectFromDims([0, 0], [this.width, this.scrollLine.height]);
     
-    var [upperRect,  area     ] = this.utils.splitRectVert(area, scrollHandleMid);
-    var [handleRect, lowerRect] = this.utils.splitRectVert(area, 0);
-    
-    return [upperRect, lowerRect, handleRect];
+    var [upperRect, lowerRect] = this.utils.splitRectVert(area, Math.round(scrollHandleMid));
+    return [upperRect, lowerRect];
 },
 
 isNecessary: function()
@@ -388,7 +408,7 @@ getScrollLineLocation: function(event)
 // XXX Should kill anims.
 onPressScrollLine: function(ev)
 {
-    //dump("internoteNoteUI.onPressScrollLine\n");
+    //dump("internoteUtilities.ScrollHandler.onPressScrollLine\n");
     
     try
     {
@@ -414,7 +434,7 @@ onPressScrollLine: function(ev)
 
 onStartDragHandle: function(event)
 {
-    //dump("internoteNoteUI.onStartDragHandle\n");
+    //dump("internoteUtilities.ScrollHandler.onStartDragHandle\n");
     
     var dragHandler = new this.utils.DragHandler(this.utils);
     var startPos = this.element.scrollTop;

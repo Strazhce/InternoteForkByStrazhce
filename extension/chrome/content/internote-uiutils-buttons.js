@@ -5,6 +5,9 @@ internoteUtilities.incorporate({
     {
         this.utils      = utils;
         this.element    = element;
+        
+        this.isInside   = false;
+        this.isPressed  = false;
     },
     
     FlexiblePressHoverHandler: function(utils, element, area)
@@ -16,6 +19,9 @@ internoteUtilities.incorporate({
         this.element      = element;
         this.area         = area;
         this.lastLocalPos = [-1, -1]; // Should never be inside.
+        
+        this.isInside   = false;
+        this.isPressed  = false;
     }
 });
 
@@ -37,8 +43,12 @@ internoteUtilities.PressHoverHandler.prototype =
     {
         try
         {
-            this.utils.addBoundDOMEventListener(this.element, "mouseout", this, "handleMouseOut", false);
-            this.onMouseOver();
+            if (this.isHoverOK(ev))
+            {
+                this.isInside = true;
+                this.utils.addBoundDOMEventListener(this.element, "mouseout", this, "handleMouseOut", false);
+                this.onMouseOver();
+            }
         }
         catch (ex)
         {
@@ -50,8 +60,12 @@ internoteUtilities.PressHoverHandler.prototype =
     {
         try
         {
-            this.utils.removeBoundDOMEventListener(this.element, "mouseout", this, "handleMouseOut", false);
-            this.onMouseOut();
+            if (this.isInside)
+            {
+                this.isInside = false;
+                this.utils.removeBoundDOMEventListener(this.element, "mouseout", this, "handleMouseOut", false);
+                this.onMouseOut();
+            }
         }
         catch (ex)
         {
@@ -63,8 +77,12 @@ internoteUtilities.PressHoverHandler.prototype =
     {
         try
         {
-            this.utils.addBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
-            this.onMouseDown(ev.button);
+            if (this.isPressOK(ev))
+            {
+                this.isPressed = true;
+                this.utils.addBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
+                this.onMouseDown();
+            }
         }
         catch (ex)
         {
@@ -76,14 +94,22 @@ internoteUtilities.PressHoverHandler.prototype =
     {
         try
         {
-            this.utils.removeBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
-            this.onMouseUp(ev.button);
+            if (this.isPressed)
+            {
+                this.isPressed = false;
+                this.utils.removeBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
+                this.onMouseUp();
+            }
         }
         catch (ex)
         {
             this.utils.handleException("Exception caught when mousing up.", ex);
         }
     },
+    
+    // Override as necessary.
+    isHoverOK: function(ev) { return true; },
+    isPressOK: function(ev) { return true; },
 };
 
 // This version lets you set a changeable area within the element that is considered the press/hover area.
@@ -97,9 +123,11 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
     
     setArea: function(area)
     {
-        //dump("setArea\n");
-        this.area = area;
-        this.checkWhetherMouseInArea();
+        if (!this.utils.areRectsEqual(this.area, area))
+        {
+            this.area = area;
+            this.checkWhetherMouseInArea();
+        }
     },
     
     isInArea: function(localPos)
@@ -109,7 +137,6 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
     
     handleMouseOver: function(ev)
     {
-        //dump("handleMouseOver\n");
         try
         {
             this.utils.addBoundDOMEventListener(this.element, "mouseout",  this, "handleMouseOut",  false);
@@ -117,10 +144,9 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
             
             this.lastLocalPos = this.convertFromClientToLocalCoords([ev.clientX, ev.clientY]);
             
-            if (this.isInArea(this.lastLocalPos))
+            if (this.isInArea(this.lastLocalPos) && this.isHoverOK(ev))
             {
-                //dump("  Entered area.\n");
-                this.wasInArea = true;
+                this.isInside = true;
                 this.onMouseOver();
             }
         }
@@ -132,7 +158,6 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
     
     handleMouseMove: function(ev)
     {
-        //dump("handleMouseMove\n");
         try
         {
             this.lastLocalPos = this.convertFromClientToLocalCoords([ev.clientX, ev.clientY]);
@@ -141,12 +166,11 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
         catch (ex)
         {
             this.utils.handleException("Exception caught when moving mouse.", ex);
-        }        
+        }
     },
     
     handleMouseOut: function(ev)
     {
-        //dump("handleMouseOut\n");
         try
         {
             this.utils.removeBoundDOMEventListener(this.element, "mouseout",  this, "handleMouseOut",  false);
@@ -155,11 +179,10 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
             // Need to update lastLocalPos so that we'll stay out if setArea is called again.
             this.lastLocalPos = this.convertFromClientToLocalCoords([ev.clientX, ev.clientY]);
             
-            if (this.wasInArea)
+            if (this.isInside)
             {
-                //dump("  Left area.\n");
+                this.isInside = false;
                 this.onMouseOut();
-                this.wasInArea = false;
             }
         }
         catch (ex)
@@ -170,14 +193,13 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
     
     handleMouseDown: function(ev)
     {
-        //dump("handleMouseDown\n");
         try
         {
-            if (this.wasInArea)
+            if (this.isInside && this.isPressOK(ev))
             {
-                //dump("  Pressed in area.\n");
+                this.isPressed = true;
                 this.utils.addBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
-                this.onMouseDown(ev.button);
+                this.onMouseDown();
             }
         }
         catch (ex)
@@ -188,12 +210,14 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
     
     handleMouseUp: function(ev)
     {
-        //dump("handleMouseUp\n");
         try
         {
-            //dump("  Released.\n");
-            this.utils.removeBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
-            this.onMouseUp(ev.button);
+            if (this.isPressed)
+            {
+                this.isPressed = false;
+                this.utils.removeBoundDOMEventListener(this.element.ownerDocument, "mouseup", this, "handleMouseUp", false);
+                this.onMouseUp();
+            }
         }
         catch (ex)
         {
@@ -203,27 +227,29 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
     
     checkWhetherMouseInArea: function()
     {
-        var isInAreaNow = this.isInArea(this.lastLocalPos);
+        var isInsideNow = this.isInArea(this.lastLocalPos);
         
-        if (this.wasInArea && !isInAreaNow)
+        if (this.isInside && !isInsideNow)
         {
-            //dump("  Left area.\n");
+            this.isInside = false;
             this.onMouseOut();
         }
-        else if (!this.wasInArea && isInAreaNow)
+        else if (!this.isInside && isInsideNow)
         {
-            //dump("  Entered area.\n");
+            this.isInside = true;
             this.onMouseOver();
         }
-        
-        this.wasInArea = isInAreaNow;
     },
     
     convertFromClientToLocalCoords: function(mouseClientPos)
     {
-           var elementClientRect = this.utils.getSingleElement(this.element.getClientRects());
+        var elementClientRect = this.utils.getSingleElement(this.element.getClientRects());
         return this.utils.coordPairSubtract(mouseClientPos, [elementClientRect.left, elementClientRect.top]);
     },
+    
+    // Override as necessary.
+    isHoverOK: function(ev) { return true; },
+    isPressOK: function(ev) { return true; },
 };
 
 internoteUtilities.incorporate({
@@ -237,71 +263,21 @@ internoteUtilities.incorporate({
     hoveredButton: null,
     pressedButton: null,
     
-    registerButtonEffectsHandler: function(element, isEnabledFunc, redrawFunc, flexibleArea)
+    registerGeneralHandler: function(handler)
     {
-        this.assertError(element       != null, "Element is null.",       element      );
-        this.assertError(isEnabledFunc != null, "isEnabledFunc is null.", isEnabledFunc);
-        this.assertError(redrawFunc    != null, "redrawFunc is null.",    redrawFunc   );
+        // XXX Need to make this global.
+        InternoteEventDispatcher.prototype.incorporateED(handler);
+        handler.initEventDispatcher();
+        handler.createEvent("effectModeChanged");
         
-        var handler = (flexibleArea != null)
-                    ? new this.FlexiblePressHoverHandler(this, element, flexibleArea)
-                    : new this.PressHoverHandler(this, element);
-        
-        handler.redraw = function()
+        handler.dispatchNewMode = function()
         {
-            if (this.utils.hoveredButton != element)
-            {
-                redrawFunc.call(this, this.utils.EFFECT_MODE_NORMAL);
-            }
-            else if (this.utils.pressedButton == element)
-            {
-                redrawFunc.call(this, this.utils.EFFECT_MODE_PRESS);
-            }
-            else
-            {
-                redrawFunc.call(this, this.utils.EFFECT_MODE_HOVER);
-            }
+            if      (!this.isInside) var mode = this.utils.EFFECT_MODE_NORMAL
+            else if (this.isPressed) var mode = this.utils.EFFECT_MODE_PRESS
+            else                     var mode = this.utils.EFFECT_MODE_HOVER;
+            
+            this.dispatchEvent("effectModeChanged", mode);
         };
-        
-        handler.onMouseOver = function()
-        {
-            if (isEnabledFunc.call())
-            {
-                this.utils.hoveredButton = element;
-                this.redraw();
-            }
-        };
-        
-        handler.onMouseOut = function()
-        {
-            if (this.utils.hoveredButton == element)
-            {
-                this.utils.hoveredButton = null;
-                this.redraw();
-            }
-        };
-        
-        handler.onMouseDown = function(button)
-        {
-            if (button == 0 && isEnabledFunc.call())
-            {
-                this.utils.pressedButton = element;
-                this.redraw();
-            }
-        };
-        
-        handler.onMouseUp = function(button)
-        {
-            if (this.utils.pressedButton == element)
-            {
-                this.utils.pressedButton = null;
-                this.redraw();
-            }
-        };
-        
-        handler.registerHandlers();
-
-        return handler;
     },
     
     registerSimpleButtonHandler: function(element, actionFunc, isEnabledFunc, flexibleArea)
@@ -310,31 +286,23 @@ internoteUtilities.incorporate({
                     ? new this.FlexiblePressHoverHandler(this, element, flexibleArea)
                     : new this.PressHoverHandler(this, element);
         
-        handler.onMouseOver = function()
-        {
-            this.isInside = true;
-        };
+        this.registerGeneralHandler(handler);
         
-        handler.onMouseOut = function()
-        {
-            this.isInside = false;
-        };
+        handler.onMouseOver = function() { this.dispatchNewMode(); };
+        handler.onMouseOut  = function() { this.dispatchNewMode(); };
+        handler.onMouseDown = function() { this.dispatchNewMode(); };
         
-        handler.onMouseDown = function(button) {
-            if (button == 0 && isEnabledFunc.call())
-            {
-                this.isPressed = true;
-            }
-        };
-        
-        handler.onMouseUp = function(button)
-        {
-            if (this.isInside && this.isPressed)
+        handler.onMouseUp = function() {
+            this.dispatchNewMode();
+            
+            if (this.isInside)
             {
                 actionFunc.call(this);
             }
-            this.isPressed = false;
         };
+        
+        handler.isHoverOK = function(ev) { return isEnabledFunc.call(); }
+        handler.isPressOK = function(ev) { return isEnabledFunc.call() && ev.button == 0; }
         
         handler.registerHandlers();
         
@@ -347,6 +315,8 @@ internoteUtilities.incorporate({
                     ? new this.FlexiblePressHoverHandler(this, element, flexibleArea)
                     : new this.PressHoverHandler(this, element);
         
+        this.registerGeneralHandler(handler);
+        
         handler.turnOnRepeat = function()
         {
             this.turnOffRepeat(); // Just in case.
@@ -356,9 +326,9 @@ internoteUtilities.incorporate({
                 this.delayTimeout = null;
                 this.repeatInterval = setInterval(this.utils.bind(this, function()
                 {
-                    if (this.isHovered)
+                    if (this.isInside)
                     {
-                        actionFunc.call(this);
+                        actionFunc.call();
                     }
                 }), intervalTime);
             }), delayTime);
@@ -381,51 +351,87 @@ internoteUtilities.incorporate({
         
         handler.onMouseOver = function()
         {
-            this.isHovered = true;
-        };
-        
-        handler.onMouseOut = function()
-        {
-            this.isHovered = false;
-        };
-        
-        handler.onMouseDown = function(button)
-        {
-            if (button == 0 && isEnabledFunc.call())
+            this.dispatchNewMode();
+            if (this.isPressed)
             {
-                actionFunc.call();
-                this.isPressed = true;
                 this.turnOnRepeat();
             }
         };
         
-        handler.onMouseUp = function(button)
+        handler.onMouseOut = function()
         {
+            this.dispatchNewMode();
             if (this.isPressed)
             {
                 this.turnOffRepeat();
             }
-            this.isPressed = false;
         };
+        
+        handler.onMouseDown = function(button)
+        {
+            this.dispatchNewMode();
+            this.turnOnRepeat();
+            
+            // This action is delayed because when we click on a canvas with
+            // multiple repeat button handlers, we should determine which area
+            // the mouse is in first, in case the action function changes
+            // the area and this might affect the result.
+            setTimeout(function() { actionFunc.call(); }, 0);
+        };
+        
+        handler.onMouseUp = function(button)
+        {
+            this.dispatchNewMode();
+            this.turnOffRepeat();
+        };
+        
+        handler.isHoverOK = function(ev) { return isEnabledFunc.call(); }
+        handler.isPressOK = function(ev) { return isEnabledFunc.call() && ev.button == 0; }
         
         handler.registerHandlers();
         
         return handler;
     },
     
+    registerButtonEffectsHandler: function(handler, redrawFunc)
+    {
+        this.assertError(handler    != null, "handler is null.",    handler   );
+        this.assertError(redrawFunc != null, "redrawFunc is null.", redrawFunc);
+        
+        handler.addEventListener("effectModeChanged", redrawFunc);
+    },
+    
     createSimpleButton: function(doc, id, width, height, redrawFunc, actionFunc, isEnabledFunc)
     {
         var canvas = this.createHTMLCanvas(doc, id, width, height);
-        this.registerButtonEffectsHandler(canvas, isEnabledFunc, redrawFunc);
-        this.registerSimpleButtonHandler(canvas, actionFunc, isEnabledFunc);
+        
+        try
+        {
+            var handler = this.registerSimpleButtonHandler(canvas, actionFunc, isEnabledFunc);
+            this.registerButtonEffectsHandler(handler, redrawFunc);
+        }
+        catch (ex)
+        {
+            this.handleException("Exception caught when registering simple button handlers.", ex);
+        }
+        
         return canvas;
     },
     
     createRepeatingButton: function(doc, id, width, height, redrawFunc, actionFunc, isEnabledFunc, delayTime, intervalTime)
     {
         var canvas = this.createHTMLCanvas(doc, id, width, height);
-        this.registerButtonEffectsHandler(canvas, isEnabledFunc, redrawFunc);
-        this.registerRepeatingButtonHandler(canvas, actionFunc, isEnabledFunc, delayTime, intervalTime);
+        
+        try
+        {
+            var handler = this.registerRepeatingButtonHandler(canvas, actionFunc, isEnabledFunc, delayTime, intervalTime);
+            this.registerButtonEffectsHandler(handler, redrawFunc);
+        }
+        catch (ex)
+        {
+            this.handleException("Exception caught when registering repeating button handlers.", ex);
+        }
+        
         return canvas;
     },
     

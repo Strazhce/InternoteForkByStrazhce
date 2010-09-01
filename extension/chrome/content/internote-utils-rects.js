@@ -114,6 +114,12 @@ restrictPosToRect: function(pos, rect)
            this.clipToRange(pos[1], rect.topLeft[1], rect.bottomRight[1])];
 },
 
+areRectsEqual: function(rect1, rect2)
+{
+    return this.areCoordPairsEqual(rect1.topLeft,     rect2.topLeft    ) &&
+           this.areCoordPairsEqual(rect1.bottomRight, rect2.bottomRight);
+},
+
 doRectsOverlap: function(rect1, rect2)
 {
     this.assertError(this.isRectangle(rect1),  "Invalid rect1.");
