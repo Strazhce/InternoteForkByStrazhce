@@ -43,6 +43,14 @@ incorporate: function(obj)
     }
 },
 
+incorporate2: function(destObj, srcObj)
+{
+    for (var name in srcObj)
+    {
+        destObj[name] = srcObj[name];
+    }
+},
+
 ifNull: function(value, defaultVal)
 {
     return (value == null) ? defaultVal : value;

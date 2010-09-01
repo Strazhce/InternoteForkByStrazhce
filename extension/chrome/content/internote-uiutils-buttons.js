@@ -25,7 +25,9 @@ internoteUtilities.incorporate({
     }
 });
 
-internoteUtilities.PressHoverHandler.prototype =
+internoteUtilities.PressHoverHandler.prototype = new InternoteEventDispatcher();
+
+internoteUtilities.incorporate2(internoteUtilities.PressHoverHandler.prototype,
 {
     registerHandlers: function()
     {
@@ -110,10 +112,12 @@ internoteUtilities.PressHoverHandler.prototype =
     // Override as necessary.
     isHoverOK: function(ev) { return true; },
     isPressOK: function(ev) { return true; },
-};
+});
 
 // This version lets you set a changeable area within the element that is considered the press/hover area.
-internoteUtilities.FlexiblePressHoverHandler.prototype =
+internoteUtilities.FlexiblePressHoverHandler.prototype = new InternoteEventDispatcher();
+
+internoteUtilities.incorporate2(internoteUtilities.FlexiblePressHoverHandler.prototype,
 {
     registerHandlers: function()
     {
@@ -250,23 +254,15 @@ internoteUtilities.FlexiblePressHoverHandler.prototype =
     // Override as necessary.
     isHoverOK: function(ev) { return true; },
     isPressOK: function(ev) { return true; },
-};
+});
 
 internoteUtilities.incorporate({
-
-    noteFlipImage: new Image(),
-    
     EFFECT_MODE_NORMAL: 0,
     EFFECT_MODE_HOVER:  1,
     EFFECT_MODE_PRESS:  2,
     
-    hoveredButton: null,
-    pressedButton: null,
-    
     registerGeneralHandler: function(handler)
     {
-        // XXX Need to make this global.
-        InternoteEventDispatcher.prototype.incorporateED(handler);
         handler.initEventDispatcher();
         handler.createEvent("effectModeChanged");
         
