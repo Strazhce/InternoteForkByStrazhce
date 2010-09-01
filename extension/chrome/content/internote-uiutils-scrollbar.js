@@ -436,6 +436,8 @@ onStartDragHandle: function(event)
 {
     //dump("internoteUtilities.ScrollHandler.onStartDragHandle\n");
     
+    var CANCEL_OFFSET = 6 * this.width;
+    
     var dragHandler = new this.utils.DragHandler(this.utils);
     var startPos = this.element.scrollTop;
     
@@ -443,11 +445,18 @@ onStartDragHandle: function(event)
     this.drawScrollLine();
     
     dragHandler.onDragMouseMoved = this.utils.bind(this, function(event, offset) {
-        var [scrollLineTop, scrollLineBot, scrollTopPos, scrollBotPos] = this.getScrollInfo();
-        var scrollHeight = scrollLineBot - scrollLineTop;
-        var proportionOffset = offset[1] / scrollHeight;
-        var scrollMovement = proportionOffset * this.element.scrollHeight;
-        this.onChangeScroll(startPos + scrollMovement);
+        if (CANCEL_OFFSET < Math.abs(offset[0]))
+        {
+            dragHandler.dragFinished(false, null);
+        }
+        else
+        {
+            var [scrollLineTop, scrollLineBot, scrollTopPos, scrollBotPos] = this.getScrollInfo();
+            var scrollHeight = scrollLineBot - scrollLineTop;
+            var proportionOffset = offset[1] / scrollHeight;
+            var scrollMovement = proportionOffset * this.element.scrollHeight;
+            this.onChangeScroll(startPos + scrollMovement);
+        }
     });
     
     dragHandler.onDragFinished = this.utils.bind(this, function(wasCompleted, wasDrag, offset)
