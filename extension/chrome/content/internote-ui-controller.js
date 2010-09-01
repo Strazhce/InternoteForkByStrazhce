@@ -98,7 +98,7 @@ minimizedNotes: [],
 
 allUINotes: [],
 uiNoteLookup: [],
-
+hasSeenUINote: [],
 checkViewportEvent: null,
 
 ///////////////////////////////
@@ -453,6 +453,8 @@ uiNoteRemove: function(uiNote)
 
 changePage: function(newURL, isPageLoaded)
 {
+    //dump("changePage\n");
+    
     // We might tab change to the same page, so we still need this ...
     
     this.currentBrowser = this.utils.getCurrentBrowser();
@@ -501,11 +503,12 @@ changePage: function(newURL, isPageLoaded)
         
         this.uiNoteLookup   = [];
         this.allUINotes     = [];
+        this.hasSeenUINote  = [];
         this.minimizedNotes = [];
         this.arePageListeners = false;
         
         this.displayUI.setUINotes(this.allUINotes, this.uiNoteLookup);
-
+        
         if (this.allowNotesOnThisPage(newURL))
         {
             this.configureStorageWatcher(this.currentURL);
@@ -520,7 +523,7 @@ changePage: function(newURL, isPageLoaded)
                     this.minimizedNotes.push(uiNote);
                 }
             }
-
+            
             this.minimizedNotes.sort(this.minimizedNoteSortFunc);
             
             for (var i = 0; i < this.minimizedNotes.length; i++)
@@ -1721,7 +1724,9 @@ screenCreateNote: function(uiNote, shouldAnimate)
     var posOnViewport = this.screenCalcNotePosOnViewport(uiNote);
     this.utils.assertError(this.utils.isCoordPair(posOnViewport), "Bad pos on viewport.", posOnViewport);
     
-    this.displayUI.addNote(uiNote, posOnViewport, this.storage.getDims(uiNote.note));
+    var noteDims = this.storage.getDims(uiNote.note);
+    
+    this.displayUI.addNote(uiNote, posOnViewport, noteDims);
     
     // Animation should be the very last thing so it doesn't get interrupted by other CPU tasks.
     if (shouldAnimate && this.displayUI.supportsTranslucency())
@@ -1732,6 +1737,13 @@ screenCreateNote: function(uiNote, shouldAnimate)
     else
     {
         uiNote.noteElt.style.opacity = 1;
+    }
+    
+    var noteRectOnViewport = this.utils.makeRectFromDims(posOnViewport, noteDims);
+    var viewportRect = this.utils.makeRectFromDims([0, 0], this.utils.getViewportDims(this.currentBrowser));
+    if (this.utils.doRectsOverlap(noteRectOnViewport, viewportRect))
+    {
+        this.hasSeenUINote[uiNote.num] = 1;
     }
 },
 
@@ -2210,6 +2222,11 @@ screenCheckAspects: function(ev)
             var viewportDims = viewportResized ? this.utils.getViewportDims(this.currentBrowser) : null;
             var posFunc = this.utils.bind(this, this.screenGetUpdatedPosFunc);
             
+            if (viewportResized || scrolled || pageResized)
+            {
+                this.markOnscreenNotes();
+            }
+            
             this.displayUI.handleChangedAspects(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized);
         }
         
@@ -2521,24 +2538,32 @@ hasHTMLNotes: function()
     return false;
 },
 
-hasOffscreenNotes: function()
+markOnscreenNotes: function()
 {
     var viewportRect = this.utils.getViewportRect(this.currentBrowser);
     
     for (var i = 0; i < this.allUINotes.length; i++)
     {
         var uiNote = this.allUINotes[i];
-        if (!uiNote.note.isMinimized) // XXX Fix this is there are ever in-place minimized.
+        if (uiNote.note.isMinimized) // XXX Fix this is there are ever in-place minimized.
+        {
+            this.hasSeenUINote[uiNote.num] = 1;
+        }
+        else
         {
             var posOnPage = this.screenCalcNotePosOnPage(uiNote, [0, 0]);
             var noteRect   = this.utils.makeRectFromDims(posOnPage, this.storage.getDims(uiNote.note));
-            if (!this.utils.doRectsOverlap(noteRect, viewportRect))
+            if (this.utils.doRectsOverlap(noteRect, viewportRect))
             {
-                return true;
+                this.hasSeenUINote[uiNote.num] = 1;
             }
         }
     }
-    return false;
+},
+
+hasOffscreenNotes: function()
+{
+    return this.allUINotes.some(function(uiNote) { return this.hasSeenUINote[uiNote.num] !== 1; }, this);
 },
 
 showWarning: function(messageName)
@@ -2550,6 +2575,8 @@ showWarning: function(messageName)
 
 showMessage: function(messageName, shouldTimeout, linkMessageName, linkFunc)
 {
+    //dump("showMessage\n");
+    
     if (shouldTimeout == null)
     {
         shouldTimeout = true;
@@ -2597,6 +2624,7 @@ maybeShowOffscreenMessage: function()
     
     if (this.hasOffscreenNotes())
     {
+        //dump("  Shown.\n");
         this.showMessage("OffscreenMessage");
     }
 },
