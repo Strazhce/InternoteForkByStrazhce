@@ -820,9 +820,9 @@ createDragBorder: function(doc, uiNote, directionStr, isVertical, onMoveStart)
     
     if (onMoveStart != null)
     {
-        dragBorder.onmousedown = function(event)
+        dragBorder.onmousedown = function(ev)
         {
-            if (uiNote.isEnabled) onMoveStart(event);
+            if (uiNote.isEnabled && ev.button == 0) onMoveStart(ev);
         };
     }
     
@@ -888,9 +888,9 @@ createResizeHandle: function(doc, uiNote, onResizeStart)
     
     if (onResizeStart != null)
     {
-        canvas.onmousedown = function(event)
+        canvas.onmousedown = function(ev)
         {
-            if (uiNote.isEnabled) onResizeStart(event);
+            if (uiNote.isEnabled && ev.button == 0) onResizeStart(ev);
         }
     }
     
