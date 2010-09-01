@@ -297,7 +297,7 @@ internoteUtilities.incorporate({
             
             if (this.isInside)
             {
-                actionFunc.call(this);
+                actionFunc.call(this, this.element);
             }
         };
         
@@ -328,7 +328,7 @@ internoteUtilities.incorporate({
                 {
                     if (this.isInside)
                     {
-                        actionFunc.call();
+                        actionFunc.call(this, this.element);
                     }
                 }), intervalTime);
             }), delayTime);
@@ -376,7 +376,7 @@ internoteUtilities.incorporate({
             // multiple repeat button handlers, we should determine which area
             // the mouse is in first, in case the action function changes
             // the area and this might affect the result.
-            setTimeout(function() { actionFunc.call(); }, 0);
+            setTimeout(function() { actionFunc.call(this, this.element); }, 0);
         };
         
         handler.onMouseUp = function(button)
