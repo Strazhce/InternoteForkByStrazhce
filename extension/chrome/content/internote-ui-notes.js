@@ -620,6 +620,7 @@ updateFontSize: function(uiNote)
     var lineHeight = parseInt(style.lineHeight, 10);
     
     uiNote.scrollHandler.updateLineHeight(lineHeight);
+    uiNote.scrollHandler.updateScrollLine();
 },
 
 updateScrollbarType: function(uiNote)
