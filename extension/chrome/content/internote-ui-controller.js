@@ -2243,12 +2243,13 @@ screenCheckAspects: function(ev)
 screenCommitPos: function(uiNote, posOnViewport)
 {
     //dump("screenCommitPos\n");
-
+    
     // Convert the screen pos to page pos ...
     var contentWindow = this.currentBrowser.contentWindow;
     var scrollPos = [contentWindow.scrollX, contentWindow.scrollY];
     var pagePos = this.utils.coordPairAdd(posOnViewport, scrollPos);
     // ... and store it.
+    
     this.storage.setPosition(uiNote.note, pagePos);
     
     //dump("  posOnViewport = " + this.utils.compactDumpString(posOnViewport) + "\n");
@@ -2258,8 +2259,13 @@ screenCommitPos: function(uiNote, posOnViewport)
 
 screenMoveNote: function(uiNote)
 {
+    //dump("screenMoveNote\n");
+    
     var newPosOnViewport     = this.screenCalcNotePosOnViewport(uiNote);
     var currentPosOnViewport = this.displayUI.getScreenPosition(uiNote);
+    
+    //dump("  newPosOnVP  = " + this.utils.compactDumpString(newPosOnViewport    ) + "\n");
+    //dump("  currPosOnVP = " + this.utils.compactDumpString(currentPosOnViewport) + "\n");
     
     if (!this.utils.areCoordPairsEqual(newPosOnViewport, currentPosOnViewport))
     {
@@ -2799,6 +2805,8 @@ onNoteEdited: function(event)
 
 onNoteMoved: function(event)
 {
+    //dump("onNoteMoved\n");
+    
     try
     {
         var note = event.note;
