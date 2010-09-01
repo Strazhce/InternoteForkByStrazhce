@@ -135,7 +135,7 @@ dragKeyPressed: function(ev)
     {
         if (ev.keyCode == ev.DOM_VK_ESCAPE)
         {
-            this.dragFinished(false, null, null, this.data);
+            this.dragFinished(false, null);
             ev.stopPropagation();
             ev.preventDefault();
         }
