@@ -866,17 +866,16 @@ clearAfterMenuSeparator: function(menuSeparator)
     }
 },
 
-
 updateViewportDimsForImage: function(contentDoc, startDims)
 {
     if (contentDoc.body.clientHeight < contentDoc.body.scrollHeight)
     {
-        startDims[0] -= this.SCROLLBAR_SIZE;
+        startDims[0] -= this.scrollbarSize;
     }
     
     if (contentDoc.body.clientWidth < contentDoc.body.scrollWidth)
     {
-        startDims[1] -= this.SCROLLBAR_SIZE;
+        startDims[1] -= this.scrollbarSize;
     }
 },
 
@@ -886,11 +885,6 @@ updateViewportDimsForHTML: function(browser, contentDoc, startDims)
 {
     var horzScrollbarDetected = false;
     var vertScrollbarDetected = false;
-    
-    if (this.scrollbarSize == null)
-    {
-        this.scrollbarSize = this.calcScrollbarWidth();
-    }        
     
     if (contentDoc.documentElement != null && contentDoc.body != null) // During loading ...
     {
@@ -928,13 +922,13 @@ updateViewportDimsForXML: function(contentDoc, startDims)
     if (contentDoc.documentElement.clientHeight < contentDoc.documentElement.scrollHeight)
     {
         //dump("Remove X\n");
-        startDims[0] -= this.SCROLLBAR_SIZE;
+        startDims[0] -= this.scrollbarSize;
     }
     
     if (contentDoc.documentElement.clientWidth < contentDoc.documentElement.scrollWidth)
     {
         //dump("Remove Y\n");
-        startDims[1] -= this.SCROLLBAR_SIZE;
+        startDims[1] -= this.scrollbarSize;
     }
 },
 
@@ -945,7 +939,12 @@ getViewportDims: function(browser)
 {
     this.assertError(browser != null, "Null browser", browser);
     
-    var contentDoc = browser.contentDocument;
+    if (this.scrollbarSize == null)
+    {
+        this.scrollbarSize = this.calcScrollbarWidth();
+    }        
+	
+	var contentDoc = browser.contentDocument;
     
     var viewportDims = this.getDims(browser.boxObject);
     
