@@ -221,19 +221,7 @@ showMessageNow: function(message)
         }
     }), false);
     
-    if (this.links.length == 0)
-    {
-        this.balloonDiv.style.cursor = "pointer";
-        
-        this.balloonPanel.addEventListener("click", this.utils.bind(this, function()
-        {
-            this.onClose();
-        }), false);
-    }
-    else
-    {
-        this.balloonDiv.style.cursor = "default";
-    }
+    this.balloonDiv.style.cursor = "default";
 },
 
 abandonAllMessages: function()
