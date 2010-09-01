@@ -132,10 +132,24 @@ raiseNote: function(uiNote)
         
         var isFocused = this.noteUI.isFocused(uiNote);
         
-        if (!uiNote.note.isMinimized)
+        try
         {
-            var selectionStart = uiNote.textArea.selectionStart;
-            var selectionEnd   = uiNote.textArea.selectionEnd;
+            var selection = [uiNote.textArea.selectionStart, uiNote.textArea.selectionEnd];
+        }
+        catch (ex)
+        {
+            if (ex.name == "NS_ERROR_FAILURE")
+            {
+                // This will happen if you try to store the selection for a minimized note,
+                // which can happen during the restore process.  We should continue and skip it.
+                // I think this is tricky to detect otherwise, I think because there's no
+                // guaranteed order between raising and restoring.
+                var selection = null;
+            }
+            else
+            {
+                throw ex;
+            }
         }
         
         this.removeNote(uiNote);
@@ -153,10 +167,9 @@ raiseNote: function(uiNote)
                 this.focusNote(uiNote);
             }
             
-            if (!uiNote.note.isMinimized)
+            if (selection != null)
             {
-                uiNote.textArea.selectionStart = selectionStart;
-                uiNote.textArea.selectionEnd   = selectionEnd;
+                [uiNote.textArea.selectionStart, uiNote.textArea.selectionEnd] = selection;
             }
         }), 0);
     }
