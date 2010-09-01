@@ -1030,6 +1030,10 @@ getPageDims: function(browser)
     {
         return [0, 0];
     }
+    else if (contentDoc instanceof ImageDocument)
+    {
+        return [contentDoc.body.scrollWidth, contentDoc.body.scrollHeight];
+    }
     else
     {
         return [contentDoc.documentElement.scrollWidth, contentDoc.documentElement.scrollHeight];
