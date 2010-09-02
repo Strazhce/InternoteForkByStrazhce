@@ -8,6 +8,7 @@
 <!ENTITY internote.openManagerCmd.label       "Manage All Notes">
 <!ENTITY internote.openPrefsCmd.label         "Options">
 <!ENTITY internote.helpCmd.label              "Help">
+<!ENTITY internote.reportBugCmd.label         "Report Bug">
 <!ENTITY internote.aboutCmd.label             "About Internote">
 
 <!ENTITY internote.displayNotesCmd.label      "Display Notes">
@@ -19,6 +20,7 @@
 <!ENTITY internote.openManagerCmd.accesskey   "M">
 <!ENTITY internote.openPrefsCmd.accesskey     "P">
 <!ENTITY internote.helpCmd.accesskey          "H">
+<!ENTITY internote.reportBugCmd.accesskey     "R">
 <!ENTITY internote.aboutCmd.accesskey         "A">
 <!ENTITY internote.displayNotesCmd.accesskey  "D">
 <!ENTITY internote.minimizeAllCmd.accesskey   "E">
@@ -251,11 +253,6 @@
 <!ENTITY internote.aboutVersion.label         "Version">
 
 <!ENTITY internote.aboutPeople.caption        "People Who Have Helped Make Internote What It is">
-
-<!ENTITY internote.aboutReporting.caption     "Reporting Issues with Internote">
-<!ENTITY internote.aboutReporting.desc        "You are welcome to send any reports of bugs, limitations and desired features in Internote.  Please see the home page for more details.">
-<!ENTITY internote.aboutInfo.desc             "The following information can be copied into any bug reports.  It includes some basic information about your installation as well as any internal problems that Internote detected. This may help diagnose your problem.">
-<!ENTITY internote.aboutPrivacy.desc          "Note: It's possible that this includes information about your browsing session, such as web page addresses.">
 
 <!ENTITY internote.aboutHomePage.label        "Internote Home Page">
 
