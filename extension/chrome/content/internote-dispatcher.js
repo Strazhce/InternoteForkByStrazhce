@@ -38,13 +38,28 @@ InternoteEventDispatcher.prototype.incorporateED = function(newPrototype)
 InternoteEventDispatcher.prototype.initEventDispatcher = function()
 {
     this.events = [];
+    
+    // The purpose of the event stack is to remember which events are
+    // currently being dispatched.  This allows us to prevent adding
+    // and removing listeners in this time - this makes things a little
+    // slower, but it could prevent a difficult to reproduce and find bug.
+    // We use a stack because a dispatch could lead to a listener that
+    // leads to another dispatch.
+    this.eventStack = [];
 };
 
 InternoteEventDispatcher.prototype.addEventListener = function(eventName, callback)
 {
     //dump("InternoteEventDispatcher.addEventListener " + eventName + " " + this.utils.getJSClassName(this) + "\n");
     
-    this.utils.assertError(typeof(callback) == "function", "addEventListener: callback not a function", typeof(callback));
+    this.utils.assertError(typeof(eventName) == "string" ,  "EventName is invalid",    eventName);
+    this.utils.assertError(typeof(callback ) == "function", "Callback not a function", callback);
+    
+    if (this.isEventBeingDispatched(eventName))
+    {
+        this.assertWarnNotHere("Can't add listener while event being dispatched.", eventName);
+        return;
+    }
     
     var listeners = this.events[eventName];
     if (listeners != null)
@@ -53,7 +68,7 @@ InternoteEventDispatcher.prototype.addEventListener = function(eventName, callba
         if (index == -1)
         {
             listeners.push(callback);
-            this.utils.assertError(listeners.length > 0, "addEventListener: add callback failed");
+            this.utils.assertError(listeners.length > 0, "Add callback failed.");
         }
         else {
             this.utils.assertWarnNotHere("Callback already added to event.");
@@ -67,6 +82,15 @@ InternoteEventDispatcher.prototype.addEventListener = function(eventName, callba
 InternoteEventDispatcher.prototype.removeEventListener = function(eventName, callback)
 {
     //dump("InternoteEventDispatcher.removeEventListener " + eventName + " " + this.utils.getJSClassName(this) + "\n");
+    
+    this.utils.assertError(typeof(eventName) == "string" ,  "EventName is invalid",    eventName);
+    this.utils.assertError(typeof(callback ) == "function", "Callback not a function", callback);
+    
+    if (this.isEventBeingDispatched(eventName))
+    {
+        this.utils.assertWarnNotHere("Can't remove listener while event being dispatched.", eventName);
+        return;
+    }
     
     var listeners = this.events[eventName];
     if (listeners != null)
@@ -88,9 +112,9 @@ InternoteEventDispatcher.prototype.removeEventListener = function(eventName, cal
 
 InternoteEventDispatcher.prototype.addBoundEventListener = function(eventName, obj, propertyName)
 {
-    this.utils.assertError(typeof(eventName   ) == "string" , "abel: eventName is invalid");
-    this.utils.assertError(typeof(obj         ) == "object" , "abel: obj is invalid");
-    this.utils.assertError(typeof(propertyName) == "string" , "abel: propertyName is invalid");
+    this.utils.assertError(typeof(obj         ) == "object" , "Obj is invalid",          obj);
+    this.utils.assertError(typeof(propertyName) == "string" , "PropertyName is invalid", propertyName);
+    
     var fn = this.utils.getBoundVersion(obj, propertyName);
     fn.obj          = obj;
     fn.propertyName = propertyName;
@@ -99,13 +123,18 @@ InternoteEventDispatcher.prototype.addBoundEventListener = function(eventName, o
 
 InternoteEventDispatcher.prototype.removeBoundEventListener = function(eventName, obj, propertyName)
 {
-    this.utils.assertError(typeof(eventName   ) == "string" , "abdel: eventName is invalid");
-    this.utils.assertError(typeof(obj         ) == "object" , "abdel: obj is invalid");
-    this.utils.assertError(typeof(propertyName) == "string" , "abdel: propertyName is invalid");
+    this.utils.assertError(typeof(obj         ) == "object" , "Obj is invalid",          obj);
+    this.utils.assertError(typeof(propertyName) == "string" , "PropertyName is invalid", propertyName);
+    
     var fn = this.utils.getBoundVersion(obj, propertyName);
     fn.obj          = obj;
     fn.propertyName = propertyName;
     this.removeEventListener(eventName, fn);
+};
+
+InternoteEventDispatcher.prototype.isEventBeingDispatched = function(eventName)
+{
+    return this.eventStack.indexOf(eventName) != -1;
 };
 
 InternoteEventDispatcher.prototype.createEvent = function(eventName)
@@ -130,6 +159,8 @@ InternoteEventDispatcher.prototype.dispatchEvent = function(eventName, eventObj)
     // This ensures "immutability" is preserved, since the object goes out to multiple places.
     eventObj.name = eventName;
     
+    this.eventStack.push(eventName);
+    
     var listeners = this.events[eventName];
     if (listeners != null)
     {
@@ -148,5 +179,14 @@ InternoteEventDispatcher.prototype.dispatchEvent = function(eventName, eventObj)
     }
     else {
         this.utils.assertWarnNotHere("Event does not exist when dispatching.");
+    }
+    
+    if (this.eventStack[this.eventStack.length - 1] == eventName)
+    {
+        this.eventStack.pop();
+    }
+    else
+    {
+        this.assertWarnNotHere("Event stack corrupted when popping.");
     }
 };
