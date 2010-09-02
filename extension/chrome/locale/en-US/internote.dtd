@@ -6,7 +6,7 @@
 <!ENTITY internote.newNoteCmd.label           "Add New Note">
 
 <!ENTITY internote.openManagerCmd.label       "Manage All Notes">
-<!ENTITY internote.openPrefsCmd.label         "Preferences for Internote">
+<!ENTITY internote.openPrefsCmd.label         "Options for Internote">
 <!ENTITY internote.helpCmd.label              "Help for Internote">
 
 <!ENTITY internote.displayNotesCmd.label      "Display Notes">
@@ -91,12 +91,12 @@
 
 <!-- Preferences Dialog -->
 
-<!ENTITY internote.prefsDialog.title          "Preferences for Internote">
+<!ENTITY internote.prefsDialog.title          "Options for Internote">
 
-<!ENTITY internote.defaultStylePrefs.caption  "Preferences for New Notes">
-<!ENTITY internote.globalStylePrefs.caption   "Preferences for All Notes">
-<!ENTITY internote.generalPrefs.caption       "General Preferences">
-<!ENTITY internote.storagePrefs.caption       "Storage Preferences">
+<!ENTITY internote.defaultStylePrefs.caption  "Options for New Notes">
+<!ENTITY internote.globalStylePrefs.caption   "Options for All Notes">
+<!ENTITY internote.generalPrefs.caption       "General Options">
+<!ENTITY internote.storagePrefs.caption       "Storage Options">
 
 <!ENTITY internote.fontSize.label             "Font Size">
 
@@ -186,10 +186,10 @@
 <!ENTITY internote.exportAllCmd.label         "Export All">
 
 <!ENTITY internote.fromV3Cmd.label            "From Internote v3"> 
-<!ENTITY internote.fromV2Cmd.label            "From Old Internote v2">
+<!ENTITY internote.fromV2Cmd.label            "From Internote v2">
 
 <!ENTITY internote.toV3Cmd.label              "To Internote v3"> 
-<!ENTITY internote.toV2Cmd.label              "To Old Internote v2">
+<!ENTITY internote.toV2Cmd.label              "To Internote v2">
 <!ENTITY internote.toBookmarksCmd.label       "To Bookmarks">
 <!ENTITY internote.toTextCmd.label            "To Text">
 <!ENTITY internote.toHTMLCmd.label            "To HTML">

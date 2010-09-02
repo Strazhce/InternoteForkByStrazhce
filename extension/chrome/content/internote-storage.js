@@ -1125,7 +1125,7 @@ formatTextForOutput: function(text)
     
     if (text == "")
     {
-        var emptyTextMessage = this.utils.getLocaleString("EmptyTextMessage");
+        var emptyTextMessage = this.utils.getLocaleString("EmptyTextDescription");
         text = "--- " + emptyTextMessage + " ---";
     }
     

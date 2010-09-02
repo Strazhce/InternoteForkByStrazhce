@@ -1573,7 +1573,7 @@ treeView : {
             if (url == "")
             {
                 var categoryStyle = "empty_data";
-                var urlDesc = this.utils.getLocaleString("EmptyRegexpMessage");
+                var urlDesc = this.utils.getLocaleString("EmptyRegexpCategory");
             }
             else
             {
@@ -1585,14 +1585,14 @@ treeView : {
         else if (category == "invalidurl")
         {
             var categoryStyle = "empty_data";
-            var urlDesc = this.utils.getLocaleString("InvalidURLMessage");
+            var urlDesc = this.utils.getLocaleString("InvalidURLCategory");
         }
         else
         {
             if (url == "")
             {
                 var categoryStyle = "empty_data";
-                var urlDesc = this.utils.getLocaleString("EmptyURLMessage");
+                var urlDesc = this.utils.getLocaleString("EmptyURLCategory");
             }
             else
             {
@@ -1655,7 +1655,7 @@ treeView : {
         var text = this.utils.trim(note.text);
         if (text == "")
         {
-            var emptyTextMessage = this.utils.getLocaleString("EmptyTextMessage");
+            var emptyTextMessage = this.utils.getLocaleString("EmptyTextDescription");
             return [emptyTextMessage, "empty_data"];
         }
         else
