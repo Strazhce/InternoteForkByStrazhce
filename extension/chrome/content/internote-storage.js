@@ -857,8 +857,22 @@ matchesURL: function(note, pageURL)
     }
     else if (note.matchType == this.URL_MATCH_REGEXP)
     {
-        return pageURL.match(noteURL) ||
-               (pageURL != null && pageURLCanon.match(noteURL));
+        try
+        {
+            return pageURL.match(noteURL) ||
+                   (pageURL != null && pageURLCanon.match(noteURL));
+        }
+        catch (ex)
+        {
+            if (ex.name == "SyntaxError")
+            {
+                return false;
+            }
+            else
+            {
+                throw ex;
+            }
+        }
     }
     else if (note.matchType == this.URL_MATCH_PREFIX)
     {

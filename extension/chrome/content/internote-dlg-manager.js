@@ -1543,7 +1543,14 @@ treeView : {
         
         if (note.matchType == this.storage.URL_MATCH_REGEXP)
         {
-            return "regexp:" + note.url;
+            if (this.utils.isValidRegexp(note.url))
+            {
+                return "regexp:" + note.url;
+            }
+            else
+            {
+                return "invalidregexp:";
+            }
         }
         else if (note.matchType == this.storage.URL_MATCH_SITE ||
                  note.matchType == this.storage.URL_MATCH_SUFFIX)
@@ -1632,6 +1639,11 @@ treeView : {
         {
             var categoryStyle = "empty_data";
             var urlDesc = this.utils.getLocaleString("InvalidURLCategory");
+        }
+        else if (category == "invalidregexp")
+        {
+            var categoryStyle = "empty_data";
+            var urlDesc = this.utils.getLocaleString("InvalidRegexpCategory");
         }
         else
         {

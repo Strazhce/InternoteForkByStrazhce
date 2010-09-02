@@ -987,4 +987,24 @@ getSingleElement: function(arr)
     return arr[0];
 },
 
+isValidRegexp: function(regexp)
+{
+    try
+    {
+        new RegExp(regexp);
+        return true;
+    }
+    catch (ex)
+    {
+        if (ex.name == "SyntaxError")
+        {
+            return false;
+        }
+        else
+        {
+            throw ex;
+        }
+    }
+},
+
 };
