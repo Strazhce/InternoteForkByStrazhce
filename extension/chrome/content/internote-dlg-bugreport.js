@@ -98,11 +98,12 @@ openDisclosure: function()
 
 copy: function()
 {
-    var email = this.utils.trim(document.getElementById("email").value);
+    //var email = this.utils.trim(document.getElementById("email").value);
     var info  = this.utils.trim(document.getElementById("extra-info").value);
     var auto  = this.utils.trim(document.getElementById("errors-text").value);
     
-    var combinedText = ((email != "") ? ("Email: " + email + "\n\n") : "No Email\n\n") +
+    var combinedText = 
+                       /* ((email != "") ? ("Email: " + email + "\n\n") : "No Email\n\n") + */
                        ((info != "") ? ("Info:\n" + info + "\n\n") : "No Extra Info\n\n") +
                        ("Auto Info:\n" + auto + "\n");
         

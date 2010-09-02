@@ -262,6 +262,6 @@
 <!ENTITY internote.submitBugReportButton.label "Submit Bug Report">
 <!ENTITY internote.cancelButton.label         "Cancel">
 
-<!ENTITY internote.sendInstructions.desc      "Once you have filled out all the information, please copy the information using the button below, then go to the webpage below.">
+<!ENTITY internote.sendInstructions.desc      "Once you have filled out the above information, please copy all of the information using the button below, then go to the webpage below.">
 <!ENTITY internote.reportComments.desc        "Please describe any relevant information, such as how the problem occurred.">
 <!ENTITY internote.reportEmail.desc           "If you enter your email here, you can be asked for more information, if it's needed to fix your problem.">
