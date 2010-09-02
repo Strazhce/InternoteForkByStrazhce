@@ -1546,6 +1546,28 @@ treeView : {
             }
             else
             {
+                // Strip trailing slash if present.
+                if (effectiveURL.charAt(effectiveURL.length - 1) == "/")
+                {
+                    // Check the trailing slash is a part of a path and not params/anchor.
+                    var parsedURL = this.utils.parseURL(effectiveURL);
+                    this.utils.dumpTraceData(parsedURL, 2);
+                    
+                    if (parsedURL.params == null && parsedURL.anchor == null)
+                    {
+                        // Remove trailing slash.
+                        effectiveURL = effectiveURL.substr(0, effectiveURL.length - 1);
+                    }
+                }
+                
+                // Strip protocol.
+                var strippedURL = effectiveURL.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
+                strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
+                if (strippedURL != "")
+                {
+                    effectiveURL = strippedURL;
+                }
+                
                 return "category:" + effectiveURL;
             }
         }
@@ -1602,18 +1624,7 @@ treeView : {
             else
             {
                 var categoryStyle = "url_category";
-                
-                if (this.utils.parseURL(url) == null)
-                {
-                    var urlDesc = url;
-                }
-                else
-                {
-                    var strippedURL = url.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
-                    strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
-                    if (strippedURL == "") strippedURL = url;
-                    var urlDesc = strippedURL;
-                }
+                var urlDesc = url;
             }
         }
         
