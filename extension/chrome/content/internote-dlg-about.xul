@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         buttons="accept"
         buttonlabelaccept="&internote.closeButton.label;"
         persist="screenX screenY"
-        screenX="24" screenY="24" width="800px" height="800px"
+        screenX="24" screenY="24" width="600" height="600"
         onload="internoteAboutDlg.init();" >
     
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js" />
@@ -43,7 +43,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <spacer style="min-width: 20px; max-width: 20px;" />
                     <vbox pack="center">
                         <image src="chrome://internote/skin/internote128.png" pack="center"
-                               style="min-width: 100px; max-width: 100px; min-height: 100px; max-height: 100px;" />
+                               style="min-width: 128px; max-width: 128px; min-height: 128px; max-height: 128px;" />
                     </vbox>
                     <spacer style="min-width: 20px; max-width: 20px;" />
                     <vbox>
@@ -92,24 +92,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 </groupbox>
             </vbox>
         </hbox>
-        
-        <groupbox>
-            <caption label="&internote.aboutReporting.caption;" />
-            
-            <description>&internote.aboutReporting.desc;</description>
-            
-            <description>&internote.aboutInfo.desc;</description>
-            <description>&internote.aboutPrivacy.desc;</description>
-            
-            <vbox id="errors-box" flex="1">
-                <textbox id="errors-text" rows="3" columns="60" multiline="true" />
-                <hbox>
-                    <spacer flex="1" />
-                    <button label="&internote.aboutCopy.label;" oncommand="internoteAboutDlg.copy();" style="min-width: 100px;" />
-                    <spacer flex="1" />
-                </hbox>
-            </vbox>
-        </groupbox>
     </vbox>
 
     <stringbundleset id="stringbundleset">

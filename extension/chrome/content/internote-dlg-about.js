@@ -37,8 +37,7 @@ init: function()
             var internoteVersion = this.utils.getInternoteVersion(installRDF);
             this.fixVersionNumber(internoteVersion);
             this.insertContributors(installRDF);
-            this.fixDescription(installRDF);      
-            this.adjustErrorInfo(em, internoteVersion);
+            this.fixDescription(installRDF);
         }
         else
         {
@@ -98,21 +97,6 @@ removeContributors: function()
     newNode.appendChild(document.createTextNode(this.utils.getLocaleString("DataLoadError")));
     
     contributorsBox.appendChild(newNode);
-},
-
-adjustErrorInfo: function(em, internoteVersion)
-{
-    var text = this.utils.getErrorInfo(em, internoteVersion);    
-    var textBox = document.getElementById("errors-text");
-    textBox.readOnly = true;
-    textBox.value = text;
-},
-
-copy: function()
-{
-    var text = document.getElementById("errors-text").value;
-    var clipboardHelper = this.utils.getCCService("@mozilla.org/widget/clipboardhelper;1", "nsIClipboardHelper");
-    clipboardHelper.copyString(text.replace(/\n/g, "\r\n"));
 },
 
 openHomePage: function()
