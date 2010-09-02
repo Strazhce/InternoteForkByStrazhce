@@ -1547,7 +1547,6 @@ treeView : {
                 {
                     // Check the trailing slash is a part of a path and not params/anchor.
                     var parsedURL = this.utils.parseURL(effectiveURL);
-                    this.utils.dumpTraceData(parsedURL, 2);
                     
                     if (parsedURL.params == null && parsedURL.anchor == null)
                     {
