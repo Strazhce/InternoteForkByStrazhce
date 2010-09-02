@@ -677,7 +677,6 @@ userSelectsTreeElement: function()
 
 userSelectsSearchElement: function()
 {
-    dump("C\n");
     var resultsList = document.getElementById("resultsList");
     this.userSelectsElement(resultsList.view, this.treeView, this.utils.bind(this, this.getNotesFromSearch));
 },
@@ -944,7 +943,7 @@ onSearchNoteAdded: function(event)
         var tr = document.createElement("treerow");
         var tc = document.createElement("treecell");
         
-        var [desc, style] = this.getTextDescription(note);
+        var [desc, style] = this.treeView.getTextDescription(note);
         tc.setAttribute("label", desc);
         tr.appendChild(tc);
         ti.appendChild(tr);
@@ -988,7 +987,7 @@ onSearchNoteEdited: function(event)
         {
             var searchResultsPane = document.getElementById("searchResultChildren");
             var rowNode = searchResultsPane.childNodes[treeIndex];
-            var [desc, style] = this.getTextDescription(note)
+            var [desc, style] = this.treeView.getTextDescription(note)
             rowNode.firstChild.firstChild.setAttribute("label", desc);
         }
     }
