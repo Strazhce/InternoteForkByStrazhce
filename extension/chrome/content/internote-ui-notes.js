@@ -606,8 +606,7 @@ flipNote: function(uiNote, newIsFlipped)
 focusNote: function(uiNote)
 {
     this.utils.assertError(uiNote != null, "Null UINote when trying to focus.");
-    // XXX For some unknown reason this delay is necessary when we restore the note.
-    setTimeout(function() { uiNote.textArea.focus(); }, 0);
+    uiNote.textArea.focus();
 },
 
 updateFontSize: function(uiNote)
