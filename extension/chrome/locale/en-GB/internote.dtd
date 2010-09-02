@@ -129,7 +129,8 @@
 
 <!ENTITY internote.browseButton.label         "Browse">
 
-<!ENTITY internote.storageMove.desc           "New locations won't be used until Firefox is restarted. Existing notes won't be moved to the new location, however you may import them using the manager.">
+<!ENTITY internote.storageRestartProviso.desc "New locations won't be used until Firefox is restarted.">
+<!ENTITY internote.storageMoveProviso.desc    "Existing notes won't be moved to new locations, however you may import them using &quot;Manage All Notes&quot; on the Internote menu.">
 <!ENTITY internote.confirmProviso.desc        "Using the manager to delete multiple notes always asks for confirmation.">
 <!ENTITY internote.adjustDefaults.desc        "These are defaults which may be changed for individual notes later using the note's borders or the flip button.">
 

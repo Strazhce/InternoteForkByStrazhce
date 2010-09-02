@@ -30,8 +30,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             onload="internotePrefsDialog.init();"
             ondialogaccept="return internotePrefsDialog.onAccept();"
             buttons="accept,cancel"
-            height="780px"
-            width="450px">
+            screenX="24" screenY="24" width="700px" height="630px"
+            persist="screenX screenY width height">
 
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
@@ -60,6 +60,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <columns>
                         <column />
                         <column />
+                        <column />
+                        <column />
                     </columns>
                     <rows>
                         <row align="center">
@@ -72,6 +74,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                                     <menuitem value="3" label="&internote.limeColor.value;" />
                                     <menuitem value="4" label="&internote.grapeColor.value;" />
                                     <menuitem value="5" label="&internote.cauliflowerColor.value;" />
+                                </menupopup>
+                            </menulist>
+                            <label value="&internote.defaultSize.label;:" control="sizeEntryBox" />
+                            <menulist id="sizeEntryBox" preference="defaultSizePreference">
+                                <menupopup>
+                                    <menuitem value="0" label="&internote.tinySize.value;" />
+                                    <menuitem value="1" label="&internote.normalSize.value;" />
+                                    <menuitem value="2" label="&internote.largeSize.value;" />
+                                    <menuitem value="3" label="&internote.giantSize.value;" />
                                 </menupopup>
                             </menulist>
                         </row>
@@ -87,19 +98,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                                     <menuitem value="5" label="&internote.snowColor.value;" />
                                 </menupopup>
                             </menulist>
-                        </row>
-                        <row align="center">
-                            <label value="&internote.defaultSize.label;:" control="sizeEntryBox" />
-                            <menulist id="sizeEntryBox" preference="defaultSizePreference">
-                                <menupopup>
-                                    <menuitem value="0" label="&internote.tinySize.value;" />
-                                    <menuitem value="1" label="&internote.normalSize.value;" />
-                                    <menuitem value="2" label="&internote.largeSize.value;" />
-                                    <menuitem value="3" label="&internote.giantSize.value;" />
-                                </menupopup>
-                            </menulist>
-                        </row>
-                        <row align="center">
                             <label value="&internote.defaultPos.label;:" control="defaultNotePosition" />
                             <menulist id="defaultNotePosition" preference="defaultPositionPreference">
                                 <menupopup>
@@ -119,31 +117,51 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </groupbox>
             <groupbox>
                 <caption label="&internote.globalStylePrefs.caption;" />
-                <hbox align="center">
-                    <label value="&internote.fontSize.label;:" control="fontSizeEntryBox" />
-                    <menulist id="fontSizeEntryBox" preference="fontSizePreference">
-                        <menupopup>
-                            <menuitem value="10" label="&internote.tinySize.value;" />
-                            <menuitem value="12" label="&internote.normalSize.value;" />
-                            <menuitem value="14" label="&internote.largeSize.value;" />
-                            <menuitem value="16" label="&internote.giantSize.value;" />
-                            <menuitem value="18" label="&internote.megaSize.value;" />
-                        </menupopup>
-                    </menulist>
-                </hbox>
-                <checkbox id="defaultTransCheckBox"    preference="transparencyPreference"    label="&internote.useTranslucencyCBox.label;" />
-                <checkbox id="highlightableCheckBox"   preference="highlightablePreference"   label="&internote.useHighlightableCBox.label;" />
-                <checkbox id="scrollbarCheckBox"       preference="nativeScrollPreference"    label="&internote.useNativeScrollCBox.label;" />
+                <grid>
+                    <columns>
+                        <column flex="1" />
+                        <column flex="1" />
+                    </columns>
+                    <rows>
+                        <row>
+                            <hbox align="center">
+                                <label value="&internote.fontSize.label;:" control="fontSizeEntryBox" />
+                                <menulist id="fontSizeEntryBox" preference="fontSizePreference">
+                                    <menupopup>
+                                        <menuitem value="10" label="&internote.tinySize.value;" />
+                                        <menuitem value="12" label="&internote.normalSize.value;" />
+                                        <menuitem value="14" label="&internote.largeSize.value;" />
+                                        <menuitem value="16" label="&internote.giantSize.value;" />
+                                        <menuitem value="18" label="&internote.megaSize.value;" />
+                                    </menupopup>
+                                </menulist>
+                            </hbox>
+                            <checkbox id="highlightableCheckBox"   preference="highlightablePreference"   label="&internote.useHighlightableCBox.label;" />
+                        </row>
+                        <row>
+                            <checkbox id="defaultTransCheckBox"    preference="transparencyPreference"    label="&internote.useTranslucencyCBox.label;" />
+                            <checkbox id="scrollbarCheckBox"       preference="nativeScrollPreference"    label="&internote.useNativeScrollCBox.label;" />
+                        </row>
+                    </rows>
+                </grid>
             </groupbox>
             <groupbox>
                 <caption label="&internote.generalPrefs.caption;"/>
-                <vbox align="left">
-                    <checkbox id="statusbarCheckBox"       preference="statusbarPreference"       label="&internote.useStatusBarCBox.label;" />
-                    <checkbox id="askBeforeDeleteCheckBox" preference="askBeforeDeletePreference" label="&internote.confirmDeleteCBox.label;" />
-                    <description>
-                        (&internote.confirmProviso.desc;)
-                    </description>
-                </vbox>
+                <grid>
+                    <columns>
+                        <column flex="1" />
+                        <column flex="1" />
+                    </columns>
+                    <rows>
+                        <row>
+                            <checkbox id="askBeforeDeleteCheckBox" preference="askBeforeDeletePreference" label="&internote.confirmDeleteCBox.label;" />
+                            <checkbox id="statusbarCheckBox"       preference="statusbarPreference"       label="&internote.useStatusBarCBox.label;" />
+                        </row>
+                        <description>
+                            (&internote.confirmProviso.desc;)
+                        </description>
+                    </rows>
+                </grid>
             </groupbox>
             <groupbox>
                 <caption label="&internote.storagePrefs.caption;"/>
@@ -154,7 +172,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <button id="chooseFolder" label="&internote.browseButton.label;..." />
                     </hbox>
                     <description>
-                        (&internote.storageMove.desc;)
+                        (&internote.storageRestartProviso.desc;)
+                    </description>
+                    <description>
+                        (&internote.storageMoveProviso.desc;)
                     </description>
                 </vbox>
             </groupbox>
