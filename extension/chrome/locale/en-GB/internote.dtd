@@ -230,13 +230,13 @@
 
 <!-- Bug Reporting Info -->
 
-<!ENTITY internote.infoThanks.desc            "Thanks for filing a bug report - your report will help make Internote better. Any info you send will only be used to help fix bugs.">
-<!ENTITY internote.infoType.desc              "Below is important automatically-collected info that may help diagnose your problem.">
-<!ENTITY internote.infoDisclaimer.desc        "This includes your installed extensions list, and may sometimes include info about your notes and browsing session.">
+<!ENTITY internote.infoThanks.desc            "Thanks for filing a bug report - your report will help make Internote better. Any information you send will only be used to help fix bugs.">
+<!ENTITY internote.infoType.desc              "Below is important automatically-collected information that may help diagnose your problem.">
+<!ENTITY internote.infoDisclaimer.desc        "This includes your installed extensions list, and may sometimes include information about your notes and browsing session.">
 
-<!ENTITY internote.infoWhy.desc               "Why is this info needed?">
-<!ENTITY internote.infoReasons1.desc          "Info about installed extensions is useful in determining whether Internote problems are caused by a conflict with another extension.">
-<!ENTITY internote.infoReasons2.desc          "When problems are recorded, relevant info will be gathered, which could be many different things. For some problems this might include info about your notes and browsing session.">
+<!ENTITY internote.infoWhy.desc               "Why is this information needed?">
+<!ENTITY internote.infoReasons1.desc          "Your list of installed extensions is useful in determining whether Internote problems are caused by a conflict with another extension.">
+<!ENTITY internote.infoReasons2.desc          "When problems are detected, information related to the problem will be gathered to help determine why it is occurring. This might include information about your notes and browsing session.">
 
 <!ENTITY internote.infoCopy.label             "Copy All Information">
 
@@ -248,8 +248,6 @@
 <!ENTITY internote.aboutDevelopers.caption    "Developers">
 <!ENTITY internote.aboutContributors.caption  "Contributors">
 <!ENTITY internote.aboutTranslators.caption   "Translators">
-
-<!ENTITY internote.aboutCopy.label            "Copy Information">
 
 <!ENTITY internote.aboutVersion.label         "Version">
 
@@ -264,6 +262,6 @@
 <!ENTITY internote.submitBugReportButton.label "Submit Bug Report">
 <!ENTITY internote.cancelButton.label         "Cancel">
 
-<!ENTITY internote.sendInstructions.desc      "Once you have filled out all the information, go to the webpage below to find out where to submit the info that you can copy on the button below.">
-<!ENTITY internote.reportComments.desc        "Please describe any possibly relevant info, such as how the problem occurred.">
-<!ENTITY internote.reportEmail.desc           "If you enter your email here, you can be asked for more info, if it's needed to fix your problem.">
+<!ENTITY internote.sendInstructions.desc      "Once you have filled out all the information, please copy the information using the button below, then go to the webpage below.">
+<!ENTITY internote.reportComments.desc        "Please describe any relevant information, such as how the problem occurred.">
+<!ENTITY internote.reportEmail.desc           "If you enter your email here, you can be asked for more information, if it's needed to fix your problem.">

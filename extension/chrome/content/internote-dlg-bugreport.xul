@@ -66,10 +66,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <description>&internote.sendInstructions.desc;</description>
     <hbox align="center">
         <spacer flex="1" />
+        <button label="&internote.infoCopy.label;" oncommand="internoteBugReportDlg.copy();" style="min-width: 100px;" />
+        <spacer flex="1" />
         <label onclick="internoteBugReportDlg.openBugPage();" value="&internote.bugReportDialog.title;"
                style="color: blue; text-decoration: underline; cursor: pointer;" />
-        <spacer flex="1" />
-        <button label="&internote.aboutCopy.label;" oncommand="internoteBugReportDlg.copy();" style="min-width: 100px;" />
         <spacer flex="1" />
     </hbox>
     
