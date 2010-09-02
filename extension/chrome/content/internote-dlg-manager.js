@@ -926,10 +926,35 @@ treeRemoveNote: function(note, urlData)
 getSearchFilter: function(searchTerm)
 {
     var searchTermLower = searchTerm.toLowerCase();
+    
+    try
+    {
+        var searchTermRegexp = new RegExp(searchTermLower);
+    }
+    catch (ex)
+    {
+        if (ex.name == "SyntaxError")
+        {
+            var searchTermRegexp = null;
+        }
+        else
+        {
+            throw ex;
+        }
+    }
+    
     return function(note)
     {
-        return note.text.toLowerCase().match(searchTermLower);
-    }
+        var textLower = note.text.toLowerCase();
+        if (textLower.indexOf(searchTermLower) != -1)
+        {
+            return true;
+        }
+        else if (searchTermRegexp != null)
+        {
+            return textLower.match(searchTermLower);
+        }
+    };
 },
 
 onSearchNoteAdded: function(event)
