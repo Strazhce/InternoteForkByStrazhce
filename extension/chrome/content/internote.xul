@@ -83,6 +83,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       oncommand="internoteUIController.userOpensPrefs();" />
             <menuitem label="&internote.helpCmd.label;..." accesskey="&internote.helpCmd.accesskey;"
                       oncommand="internoteUIController.userOpensHelp();" />
+            <menuitem label="&internote.reportBugCmd.label;..." accesskey="&internote.reportBugCmd.accesskey;"
+                      oncommand="internoteUIController.userReportsBug();" />
             <menuitem label="&internote.aboutCmd.label;..." accesskey="&internote.aboutCmd.accesskey;"
                       oncommand="internoteUIController.userOpensAbout();" />
         </menupopup>
@@ -117,6 +119,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   oncommand="internoteUIController.userOpensPrefs();" />
         <menuitem label="&internote.helpCmd.label;" accesskey="&internote.helpCmd.accesskey;"
                   oncommand="internoteUIController.userOpensHelp();" />
+        <menuitem label="&internote.reportBugCmd.label;..." accesskey="&internote.reportBugCmd.accesskey;"
+                  oncommand="internoteUIController.userReportsBug();" />
         <menuitem label="&internote.aboutCmd.label;..." accesskey="&internote.aboutCmd.accesskey;"
                   oncommand="internoteUIController.userOpensAbout();" />
     </menupopup>

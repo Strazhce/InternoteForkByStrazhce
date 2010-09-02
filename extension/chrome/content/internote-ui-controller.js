@@ -703,16 +703,7 @@ userCreatesNote: function()
         try
         {
             this.showMessage("NoteCreationError", true, "ReportBugLabel", this.utils.bind(this, function() {
-                if (this.bugReportDialog != null && !this.bugReportDialog.closed)
-                {
-                    this.bugReportDialog.focus();
-                    this.bugReportDialog.postMessage("reload", "*");    
-                }
-                else
-                {
-                    this.bugReportDialog = window.openDialog('chrome://internote/content/internote-dlg-bugreport.xul',
-                                                             'internotebugreport', 'centerscreen, chrome, all', window);
-                }
+                this.userReportsBug();
             }));
         }
         catch (ex2)
@@ -1057,6 +1048,20 @@ userViewsInManager: function(element)
     catch (ex)
     {
         this.utils.handleException("Exception caught when user viewing note in manager.", ex);
+    }
+},
+
+userReportsBug: function()
+{
+    if (this.bugReportDialog != null && !this.bugReportDialog.closed)
+    {
+        this.bugReportDialog.focus();
+        this.bugReportDialog.postMessage("reload", "*");    
+    }
+    else
+    {
+        this.bugReportDialog = window.openDialog('chrome://internote/content/internote-dlg-bugreport.xul',
+                                                 'internotebugreport', 'centerscreen, chrome, all', window);
     }
 },
 
