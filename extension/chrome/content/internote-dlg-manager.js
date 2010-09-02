@@ -762,7 +762,7 @@ getNotesFromTree: function(treeIndex)
     if (this.treeView.isContainer(treeIndex))
     {
         var urlData = this.treeView.treeData[treeIndex][this.treeView.COL_LOOKUP];
-        return this.treeView.getNotesForManagerURLData(url);
+        return this.treeView.getNotesForManagerURLData(urlData);
     }
     else
     {
