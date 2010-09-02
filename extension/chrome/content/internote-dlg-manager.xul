@@ -130,7 +130,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <textbox id="searchFilter" oninput="internoteManager.updateSearchResults()" flex="1" style="height: 2em;" />
                     <label value="X" tooltiptext="&internote.closeResults.tooltip;"
                            style="background-color: lightgray; opacity: .75; width: 1.5em; height: 1.5em; text-align: center; padding-top: .1em;"
-                           onclick="document.getElementById('searchFilter').value=''; internoteManager.updateSearchResults();" />
+                           onclick="internoteManager.clearSearchResults()" />
                 </hbox>
             </hbox>
         </vbox>

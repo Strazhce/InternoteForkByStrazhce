@@ -623,62 +623,69 @@ userSelectsElement: function(mainTree, otherTree, getNotesFunc)
 {
     //dump("internoteManager.userSelectsTreeElement\n");
     
-    try
+    if (this.suppressSelectionChangeEvents) return;
+    
+    var mainSelection = mainTree.selection;
+    
+    this.utils.setEnabled(this.actions, mainSelection.count > 0);
+    
+    // First deselect other tree.
+    // XXX Should probably support Ctrl-Click not deselecting the other tree, so they work together.
+    if (otherTree != null)
     {
-        if (this.suppressSelectionChangeEvents) return;
-        
-        var mainSelection = mainTree.selection;
-        
-        this.utils.setEnabled(this.actions, mainSelection.count > 0);
-        
-        // First deselect other tree.
-        // XXX Should probably support Ctrl-Click not deselecting the other tree, so they work together.
-        if (otherTree != null)
+        var otherSelection = otherTree.selection;
+        // XXX Check first to prevent infinite recursion when selection changes.
+        if (otherSelection.count > 0)
         {
-            var otherSelection = otherTree.selection;
-            // XXX Check first to prevent infinite recursion when selection changes.
-            if (otherSelection.count > 0)
-            {
-                // Suppress reloads until when we are done.
-                this.suppressSelectionChangeEvents = true;
-                otherSelection.clearSelection();
-                this.suppressSelectionChangeEvents = false;
-            }
+            // Suppress reloads until when we are done.
+            this.suppressSelectionChangeEvents = true;
+            otherSelection.clearSelection();
+            this.suppressSelectionChangeEvents = false;
         }
-        
-        if (mainSelection.count == 1)
+    }
+    
+    if (mainSelection.count == 1)
+    {
+        var treeIndex = this.getSingleSelectedRow(mainSelection);
+        if (!mainTree.isContainer(treeIndex))
         {
-            var treeIndex = this.getSingleSelectedRow(mainSelection);
-            if (!mainTree.isContainer(treeIndex))
-            {
-                this.setNoteData(getNotesFunc(treeIndex)[0]);
-            }
-            else
-            {
-                this.clearNoteData();
-            }
+            this.setNoteData(getNotesFunc(treeIndex)[0]);
         }
         else
         {
             this.clearNoteData();
         }
     }
-    catch (ex)
+    else
     {
-        this.utils.handleException("Except caught when user selected element.", ex);
+        this.clearNoteData();
     }
 },
 
 userSelectsTreeElement: function()
 {
-    var resultsList = document.getElementById("resultsList");
-    this.userSelectsElement(this.treeView, resultsList.view, this.utils.bind(this, this.getNotesFromTree));
+    try
+    {
+        var resultsList = document.getElementById("resultsList");
+        this.userSelectsElement(this.treeView, resultsList.view, this.utils.bind(this, this.getNotesFromTree));
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Except caught when user selected tree element.", ex);
+    }
 },
 
 userSelectsSearchElement: function()
 {
-    var resultsList = document.getElementById("resultsList");
-    this.userSelectsElement(resultsList.view, this.treeView, this.utils.bind(this, this.getNotesFromSearch));
+    try
+    {
+        var resultsList = document.getElementById("resultsList");
+        this.userSelectsElement(resultsList.view, this.treeView, this.utils.bind(this, this.getNotesFromSearch));
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Except caught when user selected search element.", ex);
+    }
 },
 
 userEditsData: function(event)
@@ -721,14 +728,21 @@ userEditsData: function(event)
 
 userResetsNotes: function(shouldResetAllSelected)
 {
-    var notesToReset = shouldResetAllSelected ? this.getAllSelectedNotes() : [ this.noteBeingEdited ];
-    
-    for (var i = 0; i < notesToReset.length; i++)
+    try
     {
-        var note = notesToReset[i];
-        this.utils.assertError(note != null, "Note is null when trying to reset note in manager.");
-        this.storage.resetNote(note);
-        this.storage.raiseNote(note);
+        var notesToReset = shouldResetAllSelected ? this.getAllSelectedNotes() : [ this.noteBeingEdited ];
+        
+        for (var i = 0; i < notesToReset.length; i++)
+        {
+            var note = notesToReset[i];
+            this.utils.assertError(note != null, "Note is null when trying to reset note in manager.");
+            this.storage.resetNote(note);
+            this.storage.raiseNote(note);
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when resetting notes.", ex);
     }
 },
 
@@ -1067,42 +1081,69 @@ destroySearchResults: function()
 
 updateSearchResults: function()
 {
-    var searchTerm = document.getElementById("searchFilter").value;
-    if (searchTerm == "" && this.searchNotes != null)
+    try
     {
-        this.destroySearchResults();
+        var searchTerm = document.getElementById("searchFilter").value;
+        if (searchTerm == "" && this.searchNotes != null)
+        {
+            this.destroySearchResults();
+        }
+        else if (searchTerm != "")
+        {
+            if (this.searchNotes != null)
+            {
+                this.searchNotes.updateFilter(this.getSearchFilter(searchTerm));
+            }
+            else
+            {
+                this.initSearchResults(searchTerm);
+            }
+        }
     }
-    else if (searchTerm != "")
+    catch (ex)
     {
-        if (this.searchNotes != null)
-        {
-            this.searchNotes.updateFilter(this.getSearchFilter(searchTerm));
-        }
-        else
-        {
-            this.initSearchResults(searchTerm);
-        }
+        this.utils.handleException("Exception caught when updating search results.", ex);
+    }
+},
+
+clearSearchResults: function()
+{
+    try
+    {
+        document.getElementById('searchFilter').value = "";
+        this.updateSearchResults();
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when clearing search results.", ex);
     }
 },
 
 openURL : function ()
 {
-    if (this.noteBeingEdited != null && this.isValidURLOrSite())
+    try
     {
-        var noteURL = document.getElementById("noteURL").value;
-        
-        if (noteURL != null)
+        if (this.noteBeingEdited != null && this.isValidURLOrSite())
         {
-            if (this.noteBeingEdited.matchType == this.storage.URL_MATCH_REGEXP)
+            var noteURL = document.getElementById("noteURL").value;
+            
+            if (noteURL != null)
             {
-                noteURL = noteURL.replace(/\.\*$/, "");
+                if (this.noteBeingEdited.matchType == this.storage.URL_MATCH_REGEXP)
+                {
+                    noteURL = noteURL.replace(/\.\*$/, "");
+                }
+                
+                this.utils.openURL(noteURL);
+                
+                // Close the manager.
+                document.getElementById("internoteManager").acceptDialog();
             }
-            
-            this.utils.openURL(noteURL);
-            
-            // Close the manager.
-            document.getElementById("internoteManager").acceptDialog();
         }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when opening URL.", ex);
     }
 },
 
@@ -1228,54 +1269,68 @@ userExportsNotes: function(text, fileType, filter, extension, defaultFileName)
 
 userChangesExpandOnSelected: function(shouldBeExpanded)
 {
-    this.tree.focus();
-    
-    var start = {};
-    var end   = {};
-    var selectedRows = [];
-    var selection = this.treeView.selection;
-    var rangeCount = selection.getRangeCount();
-    
-    // We need to loop through ranges in reverse order, so that expanding changing the index of
-    // later URLs is not a problem. There seems to be no guarantee getRangeAt is sorted, so we
-    // must sort them.  Also, because we want convert notes to URLs to allow collapsing if the
-    // user has just selected a note, this creates a similar problem if there are two selected
-    // notes within a URL (the second note will have a bad index after collapse).  Thus we must
-    // do the conversion before the sorting - the easiest solution is converting to individual
-    // URL indexes before sorting.
-    var selected = [];
-    
-    for (var i = 0; i < rangeCount; i++)
+    try
     {
-        selection.getRangeAt(i, start, end);
-        for (j = start.value; j <= end.value; j++)
+        this.tree.focus();
+        
+        var start = {};
+        var end   = {};
+        var selectedRows = [];
+        var selection = this.treeView.selection;
+        var rangeCount = selection.getRangeCount();
+        
+        // We need to loop through ranges in reverse order, so that expanding changing the index of
+        // later URLs is not a problem. There seems to be no guarantee getRangeAt is sorted, so we
+        // must sort them.  Also, because we want convert notes to URLs to allow collapsing if the
+        // user has just selected a note, this creates a similar problem if there are two selected
+        // notes within a URL (the second note will have a bad index after collapse).  Thus we must
+        // do the conversion before the sorting - the easiest solution is converting to individual
+        // URL indexes before sorting.
+        var selected = [];
+        
+        for (var i = 0; i < rangeCount; i++)
         {
-            var isContainer = this.treeView.treeData[j][this.treeView.COL_IS_CONTAINER];
-            var urlRow = isContainer ? j : this.treeView.getParentIndex(j);
-            selected.push(urlRow);
-        }
-    }
-    
-    selected.sort(this.utils.numericSort);
-    
-    // We loop through in reverse.  Dupes (due to multiple notes within a URL selected) are not
-    // a problem since they will have the right state the 2nd time and we only toggle if wrong.
-    for (var i = selected.length - 1; i >= 0; i--)
-    {
-        if (this.treeView.isContainerOpen(selected[i]) != shouldBeExpanded)
-        {
-            var changedCount = this.treeView.toggleOpenState(selected[i]);
-            if (shouldBeExpanded)
+            selection.getRangeAt(i, start, end);
+            for (j = start.value; j <= end.value; j++)
             {
-                selection.rangedSelect(selected[i] + 1, selected[i] + changedCount, true);
+                var isContainer = this.treeView.treeData[j][this.treeView.COL_IS_CONTAINER];
+                var urlRow = isContainer ? j : this.treeView.getParentIndex(j);
+                selected.push(urlRow);
             }
         }
+        
+        selected.sort(this.utils.numericSort);
+        
+        // We loop through in reverse.  Dupes (due to multiple notes within a URL selected) are not
+        // a problem since they will have the right state the 2nd time and we only toggle if wrong.
+        for (var i = selected.length - 1; i >= 0; i--)
+        {
+            if (this.treeView.isContainerOpen(selected[i]) != shouldBeExpanded)
+            {
+                var changedCount = this.treeView.toggleOpenState(selected[i]);
+                if (shouldBeExpanded)
+                {
+                    selection.rangedSelect(selected[i] + 1, selected[i] + changedCount, true);
+                }
+            }
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when expanding or collapsing category.", ex);
     }
 },
 
 userSelectsAll: function()
 {
-    this.treeView.selection.selectAll();
+    try
+    {
+        this.treeView.selection.selectAll();
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when selecting all.", ex);
+    }
 },
 
 userImportsNotesInV3: function ()
