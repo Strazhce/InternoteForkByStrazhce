@@ -2512,8 +2512,14 @@ startNoteAnimation: function(uiNote, animation, animationTime, onCompleteExtra, 
         
         if (onCompleteExtra != null) onCompleteExtra();
         delete this.noteAnimations[uiNote.num];
-        driver.removeEventListener("animationCompleted", onComplete);
-        onComplete = null;
+        
+        // It's important that we delay this, since it's wrong to remove the listener while
+        // the dispatcher is looping through the event listeners!
+        setTimeout(function()
+        {
+            driver.removeEventListener("animationCompleted", onComplete);
+            onComplete = null;
+        }, 0);
     });
     
     driver.addEventListener("animationCompleted", onComplete);
