@@ -108,7 +108,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <notificationbox id="notificationBox" flex="1">
     
     <hbox flex="2">
-        <vbox flex="3">
+        <vbox flex="3" id="leftPanel">
             <tree id="noteList" flex="2" onselect="internoteManager.userSelectsTreeElement();">
                 <treecols>
                     <treecol id="element" label="&internote.noteList.columnTitle;" primary="true" flex="1"/>
@@ -135,7 +135,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </hbox>
         </vbox>
         <splitter id="splitter" state="collapsed" collapse="after" resizeafter="closest" />
-        <vbox flex="1">
+        <vbox flex="1" id="rightPanel">
             <groupbox>
             <caption label="&internote.noteScope.caption;"/>
             

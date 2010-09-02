@@ -476,6 +476,16 @@ setNoteData: function(note)
     this.configureURLSection(this.noteBeingEdited);
     
     this.isUpdating = false;
+    
+    // We now lock the splitter in place by giving a width attribute to the right panel.
+    // This prevents the splitter stuttering with slight movements, when we later reload
+    // data in the right-side panel.
+    var rightPanel = document.getElementById("rightPanel");
+    if (rightPanel.getAttribute("width") == "")
+    {
+        var currentWidth = this.utils.removePx(getComputedStyle(rightPanel, null).width);
+        rightPanel.setAttribute("width", currentWidth);
+    }
 },
 
 configureURLSection: function(note)
