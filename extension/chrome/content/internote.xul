@@ -73,16 +73,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
             <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-main" accesskey="&internote.unminimizeAllCmd.accesskey;"
                       oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
-            <menuseparator />
             <menuitem label="&internote.openManagerCmd.label;..." accesskey="&internote.openManagerCmd.accesskey;"
                       oncommand="internoteUIController.userOpensManager();" />
+            <menuseparator />
+            <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-main"
+                      oncommand="internoteUIController.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;" />
+            <menuseparator />
             <menuitem label="&internote.openPrefsCmd.label;..." accesskey="&internote.openPrefsCmd.accesskey;"
                       oncommand="internoteUIController.userOpensPrefs();" />
             <menuitem label="&internote.helpCmd.label;..." accesskey="&internote.helpCmd.accesskey;"
                       oncommand="internoteUIController.userOpensHelp();" />
-            <menuseparator />
-            <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-main"
-                      oncommand="internoteUIController.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;" />
+            <menuitem label="&internote.aboutCmd.label;..." accesskey="&internote.aboutCmd.accesskey;"
+                      oncommand="internoteUIController.userOpensAbout();" />
         </menupopup>
     </menu>
 </menupopup>
@@ -105,16 +107,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
         <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-statusbar" accesskey="&internote.unminimizeAllCmd.accesskey;"
                   oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
-        <menuseparator />
         <menuitem label="&internote.openManagerCmd.label;..." accesskey="&internote.openManagerCmd.accesskey;"
                   oncommand="internoteUIController.userOpensManager();" />
+        <menuseparator />
+        <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-statusbar"
+                  oncommand="internoteUIController.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;"/>
+        <menuseparator />
         <menuitem label="&internote.openPrefsCmd.label;..." accesskey="&internote.openPrefsCmd.accesskey;"
                   oncommand="internoteUIController.userOpensPrefs();" />
         <menuitem label="&internote.helpCmd.label;" accesskey="&internote.helpCmd.accesskey;"
                   oncommand="internoteUIController.userOpensHelp();" />
-        <menuseparator />
-        <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-statusbar"
-                  oncommand="internoteUIController.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;"/>
+        <menuitem label="&internote.aboutCmd.label;..." accesskey="&internote.aboutCmd.accesskey;"
+                  oncommand="internoteUIController.userOpensAbout();" />
     </menupopup>
     
     <menupopup id="internote-note-menu" onpopupshowing="internoteUIController.chromePrepareContextMenu(popupNode);">

@@ -6,8 +6,9 @@
 <!ENTITY internote.newNoteCmd.label           "Add New Note">
 
 <!ENTITY internote.openManagerCmd.label       "Manage All Notes">
-<!ENTITY internote.openPrefsCmd.label         "Options for Internote">
-<!ENTITY internote.helpCmd.label              "Help for Internote">
+<!ENTITY internote.openPrefsCmd.label         "Options">
+<!ENTITY internote.helpCmd.label              "Help">
+<!ENTITY internote.aboutCmd.label             "About Internote">
 
 <!ENTITY internote.displayNotesCmd.label      "Display Notes">
 
@@ -18,6 +19,7 @@
 <!ENTITY internote.openManagerCmd.accesskey   "M">
 <!ENTITY internote.openPrefsCmd.accesskey     "P">
 <!ENTITY internote.helpCmd.accesskey          "H">
+<!ENTITY internote.aboutCmd.accesskey         "A">
 <!ENTITY internote.displayNotesCmd.accesskey  "D">
 <!ENTITY internote.minimizeAllCmd.accesskey   "E">
 <!ENTITY internote.unminimizeAllCmd.accesskey "E">
