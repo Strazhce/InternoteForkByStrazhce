@@ -394,17 +394,6 @@ setNoteData: function(note)
         var urlData = this.treeView.getManagerURLData(note);
         var [category, url] = this.utils.simpleSplit(urlData, ":");
         
-        if (category == "regexp" || url == "")
-        {
-            document.getElementById("goToLink").style.color  = "gray";
-            document.getElementById("goToLink").style.cursor = "";
-        }
-        else
-        {
-            document.getElementById("goToLink").style.color  = "blue";
-            document.getElementById("goToLink").style.cursor = "pointer";
-        }
-        
         var backColor = this.consts.BACKGROUND_COLOR_SWABS.indexOf(note.backColor);
         var foreColor = this.consts.FOREGROUND_COLOR_SWABS.indexOf(note.foreColor);
         
@@ -465,13 +454,14 @@ setNoteData: function(note)
         {
             document.getElementById("noteText").removeAttribute("disabled");
         }
+        
+        this.configureURLSection(this.noteBeingEdited, category, url);
     }
     else
     {
         this.clearNoteData();
+        this.configureURLSection(null);
     }
-    
-    this.configureURLSection(this.noteBeingEdited);
     
     this.isUpdating = false;
     
@@ -493,22 +483,20 @@ setNoteData: function(note)
     
 },
 
-configureURLSection: function(note)
+configureURLSection: function(note, category, url)
 {
     var urlLabelDeck = document.getElementById("urlLabelDeck");
     var mainURLLabel = document.getElementById("mainURLLabel");
     var urlText      = document.getElementById("noteURL");
-    var goToLink     = document.getElementById("goToLink");
     var ignoreAnchor = document.getElementById("ignoreAnchor");
     var ignoreParams = document.getElementById("ignoreParams");
     
     mainURLLabel.removeAttribute("disabled");
     urlText     .removeAttribute("disabled");
-    goToLink    .removeAttribute("disabled");
     ignoreAnchor.removeAttribute("disabled");
     ignoreParams.removeAttribute("disabled");
     
-    if (note.matchType == this.storage.URL_MATCH_URL)
+    if (note == null || note.matchType == this.storage.URL_MATCH_URL)
     {
         urlLabelDeck.setAttribute("selectedIndex", "0");
     }
@@ -518,9 +506,6 @@ configureURLSection: function(note)
         
         mainURLLabel.setAttribute("disabled", "true");
         urlText     .setAttribute("disabled", "true");
-        
-        goToLink.style.color = "gray";
-        goToLink.style.cursor = "";
     }
     else if (note.matchType == this.storage.URL_MATCH_PREFIX)
     {
@@ -544,35 +529,46 @@ configureURLSection: function(note)
         urlLabelDeck.setAttribute("selectedIndex", "0");
     }
     
-    if (!this.storage.areIgnoresApplicable(note.matchType))
+    if (note == null || !this.storage.areIgnoresApplicable(note.matchType))
     {
         ignoreAnchor.setAttribute("disabled", "true");
         ignoreParams.setAttribute("disabled", "true");
     }
     
-    if (!this.isValidURLOrSite())
+    if (category == "regexp" || !this.isValidURLOrSite())
     {
         document.getElementById("goToLink").style.color  = "gray";
         document.getElementById("goToLink").style.cursor = "";
+    }
+    else
+    {
+        document.getElementById("goToLink").style.color  = "blue";
+        document.getElementById("goToLink").style.cursor = "pointer";
     }
 },
 
 isValidURLOrSite: function()
 {
-    var urlData = this.treeView.getManagerURLData(this.noteBeingEdited);
-    var [category, url] = this.utils.simpleSplit(urlData, ":");
-    
-    if (category == "regexp")
+    if (this.noteBeingEdited.matchType == this.storage.URL_MATCH_URL ||
+        this.noteBeingEdited.matchType == this.storage.URL_MATCH_PREFIX)
+    {
+        return this.utils.parseURL(this.noteBeingEdited.url) != null;
+    }
+    else if (this.noteBeingEdited.matchType == this.storage.URL_MATCH_ALL ||
+             this.noteBeingEdited.matchType == this.storage.URL_MATCH_REGEXP)
     {
         return false;
     }
+    else if (this.noteBeingEdited.matchType == this.storage.URL_MATCH_SITE ||
+             this.noteBeingEdited.matchType == this.storage.URL_MATCH_SUFFIX)
+    {
+        return this.utils.isValidSite(this.noteBeingEdited.url) ||
+               this.utils.parseURL(this.noteBeingEdited.url) != null;
+    }
     else
     {
-        var parsedURL = this.utils.parseURL(url);
-        
-        var isValidURL = (parsedURL != null && this.utils.isValidURLSite(parsedURL.site, parsedURL.protocol));
-        
-        return isValidURL ? true : this.utils.isValidSite(url);
+        this.utils.assertWarnNotHere("Unknown match type when validating URL/site.", note.matchType);
+        return false;
     }
 },
 
