@@ -405,8 +405,6 @@ setNoteData: function(note)
             document.getElementById("goToLink").style.cursor = "pointer";
         }
         
-        document.getElementById("splitter").setAttribute("state", "open");
-        
         var backColor = this.consts.BACKGROUND_COLOR_SWABS.indexOf(note.backColor);
         var foreColor = this.consts.FOREGROUND_COLOR_SWABS.indexOf(note.foreColor);
         
@@ -477,15 +475,22 @@ setNoteData: function(note)
     
     this.isUpdating = false;
     
-    // We now lock the splitter in place by giving a width attribute to the right panel.
-    // This prevents the splitter stuttering with slight movements, when we later reload
-    // data in the right-side panel.
-    var rightPanel = document.getElementById("rightPanel");
-    if (rightPanel.getAttribute("width") == "")
+    if (note != null)
     {
-        var currentWidth = this.utils.removePx(getComputedStyle(rightPanel, null).width);
-        rightPanel.setAttribute("width", currentWidth);
+        // We now lock the splitter in place by giving a width attribute to the right panel.
+        // This prevents the splitter stuttering with slight movements, when we later reload
+        // data in the right-side panel.
+        var rightPanel = document.getElementById("rightPanel");
+        if (rightPanel.getAttribute("width") == "")
+        {
+            var dialog = document.getElementById("internoteManager");
+            var currentWidth = this.utils.removePx(getComputedStyle(dialog, null).width) / 2;
+            rightPanel.setAttribute("width", currentWidth);
+        }
+        
+        document.getElementById("splitter").setAttribute("state", "open");
     }
+    
 },
 
 configureURLSection: function(note)
