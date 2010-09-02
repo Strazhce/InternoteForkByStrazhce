@@ -923,9 +923,15 @@ treeRemoveNote: function(note, urlData)
     return [isSelected, isCategoryOpen];
 },
 
+getSearchTerms: function(searchText)
+{
+    return this.utils.innerTrim(this.utils.trim(searchText)).split(" ");
+},
+
 getSearchFilter: function(searchTerm)
 {
     var searchTermLower = searchTerm.toLowerCase();
+    var searchTerms = this.getSearchTerms(searchTermLower);
     
     try
     {
@@ -946,7 +952,11 @@ getSearchFilter: function(searchTerm)
     return function(note)
     {
         var textLower = note.text.toLowerCase();
-        if (textLower.indexOf(searchTermLower) != -1)
+        var areAllSearchTermsPresent = searchTerms.every(function(term) {
+            return textLower.indexOf(term) != -1;
+        });
+        
+        if (areAllSearchTermsPresent)
         {
             return true;
         }
