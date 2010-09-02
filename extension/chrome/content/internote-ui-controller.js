@@ -2513,23 +2513,12 @@ startNoteAnimation: function(uiNote, animation, animationTime, onCompleteExtra, 
     var driver = new internoteAnimation.AnimationDriver(this.utils, animation);
     this.noteAnimations[uiNote.num] = driver;
     
-    var onComplete = this.utils.bind(this, function()
+    driver.addEventListener("animationCompleted", this.utils.bind(this, function()
     {
         //dump("startNoteAnimation.onComplete " + uiNote.num + "\n");
-        
         if (onCompleteExtra != null) onCompleteExtra();
         delete this.noteAnimations[uiNote.num];
-        
-        // It's important that we delay this, since it's wrong to remove the listener while
-        // the dispatcher is looping through the event listeners!
-        setTimeout(function()
-        {
-            driver.removeEventListener("animationCompleted", onComplete);
-            onComplete = null;
-        }, 0);
-    });
-    
-    driver.addEventListener("animationCompleted", onComplete);
+    }));
     
     if (this.utils.isMinimized() || shouldSkip)
     {
