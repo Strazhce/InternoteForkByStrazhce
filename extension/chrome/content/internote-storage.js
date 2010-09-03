@@ -787,7 +787,8 @@ getEffectiveURL: function(note)
     if (note.effectiveURL == null)
     {
         // Store it to save time because we have to process each note whenever we load a page.
-        note.effectiveURL = this.processEffectiveURL(note.url, note.matchType, note.ignoreAnchor, note.ignoreParams);
+        var noteURL = this.utils.trim(note.url);
+        note.effectiveURL = this.processEffectiveURL(noteURL, note.matchType, note.ignoreAnchor, note.ignoreParams);
     }
     return note.effectiveURL;
 },
@@ -796,8 +797,9 @@ getEffectiveSite: function(note)
 {
     if (note.matchType == this.URL_MATCH_SITE || note.matchType == this.URL_MATCH_SUFFIX)
     {
-        var parsedNoteURL = this.utils.parseURL(note.url);
-        return (parsedNoteURL != null) ? parsedNoteURL.site : note.url;
+        var noteURL = this.utils.trim(note.url);
+        var parsedNoteURL = this.utils.parseURL(noteURL);
+        return (parsedNoteURL != null) ? parsedNoteURL.site : noteURL;
     }
     else
     {
@@ -847,7 +849,7 @@ matchesURL: function(note, pageURL)
 {
     //dump("InternoteStorage.matchesURL\n");
     
-    var noteURL = note.url;
+    var noteURL = this.utils.trim(note.url);
     var noteURLCanon = this.getEffectiveURL(note);
     var pageURLCanon = this.processEffectiveURL(pageURL, this.URL_MATCH_URL, note.ignoreAnchor, note.ignoreParams);
     
@@ -859,8 +861,16 @@ matchesURL: function(note, pageURL)
     {
         try
         {
-            return pageURL.match(noteURL) ||
-                   (pageURL != null && pageURLCanon.match(noteURL));
+            if (noteURL == "")
+            {
+                // Blank regexp is treated as match none not match all.
+                return false;
+            }
+            else
+            {
+                return pageURL.match(noteURL) ||
+                       (pageURL != null && pageURLCanon.match(noteURL));
+            }
         }
         catch (ex)
         {

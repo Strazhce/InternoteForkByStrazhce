@@ -1608,9 +1608,14 @@ treeView : {
         
         if (note.matchType == this.storage.URL_MATCH_REGEXP)
         {
-            if (this.utils.isValidRegexp(note.url))
+            var noteRegexp = this.utils.trim(note.url);
+            if (noteRegexp == "")
             {
-                return "regexp:" + note.url;
+                return "blankregexp:";
+            }
+            else if (this.utils.isValidRegexp(noteRegexp))
+            {
+                return "regexp:" + noteRegexp;
             }
             else
             {
@@ -1620,7 +1625,19 @@ treeView : {
         else if (note.matchType == this.storage.URL_MATCH_SITE ||
                  note.matchType == this.storage.URL_MATCH_SUFFIX)
         {
-            return "category:" + this.storage.getEffectiveSite(note);
+            var site = this.storage.getEffectiveSite(note);
+            if (this.utils.isValidSite(site))
+            {
+                return "category:" + site;
+            }
+            else if (site == "")
+            {
+                return "blanksite:";
+            }
+            else
+            {
+                return "invalidsite:";
+            }
         }
         else
         {
@@ -1629,7 +1646,7 @@ treeView : {
             {
                 if (this.utils.trim(note.url) == "")
                 {
-                    return "category:";
+                    return "blankurl:";
                 }
                 else
                 {
@@ -1686,19 +1703,20 @@ treeView : {
     {
         var [category, url] = this.utils.simpleSplit(urlData, ":");
         
-        if (category == "regexp")
+        this.utils.dumpTraceData(category);
+        
+        if (category == "category")
         {
-            if (url == "")
-            {
-                var categoryStyle = "empty_data";
-                var urlDesc = this.utils.getLocaleString("EmptyRegexpCategory");
-            }
-            else
-            {
-                var categoryStyle = "url_regexp";
-                var regexpPrefix = this.utils.getLocaleString("RegexpAbbreviation") + ": ";
-                var urlDesc = regexpPrefix + url;
-            }
+            this.utils.assertWarn(url != "", "Blank URL for category.");
+            var categoryStyle = "url_category";
+            var urlDesc = url;
+        }
+        else if (category == "regexp")
+        {
+            this.utils.assertWarn(url != "", "Blank regexp for category.");
+            var categoryStyle = "url_regexp";
+            var regexpPrefix = this.utils.getLocaleString("RegexpAbbreviation") + ": ";
+            var urlDesc = regexpPrefix + url;
         }
         else if (category == "invalidurl")
         {
@@ -1710,18 +1728,31 @@ treeView : {
             var categoryStyle = "empty_data";
             var urlDesc = this.utils.getLocaleString("InvalidRegexpCategory");
         }
+        else if (category == "invalidsite")
+        {
+            var categoryStyle = "empty_data";
+            var urlDesc = this.utils.getLocaleString("InvalidSiteCategory");
+        }
+        else if (category == "blankurl")
+        {
+            var categoryStyle = "empty_data";
+            var urlDesc = this.utils.getLocaleString("EmptyURLCategory");
+        }
+        else if (category == "blankregexp")
+        {
+            var categoryStyle = "empty_data";
+            var urlDesc = this.utils.getLocaleString("EmptyRegexpCategory");
+        }
+        else if (category == "blanksite")
+        {
+            var categoryStyle = "empty_data";
+            var urlDesc = this.utils.getLocaleString("EmptySiteCategory");
+        }
         else
         {
-            if (url == "")
-            {
-                var categoryStyle = "empty_data";
-                var urlDesc = this.utils.getLocaleString("EmptyURLCategory");
-            }
-            else
-            {
-                var categoryStyle = "url_category";
-                var urlDesc = url;
-            }
+            this.utils.assertWarnNotHere("Unknown manager category.", category);
+            var categoryStyle = "empty_data";
+            var urlDesc = "???";
         }
         
         return [urlDesc, true, false, urlData, categoryStyle];
