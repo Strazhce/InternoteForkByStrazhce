@@ -101,6 +101,25 @@ canonicalizeParsedURL: function(parsedURL)
         parsedURL.params = null;
     }
     
+    if (parsedURL.params != null)
+    {
+        parsedURL.params.sort(function(param1, param2)
+        {
+            if (param1[0] < param2[0])
+            {
+                return -1;
+            }
+            else if (param1[0] > param2[0])
+            {
+                return +1;
+            }
+            else
+            {
+                return 0;
+            }
+        });
+    }
+    
     if (parsedURL.port == this.getDefaultPort(parsedURL.protocol))
     {
         parsedURL.port = null;
@@ -115,9 +134,10 @@ formatURL: function(parsedURL)
     var userNameComponent = (parsedURL.userName != null) ? (parsedURL.userName + ":") : "";
     var passwordComponent = (parsedURL.password != null) ? (parsedURL.password + "@") : "";
     var portComponent     = (parsedURL.port     != null) ? (":" + parsedURL.port    ) : "";
-    var paramsComponent   = (parsedURL.params   != null) ? ("?" + encodeURIComponent(parsedURL.params)) : "";
+    var paramsComponent   = (parsedURL.params   != null) ? ("?" + parsedURL.params.map(this.formatParam, this).join("&")) : "";
     var anchorComponent   = (parsedURL.anchor   != null) ? ("#" + encodeURIComponent(parsedURL.anchor)) : "";
     var pathComponent     = "/" + parsedURL.path.map(encodeURIComponent).join("/");
+    
     return parsedURL.protocol + "://" + userNameComponent + passwordComponent +
            parsedURL.site + portComponent + pathComponent +
            paramsComponent + anchorComponent;
@@ -167,7 +187,7 @@ parseURL: function(url)
             
             var params   = (regexpResults[7] == null)
                          ? null
-                         : decodeURIComponent(regexpResults[7].replace(/^\?/, ""));
+                         : regexpResults[7].replace(/^\?/, "");
             
             var anchor   = (regexpResults[8] == null)
                          ? null
@@ -175,9 +195,20 @@ parseURL: function(url)
             
             var isValidPath = (path.charAt(0) == "/");
             var isValidPort = (regexpResults[5] == null) || this.isValidPortString(regexpResults[5]);
-            if (isValidPort)
+            
+            if (params != null)
             {
-                var path = (path == "/") ? [] : (path.replace(/^\//, "").split("/").map(decodeURIComponent));
+                params = params.split(/[&;]/).map(this.parseParam, this);
+                var areValidParams = params.every(function(param) { return param != null; });
+            }
+            else
+            {
+                var areValidParams = true;
+            }
+            
+            if (isValidPort && areValidParams)
+            {
+                path = (path == "/") ? [] : (path.replace(/^\//, "").split("/").map(decodeURIComponent));
                 port = (port == null) ? null : parseInt(port, 10);
                 return { protocol: regexpResults[1], userName: userName, password: password, site: regexpResults[4],
                          port: port, path: path, params: params, anchor: anchor };
@@ -200,6 +231,30 @@ parseURL: function(url)
             return null;
         }
     }
+},
+
+parseParam: function(param)
+{
+    if (this.paramRegexp == null)
+    {
+        this.paramRegexp = new RegExp(/^([^=]+)=([^=]*)$/);
+    }
+    
+    var regexpResults = this.paramRegexp.exec(param);
+    
+    if (regexpResults == null)
+    {
+        return null;
+    }
+    else
+    {
+        return [decodeURIComponent(regexpResults[1]), decodeURIComponent(regexpResults[2])];
+    }
+},
+
+formatParam: function(param)
+{
+    return param[0] + "=" + param[1];
 },
 
 isValidURLSite: function(site, protocol)
