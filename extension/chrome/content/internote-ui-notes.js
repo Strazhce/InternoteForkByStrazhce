@@ -302,6 +302,16 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
         noteElt.addEventListener("mousedown", callbacks.onMouseDown, false);
     }
     
+    var onMouseScroll = this.utils.bind(this, function(ev)
+    {
+        this.onMouseScroll(ev, uiNote);
+    });
+    
+    uiNote.textArea. addEventListener("DOMMouseScroll", onMouseScroll, false);
+    uiNote.scrollbar.addEventListener("DOMMouseScroll", onMouseScroll, false);
+    
+    onMouseScroll = null; // Prevent leak
+    
     this.setMinimizedVisibility(uiNote);
     
     if (note.isMinimized)
@@ -351,6 +361,36 @@ setButtonTooltip: function(button, entityLabelId)
     var tooltipLabel = document.getElementById(entityLabelId).getAttribute("value");
     button.removeAttributeNS(null, "tooltiptext");
     button.setAttributeNS(null, "tooltiptext", tooltipLabel);
+},
+
+onMouseScroll: function(ev, uiNote)
+{
+    //dump("onMouseScroll\n");
+    
+    try
+    {
+        if (!this.prefs.shouldUseNativeScrollbar())
+        {
+            if (ev.detail < 0)
+            {
+                for (var i = 0; i < Math.abs(ev.detail); i++)
+                {
+                    uiNote.scrollHandler.onScrollUpLine();
+                }
+            }
+            else if (ev.detail > 0)
+            {
+                for (var i = 0; i < ev.detail; i++)
+                {
+                    uiNote.scrollHandler.onScrollDownLine();
+                }
+            }
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when using mouse wheel.", ex);
+    }
 },
 
 cloneUINote: function(uiNote, doc)
