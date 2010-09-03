@@ -40,9 +40,7 @@ init: function()
     this.utils.addBoundDOMEventListener(this.alternativeLocationCheckbox, "click",   this, "userTogglesLocationCheckbox", false);
     this.utils.addBoundDOMEventListener(this.chooseFolderButton,          "command", this, "userSetsSaveLocation",      false);
     
-    var useAlternativeLocation = this.alternativeLocationCheckbox.checked;
-    this.saveFolderField   .disabled = useAlternativeLocation ? "" : "true";
-    this.chooseFolderButton.disabled = useAlternativeLocation ? "" : "true";
+    this.userTogglesLocationCheckbox();
 },
 
 onAccept: function()
@@ -118,7 +116,7 @@ userTogglesLocationCheckbox: function(ev)
         }
         else
         {
-            this.saveFolderField.value = "";
+            this.saveFolderField.value = this.utils.getProfileDir().path;
             this.saveFolderField.disabled = "true";
             this.chooseFolderButton.disabled = "true";
         }
