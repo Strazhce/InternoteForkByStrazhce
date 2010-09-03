@@ -1639,6 +1639,10 @@ treeView : {
                 return "invalidsite:";
             }
         }
+        else if (note.matchType == this.storage.URL_MATCH_ALL)
+        {
+            return "all:";
+        }
         else
         {
             var effectiveURL = this.storage.getEffectiveURL(note);
@@ -1718,40 +1722,45 @@ treeView : {
             var regexpPrefix = this.utils.getLocaleString("RegexpAbbreviation") + ": ";
             var urlDesc = regexpPrefix + url;
         }
+        else if (category == "all")
+        {
+            var categoryStyle = "special_data";
+            var urlDesc = this.utils.getLocaleString("AllCategory");
+        }
         else if (category == "invalidurl")
         {
-            var categoryStyle = "empty_data";
+            var categoryStyle = "special_data";
             var urlDesc = this.utils.getLocaleString("InvalidURLCategory");
         }
         else if (category == "invalidregexp")
         {
-            var categoryStyle = "empty_data";
+            var categoryStyle = "special_data";
             var urlDesc = this.utils.getLocaleString("InvalidRegexpCategory");
         }
         else if (category == "invalidsite")
         {
-            var categoryStyle = "empty_data";
+            var categoryStyle = "special_data";
             var urlDesc = this.utils.getLocaleString("InvalidSiteCategory");
         }
         else if (category == "blankurl")
         {
-            var categoryStyle = "empty_data";
+            var categoryStyle = "special_data";
             var urlDesc = this.utils.getLocaleString("EmptyURLCategory");
         }
         else if (category == "blankregexp")
         {
-            var categoryStyle = "empty_data";
+            var categoryStyle = "special_data";
             var urlDesc = this.utils.getLocaleString("EmptyRegexpCategory");
         }
         else if (category == "blanksite")
         {
-            var categoryStyle = "empty_data";
+            var categoryStyle = "special_data";
             var urlDesc = this.utils.getLocaleString("EmptySiteCategory");
         }
         else
         {
             this.utils.assertWarnNotHere("Unknown manager category.", category);
-            var categoryStyle = "empty_data";
+            var categoryStyle = "special_data";
             var urlDesc = "???";
         }
         
@@ -1799,7 +1808,7 @@ treeView : {
         if (text == "")
         {
             var emptyTextMessage = this.utils.getLocaleString("EmptyTextDescription");
-            return [emptyTextMessage, "empty_data"];
+            return [emptyTextMessage, "special_data"];
         }
         else
         {

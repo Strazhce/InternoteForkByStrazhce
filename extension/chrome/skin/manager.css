@@ -2,7 +2,7 @@ treechildren::-moz-tree-cell-text(url_category) {
     font-weight: bold;
 }
 
-treechildren::-moz-tree-cell-text(empty_data)
+treechildren::-moz-tree-cell-text(special_data)
 {
     font-style: italic;
 }
