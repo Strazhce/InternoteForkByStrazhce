@@ -1707,8 +1707,6 @@ treeView : {
     {
         var [category, url] = this.utils.simpleSplit(urlData, ":");
         
-        this.utils.dumpTraceData(category);
-        
         if (category == "category")
         {
             this.utils.assertWarn(url != "", "Blank URL for category.");
