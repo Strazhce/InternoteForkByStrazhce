@@ -1205,6 +1205,7 @@ userImportsNotes: function(fileType, filter)
             message = message.replace("%1", addedCount).replace("%2", foundCount);
             
             var notificationBox = document.getElementById("notificationBox");
+            notificationBox.removeAllNotifications(true);
             notificationBox.appendNotification(message, "import_message", null, notificationBox.PRIORITY_INFO_MEDIUM);
         }
     }
@@ -1263,6 +1264,7 @@ userExportsNotes: function(text, noteCount, fileType, filter, extension, default
         message = message.replace("%1", noteCount);
         
         var notificationBox = document.getElementById("notificationBox");
+        notificationBox.removeAllNotifications(true);
         notificationBox.appendNotification(message, "export_message", null, notificationBox.PRIORITY_INFO_MEDIUM);        
     }
     catch (ex)
