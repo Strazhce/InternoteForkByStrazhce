@@ -109,13 +109,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     
     <hbox flex="2">
         <vbox flex="3" id="leftPanel">
-            <tree id="noteList" flex="2" onselect="internoteManager.userSelectsTreeElement();">
+            <tree id="noteList" flex="2" onselect="internoteManager.userSelectsTreeElement();" hidecolumnpicker="true">
                 <treecols>
                     <treecol id="element" label="&internote.noteList.columnTitle;" primary="true" flex="1"/>
                 </treecols>
                 <treechildren />
             </tree>
-            <tree id="resultsList" flex="1" onselect="internoteManager.userSelectsSearchElement();" style="display: none;">
+            <tree id="resultsList" flex="1" onselect="internoteManager.userSelectsSearchElement();" hidecolumnpicker="true" style="display: none;">
                 <treecols>
                     <treecol id="elementsr" label="&internote.searchResults.label;" primary="true" flex="1"/>
                 </treecols>
