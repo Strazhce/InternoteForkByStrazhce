@@ -1218,7 +1218,7 @@ userImportsNotes: function(fileType, filter)
     }
 },
 
-userExportsNotes: function(text, fileType, filter, extension, defaultFileName)
+userExportsNotes: function(text, noteCount, fileType, filter, extension, defaultFileName)
 {
     try
     {
@@ -1258,6 +1258,12 @@ userExportsNotes: function(text, fileType, filter, extension, defaultFileName)
             
             this.utils.saveStringToFilename(text, fileName);
         }
+        
+        var message = this.utils.getLocaleString("ExportMessage");
+        message = message.replace("%1", noteCount);
+        
+        var notificationBox = document.getElementById("notificationBox");
+        notificationBox.appendNotification(message, "export_message", null, notificationBox.PRIORITY_INFO_MEDIUM);        
     }
     catch (ex)
     {
@@ -1364,7 +1370,8 @@ userExportsNotesInV3: function (shouldExportOnlySelected)
     {
         var fileName = this.utils.getLocaleString("ExportDefaultFileName") + ".xml";
         var selection = this.getNotesToActUpon(shouldExportOnlySelected);
-        this.userExportsNotes(this.storage.generateNotesInV3(selection), "InternoteV3", null, null, fileName);
+        var noteCount = this.utils.getArrayNonNullCount(selection);
+        this.userExportsNotes(this.storage.generateNotesInV3(selection), noteCount, "InternoteV3", null, null, fileName);
     }
     catch (ex)
     {
@@ -1377,7 +1384,8 @@ userExportsNotesInV2: function (shouldExportOnlySelected)
     try
     {
         var selection = this.getNotesToActUpon(shouldExportOnlySelected);
-        this.userExportsNotes(this.storage.generateNotesInV2(selection), "InternoteV2", null, null, this.storage.LEGACY_FILENAME);
+        var noteCount = this.utils.getArrayNonNullCount(selection);
+        this.userExportsNotes(this.storage.generateNotesInV2(selection), noteCount, "InternoteV2", null, null, this.storage.LEGACY_FILENAME);
     }
     catch (ex)
     {
@@ -1391,11 +1399,12 @@ userExportsNotesInHTML: function (shouldExportOnlySelected)
     {
         var filter = this.utils.getCIConstant("nsIFilePicker", "filterHTML");
         var selection = this.getNotesToActUpon(shouldExportOnlySelected);
+        var noteCount = this.utils.getArrayNonNullCount(selection);
         
         var scratchDoc = this.utils.getScratchIFrame().contentDocument;
         this.storage.generateNotesInHTML(selection, scratchDoc);
         
-        this.userExportsNotes(scratchDoc.documentElement.innerHTML, "HTML", filter, "html");
+        this.userExportsNotes(scratchDoc.documentElement.innerHTML, noteCount, "HTML", filter, "html");
     }
     catch (ex)
     {
@@ -1409,7 +1418,8 @@ userExportsNotesInText: function (shouldExportOnlySelected)
     {
         var filter = this.utils.getCIConstant("nsIFilePicker", "filterText");
         var selection = this.getNotesToActUpon(shouldExportOnlySelected);
-        this.userExportsNotes(this.storage.generateNotesInText(selection), "Text", filter, "txt");
+        var noteCount = this.utils.getArrayNonNullCount(selection);
+        this.userExportsNotes(this.storage.generateNotesInText(selection), noteCount, "Text", filter, "txt");
     }
     catch (ex)
     {
@@ -1423,7 +1433,8 @@ userExportsNotesInBookmarks: function(shouldExportOnlySelected)
     {
         var filter = this.utils.getCIConstant("nsIFilePicker", "filterHTML");
         var selection = this.getNotesToActUpon(shouldExportOnlySelected);
-        this.userExportsNotes(this.storage.generateNotesInBookmarks(selection), "Bookmarks", filter, "html", "bookmarks");
+        var noteCount = this.utils.getArrayNonNullCount(selection);
+        this.userExportsNotes(this.storage.generateNotesInBookmarks(selection), noteCount, "Bookmarks", filter, "html", "bookmarks");
     }
     catch (ex)
     {
