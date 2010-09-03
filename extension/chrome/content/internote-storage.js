@@ -847,70 +847,77 @@ processEffectiveURL: function(url, matchType, ignoreAnchor, ignoreParams)
 
 matchesURL: function(note, pageURL)
 {
-    //dump("InternoteStorage.matchesURL\n");
-    
-    var noteURL = this.utils.trim(note.url);
-    var noteURLCanon = this.getEffectiveURL(note);
-    var pageURLCanon = this.processEffectiveURL(pageURL, this.URL_MATCH_URL, note.ignoreAnchor, note.ignoreParams);
-    
-    if (note.matchType == this.URL_MATCH_URL)
+    try
     {
-        return pageURLCanon == noteURLCanon;
-    }
-    else if (note.matchType == this.URL_MATCH_REGEXP)
-    {
-        try
+        //dump("InternoteStorage.matchesURL\n");
+        
+        var noteURL = this.utils.trim(note.url);
+        var noteURLCanon = this.getEffectiveURL(note);
+        var pageURLCanon = this.processEffectiveURL(pageURL, this.URL_MATCH_URL, note.ignoreAnchor, note.ignoreParams);
+        
+        if (note.matchType == this.URL_MATCH_URL)
         {
-            if (noteURL == "")
+            return pageURLCanon == noteURLCanon;
+        }
+        else if (note.matchType == this.URL_MATCH_REGEXP)
+        {
+            try
             {
-                // Blank regexp is treated as match none not match all.
-                return false;
+                if (noteURL == "")
+                {
+                    // Blank regexp is treated as match none not match all.
+                    return false;
+                }
+                else
+                {
+                    return pageURL.match(noteURL) ||
+                           (pageURL != null && pageURLCanon.match(noteURL));
+                }
             }
-            else
+            catch (ex2)
             {
-                return pageURL.match(noteURL) ||
-                       (pageURL != null && pageURLCanon.match(noteURL));
+                if (ex2.name == "SyntaxError")
+                {
+                    return false;
+                }
+                else
+                {
+                    throw ex2;
+                }
             }
         }
-        catch (ex)
+        else if (note.matchType == this.URL_MATCH_PREFIX)
         {
-            if (ex.name == "SyntaxError")
-            {
-                return false;
-            }
-            else
-            {
-                throw ex;
-            }
+            return pageURLCanon == noteURL      ||
+                   pageURLCanon == noteURLCanon ||
+                   this.utils.startsWith(pageURLCanon, noteURL     ) ||
+                   this.utils.startsWith(pageURLCanon, noteURLCanon);
+        }
+        else if (note.matchType == this.URL_MATCH_SITE)
+        {
+            var noteSite = this.getEffectiveSite(note);
+            var pageSite = this.utils.getURLSite(pageURL);
+            return pageSite == noteSite;
+        }
+        else if (note.matchType == this.URL_MATCH_SUFFIX)
+        {
+            var noteSite = this.getEffectiveSite(note);
+            var pageSite = this.utils.getURLSite(pageURL);
+            return this.utils.isSiteSuffix(pageSite, noteSite);
+        }
+        else if (note.matchType == this.URL_MATCH_ALL)
+        {
+            return true;
+        }
+        else
+        {
+            this.utils.assertWarnNotHere("Unknown match type in InternoteStorage.matchesURL", note.matchType);
+            return false;
         }
     }
-    else if (note.matchType == this.URL_MATCH_PREFIX)
+    catch (ex)
     {
-        return pageURLCanon == noteURL      ||
-               pageURLCanon == noteURLCanon ||
-               this.utils.startsWith(pageURLCanon, noteURL     ) ||
-               this.utils.startsWith(pageURLCanon, noteURLCanon);
-    }
-    else if (note.matchType == this.URL_MATCH_SITE)
-    {
-        var noteSite = this.getEffectiveSite(note);
-        var pageSite = this.utils.getURLSite(pageURL);
-        return pageSite == noteSite;
-    }
-    else if (note.matchType == this.URL_MATCH_SUFFIX)
-    {
-        var noteSite = this.getEffectiveSite(note);
-        var pageSite = this.utils.getURLSite(pageURL);
-        return this.utils.isSiteSuffix(pageSite, noteSite);
-    }
-    else if (note.matchType == this.URL_MATCH_ALL)
-    {
-        return true;
-    }
-    else
-    {
-        this.utils.assertWarnNotHere("Unknown match type in InternoteStorage.matchesURL", note.matchType);
-        return false;
+        this.utils.handleException("Exception caught when testing whether note matches URL", ex);
     }
 },
 
