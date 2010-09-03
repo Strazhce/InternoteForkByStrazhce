@@ -37,7 +37,7 @@
 <!ENTITY internote.setDefaultColorsCmd.label  "Use as Default Colors">
 
 <!ENTITY internote.deleteNoteCmd.label        "Delete Note">
-<!ENTITY internote.chooseColorsCmd.label      "Choose New Colours">
+<!ENTITY internote.chooseColorsCmd.label      "Choose New Colors">
 <!ENTITY internote.editTextCmd.label          "Edit Text">
 <!ENTITY internote.minimizeNoteCmd.label      "Minimize Note">
 <!ENTITY internote.unminimizeNoteCmd.label    "Restore Note">
