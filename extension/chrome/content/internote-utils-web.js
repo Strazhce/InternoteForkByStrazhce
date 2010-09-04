@@ -198,15 +198,12 @@ parseURL: function(url)
             
             if (params != null)
             {
-                params = params.split(/[&;]/).map(this.parseParam, this);
-                var areValidParams = params.every(function(param) { return param != null; });
-            }
-            else
-            {
-                var areValidParams = true;
+                params = params.split(/[&;]/)
+                               .filter(function(param) { return param != ""; })
+                               .map(this.parseParam, this);
             }
             
-            if (isValidPort && areValidParams)
+            if (isValidPort)
             {
                 path = (path == "/") ? [] : (path.replace(/^\//, "").split("/").map(decodeURIComponent));
                 port = (port == null) ? null : parseInt(port, 10);
@@ -244,7 +241,7 @@ parseParam: function(param)
     
     if (regexpResults == null)
     {
-        return null;
+        return [decodeURIComponent(param)];
     }
     else
     {
@@ -254,7 +251,14 @@ parseParam: function(param)
 
 formatParam: function(param)
 {
-    return encodeURIComponent(param[0]) + "=" + encodeURIComponent(param[1]);
+    if (param[1] != null)
+    {
+        return encodeURIComponent(param[0]) + "=" + encodeURIComponent(param[1]);
+    }
+    else
+    {
+        return encodeURIComponent(param[0]);
+    }
 },
 
 isValidURLSite: function(site, protocol)
