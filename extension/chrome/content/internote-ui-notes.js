@@ -529,7 +529,7 @@ fixTextArea: function(uiNote, dims)
     
     // See firefox bug #542394.
     var textDims = this.utils.coordPairSubtract(dims, [horzBorderArea, vertBorderArea]);
-    textDims = this.utils.coordPairMax(textDims, [0, 0]);
+    textDims = this.utils.clipNegativeCoordPair(textDims);
     
     this.utils.fixDOMEltDims(uiNote.textArea, textDims);
 },
@@ -1404,7 +1404,8 @@ updateStaticImage: function(uiNote, dims)
     
     // The foreground must stick around, so we'll need to adjust its size or it messes things up.
     var foregroundMargins = [2 * this.NOTE_BORDER_SIZE, 2 * this.NOTE_BORDER_SIZE];
-    this.utils.fixDOMEltDims(uiNote.foreground, this.utils.coordPairSubtract(dims, foregroundMargins));
+    var foregroundDims = this.utils.clipNegativeCoordPair(this.utils.coordPairSubtract(dims, foregroundMargins));
+    this.utils.fixDOMEltDims(uiNote.foreground, foregroundDims);
     
     context.drawImage(uiNote.rawCanvas, 0, 0, scaledCanvas.width, scaledCanvas.height);
 },

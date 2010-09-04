@@ -88,4 +88,9 @@ isPositiveCoordPair: function(pair)
     return this.isCoordPair(pair) && pair[0] > 0 && pair[1] > 0;
 },
 
+clipNegativeCoordPair: function(pair)
+{
+    return this.coordPairMax([0, 0], pair);
+},
+
 });

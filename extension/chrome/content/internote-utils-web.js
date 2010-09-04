@@ -642,6 +642,7 @@ setDisplayed: function(elts, isDisplayed)
 
 fixDOMEltWidth: function(elt, width)
 {
+    this.assertWarn(this.isNonNegativeNumber(width), "Can't set width to bad number.", width);
     elt.style.width     = width  + "px";
     elt.style.maxWidth  = width  + "px";
     elt.style.minWidth  = width  + "px";
@@ -649,6 +650,7 @@ fixDOMEltWidth: function(elt, width)
 
 fixDOMEltHeight: function(elt, height)
 {
+    this.assertWarn(this.isNonNegativeNumber(height), "Can't set height to bad number.", height);
     elt.style.height    = height + "px";
     elt.style.maxHeight = height + "px";
     elt.style.minHeight = height + "px";
