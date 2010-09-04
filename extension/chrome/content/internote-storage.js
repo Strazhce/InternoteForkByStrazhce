@@ -652,8 +652,6 @@ addSimpleNote: function(url, text, noteTopLeft, noteDims)
     var ignoreAnchor = true;
     var ignoreParams = true;
     
-    url = this.utils.canonicalizeURL(url);
-    
     return this.addNote(new this.InternoteNote(url, matchType, ignoreAnchor, ignoreParams, text,
                                                noteTopLeft[0], noteTopLeft[1], noteDims[0], noteDims[1],
                                                backColor, foreColor,
