@@ -60,6 +60,12 @@ WIDTH_BETWEEN_MINIMIZED: 2,
 ACTIVE_WARNING_INTERVAL: 500,
 CHECK_VIEWPORT_INTERVAL: 50,
 
+POS_TYPE_TOP_LEFT: 0,
+POS_TYPE_TOP_RIGHT: 1,
+POS_TYPE_BOTTOM_LEFT: 2,
+POS_TYPE_BOTTOM_RIGHT: 3,
+POS_TYPE_CENTER: 4,
+
 MENUICON_SIZE: 16,
 
 dragMode:            this.DRAG_MODE_NONE,
@@ -2009,32 +2015,24 @@ screenCalcNewNotePos: function(viewportRect, noteDims)
     
     this.utils.assertError(this.utils.isRectangle(allowedRect), "Bad start coordinate for positioning.");
     
-    var offset, start;
-    switch (posType)
+    var offsetXSign = (posType == this.POS_TYPE_TOP_RIGHT || posType == this.POS_TYPE_BOTTOM_RIGHT)
+                    ? -1
+                    : +1;
+    var offsetYSign = (posType == this.POS_TYPE_BOTTOM_LEFT || posType == this.POS_TYPE_BOTTOM_RIGHT)
+                    ? -1
+                    : +1;
+    var offset = [offsetXSign * INTERNOTE_DISTANCE, offsetYSign * INTERNOTE_DISTANCE];
+    
+    if (posType == this.POS_TYPE_CENTER)
     {
-        case 0: // Top Left
-            offset = [+INTERNOTE_DISTANCE, +INTERNOTE_DISTANCE];
-            start  = this.utils.coordPairAdd(allowedRect.topLeft, offset);
-            break;
-        case 1: // Top Right
-            offset = [-INTERNOTE_DISTANCE, +INTERNOTE_DISTANCE];
-            start  = this.utils.coordPairAdd(this.utils.getRectTopRight(allowedRect), offset);
-            break;
-        case 2: // Bottom Left
-            offset = [+INTERNOTE_DISTANCE, -INTERNOTE_DISTANCE];
-            start  = this.utils.coordPairAdd(this.utils.getRectBottomLeft(allowedRect), offset);
-            break;
-        case 3: // Bottom Right
-            offset = [-INTERNOTE_DISTANCE, -INTERNOTE_DISTANCE];
-            start  = this.utils.coordPairAdd(allowedRect.bottomRight, offset);
-            break;
-        case 4: // Centered
-            offset = [+INTERNOTE_DISTANCE, +INTERNOTE_DISTANCE];
-            start  = this.utils.getRectCenter(allowedRect);
-            break;
-        default:
-            this.utils.assertNotHere("Unknown position type.");
+        var start = this.utils.getRectCenter(allowedRect);
     }
+    else
+    {
+        var start = this.screenGetImportantPos(allowedRect, posType);
+    }
+    
+    start = this.utils.coordPairAdd(start, offset);
     
     this.utils.assertError(this.utils.isNonNegCoordPair(start), "Bad start coordinate for positioning.");
     
@@ -2042,7 +2040,7 @@ screenCalcNewNotePos: function(viewportRect, noteDims)
     var scanStartPos = 0;
     for (var checkPos = start; this.utils.isInRect(checkPos, allowedRect); checkPos = this.utils.coordPairAdd(checkPos, offset))
     {
-        if (!this.screenDoOverlappingNotesExist(this.utils.makeRectFromDims(checkPos, noteDims)))
+        if (!this.screenDoOverlappingNotesExist(this.utils.makeRectFromDims(checkPos, noteDims), posType))
         {
             this.utils.assertError(this.utils.isNonNegCoordPair(checkPos), "Bad check coordinate for positioning.");
             return checkPos;
@@ -2055,7 +2053,7 @@ screenCalcNewNotePos: function(viewportRect, noteDims)
 
 // This is very slow ... it only really show up when you hold down Alt-I to create
 // lots of notes, but it should possibly be rewritten anyway.
-screenDoOverlappingNotesExist: function(newNoteRect)
+screenDoOverlappingNotesExist: function(newNoteRect, posType)
 {
     //dump("screenDoOverlappingNotesExist " + this.utils.compactDumpString(newNoteRect) + "\n");
     
@@ -2071,16 +2069,18 @@ screenDoOverlappingNotesExist: function(newNoteRect)
             
             //dump("    NoteFound " + i + " " + this.utils.compactDumpString(noteTopLeft) + "\n");
             
+            var currNoteRect = this.utils.makeRectFromDims(note.getPos(), note.getDims());
             if (note.text == "")
             {
-                if (this.utils.areCoordPairsEqual(newNoteRect.topLeft, noteTopLeft))
+                var newNotePos  = this.screenGetImportantPos(newNoteRect, posType);
+                var currNotePos = this.screenGetImportantPos(currNoteRect, posType);
+                if (this.utils.areCoordPairsEqual(newNotePos, currNotePos))
                 {
                     return true;
                 }
             }
             else
             {
-                var currNoteRect = this.utils.makeRectFromDims(noteTopLeft, this.storage.getDims(note));
                 if (this.utils.doRectsOverlap(newNoteRect, currNoteRect))
                 {
                     return true;
@@ -2089,6 +2089,37 @@ screenDoOverlappingNotesExist: function(newNoteRect)
         }
     }
     return false;
+},
+
+screenGetImportantPos: function(rect, posType)
+{
+    this.utils.assertError(this.utils.isRectangle(rect), "Not a rectangle when getting important pos.", rect);
+    
+    if (posType == this.POS_TYPE_TOP_LEFT)
+    {
+        return rect.topLeft;
+    }
+    else if (posType == this.POS_TYPE_TOP_RIGHT)
+    {
+        return this.utils.getRectTopRight(rect);
+    }
+    else if (posType == this.POS_TYPE_BOTTOM_LEFT)
+    {
+        return this.utils.getRectBottomLeft(rect);
+    }
+    else if (posType == this.POS_TYPE_BOTTOM_RIGHT)
+    {
+        return rect.bottomRight;
+    }
+    else if (posType == this.POS_TYPE_CENTER)
+    {
+        return rect.topLeft;
+    }
+    else
+    {
+        this.utils.assertErrorNotHere("Unknown position type.");
+        return null;
+    }
 },
 
 screenGetUpdatedPosFunc: function(uiNote)
