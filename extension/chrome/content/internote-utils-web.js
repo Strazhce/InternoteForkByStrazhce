@@ -254,7 +254,7 @@ parseParam: function(param)
 
 formatParam: function(param)
 {
-    return param[0] + "=" + param[1];
+    return encodeURIComponent(param[0]) + "=" + encodeURIComponent(param[1]);
 },
 
 isValidURLSite: function(site, protocol)
