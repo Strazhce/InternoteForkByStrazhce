@@ -680,8 +680,6 @@ addNote: function(note)
     
     this.utils.assertError(note.xml == null,     "Tried to add note with XML existing.");
     
-    this.utils.dumpTraceData("3" + note.url);
-    
     this.addNoteToList(note);
     
     note.xml = this.doc.createElement("note");
