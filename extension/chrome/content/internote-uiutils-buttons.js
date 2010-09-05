@@ -372,7 +372,7 @@ internoteUtilities.incorporate({
             // multiple repeat button handlers, we should determine which area
             // the mouse is in first, in case the action function changes
             // the area and this might affect the result.
-            setTimeout(function() { actionFunc.call(this, this.element); }, 0);
+            setTimeout(this.utils.bind(this, function() { actionFunc.call(this, this.element); }), 0);
         };
         
         handler.onMouseUp = function(button)
