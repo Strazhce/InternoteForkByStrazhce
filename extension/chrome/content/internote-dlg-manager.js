@@ -24,7 +24,7 @@
 var internoteManager = {
 
 searchMapping: [],
-searchNotes: null,
+searchWatcher: null,
 
 isUpdating: false,
 suppressSelectionChangeEvents: false,
@@ -127,6 +127,11 @@ destroy: function()
     this.storage.removeBoundEventListener("noteBackRecolored",   this, "onNoteUpdateData");
     this.storage.removeBoundEventListener("noteReset",           this, "onNoteUpdateData");
     this.storage.removeBoundEventListener("notesMinimized",      this, "onNoteUpdateData");
+    
+    if (this.searchWatcher != null)
+    {
+        this.searchWatcher.destroy();
+    }
 },
 
 viewNote: function(note)
@@ -1054,14 +1059,14 @@ initSearchResults: function(searchTerm)
     resultsList.style.display = "";
     
     var extraReevaluateEvents = ["noteEdited"];
-    this.searchNotes =
+    this.searchWatcher =
         new InternoteStorageWatcher(this.storage, null, extraReevaluateEvents, []);
     
-    this.searchNotes.addBoundEventListener("noteAdded",   this, "onSearchNoteAdded");
-    this.searchNotes.addBoundEventListener("noteRemoved", this, "onSearchNoteRemoved");
-    this.searchNotes.addBoundEventListener("noteEdited",  this, "onSearchNoteEdited");
+    this.searchWatcher.addBoundEventListener("noteAdded",   this, "onSearchNoteAdded");
+    this.searchWatcher.addBoundEventListener("noteRemoved", this, "onSearchNoteRemoved");
+    this.searchWatcher.addBoundEventListener("noteEdited",  this, "onSearchNoteEdited");
     
-    this.searchNotes.updateFilter(this.getSearchFilter(searchTerm));
+    this.searchWatcher.updateFilter(this.getSearchFilter(searchTerm));
 },
 
 destroySearchResults: function()
@@ -1075,8 +1080,8 @@ destroySearchResults: function()
         searchResultsPane.removeChild(searchResultsPane.firstChild);
     }
     
-    this.searchNotes.destroy();
-    this.searchNotes = null;
+    this.searchWatcher.destroy();
+    this.searchWatcher = null;
 },
 
 updateSearchResults: function()
@@ -1084,15 +1089,15 @@ updateSearchResults: function()
     try
     {
         var searchTerm = document.getElementById("searchFilter").value;
-        if (searchTerm == "" && this.searchNotes != null)
+        if (searchTerm == "" && this.searchWatcher != null)
         {
             this.destroySearchResults();
         }
         else if (searchTerm != "")
         {
-            if (this.searchNotes != null)
+            if (this.searchWatcher != null)
             {
-                this.searchNotes.updateFilter(this.getSearchFilter(searchTerm));
+                this.searchWatcher.updateFilter(this.getSearchFilter(searchTerm));
             }
             else
             {
