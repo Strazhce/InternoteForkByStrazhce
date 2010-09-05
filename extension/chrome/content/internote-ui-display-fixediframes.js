@@ -31,13 +31,15 @@ actualPosLookup:  [],
 actualDimsLookup: [],
 flipLookup:       [],
 
-init: function(prefs, utils, noteUI)
+init: function(prefs, utils, noteUI, getViewportDimsFunc)
 {
     // It seems that a strange limitation with JS Code Modules prevents
     // global references from callbacks.
     this.prefs   = prefs;
     this.utils   = utils;
     this.noteUI  = noteUI;
+    
+    this.getViewportDimsFunc = getViewportDimsFunc;
 },
 
 supportsTranslucency: function()
@@ -45,10 +47,9 @@ supportsTranslucency: function()
     return false;
 },
 
-setBrowser: function(browser, viewportDims)
+setBrowser: function(browser)
 {
-    this.browser      = browser;
-    this.viewportDims = viewportDims;
+    this.browser = browser;
 },
 
 setUINotes: function(allUINotes, uiNoteLookup)
@@ -273,16 +274,9 @@ iFrameLoaded: function(uiNote)
     }
 },
 
-handleChangedAspects: function(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized)
+handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects " + viewportResized + " " + viewportMoved + " " + scrolled + " " + pageResized + "\n");
-    
-    this.utils.assertError(viewportDims == null || this.utils.isNonNegCoordPair(viewportDims), "Bad dims when handleChangedAspects", viewportDims);
-    
-    if (viewportResized)
-    {
-        this.viewportDims = viewportDims;
-    }
     
     // Both scrolling and resizing the viewport can lead to positions changing.
     if (scrolled || viewportResized || pageResized)
@@ -406,11 +400,14 @@ adjustNote: function(uiNote, newPos, newDims, newFlipOffset)
 
 calculateNoteProperties: function(pos, dims)
 {
-    this.utils.assertError(this.utils.isNonNegCoordPair(this.viewportDims), "Invalid viewport dims calcing note properties", this.viewportDims);
     this.utils.assertError(this.utils.isCoordPair      (pos ), "Invalid pos calcing note properties",           pos         );
     this.utils.assertError(this.utils.isNonNegCoordPair(dims), "Invalid dims calcing note properties",          dims        );
     
-    var viewportRect = this.utils.makeRectFromDims([0, 0], this.utils.getViewportDims(this.browser));
+    var viewportDims = this.getViewportDimsFunc();
+    
+    this.utils.assertError(this.utils.isNonNegCoordPair(viewportDims), "Invalid viewport dims calcing note properties", viewportDims);
+    
+    var viewportRect = this.utils.makeRectFromDims([0, 0], viewportDims);
     
     if (this.utils.isRectEmpty(viewportRect))
     {

@@ -24,7 +24,7 @@ innerContainer: null,
 offset: [0, 0],
 autoFocusNote:  null,
 
-init: function(prefs, utils, noteUI)
+init: function(prefs, utils, noteUI, getViewportDimsFunc)
 {
     // It seems that a strange limitation with JS Code Modules prevents
     // global references from callbacks.
@@ -34,6 +34,8 @@ init: function(prefs, utils, noteUI)
     
     this.isPanelShown   = false;
     this.isPanelCreated = false;
+    
+    this.getViewportDimsFunc = getViewportDimsFunc;
 },
 
 supportsTranslucency: function()
@@ -41,10 +43,9 @@ supportsTranslucency: function()
     return this.utils.supportsTranslucentPopups();
 },
 
-setBrowser: function(browser, viewportDims)
+setBrowser: function(browser)
 {
     this.browser = browser;
-    this.viewportDims = viewportDims;
 },
 
 setUINotes: function(allUINotes, uiNoteLookup)
@@ -273,7 +274,6 @@ createInsertionContainer: function()
 {
     //dump("internoteDisplayUI.createInsertionContainer\n");
     
-    this.utils.assertError(this.utils.isNonNegCoordPair(this.viewportDims), "Invalid dims in createInsertionContainer", this.viewportDims);
     this.utils.assertError(this.innerContainer == null, "Inner container already exists");
     
     //dump("  Creating new popup & container.\n");
@@ -315,9 +315,7 @@ activateDebugFunction: function()
 // at the wrong position and unmodifiable.  So we hide and open the popup as minimized.
 positionPane: function()
 {
-    //dump("internoteDisplayUI.positionPane\n");
-    
-    this.utils.assertError(this.utils.isNonNegCoordPair(this.viewportDims), "Invalid dims in positionPane", this.viewportDims);
+    dump("internoteDisplayUI.positionPane\n");
     
     var isMinimized = this.utils.isMinimized();
     
@@ -329,8 +327,12 @@ positionPane: function()
         }
         else
         {
+            var viewportDims = this.getViewportDimsFunc();
+            
+            this.utils.assertError(this.utils.isNonNegCoordPair(viewportDims), "Invalid dims in positionPane.", viewportDims);
+            
             var viewportPos  = this.utils.getScreenPos(this.browser.boxObject);
-            var viewportRect = this.utils.makeRectFromDims(viewportPos, this.viewportDims);
+            var viewportRect = this.utils.makeRectFromDims(viewportPos, viewportDims);
             
             //var screenRect = this.utils.getPopupScreenRect(this.browser);
             //var overlapRect = this.utils.getRectIntersection(screenRect, viewportRect);
@@ -365,18 +367,13 @@ positionPane: function()
     }
 },
 
-handleChangedAspects: function(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized)
+handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects\n");
     
-    if (viewportResized)
-    {
-        this.viewportDims = viewportDims;
-    }
-    
     if ((viewportResized || viewportMoved) && this.popupPanel != null)
     {
-        this.positionPane(viewportDims);
+        this.positionPane();
     }
     
     if (scrolled || viewportResized || pageResized)

@@ -31,13 +31,15 @@ actualPosLookup:  [],
 actualDimsLookup: [],
 noteOrder:        [], // We use this to avoid unnecessary reopens.
 
-init: function(prefs, utils, noteUI)
+init: function(prefs, utils, noteUI, getViewportDimsFunc)
 {
     // It seems that a strange limitation with JS Code Modules prevents
     // global references from callbacks.
     this.prefs   = prefs;
     this.utils   = utils;
     this.noteUI  = noteUI;
+    
+    this.getViewportDimsFunc = getViewportDimsFunc;
 },
 
 supportsTranslucency: function()
@@ -45,10 +47,9 @@ supportsTranslucency: function()
     return this.utils.supportsTranslucentPopups();
 },
 
-setBrowser: function(browser, viewportDims)
+setBrowser: function(browser)
 {
-    this.browser      = browser;
-    this.viewportDims = viewportDims;
+    this.browser = browser;
 },
 
 setUINotes: function(allUINotes, uiNoteLookup)
@@ -285,16 +286,9 @@ popupShown: function(event, uiNote)
     }
 },
 
-handleChangedAspects: function(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized)
+handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects " + viewportResized + " " + viewportMoved + " " + scrolled + " " + pageResized + "\n");
-    
-    this.utils.assertError(viewportDims == null || this.utils.isNonNegCoordPair(viewportDims), "Bad dims when handleChangedAspects", viewportDims);
-    
-    if (viewportResized)
-    {
-        this.viewportDims = viewportDims;
-    }
     
     // Both scrolling and resizing the viewport can lead to positions changing.
     if (scrolled || viewportResized || pageResized)
@@ -455,7 +449,7 @@ adjustNote: function(uiNote, newPos, newDims, shouldForceReopen)
 getViewportShowingRect: function()
 {
     var viewportPos  = this.utils.getScreenPos(this.browser.boxObject);
-    var viewportRect = this.utils.makeRectFromDims(viewportPos, this.viewportDims);
+    var viewportRect = this.utils.makeRectFromDims(viewportPos, this.getViewportDimsFunc());
     //var screenRect = this.utils.getPopupScreenRect(this.browser);
     //var overlapRect = this.utils.getRectIntersection(screenRect, this.viewportRect);
     var overlapRect = this.utils.restrictRectToScreen(this.browser, viewportRect);
@@ -472,11 +466,9 @@ getViewportShowingRect: function()
 
 calculateNoteProperties: function(pos, dims)
 {
-    this.utils.assertError(this.utils.isNonNegCoordPair(this.viewportDims), "Invalid viewport dims calcing note properties", this.viewportDims);
     this.utils.assertError(this.utils.isCoordPair      (pos         ), "Invalid pos calcing note properties",           pos         );
     this.utils.assertError(this.utils.isNonNegCoordPair(dims        ), "Invalid dims calcing note properties",          dims        );
     
-    //dump("  VD  = " + this.utils.compactDumpString(viewportDims) + "\n");
     //dump("  POS = " + this.utils.compactDumpString(pos         ) + "\n");
     //dump("  DIMS= " + this.utils.compactDumpString(dims        ) + "\n");
     

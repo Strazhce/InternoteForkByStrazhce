@@ -178,7 +178,12 @@ init: function()
         onFocus:         this.utils.bind(this, this.userFocusesNote),
     };
     
-    this.displayUI.init(this.prefs, this.utils, this.noteUI);
+    var getViewportDimsFunc = this.utils.bind(this, function()
+    {
+        return this.utils.getViewportDims(this.currentBrowser);
+    });
+    
+    this.displayUI.init(this.prefs, this.utils, this.noteUI, getViewportDimsFunc);
     this.noteUI   .init(this.prefs, this.utils, this.consts, this.displayUI.supportsTranslucency());
     this.anim     .init(this.utils);
     
@@ -480,11 +485,11 @@ changePage: function(newURL, isPageLoaded)
             this.utils.assertWarn(this.utils.isValidURLSite(parsedURL.site, parsedURL.protocol), "Invalid Site?", parsedURL.site);
         }
         
-        this.displayUI.setBrowser(this.currentBrowser, this.utils.getViewportDims(this.currentBrowser));
+        this.displayUI.setBrowser(this.currentBrowser);
     }
     else
     {
-        this.displayUI.setBrowser(null, null);
+        this.displayUI.setBrowser(null);
     }
     
     // XXX These two should probably be distinguished.  It's possible that
@@ -565,6 +570,9 @@ addPageListeners: function()
     if (!this.arePageListeners)
     {
         this.arePageListeners = true;
+        
+        var posFunc = this.utils.bind(this, this.screenGetUpdatedPosFunc);
+        this.displayUI.handleChangedAspects(posFunc, true, true, true, true);
         
         this.screenInitAspects();
         
@@ -2244,6 +2252,9 @@ screenCheckAspects: function(ev)
         
         if (viewportMoved || viewportResized || scrolled || pageResized)
         {
+            dump("VPMoved: " + viewportMoved + " VPResized: " + viewportResized +
+                 " Scrolled: " + scrolled + " PageResized: " + pageResized + "\n");
+            
             //dump("scrollX: " + this.currentScrollX + " -> " + newScrollX    + "\n");
             //dump("scrollY: " + this.currentScrollY + " -> " + newScrollY    + "\n");
             //dump("width:   " + this.width          + " -> " + newWidth      + "\n");
@@ -2270,7 +2281,7 @@ screenCheckAspects: function(ev)
                 this.markOnscreenNotes();
             }
             
-            this.displayUI.handleChangedAspects(viewportDims, posFunc, viewportResized, viewportMoved, scrolled, pageResized);
+            this.displayUI.handleChangedAspects(posFunc, viewportResized, viewportMoved, scrolled, pageResized);
         }
         
         this.displayUI.periodicCheck();
