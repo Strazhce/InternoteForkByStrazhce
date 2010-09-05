@@ -315,7 +315,7 @@ activateDebugFunction: function()
 // at the wrong position and unmodifiable.  So we hide and open the popup as minimized.
 positionPane: function()
 {
-    dump("internoteDisplayUI.positionPane\n");
+    //dump("internoteDisplayUI.positionPane\n");
     
     var isMinimized = this.utils.isMinimized();
     

@@ -2252,8 +2252,8 @@ screenCheckAspects: function(ev)
         
         if (viewportMoved || viewportResized || scrolled || pageResized)
         {
-            dump("VPMoved: " + viewportMoved + " VPResized: " + viewportResized +
-                 " Scrolled: " + scrolled + " PageResized: " + pageResized + "\n");
+            //dump("VPMoved: " + viewportMoved + " VPResized: " + viewportResized +
+            //     " Scrolled: " + scrolled + " PageResized: " + pageResized + "\n");
             
             //dump("scrollX: " + this.currentScrollX + " -> " + newScrollX    + "\n");
             //dump("scrollY: " + this.currentScrollY + " -> " + newScrollY    + "\n");

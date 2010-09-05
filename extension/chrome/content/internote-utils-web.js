@@ -796,12 +796,12 @@ getDeepestMainElement: function(document)
         var foundMainChild = false;
         for (var i = 0; i < elt.childNodes.length; i++)
         {
-            dump("Look child " + elt.childNodes[i].tagName + " " + elt.offsetWidth + ":" + elt.offsetHeight + " " +
-                                 elt.childNodes[i].offsetWidth + ":" + elt.childNodes[i].offsetHeight + "\n");
+            //dump("Look child " + elt.childNodes[i].tagName + " " + elt.offsetWidth + ":" + elt.offsetHeight + " " +
+            //                     elt.childNodes[i].offsetWidth + ":" + elt.childNodes[i].offsetHeight + "\n");
             if (elt.offsetWidth  <= elt.childNodes[i].offsetWidth &&
                 elt.offsetHeight <= elt.childNodes[i].offsetHeight)
             {
-                dump("Chosen\n");
+                //dump("Chosen\n");
                 elt = elt.childNodes[i];
                 foundMainChild = true;
                 break;
