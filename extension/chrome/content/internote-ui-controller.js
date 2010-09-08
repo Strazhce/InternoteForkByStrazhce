@@ -256,15 +256,16 @@ setUpInternote: function()
     }
     
     this.changePage(null, true);
-    getBrowser().addProgressListener(this.progressListener,
-                                     this.utils.getCIConstant("nsIWebProgress", "NOTIFY_STATE_DOCUMENT"));
+    
+    gBrowser.addProgressListener(this.progressListener,
+                                 this.utils.getCIConstant("nsIWebProgress", "NOTIFY_STATE_DOCUMENT"));
 },
 
 tearDownInternote: function()
 {
     this.tearDownOldPage();
-    getBrowser().removeProgressListener(this.progressListener,
-                                        this.utils.getCIConstant("nsIWebProgress", "NOTIFY_STATE_DOCUMENT"));
+    gBrowser.removeProgressListener(this.progressListener,
+                                    this.utils.getCIConstant("nsIWebProgress", "NOTIFY_STATE_DOCUMENT"));
 },
 
 maybeDisplayNotes: function()
@@ -373,7 +374,7 @@ destroy: function()
         this.storage.destroy();
     }
     
-    getBrowser().removeProgressListener(this.progressListener);
+    gBrowser.removeProgressListener(this.progressListener);
 },
 
 imageLoadCheck: function()

@@ -549,8 +549,7 @@ isSpecificHTMLElement: function(obj, tagName)
 
 getCurrentBrowser: function()
 {
-    var tabBrowser = getBrowser();
-    return tabBrowser.getBrowserAtIndex(tabBrowser.mTabContainer.selectedIndex);
+    return gBrowser.getBrowserAtIndex(gBrowser.mTabContainer.selectedIndex);
 },
 
 getBrowserURL: function(browser)
