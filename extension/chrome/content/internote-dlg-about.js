@@ -25,12 +25,10 @@ init: function()
     {
         this.utils  = internoteUtilities;
         
-        internoteUtilities.init();
+        this.utils.init();
+        this.utils.initSysInfo();
         
-        var em = this.utils.getCCService("@mozilla.org/extensions/manager;1", "nsIExtensionManager");
-        var MY_ID = "{e3631030-7c02-11da-a72b-0800200c9a66}";
-        var file = em.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
-        var installRDF = this.utils.loadInstallRDF(em);
+        var installRDF = this.utils.loadInstallRDF();
         
         if (installRDF != null)
         {

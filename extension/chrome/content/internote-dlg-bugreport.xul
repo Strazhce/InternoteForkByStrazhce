@@ -57,7 +57,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <description>&internote.infoReasons2.desc;</description>
         </vbox>
         
-        <textbox id="errors-text" style="border: 2px black;" rows="4" columns="40" flex="1" multiline="true" />
+        <textbox id="errors-text" style="border: 2px black;" rows="4" columns="40" flex="1" multiline="true" value="???" />
         
         <!-- Disabled until auto-submission.
         <description>&internote.reportEmail.desc;</description>

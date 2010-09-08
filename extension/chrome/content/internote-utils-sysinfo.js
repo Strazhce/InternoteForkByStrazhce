@@ -22,15 +22,32 @@ Components.utils.import("resource://internotejs/internote-shared-global.jsm");
 
 internoteUtilities.incorporate({
 
-getExtensionManager: function()
+initSysInfo: function()
 {
-    return this.getCCService("@mozilla.org/extensions/manager;1", "nsIExtensionManager");
+    try
+    {
+        Components.utils.import("resource://gre/modules/AddonManager.jsm");
+        this.assertError(typeof(AddonManager) != "undefined", "Addon manager doesn't exist.");
+    }
+    catch (ex)
+    {
+        if (ex.name == "NS_ERROR_FILE_NOT_FOUND")
+        {
+            this.extensionManager = this.getCCService("@mozilla.org/extensions/manager;1", "nsIExtensionManager");
+            this.assertError(this.extensionManager != null, "Unable to initialize system info.");
+        }
+        else
+        {
+            this.handleException("Exception caught when initializing addon manager.", ex);
+        }    
+    }
+    
+    this.MY_ID = "{e3631030-7c02-11da-a72b-0800200c9a66}";
 },
 
-loadInstallRDF: function(em)
+loadInstallRDF: function()
 {
-    var MY_ID = "{e3631030-7c02-11da-a72b-0800200c9a66}";
-    var file = em.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
+    var file = this.getInstallRDFLocation();
     
     if (file.exists())
     {
@@ -46,7 +63,7 @@ loadInstallRDF: function(em)
     }
     else
     {
-        this.assertErrorNotHere("Failed to find install.rdf.");
+        this.assertWarnNotHere("Failed to find install.rdf.");
         return null;
     }
 },
@@ -57,19 +74,75 @@ getInternoteVersion: function(installRDF)
     return versionElt.firstChild.data;
 },
 
-getExtensionList: function(em)
+getInstallRDFLocation: function()
+{
+    if (this.extensionManager != null)
+    {
+        return this.extensionManager.getInstallLocation(this.MY_ID).getItemFile(this.MY_ID, "install.rdf");
+    }
+    else
+    {
+        // XXX Support a better method for FF4 if and when mozilla does.
+        var dirService = this.getCCService("@mozilla.org/file/directory_service;1", "nsIProperties");
+        var file = dirService.get("ProfD", this.getCIInterface("nsIFile"));
+        file.append("extensions");
+        file.append(this.MY_ID);
+        file.append("install.rdf");
+        return file;
+    }
+},
+
+getExtensionList: function(callback)
+{
+    if (this.extensionManager != null)
+    {
+        this.getEMExtensionList(callback);
+    }
+    else
+    {
+        this.getAMExtensionList(callback);
+    }
+},
+
+getAMExtensionList: function(callback)
+{
+    AddonManager.getAllAddons(this.bind(this, function(addons) {
+        try
+        {
+            var activeExtensions = addons.filter(function(addon)
+            {
+                return addon.type == "extension" && addon.isActive && addon.isCompatible;
+            });
+            
+            var extensionDescs = activeExtensions.map(function(addon)
+            {
+                return addon.name + " [" + addon.version + "]";
+            });
+        }
+        catch (ex)
+        {
+            var extensionDescs = ["Exception " + ex];
+        }
+        
+        callback.call(this, extensionDescs);
+    }));
+},
+
+getEMExtensionList: function(callback)
 {
     try
     {
         var TYPE_EXTENSION = this.getCIConstant("nsIUpdateItem", "TYPE_EXTENSION");
-        var extensionCount = {};
-        var extensions = em.getItemList(TYPE_EXTENSION, extensionCount);
-        return extensions.map(function(ext) { return ext.name + " [" + ext.version + "]"; });
+        var extensionCount = {}; // Unused.
+        var extensions = this.extensionManager.getItemList(TYPE_EXTENSION, extensionCount);
+        var extensionDescs = extensions.map(function(ext) { return ext.name + " [" + ext.version + "]"; });
     }
     catch (ex)
     {
-        return ["Exception " + ex];
+        var extensionDescs = ["Exception " + ex];
     }
+    
+    callback.call(this, extensionDescs);
 },
 
 getPlatformString: function()
@@ -83,36 +156,36 @@ getBrowserString: function()
     return xulAppInfo.name + " " + xulAppInfo.version;
 },
 
-getErrorInfo: function(em, internoteVersion)
+getErrorInfo: function(internoteVersion, callback)
 {
     try
     {
-        var textBox = document.getElementById("errors-text");
-        textBox.readOnly = true;
-        //textBox.style.backgroundColor = "transparent";
-        
-        var text = "";
-        for (var i = 0; i < this.global.dumpData.length; i++)
+        this.getExtensionList(this.bind(this, function(extensionDescs)
         {
-            text += this.global.dumpData[i];
-        }
-        
-        text = text.replace(/\n\n\n+/g, "\n\n");
-        text = this.trim(text);
-        
-        text = "Platform: "   + this.getPlatformString()             + "\n" +
-               "Browser: "    + this.getBrowserString()              + "\n" +
-               "Internote: "  + internoteVersion                     + "\n" +
-               "Extensions: " + this.getExtensionList(em).join(", ") + "\n\n" +
-               "Internal Errors/Warnings/Messages: " + ((text == "") ? "None" : "\n\n") +
-               text;
-        
-        return text;
+            var extensionText = extensionDescs.join(", ");
+            
+            var text = "";
+            for (var i = 0; i < this.global.dumpData.length; i++)
+            {
+                text += this.global.dumpData[i];
+            }
+            
+            text = text.replace(/\n\n\n+/g, "\n\n");
+            text = this.trim(text);
+            
+            text = "Platform: "   + this.getPlatformString() + "\n" +
+                   "Browser: "    + this.getBrowserString()  + "\n" +
+                   "Internote: "  + internoteVersion         + "\n" +
+                   "Extensions: " + extensionText            + "\n\n" +
+                   "Internal Errors/Warnings/Messages: " + ((text == "") ? "None" : "\n\n") +
+                   text;
+            
+            callback.call(this, text);
+        }));
     }
     catch (ex)
     {
         this.handleException("Exception while trying to write dump data.", ex);
-        return "???";
     }
 },
 

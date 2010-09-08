@@ -29,17 +29,18 @@ init: function()
     try
     {
         this.utils.init();
+        this.utils.initSysInfo();
         
-        var em = this.utils.getCCService("@mozilla.org/extensions/manager;1", "nsIExtensionManager");
-        var MY_ID = "{e3631030-7c02-11da-a72b-0800200c9a66}";
-        var file = em.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
-        var installRDF = this.utils.loadInstallRDF(em);
+        var installRDF = this.utils.loadInstallRDF();
         
         if (installRDF != null)
         {
             this.internoteVersion = this.utils.getInternoteVersion(installRDF);
-            this.adjustErrorInfo(em, this.internoteVersion);
+            this.adjustErrorInfo(this.internoteVersion);
         }
+
+        var textBox = document.getElementById("errors-text");
+        textBox.readOnly = true;
         
         var extraInfo = document.getElementById("extra-info");
         extraInfo.focus();
@@ -47,7 +48,7 @@ init: function()
         addEventListener("message", this.utils.bind(this, function(event) {
             if (event.origin == "chrome://browser" && event.data == "reload")
             {
-                this.adjustErrorInfo(em, this.internoteVersion);
+                this.adjustErrorInfo(this.internoteVersion);
             }
         }), true);        
     }
@@ -65,12 +66,14 @@ init: function()
     }
 },
 
-adjustErrorInfo: function(em, internoteVersion)
+adjustErrorInfo: function(internoteVersion)
 {
-    var text = this.utils.getErrorInfo(em, internoteVersion);    
     var textBox = document.getElementById("errors-text");
-    textBox.readOnly = true;
-    textBox.value = text;
+    
+    this.utils.getErrorInfo(internoteVersion, function(errorInfo)
+    {
+        textBox.value = errorInfo;
+    });
 },
 
 openBugPage: function()
