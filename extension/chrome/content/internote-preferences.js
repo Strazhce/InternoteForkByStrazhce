@@ -24,14 +24,14 @@ init: function(utils, consts)
     this.utils  = utils;
     this.consts = consts;
     
-    this.prefs = this.utils.getCCService("@mozilla.org/preferences-service;1", "nsIPrefService").getBranch("internote.");
+    this.prefsBranch = this.utils.getCCService("@mozilla.org/preferences-service;1", "nsIPrefService").getBranch("internote.");
 },
 
 getBoolPref: function(prefName, defaultValue)
 {
-    if (this.prefs.getPrefType(prefName) != 0)
+    if (this.prefsBranch.getPrefType(prefName) != 0)
     {
-        if (this.prefs.getBoolPref(prefName))
+        if (this.prefsBranch.getBoolPref(prefName))
             return true;
         else
             return false;
@@ -44,9 +44,9 @@ getBoolPref: function(prefName, defaultValue)
 
 getOptionalBoolPref: function(prefName)
 {
-    if (this.prefs.getPrefType(prefName) != 0)
+    if (this.prefsBranch.getPrefType(prefName) != 0)
     {
-        if (this.prefs.getBoolPref(prefName))
+        if (this.prefsBranch.getBoolPref(prefName))
             return true;
         else
             return false;
@@ -59,9 +59,9 @@ getOptionalBoolPref: function(prefName)
 
 getCharPref: function(prefName, defaultValue)
 {
-    if (this.prefs.getPrefType(prefName) !=0)
+    if (this.prefsBranch.getPrefType(prefName) !=0)
     {
-        return this.prefs.getCharPref(prefName);
+        return this.prefsBranch.getCharPref(prefName);
     }
     else
     {
@@ -71,9 +71,9 @@ getCharPref: function(prefName, defaultValue)
                                     
 getEnumPref: function(prefName, defaultValue, maxValue)
 {
-    if (this.prefs.getPrefType(prefName) !=0)
+    if (this.prefsBranch.getPrefType(prefName) !=0)
     {
-        var prefValue = this.prefs.getCharPref(prefName);
+        var prefValue = this.prefsBranch.getCharPref(prefName);
         if (prefValue.match(/^[0-9]+$/))
         {
             var num = parseInt(prefValue, 10);
@@ -88,15 +88,15 @@ getEnumPref: function(prefName, defaultValue, maxValue)
 
 getFontSize : function()
 {
-    if (this.prefs.getPrefType("fontsize") !=0)
+    if (this.prefsBranch.getPrefType("fontsize") !=0)
     {
-        var defaultFontSize = this.prefs.getCharPref("fontsize");
+        var defaultFontSize = this.prefsBranch.getCharPref("fontsize");
         if (defaultFontSize == "10") return 10;
         if (defaultFontSize == "12") return 12;
         if (defaultFontSize == "14") return 14;
         if (defaultFontSize == "16") return 16;
         if (defaultFontSize == "18") return 18;
-        return this.prefs.getCharPref("fontsize");
+        return this.prefsBranch.getCharPref("fontsize");
     }
     else
     {
@@ -106,8 +106,8 @@ getFontSize : function()
 
 setEnumPref: function(prefName, newValue)
 {
-    this.utils.assertError(this.prefs.getPrefType(prefName) != 0, "Not an enum pref.", prefName);
-    var prefValue = this.prefs.setCharPref(prefName, "" + newValue);
+    this.utils.assertError(this.prefsBranch.getPrefType(prefName) != 0, "Not an enum pref.", prefName);
+    var prefValue = this.prefsBranch.setCharPref(prefName, "" + newValue);
 },
 
 shouldUseStatusbar      : function() { return this.getBoolPref("usestatusbar",    true ); },
@@ -156,11 +156,11 @@ getDefaultTextColor : function() { return this.getEnumPref("defaulttextcolor", 0
 
 detectFirstRun : function()
 {
-    if (this.prefs.getPrefType("firstrun") != 0)
+    if (this.prefsBranch.getPrefType("firstrun") != 0)
     {
-        if (!this.prefs.getBoolPref("firstrun"))
+        if (!this.prefsBranch.getBoolPref("firstrun"))
         {
-            this.prefs.setBoolPref("firstrun", true);
+            this.prefsBranch.setBoolPref("firstrun", true);
             return true;
         }
         else
@@ -169,7 +169,7 @@ detectFirstRun : function()
         }
     }
     
-    this.prefs.setBoolPref("firstrun", true);
+    this.prefsBranch.setBoolPref("firstrun", true);
     return true;
 },
 
@@ -177,13 +177,13 @@ setSaveLocationPref: function(path)
 {
     if (path == null || path == "")
     {
-        this.prefs.setBoolPref("changelocation", false)
-        this.prefs.setCharPref("savelocation", "");
+        this.prefsBranch.setBoolPref("changelocation", false)
+        this.prefsBranch.setCharPref("savelocation", "");
     }
     else
     {
-        this.prefs.setBoolPref("changelocation", true);
-        this.prefs.setCharPref("savelocation", path);
+        this.prefsBranch.setBoolPref("changelocation", true);
+        this.prefsBranch.setCharPref("savelocation", path);
     }
 },
 
