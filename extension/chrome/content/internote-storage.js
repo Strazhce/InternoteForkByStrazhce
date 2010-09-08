@@ -184,7 +184,7 @@ destroy: function()
     {
         //dump("  Saving ...\n")
         
-        clearTimeout(this.saveTimeout);
+        this.utils.cancelTimer(this.saveTimeout);
         this.saveXMLNow();
     }
 },
@@ -341,7 +341,7 @@ scheduleXMLSave: function()
         // We don't save the changes immediately to prevent continual resaving.
         try
         {
-            this.saveTimeout = setTimeout(this.utils.bind(this, function() {
+            this.saveTimeout = this.utils.createTimeout(this.utils.bind(this, function() {
                 this.saveXMLNow();
             }), this.SAVE_DELAY);
         }

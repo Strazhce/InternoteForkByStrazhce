@@ -158,7 +158,7 @@ raiseNote: function(uiNote)
         
         // This delay seems necessary to get the field to focus if we raised the note
         // as a result of tabbing between notes.
-        setTimeout(this.utils.bind(this, function() {
+        this.utils.createTimeout(this.utils.bind(this, function() {
             // We need to focus and reselect explicitly because any focus may be lost when we just did the raiseNote because
             // it removes the note from and readds it to the DOM.  This isn't entirely desirable given it may affect
             // the focus in other windows but it seems to be the best solution as long as the notes are in a stack.

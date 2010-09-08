@@ -266,7 +266,7 @@ internoteAnimation.AnimationDriver.prototype.start = function(animationTime)
     // It's okay to start immediately if we have a delayed start pending, just kill it.
     if (this.delayTimeout != null)
     {
-        clearTimeout(this.delayTimeout);
+        this.utils.cancelTimer(this.delayTimeout);
         this.delayTimeout = null;
     }
     
@@ -278,14 +278,14 @@ internoteAnimation.AnimationDriver.prototype.start = function(animationTime)
     this.animation.doStep(0);
     
     this.startTime = new Date().getTime();
-    this.interval = setInterval(this.utils.bind(this, this.animateStep), this.stepTime);
+    this.interval = this.utils.createInterval(this.utils.bind(this, this.animateStep), this.stepTime);
 };
 
 internoteAnimation.AnimationDriver.prototype.delayedStart = function(delayTime, animationTime)
 {
     this.utils.assertError(!this.isStarted, "Can't delay start an already started animation.");
     
-    this.delayTimeout = setTimeout(this.utils.bind(this, function()
+    this.delayTimeout = this.utils.createTimeout(this.utils.bind(this, function()
     {
         this.delayTimeout = null;
         this.start(animationTime);
@@ -332,13 +332,13 @@ internoteAnimation.AnimationDriver.prototype.abandonTimer = function()
     
     if (this.delayTimeout != null)
     {
-        clearTimeout(this.delayTimeout);
+        this.utils.cancelTimer(this.delayTimeout);
         this.delayTimeout = null;
     }
     
     if (this.interval != null)
     {
-        clearInterval(this.interval);
+        this.utils.cancelTimer(this.interval);
         this.interval = null;
     }
 };

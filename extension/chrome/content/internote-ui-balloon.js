@@ -244,7 +244,7 @@ abandonAnimation: function()
     
     if (this.hurryTimeout != null)
     {
-        clearTimeout(this.hurryTimeout);
+        this.utils.cancelTimer(this.hurryTimeout);
         this.hurryTimeout = null;
     }
     
@@ -289,7 +289,7 @@ startAnimation: function(displayTime)
     }
     else
     {
-        this.hurryTimeout = setTimeout(this.utils.bind(this, function() {
+        this.hurryTimeout = this.utils.createTimeout(this.utils.bind(this, function() {
             this.balloonAnimDriver.hurry();
         }), displayTime + this.FADE_OUT_TIME / 2);
     }

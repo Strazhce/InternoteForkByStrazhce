@@ -317,10 +317,10 @@ internoteUtilities.incorporate({
         {
             this.turnOffRepeat(); // Just in case.
             
-            this.delayTimeout = setTimeout(this.utils.bind(this, function()
+            this.delayTimeout = this.utils.createTimeout(this.utils.bind(this, function()
             {
                 this.delayTimeout = null;
-                this.repeatInterval = setInterval(this.utils.bind(this, function()
+                this.repeatInterval = this.utils.createInterval(this.utils.bind(this, function()
                 {
                     if (this.isInside)
                     {
@@ -334,13 +334,13 @@ internoteUtilities.incorporate({
         {
             if (this.delayTimeout != null)
             {
-                clearTimeout(this.delayTimeout);
+                this.utils.cancelTimer(this.delayTimeout);
                 this.delayTimeout = null;
             }
             
             if (this.repeatInterval != null)
             {
-                clearInterval(this.repeatInterval);
+                this.utils.cancelTimer(this.repeatInterval);
                 this.repeatInterval = null;
             }
         };
@@ -372,7 +372,7 @@ internoteUtilities.incorporate({
             // multiple repeat button handlers, we should determine which area
             // the mouse is in first, in case the action function changes
             // the area and this might affect the result.
-            setTimeout(this.utils.bind(this, function() { actionFunc.call(this, this.element); }), 0);
+            this.utils.createTimeout(this.utils.bind(this, function() { actionFunc.call(this, this.element); }), 0);
         };
         
         handler.onMouseUp = function(button)

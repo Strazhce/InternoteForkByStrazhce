@@ -1020,4 +1020,26 @@ getArrayNonNullCount: function(arr)
     return count;
 },
 
+createTimer: function(callback, timeoutMS, timerType)
+{
+    var timer = this.getCCInstance("@mozilla.org/timer;1", "nsITimer");
+    timer.init({ observe: callback }, timeoutMS, timer[timerType]);
+    return timer;
+},
+
+createTimeout: function(callback, timeoutMS)
+{
+    return this.createTimer(callback, timeoutMS, "TYPE_ONE_SHOT");
+},
+
+createInterval: function(callback, timeoutMS)
+{
+    return this.createTimer(callback, timeoutMS, "TYPE_REPEATING_SLACK");
+},
+
+cancelTimer: function(timer)
+{
+    timer.cancel();
+},
+
 };

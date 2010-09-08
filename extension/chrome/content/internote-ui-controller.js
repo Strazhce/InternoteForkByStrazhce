@@ -218,7 +218,7 @@ init: function()
     if (this.prefs.isInDebugMode())
     {
         this.activeWarnInterval =
-            setInterval(this.utils.bind(this, this.chromeActiveWarning), this.ACTIVE_WARNING_INTERVAL);
+            this.utils.createInterval(this.utils.bind(this, this.chromeActiveWarning), this.ACTIVE_WARNING_INTERVAL);
         
         var key    = document.createElement("key");
         key.setAttribute("key",       "g");
@@ -584,8 +584,8 @@ addPageListeners: function()
         // (a) resize and scroll events don't seem responsive enough by themselves
         // (b) there is no event set on page dims change or window move (as yet)
         // (c) it also checks the innerContainerScroll
-        this.checkViewportEvent = setInterval(this.utils.bind(this, this.screenCheckAspects),
-                                              this.CHECK_VIEWPORT_INTERVAL);
+        this.checkViewportEvent = this.utils.createInterval(this.utils.bind(this, this.screenCheckAspects),
+                                                            this.CHECK_VIEWPORT_INTERVAL);
     }
     else
     {
@@ -605,7 +605,7 @@ removePageListeners: function()
         this.utils.removeBoundDOMEventListener(this.currentBrowser, "resize", this, "screenCheckAspects", true);
         this.utils.removeBoundDOMEventListener(this.currentBrowser, "scroll", this, "screenCheckAspects", true);
         
-        clearInterval(this.checkViewportEvent);
+        this.utils.cancelTimer(this.checkViewportEvent);
         this.checkViewportEvent = null;
     }
     else
@@ -1712,7 +1712,7 @@ chromeActiveWarning: function()
     {
         try
         {
-            clearInterval(this.activeWarningInterval);
+            this.utils.cancelTimer(this.activeWarningInterval);
         }
         catch (ex2)
         {
