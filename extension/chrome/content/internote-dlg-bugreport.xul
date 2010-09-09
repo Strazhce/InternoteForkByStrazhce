@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         title="&internote.bugReportDialog.title;"
         buttons="cancel"
         buttonlabelcancel="&internote.closeButton.label;"
-        persist="screenX screenY"
+        persist="screenX screenY width height"
         screenX="24" screenY="24" width="560px" height="700px"
         onload="internoteBugReportDlg.init();"
         ondialogaccept="internoteBugReportDlg.submitBug();" >
