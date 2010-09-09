@@ -968,7 +968,7 @@ userMinimizesNote: function(elementOrEvent)
                 var animationDriver = this.noteAnimations[noteNum];
                 // XXX This will fail if animations off is ever added since that will instantaneously hurry the anim before we can add this?
                 this.utils.assertError(animationDriver != null, "Couldn't find restore animation.", animationDriver);
-;                
+                
                 animationDriver.addEventListener("animationCompleted", this.utils.bind(this, function()
                 {
                     var uiNote = this.uiNoteLookup[noteNum];
