@@ -18,10 +18,9 @@
 
 // This is a Javascript module - it is shared amongst Javascript contexts.
 
-var EXPORTED_SYMBOLS = ["internoteSharedGlobal"];
+var EXPORTED_SYMBOLS = ["internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66"];
 
-var internoteSharedGlobal = {
-    storage: null,
+var internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66 = {
     initialisationFailed: false,
     dumpData: [],
 };
