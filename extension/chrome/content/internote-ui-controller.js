@@ -355,6 +355,8 @@ destroy: function()
 {
     //dump("destroy\n");
     
+    this.tearDownOldPage();
+    
     if (this.pageWatcher != null)
     {
         this.pageWatcher.destroy();
