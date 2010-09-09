@@ -31,7 +31,10 @@ initConnections: function(sharedGlobal)
 
 init: function()
 {
-    this.prefsBranch = this.utils.getCCService("@mozilla.org/preferences-service;1", "nsIPrefService").getBranch("internote.");
+    if (this.prefsBranch == null)
+    {
+        this.prefsBranch = this.utils.getCCService("@mozilla.org/preferences-service;1", "nsIPrefService").getBranch("internote.");
+    }
 },
 
 getBoolPref: function(prefName, defaultValue)
