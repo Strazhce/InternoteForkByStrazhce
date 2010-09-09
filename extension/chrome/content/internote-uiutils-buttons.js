@@ -315,24 +315,29 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
         
         this.registerGeneralHandler(handler);
         
-        handler.turnOnRepeat = function()
+        handler.waitForRepeat = function()
         {
-            this.turnOffRepeat(); // Just in case.
+            this.stopRepeating(); // Just in case.
             
             this.delayTimeout = this.utils.createTimeout(this.utils.bind(this, function()
             {
                 this.delayTimeout = null;
-                this.repeatInterval = this.utils.createInterval(this.utils.bind(this, function()
-                {
-                    if (this.isInside)
-                    {
-                        actionFunc.call(this, this.element);
-                    }
-                }), intervalTime);
+                this.startRepeating();
             }), delayTime);
         };
         
-        handler.turnOffRepeat = function()
+        handler.startRepeating = function()
+        {
+            this.repeatInterval = this.utils.createInterval(this.utils.bind(this, function()
+            {
+                if (this.isInside)
+                {
+                    actionFunc.call(this, this.element);
+                }
+            }), intervalTime);
+        };
+        
+        handler.stopRepeating = function()
         {
             if (this.delayTimeout != null)
             {
@@ -352,7 +357,8 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
             this.dispatchNewMode();
             if (this.isPressed)
             {
-                this.turnOnRepeat();
+                actionFunc.call(this, this.element);
+                this.startRepeating();
             }
         };
         
@@ -361,26 +367,28 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
             this.dispatchNewMode();
             if (this.isPressed)
             {
-                this.turnOffRepeat();
+                this.stopRepeating();
             }
         };
         
         handler.onMouseDown = function(button)
         {
             this.dispatchNewMode();
-            this.turnOnRepeat();
             
             // This action is delayed because when we click on a canvas with
             // multiple repeat button handlers, we should determine which area
             // the mouse is in first, in case the action function changes
             // the area and this might affect the result.
-            this.utils.createTimeout(this.utils.bind(this, function() { actionFunc.call(this, this.element); }), 0);
+            this.utils.createTimeout(this.utils.bind(this, function() {
+                actionFunc.call(this, this.element);
+                this.waitForRepeat();
+            }), 0);
         };
         
         handler.onMouseUp = function(button)
         {
             this.dispatchNewMode();
-            this.turnOffRepeat();
+            this.stopRepeating();
         };
         
         handler.isHoverOK = function(ev) { return isEnabledFunc.call(); }
