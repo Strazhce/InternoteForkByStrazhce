@@ -22,15 +22,15 @@
 // and call dragStarted().  The handler will distingush a drag (moved an adequate distance)
 // from a click (didn't), as well as handling the ESC key, both through parameters to onDragFinished.
 
-internoteUtilities.incorporate({
-    DragHandler: function(utils, data)
-    {
-        this.utils = utils;
-        this.data  = data;
-    }
-});
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.DragHandler =
+function DragHandler(utils, chromeDoc, data)
+{
+    this.utils = utils;
+    this.chromeDoc = chromeDoc;
+    this.data  = data;
+};
 
-internoteUtilities.DragHandler.prototype =
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.DragHandler.prototype =
 {
 
 // Overwrite these as appropriate.
@@ -41,18 +41,18 @@ registerHandlers: function()
 {
     //dump("internoteUtilities.DragHandler.registerHandlers\n");
     
-    this.utils.addBoundDOMEventListener(document, "keypress",  this, "dragKeyPressed",     false);
-    this.utils.addBoundDOMEventListener(document, "mousemove", this, "dragMouseMoved",     false);
-    this.utils.addBoundDOMEventListener(document, "mouseup",   this, "dragButtonReleased", false);
+    this.utils.addBoundDOMEventListener(this.chromeDoc, "keypress",  this, "dragKeyPressed",     false);
+    this.utils.addBoundDOMEventListener(this.chromeDoc, "mousemove", this, "dragMouseMoved",     false);
+    this.utils.addBoundDOMEventListener(this.chromeDoc, "mouseup",   this, "dragButtonReleased", false);
 },
 
 deregisterHandlers: function()
 {
     //dump("internoteUtilities.DragHandler.deregisterHandlers\n");
     
-    this.utils.removeBoundDOMEventListener(document, "keypress",  this, "dragKeyPressed"    , false);
-    this.utils.removeBoundDOMEventListener(document, "mousemove", this, "dragMouseMoved"    , false);
-    this.utils.removeBoundDOMEventListener(document, "mouseup",   this, "dragButtonReleased", false);
+    this.utils.removeBoundDOMEventListener(this.chromeDoc, "keypress",  this, "dragKeyPressed"    , false);
+    this.utils.removeBoundDOMEventListener(this.chromeDoc, "mousemove", this, "dragMouseMoved"    , false);
+    this.utils.removeBoundDOMEventListener(this.chromeDoc, "mouseup",   this, "dragButtonReleased", false);
 },
 
 isAdequateDrag: function(offset)
@@ -188,4 +188,3 @@ dragButtonReleased: function(event)
 },
 
 };
-

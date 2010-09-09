@@ -20,14 +20,24 @@
 
 Components.utils.import("resource://internotejs/internote-shared-global.jsm");
 
-internoteUtilities.incorporate({
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("SysInfoUtils", {
 
 initSysInfo: function()
 {
+    var amExists = (this.addonManager     != null);
+    var emExists = (this.extensionManager != null);
+    
+    // Make it idempotent.
+    if (amExists || emExists)
+    {
+        return;
+    }
+    
     try
     {
         Components.utils.import("resource://gre/modules/AddonManager.jsm");
         this.assertError(typeof(AddonManager) != "undefined", "Addon manager doesn't exist.");
+        this.addonManager = AddonManager;
     }
     catch (ex)
     {
@@ -38,11 +48,9 @@ initSysInfo: function()
         }
         else
         {
-            this.handleException("Exception caught when initializing addon manager.", ex);
+            this.handleException("Exception caught when initializing addon/extension manager.", ex);
         }    
     }
-    
-    this.MY_ID = "{e3631030-7c02-11da-a72b-0800200c9a66}";
 },
 
 loadInstallRDF: function()
@@ -76,9 +84,11 @@ getInternoteVersion: function(installRDF)
 
 getInstallRDFLocation: function()
 {
+    var MY_ID = this.consts.MY_ID;
+    
     if (this.extensionManager != null)
     {
-        return this.extensionManager.getInstallLocation(this.MY_ID).getItemFile(this.MY_ID, "install.rdf");
+        return this.extensionManager.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
     }
     else
     {
@@ -86,7 +96,7 @@ getInstallRDFLocation: function()
         var dirService = this.getCCService("@mozilla.org/file/directory_service;1", "nsIProperties");
         var file = dirService.get("ProfD", this.getCIInterface("nsIFile"));
         file.append("extensions");
-        file.append(this.MY_ID);
+        file.append(MY_ID);
         file.append("install.rdf");
         return file;
     }
@@ -98,15 +108,20 @@ getExtensionList: function(callback)
     {
         this.getEMExtensionList(callback);
     }
-    else
+    else if (this.addonManager != null)
     {
         this.getAMExtensionList(callback);
+    }
+    else
+    {
+        this.utils.assertErrorNotHere("Couldn't get AM/EM.");
+        return ["Couldn't get AM/EM."];
     }
 },
 
 getAMExtensionList: function(callback)
 {
-    AddonManager.getAllAddons(this.bind(this, function(addons) {
+    this.addonManager.getAllAddons(this.bind(this, function(addons) {
         try
         {
             var activeExtensions = addons.filter(function(addon)
@@ -147,7 +162,7 @@ getEMExtensionList: function(callback)
 
 getPlatformString: function()
 {
-    return navigator.platform + " (" + navigator.oscpu + ")";
+    return this.navigator.platform + " (" + this.navigator.oscpu + ")";
 },
 
 getBrowserString: function()

@@ -16,127 +16,126 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-internoteUtilities.incorporate({
-    ScrollHandler: function(utils, prefs, element, idSuffix, width, getLineColorFunc, getHandleColorFunc, getButtonColorFunc, isEnabledFunc)
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.ScrollHandler =
+function ScrollHandler(utils, prefs, element, idSuffix, width, getLineColorFunc, getHandleColorFunc, getButtonColorFunc, isEnabledFunc)
+{
+    //dump("internoteUtilities.ScrollHandler.ScrollHandler\n");
+    
+    this.utils   = utils;
+    this.prefs   = prefs;
+    
+    this.element = element;
+    this.width   = width;
+    
+    this.isEnabledFunc = isEnabledFunc;
+    
+    this.getLineColorFunc   = getLineColorFunc;
+    this.getHandleColorFunc = getHandleColorFunc;
+    this.getButtonColorFunc = getButtonColorFunc;
+    
+    var doc = element.ownerDocument;
+    var scrollbar = this.utils.createXULElement("vbox", doc, "internote-scrollbar" + idSuffix);
+    
+    var onScrollUpLine    = this.utils.bind(this, this.onScrollUpLine  );
+    var onScrollDownLine  = this.utils.bind(this, this.onScrollDownLine);
+    
+    var onPressScrollLine = this.utils.bind(this, this.onPressScrollLine);
+    
+    var upButton   = this.upButton   = this.createButton(doc, onScrollUpLine,   "internote-upscroll"   + idSuffix, "drawUpScrollButton"  );
+    var downButton = this.downButton = this.createButton(doc, onScrollDownLine, "internote-downscroll" + idSuffix, "drawDownScrollButton");
+    
+    var scrollLine = this.scrollLine =
+        this.utils.createHTMLCanvas(doc, "internote-scrollline" + idSuffix, width, width);
+    
+    this.upperLineEffectMode = this.utils.EFFECT_MODE_NORMAL;
+    this.lowerLineEffectMode = this.utils.EFFECT_MODE_NORMAL;
+    
+    var onUpperRedrawScrollLine = this.utils.bind(this, function(effectMode)
     {
-        //dump("internoteUtilities.ScrollHandler.ScrollHandler\n");
-        
-        this.utils   = utils;
-        this.prefs   = prefs;
-        
-        this.element = element;
-        this.width   = width;
-        
-        this.isEnabledFunc = isEnabledFunc;
-        
-        this.getLineColorFunc   = getLineColorFunc;
-        this.getHandleColorFunc = getHandleColorFunc;
-        this.getButtonColorFunc = getButtonColorFunc;
-        
-        var doc = element.ownerDocument;
-        var scrollbar = this.utils.createXULElement("vbox", doc, "internote-scrollbar" + idSuffix);
-        
-        var onScrollUpLine    = this.utils.bind(this, this.onScrollUpLine  );
-        var onScrollDownLine  = this.utils.bind(this, this.onScrollDownLine);
-        
-        var onPressScrollLine = this.utils.bind(this, this.onPressScrollLine);
-        
-        var upButton   = this.upButton   = this.createButton(doc, onScrollUpLine,   "internote-upscroll"   + idSuffix, "drawUpScrollButton"  );
-        var downButton = this.downButton = this.createButton(doc, onScrollDownLine, "internote-downscroll" + idSuffix, "drawDownScrollButton");
-        
-        var scrollLine = this.scrollLine =
-            this.utils.createHTMLCanvas(doc, "internote-scrollline" + idSuffix, width, width);
-        
-        this.upperLineEffectMode = this.utils.EFFECT_MODE_NORMAL;
-        this.lowerLineEffectMode = this.utils.EFFECT_MODE_NORMAL;
-        
-        var onUpperRedrawScrollLine = this.utils.bind(this, function(effectMode)
+        var shouldChangeArea = (this.upperLineEffectMode == this.utils.EFFECT_MODE_PRESS ||
+                                effectMode               == this.utils.EFFECT_MODE_PRESS);
+        this.upperLineEffectMode = effectMode;
+        if (shouldChangeArea)
         {
-            var shouldChangeArea = (this.upperLineEffectMode == this.utils.EFFECT_MODE_PRESS ||
-                                    effectMode               == this.utils.EFFECT_MODE_PRESS);
-            this.upperLineEffectMode = effectMode;
-            if (shouldChangeArea)
-            {
-                this.updateScrollLine();
-            }
-            else if (this.upperLineEffectMode != effectMode)
-            {
-                this.drawScrollLine();
-            }
-        });
-        var onLowerRedrawScrollLine = this.utils.bind(this, function(effectMode)
+            this.updateScrollLine();
+        }
+        else if (this.upperLineEffectMode != effectMode)
         {
-            var shouldChangeArea = (this.lowerLineEffectMode == this.utils.EFFECT_MODE_PRESS ||
-                                    effectMode               == this.utils.EFFECT_MODE_PRESS);
-            this.lowerLineEffectMode = effectMode;
-            if (shouldChangeArea)
-            {
-                this.updateScrollLine();
-            }
-            else if (this.lowerLineEffectMode != effectMode)
-            {
-                this.drawScrollLine();
-            }
-        });
-        
-        var onScrollUpPage   = this.utils.bind(this, this.onScrollUpPage  );
-        var onScrollDownPage = this.utils.bind(this, this.onScrollDownPage);
-        
-        var [upperLineArea, lowerLineArea] = this.getLineArea();
-        this.upperLineHandler = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollUpPage,   this.isEnabledFunc,
-                                                                          this.REPEAT_DELAY, this.REPEAT_INTERVAL, upperLineArea);
-        this.lowerLineHandler = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollDownPage, this.isEnabledFunc,
-                                                                          this.REPEAT_DELAY, this.REPEAT_INTERVAL, lowerLineArea);
+            this.drawScrollLine();
+        }
+    });
+    var onLowerRedrawScrollLine = this.utils.bind(this, function(effectMode)
+    {
+        var shouldChangeArea = (this.lowerLineEffectMode == this.utils.EFFECT_MODE_PRESS ||
+                                effectMode               == this.utils.EFFECT_MODE_PRESS);
+        this.lowerLineEffectMode = effectMode;
+        if (shouldChangeArea)
+        {
+            this.updateScrollLine();
+        }
+        else if (this.lowerLineEffectMode != effectMode)
+        {
+            this.drawScrollLine();
+        }
+    });
+    
+    var onScrollUpPage   = this.utils.bind(this, this.onScrollUpPage  );
+    var onScrollDownPage = this.utils.bind(this, this.onScrollDownPage);
+    
+    var [upperLineArea, lowerLineArea] = this.getLineArea();
+    this.upperLineHandler = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollUpPage,   this.isEnabledFunc,
+                                                                      this.REPEAT_DELAY, this.REPEAT_INTERVAL, upperLineArea);
+    this.lowerLineHandler = this.utils.registerRepeatingButtonHandler(scrollLine, onScrollDownPage, this.isEnabledFunc,
+                                                                      this.REPEAT_DELAY, this.REPEAT_INTERVAL, lowerLineArea);
 
-        this.utils.registerButtonEffectsHandler(this.upperLineHandler, onUpperRedrawScrollLine);
-        this.utils.registerButtonEffectsHandler(this.lowerLineHandler, onLowerRedrawScrollLine);
-        
-        scrollLine.addEventListener("mousedown", onPressScrollLine, false);
-        
-        var scrollLineWrapper = this.scrollLineWrapper =
-            this.utils.createXULElement("vbox", doc, "internote-scrolllinewrapper" + idSuffix);
-        
-        if (this.hasCombinedScrollButtons())
-        {
-            scrollbar.appendChild(scrollLineWrapper);
-            scrollbar.appendChild(this.utils.createXULSpacer(doc, width, width/2));
-            scrollbar.appendChild(upButton);
-            scrollbar.appendChild(this.utils.createXULSpacer(doc, width, width/2));
-            scrollbar.appendChild(downButton);
-        }
-        else
-        {
-            scrollbar.appendChild(upButton);
-            scrollbar.appendChild(this.utils.createXULSpacer(doc, width, width/2));
-            scrollbar.appendChild(scrollLineWrapper);
-            scrollbar.appendChild(this.utils.createXULSpacer(doc, width, width/2));
-            scrollbar.appendChild(downButton);
-        }
-        
-        scrollbar.flex = "1";
-        
-        scrollLineWrapper.appendChild(scrollLine);
-        this.utils.fixDOMEltWidth(scrollLineWrapper, this.width);
-        scrollLineWrapper.flex = "1";
-        scrollLineWrapper.style.overflow = "hidden";
-        
-        this.paintUI();
-        
-        this.scrollbar = scrollbar;
-        
-        this.element.addEventListener("scroll", this.utils.bind(this, function()
-        {
-            this.updateScrollLine();
-        }), false);
-        
-        this.element.addEventListener("input", this.utils.bind(this, function()
-        {
-            this.updateScrollLine();
-        }), false);
+    this.utils.registerButtonEffectsHandler(this.upperLineHandler, onUpperRedrawScrollLine);
+    this.utils.registerButtonEffectsHandler(this.lowerLineHandler, onLowerRedrawScrollLine);
+    
+    scrollLine.addEventListener("mousedown", onPressScrollLine, false);
+    
+    var scrollLineWrapper = this.scrollLineWrapper =
+        this.utils.createXULElement("vbox", doc, "internote-scrolllinewrapper" + idSuffix);
+    
+    if (this.hasCombinedScrollButtons())
+    {
+        scrollbar.appendChild(scrollLineWrapper);
+        scrollbar.appendChild(this.utils.createXULSpacer(doc, width, width/2));
+        scrollbar.appendChild(upButton);
+        scrollbar.appendChild(this.utils.createXULSpacer(doc, width, width/2));
+        scrollbar.appendChild(downButton);
     }
-});
+    else
+    {
+        scrollbar.appendChild(upButton);
+        scrollbar.appendChild(this.utils.createXULSpacer(doc, width, width/2));
+        scrollbar.appendChild(scrollLineWrapper);
+        scrollbar.appendChild(this.utils.createXULSpacer(doc, width, width/2));
+        scrollbar.appendChild(downButton);
+    }
+    
+    scrollbar.flex = "1";
+    
+    scrollLineWrapper.appendChild(scrollLine);
+    this.utils.fixDOMEltWidth(scrollLineWrapper, this.width);
+    scrollLineWrapper.flex = "1";
+    scrollLineWrapper.style.overflow = "hidden";
+    
+    this.paintUI();
+    
+    this.scrollbar = scrollbar;
+    
+    this.element.addEventListener("scroll", this.utils.bind(this, function()
+    {
+        this.updateScrollLine();
+    }), false);
+    
+    this.element.addEventListener("input", this.utils.bind(this, function()
+    {
+        this.updateScrollLine();
+    }), false);
+};
 
-internoteUtilities.ScrollHandler.prototype =
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.ScrollHandler.prototype =
 {
 
 REPEAT_INTERVAL: 100,
@@ -438,7 +437,7 @@ onStartDragHandle: function(event)
     
     var CANCEL_OFFSET = 6 * this.width;
     
-    var dragHandler = new this.utils.DragHandler(this.utils);
+    var dragHandler = new this.utils.DragHandler(this.utils, this.element.ownerDocument);
     var startPos = this.element.scrollTop;
     
     this.handleEffectMode = this.utils.EFFECT_MODE_PRESS;
@@ -479,4 +478,3 @@ onStartDragHandle: function(event)
 },
 
 };
-

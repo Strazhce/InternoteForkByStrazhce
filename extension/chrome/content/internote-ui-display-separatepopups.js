@@ -91,7 +91,7 @@ addNote: function(uiNote, pos)
     
     this.utils.addBoundDOMEventListener(uiNote.textArea, "focus", this, "onNoteFocused", false);
     
-    var popup = this.utils.createShiftingPanel(uiNote.num, uiNote.noteElt);
+    var popup = this.utils.createShiftingPanel(document, uiNote.num, uiNote.noteElt);
     popup.setAttribute("class", "internote-popup");
     
     var dims = this.dimsLookup[uiNote.num] = uiNote.note.getDims();
@@ -265,7 +265,7 @@ popupShown: function(event, uiNote)
                     
                     // Check whether off-page.
                     var currNoteRect = this.utils.makeRectFromDims(nextUINote.note.getPos(), nextUINote.note.getDims());
-                    this.utils.scrollToShowRect(this.browser, currNoteRect);
+                    this.utils.scrollToShowRect(window, this.browser, currNoteRect);
                     
                     this.focusNote(nextUINote);
                     this.raiseNote(nextUINote);
@@ -452,7 +452,7 @@ getViewportShowingRect: function()
     var viewportRect = this.utils.makeRectFromDims(viewportPos, this.getViewportDimsFunc());
     //var screenRect = this.utils.getPopupScreenRect(this.browser);
     //var overlapRect = this.utils.getRectIntersection(screenRect, this.viewportRect);
-    var overlapRect = this.utils.restrictRectToScreen(this.browser, viewportRect);
+    var overlapRect = this.utils.restrictRectToScreen(window, this.browser, viewportRect);
     var newOffset = this.utils.coordPairSubtract(overlapRect.topLeft, viewportRect.topLeft);
     
     //dump("AK1 " + this.arrayToString(viewportPos) + "\n");

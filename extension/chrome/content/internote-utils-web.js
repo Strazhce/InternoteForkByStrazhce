@@ -17,7 +17,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-internoteUtilities.incorporate({
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("WebUtils", {
 
 XHTML_NS: "http://www.w3.org/1999/xhtml",
 XUL_NS:   "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
@@ -322,19 +322,18 @@ removeAllChildNodes: function(elt)
     }
 },
 
-htmlEncode: function(unencodedText)
+htmlEncode: function(aDoc, unencodedText)
 {
-    var textNode = document.createTextNode(unencodedText);
-    var element = this.createHTMLElement("textArea");
+    var textNode = aDoc.createTextNode(unencodedText);
+    var element = this.createHTMLElement("textArea", aDoc);
     element.appendChild(textNode);
     return element.innerHTML;
 },
 
 /*
-htmlDecode: function(encodedText)
+htmlDecode: function(aDoc, encodedText)
 {
-    var element = this.createHTMLElement("textarea");
-    this.dumpTraceData(element);
+    var element = this.createHTMLElement("textarea", aDoc);
     element.innerHTML = encodedText;
     return element.value;
 },
@@ -547,100 +546,59 @@ isSpecificHTMLElement: function(obj, tagName)
     return obj.tagName == tagName;
 },
 
-getCurrentBrowser: function()
+getCurrentBrowser: function(tabBrowser)
 {
-    return gBrowser.getBrowserAtIndex(gBrowser.mTabContainer.selectedIndex);
+    return tabBrowser.getBrowserAtIndex(tabBrowser.mTabContainer.selectedIndex);
 },
 
 getBrowserURL: function(browser)
 {
-    if (browser == null) browser = this.getCurrentBrowser();
     return browser.contentWindow.location.href;
 },
 
-disableMultiple: function(fieldArray)
-{
-    for (var i = 0; i < fieldArray.length; i++)
-    {
-        var field = fieldArray[i];
-        if (typeof(field) == "string")
-        {
-            field = document.getElementById(field);
-        }
-        field.setAttribute("disabled", "true");
-    }
-},
-
-enableMultiple: function(fieldArray)
-{
-    for (var i = 0; i < fieldArray.length; i++)
-    {
-        var field = fieldArray[i];
-        if (typeof(field) == "string")
-        {
-            field = document.getElementById(field);
-        }
-        field.removeAttribute("disabled");
-    }
-},
-
-setEnabled: function(elts, enabled)
+setEnabledElts: function(elts, isEnabled)
 {
     var elts2 = this.isArray(elts) ? elts : [elts];
     
     for (var i = 0; i < elts2.length; i++)
     {
         var elt = elts2[i];
-        if (typeof(elt) == "string")
-        {
-            var elt2 = document.getElementById(elt);
-            if (elt2 == null)
-            {
-                this.assertWarnNotHere("Unable to find element " + elt + " in setDisplayed.");
-                continue;
-            }
-        }
-        else
-        {
-            var elt2 = elt;
-        }
         
-        if (enabled)
+        if (isEnabled)
         {
-            elt2.removeAttribute("disabled");
+            elt.removeAttribute("disabled");
         }
         else
         {
-            elt2.setAttribute("disabled", "true");
+            elt.setAttribute("disabled", "true");
         }
     }
     
 },
 
-setDisplayed: function(elts, isDisplayed)
+setEnabledIDs: function(doc, eltNames, isEnabled)
+{
+    var eltNames2 = this.isArray(eltNames) ? eltNames : [eltNames];
+    var elts = eltNames2.map(function(eltName) { return doc.getElementById(eltName); });
+    this.setEnabledElts(elts, isEnabled);
+},
+
+setDisplayedElts: function(elts, isDisplayed)
 {
     var elts2 = this.isArray(elts) ? elts : [elts];
     
     for (var i = 0; i < elts2.length; i++)
     {
         var elt = elts2[i];
-        if (typeof(elt) == "string")
-        {
-            var elt2 = document.getElementById(elt);
-            if (elt2 == null)
-            {
-                this.assertWarnNotHere("Unable to find element " + elt + " in setDisplayed.");
-                continue;
-            }
-        }
-        else
-        {
-            var elt2 = elt;
-        }
-        
-        elt2.style.display = isDisplayed ? "" : "none";
+        elt.style.display = isDisplayed ? "" : "none";
     }
-    
+},
+
+setDisplayedIDs: function(doc, eltNames, isDisplayed)
+{
+    var eltNames2 = this.isArray(eltNames) ? eltNames : [eltNames];
+    var elts = eltNames2.map(function(eltName) { return doc.getElementById(eltName); });
+    this.setDisplayedElts(elts, isDisplayed);
 },
 
 fixDOMEltWidth: function(elt, width)
@@ -713,7 +671,6 @@ getScreenPos: function(obj)
 
 createHTMLElement: function(tagName, doc, id)
 {
-    if (doc == null) doc = document;
     var elt = doc.createElementNS(this.XHTML_NS, "html:" + tagName);
     if (id != null) elt.id = id;
     return elt;
@@ -721,7 +678,6 @@ createHTMLElement: function(tagName, doc, id)
 
 createXULElement: function(tagName, doc, id)
 {
-    if (doc == null) doc = document;
     var elt = doc.createElementNS(this.XUL_NS, tagName);
     if (id != null) elt.id = id;
     return elt;
@@ -745,12 +701,12 @@ createXULSpacer: function(doc, width, height)
 // getWindowCanvas is usually called after setScratchElement, but we don't put them
 // in one function, because certain things can only be determined when the element is in
 // a document, eg scrollHeight, and this might affect what we do to the element.
-getWindowCanvas: function(window, dims)
+getWindowCanvas: function(win, doc, dims)
 {
-    var canvas = this.createHTMLElement("canvas");
+    var canvas = this.createHTMLElement("canvas", doc);
     var context = canvas.getContext("2d");
     this.setDims(canvas, dims);
-    context.drawWindow(window, 0, 0, dims[0], dims[1], "rgba(0,0,0,0)");
+    context.drawWindow(win, 0, 0, dims[0], dims[1], "rgba(0,0,0,0)");
     
     return canvas;
 },
@@ -776,20 +732,18 @@ setScratchElement: function(iFrame, freshElement, dims)
 },
 
 // Tricky code ... easy to break.
-getScratchIFrame: function(doc)
+getScratchIFrame: function(anyScratchWindowDoc)
 {
-    if (doc == null) doc = document;
-    
-    var iFrame = doc.getElementById("internote-scratch-frame");
+    var iFrame = anyScratchWindowDoc.getElementById("internote-scratch-frame");
     this.assertError(iFrame != null, "Could not find scratch frame.");
     
     return iFrame;
 },
 
 // This finds the deepest element that takes up all of the browser window.
-getDeepestMainElement: function(document)
+getDeepestMainElement: function(doc)
 {
-    var elt = document.documentElement;
+    var elt = doc.documentElement;
     do
     {
         var foundMainChild = false;
@@ -812,13 +766,13 @@ getDeepestMainElement: function(document)
     return elt;
 },
 
-calcScrollbarWidth: function()
+calcScrollbarWidth: function(anyScratchWindowDoc)
 {
-    var scratchIFrame = this.getScratchIFrame();
-    var doc = scratchIFrame.contentDocument;
-    var body = doc.getElementsByTagName("body")[0];
+    var scratchIFrame = this.getScratchIFrame(anyScratchWindowDoc);
+    var scratchDoc = scratchIFrame.contentDocument;
+    var body = scratchDoc.getElementsByTagName("body")[0];
     
-    var textArea = this.createHTMLElement("div", doc);
+    var textArea = this.createHTMLElement("div", scratchDoc);
     textArea.style.overflowY = "scroll";
     
     body.appendChild(textArea);
@@ -995,13 +949,13 @@ updateViewportDimsForXML: function(contentDoc, startDims)
 // We attempt to calculate the size of the viewport minus any scrollbars.
 // In particular we can't just take the minimums of viewport and page because a page might
 // have less height than the viewport, and also image URLs might have less width and height.
-getViewportDims: function(browser)
+getViewportDims: function(chromeWin, browser)
 {
     this.assertError(browser != null, "Null browser", browser);
     
     if (this.scrollbarSize == null)
     {
-        this.scrollbarSize = this.calcScrollbarWidth();
+        this.scrollbarSize = this.calcScrollbarWidth(chromeWin.document);
     }        
 	
 	var contentDoc = browser.contentDocument;
@@ -1015,21 +969,21 @@ getViewportDims: function(browser)
         // We sometimes get height == 0, in particular temporarily when dragging tabs into new windows ...
         if (contentDoc.documentElement != null && viewportDims[1] > 0)
         {
-            if (contentDoc instanceof ImageDocument)
+            if (contentDoc instanceof chromeWin.ImageDocument)
             {
                 this.updateViewportDimsForImage(contentDoc, viewportDims);
             }
-            else if (contentDoc instanceof HTMLDocument)
+            else if (contentDoc instanceof chromeWin.HTMLDocument)
             {
                 //dump("PRE  = " + viewportDims[0] + " " + viewportDims[1] + "\n");
                 this.updateViewportDimsForHTML(browser, contentDoc, viewportDims);
                 //dump("POST = " + viewportDims[0] + " " + viewportDims[1] + "\n");
             }
-            else if (contentDoc instanceof XMLDocument)
+            else if (contentDoc instanceof chromeWin.XMLDocument)
             {
                 this.updateViewportDimsForXML(contentDoc, viewportDims);
             }
-            else if (contentDoc instanceof XULDocument)
+            else if (contentDoc instanceof chromeWin.XULDocument)
             {
                 // XXX Should possibly do something.
                 // Do nothing.
@@ -1053,9 +1007,9 @@ getViewportDims: function(browser)
     // Next we handle really small windows, where the window is smaller than the browser box!
     // In this case we calculate the biggest the viewport could be, given the window dimensions.
     // If this is smaller than what we've already calculated, truncate it.
-    var windowTopLeft = this.getScreenPos(document.documentElement.boxObject);
+    var windowTopLeft = this.getScreenPos(chromeWin.document.documentElement.boxObject);
     //dump("  WTopLeft      = " + this.compactDumpString(windowTopLeft) + "\n");
-    var windowDims = [window.innerWidth, window.innerHeight];
+    var windowDims = [chromeWin.innerWidth, chromeWin.innerHeight];
     //dump("  WindowDims    = " + this.compactDumpString(windowDims) + "\n");
     var viewportTopLeft = this.getScreenPos(browser.boxObject);
     //dump("  VTopLeft      = " + this.compactDumpString(viewportTopLeft) + "\n");
@@ -1074,23 +1028,23 @@ getViewportDims: function(browser)
     return viewportDims;
 },
 
-getViewportRect: function(browser)
+getViewportRect: function(chromeWin, browser)
 {
     var contentWin = browser.contentWindow;
     
-    var viewportDims = this.getViewportDims(browser);
+    var viewportDims = this.getViewportDims(chromeWin, browser);
     var scrollPos = [contentWin.scrollX, contentWin.scrollY];
     return this.makeRectFromDims(scrollPos, viewportDims);
 },
 
-getPageDims: function(browser)
+getPageDims: function(chromeWin, browser)
 {
     var contentDoc = browser.contentDocument;
     if (contentDoc.documentElement == null)
     {
         return [0, 0];
     }
-    else if (contentDoc instanceof ImageDocument)
+    else if (contentDoc instanceof chromeWin.ImageDocument)
     {
         return [contentDoc.body.scrollWidth, contentDoc.body.scrollHeight];
     }
@@ -1121,11 +1075,11 @@ colorCanvas: function(canvas, color)
     context.putImageData(imageData, 0, 0);
 },
 
-scrollToShowRect: function(browser, noteRect)
+scrollToShowRect: function(chromeWin, browser, noteRect)
 {
     //dump("internoteUtilities.scrollToShowRect\n");
     
-    var viewportRect = this.getViewportRect(browser);
+    var viewportRect = this.getViewportRect(chromeWin, browser);
     
     function findNewPos(noteRectMin, noteRectMax, viewportSize, viewportRectMin, viewportRectMax)
     {

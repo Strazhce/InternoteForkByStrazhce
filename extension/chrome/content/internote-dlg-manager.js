@@ -40,20 +40,19 @@ actions: ["deleteSelected", "resetSelected", "exportSelected",
 init: function()
 {
     //dump("internoteManager.init\n");
+    this.global  = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
     
-    this.utils   = internoteUtilities;
-    this.prefs   = internotePreferences;
-    this.consts  = internoteConstants;
+    this.utils   = this.global.utils;
+    this.prefs   = this.global.prefs;
+    this.consts  = this.global.consts;
+    this.storage = this.global.storage;
     
-    this.utils.init();
-    this.prefs.init(this.utils, this.consts);
+    this.StorageWatcher = this.global.StorageWatcher;
     
     try
     {
-        InternoteEventDispatcher.prototype.incorporateED(InternoteStorage.prototype);
-        InternoteEventDispatcher.prototype.incorporateED(InternoteStorageWatcher.prototype);
+        this.utils.assertError(this.storage != null, "Manager can't find storage.", this.storage);
         
-        this.storage = InternoteStorage.makeStorage();
         this.treeView.init(this.utils, this.storage);
         this.registerStorageListeners();
         
@@ -68,7 +67,7 @@ init: function()
         this.tree = document.getElementById("noteList");
         this.tree.view = this.treeView;
         
-        this.utils.disableMultiple(this.actions);
+        this.utils.setEnabledIDs(document, this.actions, false);
         this.clearNoteData();
         
         addEventListener("message", this.utils.bind(this, function(event) {
@@ -132,6 +131,11 @@ destroy: function()
     {
         this.searchWatcher.destroy();
     }
+},
+
+getLocaleString: function(messageName)
+{
+    return this.utils.getLocaleString(document, messageName);
 },
 
 viewNote: function(note)
@@ -359,8 +363,8 @@ clearNoteData : function ()
     document.getElementById("ignoreAnchor").checked = "";
     document.getElementById("ignoreParams").checked = "";
     
-    this.utils.disableMultiple(this.editingFields);
-    this.utils.disableMultiple(document.getElementsByClassName("editlabel"));
+    this.utils.setEnabledIDs(document, this.editingFields, false);
+    this.utils.setEnabledElts(document.getElementsByClassName("editlabel"), false);
     document.getElementById("noteText").setAttribute("disabled", "true");
     
     this.isUpdating = false;
@@ -421,7 +425,7 @@ setNoteData: function(note)
             this.uncustomizeMenuList("textColorEntryBox");
         }
         
-        var unknownTimeMessage = "--- " + this.utils.getLocaleString("UnknownTimeMessage") + " ---";
+        var unknownTimeMessage = "--- " + this.getLocaleString("UnknownTimeMessage") + " ---";
         var utils = this.utils;
         
         function convertTime(time)
@@ -448,8 +452,8 @@ setNoteData: function(note)
         this.updateCheck("ignoreAnchor",      note.ignoreAnchor);
         this.updateCheck("ignoreParams",      note.ignoreParams);
         
-        this.utils.enableMultiple(this.editingFields);
-        this.utils.enableMultiple(document.getElementsByClassName("editlabel"));
+        this.utils.setEnabledIDs(document, this.editingFields, true);
+        this.utils.setEnabledElts(document.getElementsByClassName("editlabel"), true);
         
         if (note.isHTML)
         {
@@ -580,7 +584,7 @@ isValidURLOrSite: function()
 setMenuListToCustom: function(menuListID)
 {
     var menuList = document.getElementById(menuListID);
-    var customText = this.utils.getLocaleString("CustomColor");
+    var customText = this.getLocaleString("CustomColor");
     
     var customID = menuListID + "-custom";
     var existingElement = document.getElementById(customID);
@@ -632,7 +636,7 @@ userSelectsElement: function(mainTree, otherTree, getNotesFunc)
     
     var mainSelection = mainTree.selection;
     
-    this.utils.setEnabled(this.actions, mainSelection.count > 0);
+    this.utils.setEnabledIDs(document, this.actions, mainSelection.count > 0);
     
     // First deselect other tree.
     // XXX Should probably support Ctrl-Click not deselecting the other tree, so they work together.
@@ -822,12 +826,12 @@ userDeletesNotes: function (shouldDeleteAllSelected)
         {
             // If there are multiple notes, we confirm regardless of the preference, due to the
             // danger.  This could be removed once there is undo.
-            var confirmMessage = this.utils.getLocaleString("DeleteMultipleConfirm");
+            var confirmMessage = this.getLocaleString("DeleteMultipleConfirm");
             var isConfirmed = confirm(confirmMessage);
         }
         else if (this.prefs.shouldAskBeforeDelete())
         {
-            var confirmMessage = this.utils.getLocaleString("DeleteSingleConfirm");
+            var confirmMessage = this.getLocaleString("DeleteSingleConfirm");
             var isConfirmed = confirm(confirmMessage);
         }
         else
@@ -1060,7 +1064,7 @@ initSearchResults: function(searchTerm)
     
     var extraReevaluateEvents = ["noteEdited"];
     this.searchWatcher =
-        new InternoteStorageWatcher(this.storage, null, extraReevaluateEvents, []);
+        new this.StorageWatcher(this.storage, null, extraReevaluateEvents, []);
     
     this.searchWatcher.addBoundEventListener("noteAdded",   this, "onSearchNoteAdded");
     this.searchWatcher.addBoundEventListener("noteRemoved", this, "onSearchNoteRemoved");
@@ -1159,8 +1163,8 @@ userImportsNotes: function(fileType, filter)
         var nsIFilePicker = this.utils.getCIInterface("nsIFilePicker");
         var picker = this.utils.getCCInstance("@mozilla.org/filepicker;1", "nsIFilePicker");
         
-        var title = this.utils.getLocaleString("OpenTitle");
-        var fileDesc = this.utils.getLocaleString("FileType" + fileType);
+        var title = this.getLocaleString("OpenTitle");
+        var fileDesc = this.getLocaleString("FileType" + fileType);
         title = title.replace("%1", fileDesc);
         
         picker.init(window, title, nsIFilePicker.modeOpen);
@@ -1206,7 +1210,7 @@ userImportsNotes: function(fileType, filter)
                 messageType = "SomeNotesImportMessage";
             }
             
-            var message = this.utils.getLocaleString(messageType);
+            var message = this.getLocaleString(messageType);
             message = message.replace("%1", addedCount).replace("%2", foundCount);
             
             var notificationBox = document.getElementById("notificationBox");
@@ -1216,8 +1220,8 @@ userImportsNotes: function(fileType, filter)
     }
     catch (ex)
     {
-        var errorMessage = this.utils.getLocaleString("ImportFailedMessage");
-        var fileDesc = this.utils.getLocaleString("FileType" + fileType);
+        var errorMessage = this.getLocaleString("ImportFailedMessage");
+        var fileDesc = this.getLocaleString("FileType" + fileType);
         errorMessage = errorMessage.replace("%1", fileDesc);
         alert(errorMessage);
         this.utils.handleException("Exception caught when importing notes.", ex);
@@ -1231,13 +1235,13 @@ userExportsNotes: function(text, noteCount, fileType, filter, extension, default
         var nsIFilePicker = this.utils.getCIInterface("nsIFilePicker");
         var picker = this.utils.getCCInstance("@mozilla.org/filepicker;1", "nsIFilePicker");
         
-        var title = this.utils.getLocaleString("SaveTitle");
-        var fileDesc = this.utils.getLocaleString("FileType" + fileType);
+        var title = this.getLocaleString("SaveTitle");
+        var fileDesc = this.getLocaleString("FileType" + fileType);
         title = title.replace("%1", fileDesc);
         
         if (defaultFileName == null)
         {
-            defaultFileName = this.utils.getLocaleString("ExportDefaultFileName");
+            defaultFileName = this.getLocaleString("ExportDefaultFileName");
         }
         
         picker.init(window, title, nsIFilePicker.modeSave);
@@ -1265,7 +1269,7 @@ userExportsNotes: function(text, noteCount, fileType, filter, extension, default
             this.utils.saveStringToFilename(text, fileName);
         }
         
-        var message = this.utils.getLocaleString("ExportMessage");
+        var message = this.getLocaleString("ExportMessage");
         message = message.replace("%1", noteCount);
         
         var notificationBox = document.getElementById("notificationBox");
@@ -1274,7 +1278,7 @@ userExportsNotes: function(text, noteCount, fileType, filter, extension, default
     }
     catch (ex)
     {
-        var errorMessage = this.utils.getLocaleString("ExportFailedMessage");
+        var errorMessage = this.getLocaleString("ExportFailedMessage");
         alert(errorMessage);
         this.utils.handleException("Exception caught when exporting notes.", ex);
     }
@@ -1375,7 +1379,7 @@ userExportsNotesInV3: function (shouldExportOnlySelected)
 {
     try
     {
-        var fileName = this.utils.getLocaleString("ExportDefaultFileName") + ".xml";
+        var fileName = this.getLocaleString("ExportDefaultFileName") + ".xml";
         var selection = this.getNotesToActUpon(shouldExportOnlySelected);
         var noteCount = this.utils.getArrayNonNullCount(selection);
         this.userExportsNotes(this.storage.generateNotesInV3(selection), noteCount, "InternoteV3", null, null, fileName);
@@ -1408,7 +1412,7 @@ userExportsNotesInHTML: function (shouldExportOnlySelected)
         var selection = this.getNotesToActUpon(shouldExportOnlySelected);
         var noteCount = this.utils.getArrayNonNullCount(selection);
         
-        var scratchDoc = this.utils.getScratchIFrame().contentDocument;
+        var scratchDoc = this.utils.getScratchIFrame(document).contentDocument;
         this.storage.generateNotesInHTML(selection, scratchDoc);
         
         this.userExportsNotes(scratchDoc.documentElement.innerHTML, noteCount, "HTML", filter, "html");
@@ -1455,7 +1459,7 @@ userPrintsNotes: function (shouldExportOnlySelected)
     {
         var selection = this.getNotesToActUpon(shouldExportOnlySelected);
         
-        var scratchFrame = this.utils.getScratchIFrame();
+        var scratchFrame = this.utils.getScratchIFrame(document);
         
         this.storage.generateNotesInHTML(selection, scratchFrame.contentDocument);
         
@@ -1512,6 +1516,11 @@ treeView : {
         this.treeData = sortedURLDataStrings.map(this.makeURLRow, this);
     },
     
+    getLocaleString: function(messageName)
+    {
+        return this.utils.getLocaleString(document, messageName);
+    },
+        
     get rowCount()                     { return this.treeData.length; },
     setTree: function(treeBox)         { this.treeBox = treeBox; },
     getCellText: function(idx, column) { return this.treeData[idx][this.COL_TEXT]; },
@@ -1735,43 +1744,43 @@ treeView : {
         {
             this.utils.assertWarn(url != "", "Blank regexp for category.");
             var categoryStyle = "url_regexp";
-            var regexpPrefix = this.utils.getLocaleString("RegexpAbbreviation") + ": ";
+            var regexpPrefix = this.getLocaleString("RegexpAbbreviation") + ": ";
             var urlDesc = regexpPrefix + url;
         }
         else if (category == "all")
         {
             var categoryStyle = "special_data";
-            var urlDesc = this.utils.getLocaleString("AllCategory");
+            var urlDesc = this.getLocaleString("AllCategory");
         }
         else if (category == "invalidurl")
         {
             var categoryStyle = "special_data";
-            var urlDesc = this.utils.getLocaleString("InvalidURLCategory");
+            var urlDesc = this.getLocaleString("InvalidURLCategory");
         }
         else if (category == "invalidregexp")
         {
             var categoryStyle = "special_data";
-            var urlDesc = this.utils.getLocaleString("InvalidRegexpCategory");
+            var urlDesc = this.getLocaleString("InvalidRegexpCategory");
         }
         else if (category == "invalidsite")
         {
             var categoryStyle = "special_data";
-            var urlDesc = this.utils.getLocaleString("InvalidSiteCategory");
+            var urlDesc = this.getLocaleString("InvalidSiteCategory");
         }
         else if (category == "blankurl")
         {
             var categoryStyle = "special_data";
-            var urlDesc = this.utils.getLocaleString("EmptyURLCategory");
+            var urlDesc = this.getLocaleString("EmptyURLCategory");
         }
         else if (category == "blankregexp")
         {
             var categoryStyle = "special_data";
-            var urlDesc = this.utils.getLocaleString("EmptyRegexpCategory");
+            var urlDesc = this.getLocaleString("EmptyRegexpCategory");
         }
         else if (category == "blanksite")
         {
             var categoryStyle = "special_data";
-            var urlDesc = this.utils.getLocaleString("EmptySiteCategory");
+            var urlDesc = this.getLocaleString("EmptySiteCategory");
         }
         else
         {
@@ -1823,7 +1832,7 @@ treeView : {
         var text = this.utils.trim(note.text);
         if (text == "")
         {
-            var emptyTextMessage = this.utils.getLocaleString("EmptyTextDescription");
+            var emptyTextMessage = this.getLocaleString("EmptyTextDescription");
             return [emptyTextMessage, "special_data"];
         }
         else

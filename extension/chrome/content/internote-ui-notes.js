@@ -600,8 +600,8 @@ forceMinimizedDims: function(uiNote)
 setMinimizedVisibility: function(uiNote)
 {
     this.utils.assertClassError(uiNote, "UINote", "UINote is not correct class when updating minimizing.")
-    this.utils.setDisplayed(uiNote.midBotBox,    !uiNote.note.isMinimized);
-    this.utils.setDisplayed(uiNote.minimizedTop, uiNote.note.isMinimized );
+    this.utils.setDisplayedElts(uiNote.midBotBox,    !uiNote.note.isMinimized);
+    this.utils.setDisplayedElts(uiNote.minimizedTop, uiNote.note.isMinimized );
     
     this.setMinimizeButtonTooltip(uiNote);
 },
@@ -707,7 +707,7 @@ updateScrollbarPresence: function(uiNote)
     }
     
     // Make sure east deck has correct displayed status, and update text area to compensate.
-    this.utils.setDisplayed(uiNote.eastDeck, !shouldHideEastDeck);
+    this.utils.setDisplayedElts(uiNote.eastDeck, !shouldHideEastDeck);
     this.fixTextArea(uiNote, null);
 },
 
@@ -1257,8 +1257,8 @@ drawNoteBackSide: function(uiNote)
     }
     
     // draw the color swab headers
-    var noteColorStr = this.utils.getLocaleString("NoteColorTitle");
-    var textColorStr = this.utils.getLocaleString("TextColorTitle");
+    var noteColorStr = this.utils.getLocaleString(document, "NoteColorTitle");
+    var textColorStr = this.utils.getLocaleString(document, "TextColorTitle");
     
     const MAX_TEXT_WIDTH = this.consts.MIN_NOTE_WIDTH - 2 * this.NOTE_BORDER_SIZE - 2 * this.NOTE_OUTER_SIZE;
     context.fillStyle = "black";
@@ -1368,10 +1368,10 @@ makeStaticImage: function(uiNote, dims)
         dims = this.getDims(uiNote);
     }
     
-    var scratchIFrame = this.utils.getScratchIFrame();
-    var doc = scratchIFrame.contentDocument;
+    var scratchIFrame = this.utils.getScratchIFrame(document);
+    var scratchDoc = scratchIFrame.contentDocument;
     
-    var tempUINote = this.cloneUINote(uiNote, doc);
+    var tempUINote = this.cloneUINote(uiNote, scratchDoc);
     
     if (uiNote.isFlipped) this.flipNote(tempUINote);
     
@@ -1380,7 +1380,7 @@ makeStaticImage: function(uiNote, dims)
     // Can't do this until the clone has been placed in a document.
     this.configureClonedUINote(tempUINote, uiNote);
     
-    var rawCanvas = uiNote.rawCanvas = this.utils.getWindowCanvas(scratchIFrame.contentWindow, dims);
+    var rawCanvas = uiNote.rawCanvas = this.utils.getWindowCanvas(scratchIFrame.contentWindow, document, dims);
     rawCanvas.id = "internote-rawcanvas" + uiNote.num;
     
     var scaledCanvas = uiNote.scaledCanvas = this.utils.createHTMLElement("canvas", document, "internote-scaledcanvas" + uiNote.num);

@@ -23,9 +23,9 @@ init: function()
 {
     try
     {
-        this.utils  = internoteUtilities;
+        this.utils  = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
         
-        this.utils.init();
+        this.utils.init(window);
         this.utils.initSysInfo();
         
         var installRDF = this.utils.loadInstallRDF();
@@ -44,8 +44,14 @@ init: function()
     }
     catch (ex)
     {
-        internoteUtilities.handleException("Exception caught when showing about dialog.", ex);
+        var utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+        utils.handleException("Exception caught when showing about dialog.", ex);
     }
+},
+
+getLocaleString: function(messageName)
+{
+    return this.utils.getLocaleString(document, messageName);
 },
 
 insertContributors: function(installRDF)
@@ -92,7 +98,7 @@ removeContributors: function()
     this.utils.removeAllChildNodes(contributorsBox);
     
     var newNode = document.createElement("description");
-    newNode.appendChild(document.createTextNode(this.utils.getLocaleString("DataLoadError")));
+    newNode.appendChild(document.createTextNode(this.getLocaleString("DataLoadError")));
     
     contributorsBox.appendChild(newNode);
 },

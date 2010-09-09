@@ -17,7 +17,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-internoteUtilities.incorporate({
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("ColorUtils", {
 
 RED_COMP  : 0,
 GREEN_COMP: 1,

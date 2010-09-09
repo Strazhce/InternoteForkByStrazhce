@@ -23,19 +23,15 @@
 //     event name will be detected rather than silently failing.
 // (c) There are shorthand methods for using bound versions.
 
-function InternoteEventDispatcher() {}
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher =
+    function() {};
 
-InternoteEventDispatcher.prototype.incorporateED = function(newPrototype)
-{
-    // XXX Study inheritance more.
-    var dispatcherPrototype = InternoteEventDispatcher.prototype;
-    for (var prop in dispatcherPrototype)
-    {
-        newPrototype[prop] = dispatcherPrototype[prop];
-    }
-};
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher.prototype =
+    new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.BaseObject();
 
-InternoteEventDispatcher.prototype.initEventDispatcher = function()
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher.prototype.incorporate("EventDispatcher", {
+
+initEventDispatcher: function()
 {
     this.events = [];
     
@@ -46,9 +42,9 @@ InternoteEventDispatcher.prototype.initEventDispatcher = function()
     // We use a stack because a dispatch could lead to a listener that
     // leads to another dispatch.
     this.eventStack = [];
-};
+},
 
-InternoteEventDispatcher.prototype.addEventListener = function(eventName, callback)
+addEventListener: function(eventName, callback)
 {
     //dump("InternoteEventDispatcher.addEventListener " + eventName + " " + this.utils.getJSClassName(this) + "\n");
     
@@ -77,9 +73,9 @@ InternoteEventDispatcher.prototype.addEventListener = function(eventName, callba
     else {
         this.utils.assertWarnNotHere("Event does not exist when adding event listener.");
     }
-};
+},
 
-InternoteEventDispatcher.prototype.removeEventListener = function(eventName, callback)
+removeEventListener: function(eventName, callback)
 {
     //dump("InternoteEventDispatcher.removeEventListener " + eventName + " " + this.utils.getJSClassName(this) + "\n");
     
@@ -108,9 +104,9 @@ InternoteEventDispatcher.prototype.removeEventListener = function(eventName, cal
     else {
         this.utils.assertWarnNotHere("Event does not exist when removing event listener.");
     }
-};
+},
 
-InternoteEventDispatcher.prototype.addBoundEventListener = function(eventName, obj, propertyName)
+addBoundEventListener: function(eventName, obj, propertyName)
 {
     this.utils.assertError(typeof(obj         ) == "object" , "Obj is invalid",          obj);
     this.utils.assertError(typeof(propertyName) == "string" , "PropertyName is invalid", propertyName);
@@ -119,9 +115,9 @@ InternoteEventDispatcher.prototype.addBoundEventListener = function(eventName, o
     fn.obj          = obj;
     fn.propertyName = propertyName;
     this.addEventListener(eventName, fn);
-};
+},
 
-InternoteEventDispatcher.prototype.removeBoundEventListener = function(eventName, obj, propertyName)
+removeBoundEventListener: function(eventName, obj, propertyName)
 {
     this.utils.assertError(typeof(obj         ) == "object" , "Obj is invalid",          obj);
     this.utils.assertError(typeof(propertyName) == "string" , "PropertyName is invalid", propertyName);
@@ -130,14 +126,14 @@ InternoteEventDispatcher.prototype.removeBoundEventListener = function(eventName
     fn.obj          = obj;
     fn.propertyName = propertyName;
     this.removeEventListener(eventName, fn);
-};
+},
 
-InternoteEventDispatcher.prototype.isEventBeingDispatched = function(eventName)
+isEventBeingDispatched: function(eventName)
 {
     return this.eventStack.indexOf(eventName) != -1;
-};
+},
 
-InternoteEventDispatcher.prototype.createEvent = function(eventName)
+createEvent: function(eventName)
 {
     var listeners = this.events[eventName];
     if (listeners == null)
@@ -147,9 +143,9 @@ InternoteEventDispatcher.prototype.createEvent = function(eventName)
     else {
         this.utils.assertWarnNotHere("Event already exists when creating event.");
     }
-};
+},
 
-InternoteEventDispatcher.prototype.dispatchEvent = function(eventName, eventObj)
+dispatchEvent: function(eventName, eventObj)
 {
     //dump("InternoteEventDispatcher.dispatchEvent " + eventName + "\n");
     
@@ -189,4 +185,6 @@ InternoteEventDispatcher.prototype.dispatchEvent = function(eventName, eventObj)
     {
         this.assertWarnNotHere("Event stack corrupted when popping.");
     }
-};
+},
+
+});

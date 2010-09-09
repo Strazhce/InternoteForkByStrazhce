@@ -29,81 +29,16 @@
 
 Components.utils.import("resource://internotejs/internote-shared-global.jsm");
 
-///////////////////////////////
-// NOTE STORAGE
-///////////////////////////////
-
-function InternoteStorage()
+if (internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.Storage == null)
 {
-    //dump("InternoteStorage\n");
-    
-    this.isInitialising  = true;
-    
-    this.utils      = internoteUtilities;
-    this.prefs      = internotePreferences;
-    this.serializer = XMLSerializer;
-    this.xml        = XML;
-    
-    // We deliberately store the same storage location for the entire session.
-    // This makes handling change of location preference much easier - next run.
 
-    this.storageLoc = this.prefs.getModifiedSaveLocation();
-    
-    if (this.storageLoc == null)
-    {
-        this.storageLoc = this.utils.getProfileDir();
-    }
-    
-    this.allNotes     = [];
-    
-    this.initEventDispatcher();
-    this.observePrefsChanges();
-    
-    this.loadStorage();
-    
-    this.createEvent("noteDisplayToggled");
-    this.createEvent("storageFailed");
-    
-    this.createEvent("translucencyChanged");
-    this.createEvent("fontSizeChanged");
-    this.createEvent("scrollbarChanged");
-    this.createEvent("statusbarChanged");
-    
-    this.createEvent("noteAdded");
-    this.createEvent("noteRemoved");
-    this.createEvent("noteRaised");
-    this.createEvent("noteEdited");
-    this.createEvent("noteRelocated");
-    this.createEvent("noteMoved");
-    this.createEvent("noteResized");
-    this.createEvent("noteForeRecolored");
-    this.createEvent("noteBackRecolored");
-    this.createEvent("noteReset");
-    this.createEvent("notesMinimized");
-    
-    this.isInitialising = false;
-    
-    this.usageCount = 1;
-    
-    if (this.prefs.detectFirstRun())
-    {
-        this.addWelcomeNote();
-    }
-    
-    InternoteStorage.prototype.InternoteNote.prototype.getDims = function() { return [this.width, this.height]; };
-    InternoteStorage.prototype.InternoteNote.prototype.getPos  = function() { return [this.left,  this.top   ]; };
-    
-    var myStorageEventClass = InternoteStorage.prototype.StorageEvent; // Avoid referring to global after init.
-    
-    InternoteStorage.prototype.StorageEvent.prototype.clone = function()
-    {
-        // Importantly this won't clone .name which the event dispatcher adds.
-        return new myStorageEventClass(this.note, this.data1, this.data2);
-    };
-}
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.Storage =
+    function() {};
 
-InternoteStorage.prototype =
-{
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.Storage.prototype =
+    new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher();
+
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.Storage.prototype.incorporate("Storage", {
 
 StorageEvent: function StorageEvent(note, data1, data2)
 {
@@ -177,8 +112,84 @@ URL_MATCH_ALL:    5,
 
 areNotesDisplaying: true,
 
+init: function(anyMainWindowDoc)
+{
+    //dump("InternoteStorage\n");
+    
+    this.isInitialising  = true;
+    
+    this.utils      = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+    this.prefs      = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs;
+    this.serializer = XMLSerializer;
+    this.xml        = XML;
+    
+    // Get these now, in case they're not there later due to design (not sure) or bugs (probably occur from what I've seen).
+    this.domImpl     = anyMainWindowDoc.implementation;
+    this.welcomeText = this.utils.getLocaleString(anyMainWindowDoc, "WelcomeNote").replace(/\\n/g, "\n");
+    this.emptyText   = "--- " + this.utils.getLocaleString(anyMainWindowDoc, "EmptyTextDescription") +  " ---";
+    
+    // We deliberately store the same storage location for the entire session.
+    // This makes handling change of location preference much easier - next run.
+
+    this.storageLoc = this.prefs.getModifiedSaveLocation();
+    
+    if (this.storageLoc == null)
+    {
+        this.storageLoc = this.utils.getProfileDir();
+    }
+    
+    this.allNotes     = [];
+    
+    this.initEventDispatcher();
+    this.observePrefsChanges();
+    
+    this.loadStorage();
+    
+    this.createEvent("noteDisplayToggled");
+    this.createEvent("storageFailed");
+    
+    this.createEvent("translucencyChanged");
+    this.createEvent("fontSizeChanged");
+    this.createEvent("scrollbarChanged");
+    this.createEvent("statusbarChanged");
+    
+    this.createEvent("noteAdded");
+    this.createEvent("noteRemoved");
+    this.createEvent("noteRaised");
+    this.createEvent("noteEdited");
+    this.createEvent("noteRelocated");
+    this.createEvent("noteMoved");
+    this.createEvent("noteResized");
+    this.createEvent("noteForeRecolored");
+    this.createEvent("noteBackRecolored");
+    this.createEvent("noteReset");
+    this.createEvent("notesMinimized");
+    
+    this.isInitialising = false;
+    
+    this.usageCount = 1;
+    
+    if (this.prefs.detectFirstRun())
+    {
+        this.addWelcomeNote();
+    }
+    
+    this.InternoteNote.prototype.getDims = function() { return [this.width, this.height]; };
+    this.InternoteNote.prototype.getPos  = function() { return [this.left,  this.top   ]; };
+    
+    var myStorageEventClass = this.StorageEvent;
+    
+    this.StorageEvent.prototype.clone = function()
+    {
+        // Importantly this won't clone .name which the event dispatcher adds.
+        return new myStorageEventClass(this.note, this.data1, this.data2);
+    };
+},
+
 destroy: function()
 {
+    this.utils.assertError(this.usageCount == 0, "Tried to destroy used storage.", this.usageCount);
+    
     //dump("InternoteStorage.destroy\n")
     if (this.saveTimeout != null)
     {
@@ -481,7 +492,7 @@ loadStorage: function()
     this.createEmptyStorage();
     
     // But first we look for legacy storage.
-    var legacyStorage = internotePreferences.shouldUseOtherSaveLoc()
+    var legacyStorage = this.prefs.shouldUseOtherSaveLoc()
                       ? this.storageLoc.clone()
                       : this.utils.getCCInstance("@mozilla.org/file/directory_service;1", "nsIProperties")
                                   .get("UChrm", this.utils.getCIInterface("nsIFile"));
@@ -532,7 +543,7 @@ loadStorageFile: function(storageFile)
 
 createEmptyStorage: function()
 {
-    this.doc = document.implementation.createDocument("", "", null);
+    this.doc = this.domImpl.createDocument("", "", null);
     //var decl = doc.createXMLDeclaration("1.0", "utf-8", null);
     
     var root = this.doc.createElement("internote");
@@ -598,7 +609,7 @@ loadInternoteV3: function(storageDoc, includeXML)
 
 addWelcomeNote: function()
 {
-    var welcomeText  = this.utils.getLocaleString("WelcomeNote").replace(/\\n/g, "\n");
+    var welcomeText  = this.welcomeText;
     var sizeType     = parseInt(this.prefs.getDefaultSize()); // XXX Why parse here?
     
     var currTime     = new Date().getTime();
@@ -1152,8 +1163,7 @@ formatTextForOutput: function(text)
     
     if (text == "")
     {
-        var emptyTextMessage = this.utils.getLocaleString("EmptyTextDescription");
-        text = "--- " + emptyTextMessage + " ---";
+        text = this.emptyText;
     }
     
     return text;
@@ -1161,7 +1171,7 @@ formatTextForOutput: function(text)
 
 generateNotesInV3: function(notes)
 {
-    var storageDoc = document.implementation.createDocument("", "", null);
+    var storageDoc = this.domImpl.createDocument("", "", null);
     
     var root = storageDoc.createElement("internote");
     storageDoc.appendChild(root);
@@ -1422,15 +1432,22 @@ loadInternoteV2: function(allLines)
     return notes;
 },
 
-};
+});
 
 // Remember to catch exceptions that come out of here.
-InternoteStorage.makeStorage = function()
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.makeStorage = function(anyMainWindowDoc)
 {
-    if (internoteSharedGlobal.storage == null)
+    if (this.storage == null)
     {
-        internoteSharedGlobal.storage = new InternoteStorage();
+        this.storage = new this.Storage();
+        this.storage.init(anyMainWindowDoc);
     }
-    internoteSharedGlobal.usageCount++;
-    return internoteSharedGlobal.storage;
+    else
+    {
+        this.storage.usageCount++;
+    }
+    
+    return this.storage;
+};
+
 }

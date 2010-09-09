@@ -1,34 +1,35 @@
 // XXX Rewrite this to prevent leaks.
 
-internoteUtilities.incorporate({
-    PressHoverHandler: function(utils, element)
-    {
-        this.utils      = utils;
-        this.element    = element;
-        
-        this.isInside   = false;
-        this.isPressed  = false;
-    },
-    
-    FlexiblePressHoverHandler: function(utils, element, area)
-    {
-        utils.assertError(element != null, "Null element.", element);
-        utils.assertError(area    != null, "Null area.",    area   );
-    
-        this.utils        = utils;
-        this.element      = element;
-        this.area         = area;
-        this.lastLocalPos = [-1, -1]; // Should never be inside.
-        
-        this.isInside   = false;
-        this.isPressed  = false;
-    }
-});
-
-internoteUtilities.PressHoverHandler.prototype = new InternoteEventDispatcher();
-
-internoteUtilities.incorporate2(internoteUtilities.PressHoverHandler.prototype,
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandler =
+function PressHoverHandler(utils, element)
 {
+    this.utils      = utils;
+    this.element    = element;
+    
+    this.isInside   = false;
+    this.isPressed  = false;
+};
+
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHoverHandler =
+function FlexiblePressHoverHandler(utils, element, area)
+{
+    utils.assertError(element != null, "Null element.", element);
+    utils.assertError(area    != null, "Null area.",    area   );
+
+    this.utils        = utils;
+    this.element      = element;
+    this.area         = area;
+    this.lastLocalPos = [-1, -1]; // Should never be inside.
+    
+    this.isInside   = false;
+    this.isPressed  = false;
+};
+
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandler.prototype =
+    new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher();
+
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandler.prototype.incorporate("PressHoverHandler", {
+
     registerHandlers: function()
     {
         this.utils.addBoundDOMEventListener(this.element, "mousedown", this, "handleMouseDown", false);
@@ -115,10 +116,11 @@ internoteUtilities.incorporate2(internoteUtilities.PressHoverHandler.prototype,
 });
 
 // This version lets you set a changeable area within the element that is considered the press/hover area.
-internoteUtilities.FlexiblePressHoverHandler.prototype = new InternoteEventDispatcher();
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHoverHandler.prototype =
+   new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher();
 
-internoteUtilities.incorporate2(internoteUtilities.FlexiblePressHoverHandler.prototype,
-{
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHoverHandler.prototype.incorporate("FlexiblePressHoverHandler", {
+
     registerHandlers: function()
     {
         this.utils.addBoundDOMEventListener(this.element, "mousedown", this, "handleMouseDown", false);
@@ -256,7 +258,7 @@ internoteUtilities.incorporate2(internoteUtilities.FlexiblePressHoverHandler.pro
     isPressOK: function(ev) { return true; },
 });
 
-internoteUtilities.incorporate({
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("ButtonUIUtils", {
     EFFECT_MODE_NORMAL: 0,
     EFFECT_MODE_HOVER:  1,
     EFFECT_MODE_PRESS:  2,
@@ -477,4 +479,3 @@ internoteUtilities.incorporate({
     },
     
 });
-

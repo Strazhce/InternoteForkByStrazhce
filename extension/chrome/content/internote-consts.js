@@ -17,7 +17,9 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-var internoteConstants = {
+Components.utils.import("resource://internotejs/internote-shared-global.jsm");
+
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.consts = {
 
 BUGS_PAGE: "http://internote.sourceforge.net/bugreports.html",
 HELP_PAGE: "http://internote.sourceforge.net/releasenotes/3.0beta2.html",
@@ -39,5 +41,7 @@ MIN_NOTE_HEIGHT: 100,
 
 MAX_NOTE_WIDTH:  350,
 MAX_NOTE_HEIGHT: 350,
+
+MY_ID: "{e3631030-7c02-11da-a72b-0800200c9a66}",
 
 };

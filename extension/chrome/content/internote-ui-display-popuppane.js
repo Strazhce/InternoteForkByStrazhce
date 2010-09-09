@@ -284,7 +284,7 @@ createInsertionContainer: function()
     this.innerContainer.style.backgroundColor = "transparent";
     //this.innerContainer.style.backgroundColor = "rgba(255, 0, 0, 0.1)"
     
-    this.popupPanel = this.utils.createShiftingPanel("pane", this.innerContainer);
+    this.popupPanel = this.utils.createShiftingPanel(document, "pane", this.innerContainer);
     
     this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown",   this, "popupPanelShown",   false);
     
@@ -317,7 +317,7 @@ positionPane: function()
 {
     //dump("internoteDisplayUI.positionPane\n");
     
-    var isMinimized = this.utils.isMinimized();
+    var isMinimized = this.utils.isWindowMinimized(window);
     
     if (this.isPanelCreated)
     {
@@ -337,7 +337,7 @@ positionPane: function()
             //var screenRect = this.utils.getPopupScreenRect(this.browser);
             //var overlapRect = this.utils.getRectIntersection(screenRect, viewportRect);
             
-            var overlapRect = this.utils.restrictRectToScreen(this.browser, viewportRect);
+            var overlapRect = this.utils.restrictRectToScreen(window, this.browser, viewportRect);
             var newOffset = this.utils.coordPairSubtract(overlapRect.topLeft, viewportRect.topLeft);
             
             //dump("  viewportPos  = " + this.utils.compactDumpString(viewportPos) + "\n");

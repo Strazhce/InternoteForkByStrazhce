@@ -36,10 +36,12 @@
 // This class expects incorporation of the event dispatcher, this needs to be done
 // by initialisation code elsewhere.
 
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.StorageWatcher =
 function InternoteStorageWatcher(storage, filterFn, extraReevaluateEvents, extraPassthruEvents)
 {
     this.storage                  = storage;
-    this.utils                    = internoteUtilities;
+    this.utils                    = storage.utils;
+    
     this.filterFn                 = filterFn;
     this.extraPassthruEvents      = extraPassthruEvents;
     this.extraReevaluateEvents    = extraReevaluateEvents;
@@ -77,9 +79,14 @@ function InternoteStorageWatcher(storage, filterFn, extraReevaluateEvents, extra
     }
     
     //this.utils.dumpTraceData(this.noteMap);
-}
+};
 
-InternoteStorageWatcher.prototype.destroy = function(event)
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.StorageWatcher.prototype =
+    new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher();
+    
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.StorageWatcher.prototype.incorporate("StorageWatcher", {
+
+destroy: function(event)
 {
     this.storage.removeBoundEventListener("noteAdded",   this, "onNoteAdded"  );
     this.storage.removeBoundEventListener("noteRemoved", this, "onNoteRemoved");
@@ -95,37 +102,37 @@ InternoteStorageWatcher.prototype.destroy = function(event)
     }
 },
 
-InternoteStorageWatcher.prototype.getCount = function(event)
+getCount: function(event)
 {
     return this.count;
 },
 
-InternoteStorageWatcher.prototype.addNote = function(event)
+addNote: function(event)
 {
     //dump("InternoteStorageWatcher.addNote " + event.name + "\n");
 
     this.noteMap[event.note.num] = event.note;
     this.count++;
     this.dispatchEvent("noteAdded", event.clone()); // We clone to prevent overwriting the .name field.
-};
+},
 
-InternoteStorageWatcher.prototype.removeNote = function(event)
+removeNote: function(event)
 {
     //dump("InternoteStorageWatcher.removeNote " + event.name + "\n");
     
     delete this.noteMap[event.note.num];
     this.count--;
     this.dispatchEvent("noteRemoved", event.clone());
-};
+},
 
-InternoteStorageWatcher.prototype.passEvent = function(event)
+passEvent: function(event)
 {
     //dump("InternoteStorageWatcher.passEvent " + event.name + "\n");
     
     this.dispatchEvent(event.name, event);
-};
+},
 
-InternoteStorageWatcher.prototype.doesPassFilter = function(note)
+doesPassFilter: function(note)
 {
     //dump("InternoteStorageWatcher.doesPassFilter\n");
     
@@ -145,25 +152,25 @@ InternoteStorageWatcher.prototype.doesPassFilter = function(note)
             return false;
         }
     }
-};
+},
 
-InternoteStorageWatcher.prototype.onNoteAdded = function(event)
+onNoteAdded: function(event)
 {
     //dump("InternoteStorageWatcher.onNoteAdded " + event.name + "\n");
     
     var isNowPresent = this.doesPassFilter(event.note);
     if (isNowPresent) this.addNote(event);
-};
+},
 
-InternoteStorageWatcher.prototype.onNoteRemoved = function(event)
+onNoteRemoved: function(event)
 {
     //dump("InternoteStorageWatcher.onNoteRemoved " + event.name + "\n");
     
     var wasPreviouslyPresent = this.noteMap.hasOwnProperty(event.note.num);
     if (wasPreviouslyPresent) this.removeNote(event);
-};
+},
 
-InternoteStorageWatcher.prototype.onNeedingReevaluate = function(event)
+onNeedingReevaluate: function(event)
 {
     //dump("InternoteStorageWatcher.onNeedingReevaluate " + event.name + "\n");
 
@@ -175,9 +182,9 @@ InternoteStorageWatcher.prototype.onNeedingReevaluate = function(event)
     if      (isNowPresent && !wasPreviouslyPresent) this.addNote   (event);
     else if (!isNowPresent && wasPreviouslyPresent) this.removeNote(event);
     else                                            this.passEvent (event);
-};
+},
 
-InternoteStorageWatcher.prototype.onNeedingPassthru = function(event)
+onNeedingPassthru: function(event)
 {
     //dump("InternoteStorageWatcher.onNeedingPassthru " + event.name + "\n");
     
@@ -203,9 +210,9 @@ InternoteStorageWatcher.prototype.onNeedingPassthru = function(event)
         var isPresent = this.noteMap.hasOwnProperty(note.num);
         if (isPresent) this.passEvent(event);
     }
-};
+},
 
-InternoteStorageWatcher.prototype.updateFilter = function(filterFn)
+updateFilter: function(filterFn)
 {
     this.filterFn = filterFn;
     
@@ -226,4 +233,6 @@ InternoteStorageWatcher.prototype.updateFilter = function(filterFn)
         var wasPreviouslyPresent = this.noteMap.hasOwnProperty(note.num);
         if (isNowPresent && !wasPreviouslyPresent) this.addNote(new this.storage.StorageEvent(note));
     }
-};
+},
+
+});

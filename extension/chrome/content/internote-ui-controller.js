@@ -113,24 +113,25 @@ checkViewportEvent: null,
 
 init: function()
 {
-    this.utils     = internoteUtilities;
-    this.prefs     = internotePreferences;
+    this.global    = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
+    
+    this.utils     = this.global.utils;
+    this.prefs     = this.global.prefs;
+    this.consts    = this.global.consts;
+    
+    this.StorageWatcher = this.global.StorageWatcher;
+    
     this.noteUI    = internoteNoteUI;
     this.balloonUI = internoteBalloonUI;
-    this.anim      = internoteAnimation;
-    this.consts    = internoteConstants;
-    this.global    = internoteSharedGlobal;
+    this.anim      = internoteAnimation;    
     
-    this.utils.init();
+    this.utils.init(window);
     this.prefs.init(this.utils, this.consts);
     
     this.displayUI = this.chooseDisplayUI();
     
-    InternoteEventDispatcher.prototype.incorporateED(InternoteStorage.prototype);
-    InternoteEventDispatcher.prototype.incorporateED(InternoteStorageWatcher.prototype);
-    
     // This will provide a global object shared between windows
-    this.storage   = InternoteStorage.makeStorage();
+    this.storage   = this.global.makeStorage(document);
     
     this.utils.assertError(this.storage != null, "Failed to initialize storage.");
     
@@ -180,7 +181,7 @@ init: function()
     
     var getViewportDimsFunc = this.utils.bind(this, function()
     {
-        return this.utils.getViewportDims(this.currentBrowser);
+        return this.utils.getViewportDims(window, this.currentBrowser);
     });
     
     this.displayUI.init(this.prefs, this.utils, this.noteUI, getViewportDimsFunc);
@@ -232,6 +233,11 @@ init: function()
     dump("Internote startup successful\n");
 },
 
+getLocaleString: function(messageName)
+{
+    return this.utils.getLocaleString(document, messageName);
+},
+
 chooseDisplayUI: function()
 {
     if (this.utils.hasPopupBugs())
@@ -272,7 +278,7 @@ maybeDisplayNotes: function()
 {
     if (!this.storage.areNotesDisplaying)
     {
-        var displayMessage = this.utils.getLocaleString("DisplayQuestion");
+        var displayMessage = this.getLocaleString("DisplayQuestion");
         
         var shouldDisplay = confirm(displayMessage);
         
@@ -284,11 +290,11 @@ maybeDisplayNotes: function()
 
 handleCatastrophicFailure: function(alertMessageName)
 {
-    internoteSharedGlobal.initialisationFailed = true;
+    this.global.initialisationFailed = true;
     
     try
     {
-        var message = this.utils.getLocaleString(alertMessageName);
+        var message = this.getLocaleString(alertMessageName);
         alert(message);
     }
     catch (ex)
@@ -413,7 +419,7 @@ configureStorageWatcher: function(newURL)
     var pageFilter = this.getPageFilter(newURL);
     
     this.pageWatcher =
-        new InternoteStorageWatcher(this.storage, pageFilter, extraReevaluateEvents, extraPassthruEvents);
+        new this.StorageWatcher(this.storage, pageFilter, extraReevaluateEvents, extraPassthruEvents);
     
     this.pageWatcher.addBoundEventListener("noteAdded",         this, "onNoteAdded");
     this.pageWatcher.addBoundEventListener("noteRemoved",       this, "onNoteRemoved");
@@ -471,7 +477,7 @@ changePage: function(newURL, isPageLoaded)
     
     // We might tab change to the same page, so we still need this ...
     
-    this.currentBrowser = this.utils.getCurrentBrowser();
+    this.currentBrowser = this.utils.getCurrentBrowser(gBrowser);
     
     if (newURL == null)
     {
@@ -676,14 +682,14 @@ userCreatesNote: function()
 {
     //dump("userCreatesNote\n");
     
-    if (internoteSharedGlobal.initialisationFailed)
+    if (this.global.initialisationFailed)
     {
         return;
     }
     
     try
     {
-        var loc = this.utils.getBrowserURL();
+        var loc = this.utils.getBrowserURL(this.currentBrowser);
         
         if (!this.allowNotesOnThisPage(loc))
         {
@@ -695,7 +701,7 @@ userCreatesNote: function()
         
         if (this.storage.areNotesDisplaying)
         {
-            var viewportRect = this.utils.getViewportRect(this.currentBrowser);
+            var viewportRect = this.utils.getViewportRect(window, this.currentBrowser);
             var noteDims = this.storage.getDefaultDims();
             var noteTopLeft = this.screenCalcNewNotePos(viewportRect, noteDims);
             
@@ -749,7 +755,7 @@ userRemovesNote: function(elementOrEvent)
             if (this.prefs.shouldAskBeforeDelete())
             {
                 // While notes are popups they are not affected by modality, so we need a special method.
-                deleteConfirmed = this.confirmDialog(this.utils.getLocaleString("DeleteSingleConfirm"));
+                deleteConfirmed = this.confirmDialog(this.getLocaleString("DeleteSingleConfirm"));
             }
             
             if (deleteConfirmed)
@@ -888,7 +894,7 @@ userStartsDrag: function(event, uiNote, dragMode, onDragMouseMoved, onDragFinish
     this.dragStartPos       = this.displayUI.getScreenPosition(uiNote);
     this.dragMode           = dragMode;
     
-    var handler = new this.utils.DragHandler(this.utils, uiNote);
+    var handler = new this.utils.DragHandler(this.utils, document, uiNote);
     
     handler.onDragMouseMoved = onDragMouseMoved;
     
@@ -951,7 +957,7 @@ userMinimizesNote: function(elementOrEvent)
         if (!note.isMinimized)
         {
             var currNoteRect = this.utils.makeRectFromDims(this.storage.getPos(note), this.storage.getDims(note));
-            var viewportRect = this.utils.getViewportRect(this.currentBrowser);
+            var viewportRect = this.utils.getViewportRect(window, this.currentBrowser);
             if (this.utils.doRectsOverlap(viewportRect, currNoteRect))
             {
                 var animationDriver = this.noteAnimations[noteNum];
@@ -1084,7 +1090,7 @@ userReportsBug: function()
 
 userOpensManager: function(message)
 {
-    if (internoteSharedGlobal.initialisationFailed)
+    if (this.global.initialisationFailed)
     {
         return;
     }
@@ -1335,7 +1341,7 @@ userSetsDefaultColors: function(element)
         
         if (statusbar != null)
         {
-            var feedbackMessage = this.utils.getLocaleString("DefaultsColorsChangedMessage");
+            var feedbackMessage = this.getLocaleString("DefaultsColorsChangedMessage");
             statusbar.label = feedbackMessage;
         }
     }
@@ -1351,9 +1357,9 @@ userSetsDefaultColors: function(element)
 
 chromeUpdateStatusBarIconDisplay: function(shouldShowMessage)
 {
-    var shouldShowIcon = !internoteSharedGlobal.initialisationFailed && this.prefs.shouldUseStatusbar();
-    var panel          = document.getElementById("internote-panel");
-    this.utils.setDisplayed(panel, shouldShowIcon);
+    var shouldShowIcon = !internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.initialisationFailed &&
+                          this.prefs.shouldUseStatusbar();
+    this.utils.setDisplayedIDs(document, "internote-panel", shouldShowIcon);
     if (shouldShowMessage && !shouldShowIcon)
     {
         this.showMessage("NoStatusBarMessage");
@@ -1391,13 +1397,13 @@ chromePrepareTooltip: function()
                           : this.pageWatcher.getCount(); // XXX This gets spliced so should be accurate?
             
             var stringName = (noteCount == 1) ? "SingularNoteCount" : "PluralNoteCount";
-            var newMessageTemplate = this.utils.getLocaleString(stringName);
+            var newMessageTemplate = this.getLocaleString(stringName);
             var newMessage = newMessageTemplate.replace("%1", noteCount);
             tooltipElement.value = newMessage;
         }
         else
         {
-            tooltipElement.value = this.utils.getLocaleString("NotesHiddenMessage");
+            tooltipElement.value = this.getLocaleString("NotesHiddenMessage");
         }
     }
 },
@@ -1477,17 +1483,17 @@ chromePrepareContextMenu: function(element)
         var editElements = ["internote-context-cut-text", "internote-context-copy-text", "internote-context-paste-text",
                             "internote-context-delete-text", "internote-context-select-all"];
         
-        this.utils.setEnabled(editElements, !isFlipped && !isMinimized);
+        this.utils.setEnabledIDs(document, editElements, !isFlipped && !isMinimized);
         
-        this.utils.setEnabled  ("internote-context-choose-colors", !isMinimized);
-        this.utils.setDisplayed("internote-context-choose-colors", !isFlipped);
-        this.utils.setDisplayed("internote-context-edit-text",      isFlipped);
+        this.utils.setEnabledIDs  (document, "internote-context-choose-colors", !isMinimized);
+        this.utils.setDisplayedIDs(document, "internote-context-choose-colors", !isFlipped);
+        this.utils.setDisplayedIDs(document, "internote-context-edit-text",      isFlipped);
         
-        this.utils.setDisplayed("internote-context-minimize-note",   !isMinimized);
-        this.utils.setDisplayed("internote-context-unminimize-note",  isMinimized);
+        this.utils.setDisplayedIDs(document, "internote-context-minimize-note",   !isMinimized);
+        this.utils.setDisplayedIDs(document, "internote-context-unminimize-note",  isMinimized);
         
-        this.utils.setDisplayed(document.getElementsByClassName("internote-text-command" ), !isFlipped);
-        this.utils.setDisplayed(document.getElementsByClassName("internote-color-command"),  isFlipped);
+        this.utils.setDisplayedElts(document.getElementsByClassName("internote-text-command" ), !isFlipped);
+        this.utils.setDisplayedElts(document.getElementsByClassName("internote-color-command"),  isFlipped);
         
         var smallCanvas = this.utils.createHTMLCanvas(document, null, this.noteUI.NOTE_OUTER_SIZE, this.noteUI.NOTE_OUTER_SIZE);
         var largeCanvas = this.utils.createHTMLCanvas(document, null, this.MENUICON_SIZE, this.MENUICON_SIZE);
@@ -1549,11 +1555,10 @@ chromePrepareShowOnMenu: function(element)
         var isURLPrefix  = (note.matchType == this.storage.URL_MATCH_PREFIX);
         var isSiteSuffix = (note.matchType == this.storage.URL_MATCH_SUFFIX);
         
-        this.utils.setDisplayed(regexpItem, isRegexp);
+        this.utils.setDisplayedElts(regexpItem, isRegexp);
         
         var areIgnoresApplicable = this.storage.areIgnoresApplicable(note.matchType);
-        this.utils.setEnabled(anchorItem, areIgnoresApplicable);
-        this.utils.setEnabled(paramsItem, areIgnoresApplicable);
+        this.utils.setEnabledElts([anchorItem, paramsItem], areIgnoresApplicable);
         
         if (isURL   ) urlItem   .setAttribute("checked", "true");
         if (isSite  ) siteItem  .setAttribute("checked", "true");
@@ -1575,7 +1580,7 @@ chromePrepareShowOnMenu: function(element)
 chromePrepareShowOnMenuPages: function(note, isURLPrefix)
 {
     var menuSeparator = document.getElementById("internote-showon-menu-pages-sep");
-    var startsWithLabel = this.utils.getLocaleString("PageStartsWithMenuItem");
+    var startsWithLabel = this.getLocaleString("PageStartsWithMenuItem");
     
     // Now remove any existing prefix items.
     this.utils.clearAfterMenuSeparator(menuSeparator);
@@ -1610,7 +1615,7 @@ chromePrepareShowOnMenuPages: function(note, isURLPrefix)
 chromePrepareShowOnMenuSites: function(note, isSiteSuffix)
 {
     var menuSeparator = document.getElementById("internote-showon-menu-sites-sep");
-    var endsWithLabel = this.utils.getLocaleString("SiteEndsWithMenuItem");
+    var endsWithLabel = this.getLocaleString("SiteEndsWithMenuItem");
     var site = this.utils.getURLSite(this.currentURL);
     
     // Now remove any existing prefix items.
@@ -1618,7 +1623,7 @@ chromePrepareShowOnMenuSites: function(note, isSiteSuffix)
     
     if (this.utils.isIPAddress(site))
     {
-        var text = this.utils.getLocaleString("NoSitesMessage");
+        var text = this.getLocaleString("NoSitesMessage");
         var menuItem = this.chromePrepareShowOnCreateItem(menuSeparator, text, site, false, null);
         menuItem.setAttribute("disabled", "true");
     }
@@ -1769,7 +1774,7 @@ screenCreateNote: function(uiNote, shouldAnimate)
     }
     
     var noteRectOnViewport = this.utils.makeRectFromDims(posOnViewport, noteDims);
-    var viewportRect = this.utils.makeRectFromDims([0, 0], this.utils.getViewportDims(this.currentBrowser));
+    var viewportRect = this.utils.makeRectFromDims([0, 0], this.utils.getViewportDims(window, this.currentBrowser));
     if (this.utils.doRectsOverlap(noteRectOnViewport, viewportRect))
     {
         this.hasSeenUINote[uiNote.num] = 1;
@@ -1836,8 +1841,8 @@ screenCalcNotePosOnPage: function(uiNote, offset)
         return pos;
     }
     
-    var viewportDims  = this.utils.getViewportDims(this.currentBrowser);
-    var pageDims      = this.utils.getPageDims(this.currentBrowser);
+    var viewportDims  = this.utils.getViewportDims(window, this.currentBrowser);
+    var pageDims      = this.utils.getPageDims(window, this.currentBrowser);
     var effectiveDims = this.utils.coordPairMax(viewportDims, pageDims);
     
     //dump("  ScrollHeight  = " + this.currentBrowser.contentDocument.documentElement.scrollHeight + "\n");
@@ -1887,7 +1892,7 @@ screenCalcNotePosOnViewport: function(uiNote)
     
     if (note.isMinimized)
     {
-        var viewportDims = this.utils.getViewportDims(this.currentBrowser);
+        var viewportDims = this.utils.getViewportDims(window, this.currentBrowser);
         var top = viewportDims[1] - this.noteUI.MINIMIZED_HEIGHT;
         
         this.utils.assertError(uiNote.minimizePos != null, "Missing minimize pos.");
@@ -1929,7 +1934,7 @@ screenCalcDraggedPos: function(uiNote, offset)
     
     this.utils.assertError(note != null, "Note is null when calculating note position.");
     
-    var viewportDims = this.utils.getViewportDims(this.currentBrowser);
+    var viewportDims = this.utils.getViewportDims(window, this.currentBrowser);
     
     var noteDims     = this.storage.getDims(note);
     
@@ -1989,7 +1994,7 @@ screenCalcModifiedNoteDims: function(uiNote, offset)
     var newDims = this.utils.coordPairAdd(noteDims, offset);
     
     var posOnViewport = this.screenCalcNotePosOnViewport(uiNote);
-    var viewportDims = this.utils.getViewportDims(this.currentBrowser);
+    var viewportDims = this.utils.getViewportDims(window, this.currentBrowser);
     
     //dump("NP " + this.utils.compactDumpString(posOnViewport) + "\n");
     //dump("VD " + this.utils.compactDumpString(viewportDims) + "\n");
@@ -2208,8 +2213,8 @@ screenInitAspects: function()
 {
     [this.currentScrollX,   this.currentScrollY   ] = [content.scrollX, content.scrollY];
     [this.currentLeft,      this.currentTop       ] = [this.currentBrowser.boxObject.screenX, this.currentBrowser.boxObject.screenY];
-    [this.currentWidth,     this.currentHeight    ] = this.utils.getViewportDims(this.currentBrowser);
-    [this.currentPageWidth, this.currentPageHeight] = this.utils.getPageDims(this.currentBrowser);
+    [this.currentWidth,     this.currentHeight    ] = this.utils.getViewportDims(window, this.currentBrowser);
+    [this.currentPageWidth, this.currentPageHeight] = this.utils.getPageDims(window, this.currentBrowser);
 },
 
 // If the scrollbar has moved, we need to reposition the notes.
@@ -2220,7 +2225,7 @@ screenInitAspects: function()
 // In any case, we need to redraw any translucency.
 screenCheckAspects: function(ev)
 {
-    if (this.utils.isMinimized())
+    if (this.utils.isWindowMinimized(window))
     {
         return;
     }
@@ -2245,8 +2250,8 @@ screenCheckAspects: function(ev)
         var newLeft    = this.currentBrowser.boxObject.screenX;
         var newTop     = this.currentBrowser.boxObject.screenY;
         
-        var [newWidth,     newHeight]      = this.utils.getViewportDims(this.currentBrowser);
-        var [newPageWidth, newPageHeight]  = this.utils.getPageDims(this.currentBrowser);
+        var [newWidth,     newHeight]      = this.utils.getViewportDims(window, this.currentBrowser);
+        var [newPageWidth, newPageHeight]  = this.utils.getPageDims(window, this.currentBrowser);
         
         var viewportMoved   = (this.currentLeft      != newLeft      || this.currentTop        != newTop       );
         var viewportResized = (this.currentWidth     != newWidth     || this.currentHeight     != newHeight    );
@@ -2276,7 +2281,7 @@ screenCheckAspects: function(ev)
             this.currentPageWidth  = newPageWidth;
             this.currentPageHeight = newPageHeight;
             
-            var viewportDims = viewportResized ? this.utils.getViewportDims(this.currentBrowser) : null;
+            var viewportDims = viewportResized ? this.utils.getViewportDims(window, this.currentBrowser) : null;
             var posFunc = this.utils.bind(this, this.screenGetUpdatedPosFunc);
             
             if (viewportResized || scrolled || pageResized)
@@ -2570,7 +2575,7 @@ startNoteAnimation: function(uiNote, animation, animationTime, onCompleteExtra, 
         delete this.noteAnimations[uiNote.num];
     }));
     
-    if (this.utils.isMinimized() || shouldSkip)
+    if (this.utils.isWindowMinimized(window) || shouldSkip)
     {
         driver.hurry();
     }
@@ -2598,7 +2603,7 @@ hasHTMLNotes: function()
 
 markOnscreenNotes: function()
 {
-    var viewportRect = this.utils.getViewportRect(this.currentBrowser);
+    var viewportRect = this.utils.getViewportRect(window, this.currentBrowser);
     
     for (var i = 0; i < this.allUINotes.length; i++)
     {
@@ -2626,7 +2631,7 @@ hasOffscreenNotes: function()
 
 showWarning: function(messageName)
 {
-    var messageText = this.utils.getLocaleString(messageName);
+    var messageText = this.getLocaleString(messageName);
     var notifyBox = gBrowser.getNotificationBox();
     notifyBox.appendNotification(messageText, "warning", null, notifyBox.PRIORITY_WARNING_MEDIUM);
 },
@@ -2662,7 +2667,7 @@ showMessageNow: function(messageName, linkMessageName, linkFunc)
         this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
     }
     
-    this.balloonUI.popup(this.utils.getLocaleString(messageName), linkMessageName, linkFunc);
+    this.balloonUI.popup(this.getLocaleString(messageName), linkMessageName, linkFunc);
 },
 
 // This is purely for forward compatibility.  HTML notes are not supported as yet.
@@ -3188,7 +3193,8 @@ progressListener: {
             }
             catch (ex)
             {
-                internoteUtilities.handleException("Exception caught when reporting location change.", ex);
+                var utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+                utils.handleException("Exception caught when reporting location change.", ex);
             }
         }
     },
@@ -3208,7 +3214,7 @@ window.addEventListener("load", function()
     try
     {
         // Check to see if we already failed to initialize a previous window - we don't need to realert.
-        if (internoteSharedGlobal.initialisationFailed)
+        if (internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.initialisationFailed)
         {
             var panel = document.getElementById("internote-panel");
             panel.parentNode.removeChild(panel);
@@ -3220,6 +3226,15 @@ window.addEventListener("load", function()
     }
     catch (ex)
     {
-        internoteUIController.handleInitFailure(ex);
+        try
+        {
+            internoteUIController.handleInitFailure(ex);
+        }
+        catch (ex2)
+        {
+            dump("Init Failure\n");
+            dump(ex + "\n");
+            dump(ex2 + "\n");
+        }
     }
 }, false);

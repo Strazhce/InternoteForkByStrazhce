@@ -23,12 +23,12 @@ var internoteBugReportDlg =
 
 init: function()
 {
-    this.utils  = internoteUtilities;
-    this.consts = internoteConstants;
+    this.utils  = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+    this.consts = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.consts;
     
     try
     {
-        this.utils.init();
+        this.utils.init(window);
         this.utils.initSysInfo();
         
         var installRDF = this.utils.loadInstallRDF();
@@ -56,7 +56,8 @@ init: function()
     {
         try
         {
-            internoteUtilities.handleException("The bug reporting dialog failed to initialise.", ex);
+            var utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+            utils.handleException("The bug reporting dialog failed to initialise.", ex);
             alert("The bug reporting dialog failed to initialise."); // XXX Fix
         }
         catch (ex2)

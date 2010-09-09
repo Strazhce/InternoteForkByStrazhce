@@ -19,36 +19,65 @@
 
 Components.utils.import("resource://internotejs/internote-shared-global.jsm");
 
-var internoteUtilities = {
+if (internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.BaseObject == null)
+{
+    internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.BaseObject =
+        function() {};
+    
+    internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.BaseObject.prototype =
+    {
+        incorporate: function(name, obj)
+        {
+            // Don't incorporate again, for both perf reasons, and also
+            // to avoid changing the scope of the methods which may matter
+            // eg in finding globals like ImageDocument, etc.
+            var alreadyIncorporated = this["incorporated" + name];
+            if (!alreadyIncorporated)
+            {
+                for (var name in obj)
+                {
+                    this[name] = obj[name];
+                }
+                this["incorporated" + name] = true;
+            }
+        }
+    };
+}
+
+if (internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils == null)
+{
+
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils =
+    new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.BaseObject();
+
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Utils", {
 
 MAX_DUMP_DATA_SIZE: 10000,
 
-init: function()
+areUtilsInitialized: false,
+
+init: function(anyWindow)
 {
+    if (this.areUtilsInitialized)
+    {
+        return;
+    }
+    else
+    {
+        this.areUtilsInitialized = true;
+    }
+
     // Firefox seems to have bugs where it just refuses to find all global variables, so ...
     this.Cc = Components.classes;
     this.Ci = Components.interfaces;
     this.Cu = Components.utils;
     this.Cr = Components.results;
     
-    this.global = internoteSharedGlobal;
-},
-
-// Used for incorporating the utility methods from the satellite utility files.
-incorporate: function(obj)
-{
-    for (var name in obj)
-    {
-        this[name] = obj[name];
-    }
-},
-
-incorporate2: function(destObj, srcObj)
-{
-    for (var name in srcObj)
-    {
-        destObj[name] = srcObj[name];
-    }
+    this.navigator = anyWindow.navigator;
+    
+    this.global = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
+    
+    this.consts = this.global.consts;
 },
 
 ifNull: function(value, defaultVal)
@@ -56,7 +85,7 @@ ifNull: function(value, defaultVal)
     return (value == null) ? defaultVal : value;
 },
 
-getLocaleString: function(strName)
+getLocaleString: function(doc, strName)
 {
     //dump("internoteUtilities.getLocaleString " + strName + "\n");
     
@@ -67,7 +96,7 @@ getLocaleString: function(strName)
     }
     else
     {
-        var str = document.getElementById('internote-strings').getString(strName);
+        var str = doc.getElementById('internote-strings').getString(strName);
         this.assertError(str != null && str.length > 0, "Empty locale string.", strName);
         return str;
     }
@@ -118,14 +147,8 @@ openURL: function(url)
     var mediator = this.getCCService("@mozilla.org/appshell/window-mediator;1", "nsIWindowMediator");
     var recentWindow = mediator.getMostRecentWindow("navigator:browser");
     
-    if (recentWindow != null)
-    {
-        recentWindow.delayedOpenTab(url);
-    }
-    else
-    {
-        window.open(url);
-    }
+    this.utils.assertError(recentWindow != null, "Could not find window.", recentWindow);
+    recentWindow.delayedOpenTab(url);
 },
 
 saveStringToFilename : function(writeString, path)
@@ -334,11 +357,9 @@ bind: function(obj, method)
     return function() { return method.apply(obj, arguments); };
 },
 
-isMinimized: function(win)
+isWindowMinimized: function(win)
 {
-    const WINDOW_MINIMIZED = 2;
-    if (win == null) win = window;
-    return win.windowState == WINDOW_MINIMIZED;
+    return win.windowState == win.STATE_MINIMIZED;
 },
 
 // This creates a bound version of a function and places it inside the bound object.
@@ -1042,4 +1063,6 @@ cancelTimer: function(timer)
     timer.cancel();
 },
 
-};
+});
+
+}

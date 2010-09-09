@@ -22,10 +22,10 @@ var internotePrefsDialog =
 
 init: function()
 {
-    this.utils = internoteUtilities;
-    this.prefs = internotePreferences;
+    this.utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+    this.prefs = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs;
     
-    this.utils.init();
+    this.utils.init(window);
     this.prefs.init(this.utils);
     
     document.getElementById("saveFolderField").value = this.prefs.getSaveLocationPref();
@@ -43,6 +43,11 @@ init: function()
     this.userTogglesLocationCheckbox();
 },
 
+getLocaleString: function(messageName)
+{
+    return this.utils.getLocaleString(document, messageName);
+},
+
 onAccept: function()
 {
     try
@@ -58,7 +63,7 @@ onAccept: function()
             
             if (!dir.exists())
             {
-                alert(this.utils.getLocaleString("DirDoesntExistError"));
+                alert(this.getLocaleString("DirDoesntExistError"));
                 return false;
             }
             else
@@ -71,7 +76,7 @@ onAccept: function()
     catch (ex)
     {
         this.utils.handleException("Error validating storage directory.", ex);
-        alert(this.utils.getLocaleString("DirDoesntExistError"));
+        alert(this.getLocaleString("DirDoesntExistError"));
         return false;
     }
 },
@@ -83,7 +88,7 @@ userSetsSaveLocation: function ()
         const nsIFilePicker = this.utils.getCIInterface("nsIFilePicker");
         
         var picker = this.utils.getCCInstance("@mozilla.org/filepicker;1", "nsIFilePicker");
-        var title = this.utils.getLocaleString("ChooseLocation");
+        var title = this.getLocaleString("ChooseLocation");
         picker.init(window, title, nsIFilePicker.modeGetFolder);
         
         if (this.prefs.shouldUseOtherSaveLoc())

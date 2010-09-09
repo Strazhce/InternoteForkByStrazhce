@@ -17,7 +17,11 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-var internotePreferences = {
+if (internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs == null)
+{
+
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs =
+{
 
 init: function(utils, consts)
 {
@@ -214,3 +218,5 @@ addPrefsObserver: function(observeFunc)
 },
 
 };
+
+}

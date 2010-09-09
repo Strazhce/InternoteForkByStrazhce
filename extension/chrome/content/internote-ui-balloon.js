@@ -131,13 +131,13 @@ showMessageNow: function(message)
     mainStack.flex = "1";
     this.utils.fixDOMEltWidth(this.balloonPanel, this.BALLOON_WIDTH);
     
-    this.balloonCanvas = this.utils.createHTMLElement("canvas");
+    this.balloonCanvas = this.utils.createHTMLElement("canvas", document);
     
     this.balloonCanvas.setAttribute("style", "border: none; margin: 0px; padding: 0px;");
     this.balloonCanvas.height = 1; // we can work out the correct height when the popup shows
     this.balloonCanvas.width  = this.BALLOON_WIDTH;
     
-    this.balloonDiv = this.utils.createHTMLElement("div");
+    this.balloonDiv = this.utils.createHTMLElement("div", document);
     this.balloonDiv.setAttribute("style", "font-size: 10pt; border: none; margin: 0px;");
     this.balloonDiv.style.marginLeft   = this.STANDARD_MARGIN + "px";
     this.balloonDiv.style.marginRight  = this.STANDARD_MARGIN + "px";
@@ -151,9 +151,9 @@ showMessageNow: function(message)
     this.closeButton.setAttribute("style", "float: right; cursor: pointer;");
     this.redrawCloseButton();
     
-    var text = this.utils.getLocaleString(message.messageName);
+    var text = this.utils.getLocaleString(document, message.messageName);
     
-    var mainPara = this.utils.createHTMLElement("p");
+    var mainPara = this.utils.createHTMLElement("p", document);
     mainPara.appendChild(this.closeButton);
     mainPara.appendChild(document.createTextNode(text));
     mainPara.style.margin = "0px";
@@ -161,9 +161,9 @@ showMessageNow: function(message)
     
     for (var i in this.links)
     {
-        var linkText = this.utils.getLocaleString(this.links[i].messageName);
+        var linkText = this.utils.getLocaleString(document, this.links[i].messageName);
         
-        var aPara = this.utils.createHTMLElement("a");
+        var aPara = this.utils.createHTMLElement("a", document);
         aPara.appendChild(document.createTextNode(linkText));
         aPara.style.color          = "blue";
         aPara.style.cursor         = "pointer";
@@ -176,7 +176,7 @@ showMessageNow: function(message)
             this.onClose();
         }), false);
         
-        var linkPara = this.utils.createHTMLElement("p");
+        var linkPara = this.utils.createHTMLElement("p", document);
         linkPara.appendChild(aPara);
         linkPara.style.margin = "0px";
         linkPara.style.textAlign = "center";

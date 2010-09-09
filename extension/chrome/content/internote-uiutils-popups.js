@@ -16,22 +16,22 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-internoteUtilities.incorporate({
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("PopupUIUtils", {
 
-createShiftingPanel: function(suffix, containee)
+createShiftingPanel: function(doc, suffix, containee)
 {
-    var popupPanel = document.createElement("panel");
+    var popupPanel = doc.createElement("panel");
     popupPanel.setAttribute("id", "internote-popup" + suffix);
     // -moz-appearance seems to be necessary on Linux/Mac but not Windows.
     popupPanel.setAttribute("style", "background-color: transparent; border: none; -moz-appearance: none; -moz-window-shadow: none;");
     popupPanel.setAttribute("noautohide", "true");
     
     // We need this stack because you can position in stacks but not panels.
-    var container = document.createElement("stack");
+    var container = doc.createElement("stack");
     container.setAttribute("id", "internote-shiftcontainer" + suffix);
     container.setAttribute("style", "overflow: hidden; background-color: transparent;");
     
-    var myBody = document.getElementById("main-window");
+    var myBody = doc.getElementById("main-window");
     myBody.appendChild(popupPanel);
     popupPanel.appendChild(container);
     container.appendChild(containee);
@@ -66,12 +66,12 @@ getShiftingPanelContainee: function(popupPanel)
     return popupPanel.firstChild.firstChild;
 },
 
-restrictRectToScreen: function(browser, rect)
+restrictRectToScreen: function(win, browser, rect)
 {
     const WINDOW_MAXIMIZED = 1;
     
-    var screenWidth  = window.screen.availWidth;
-    var screenHeight = window.screen.availHeight;
+    var screenWidth  = win.screen.availWidth;
+    var screenHeight = win.screen.availHeight;
     
     if (this.getPlatform() == "win")
     {
@@ -80,7 +80,7 @@ restrictRectToScreen: function(browser, rect)
         // 4 pixels below, which would seem to be the size of Windows's resize border.
         var shouldUseWorkaround = false;
         
-        if (window.windowState != WINDOW_MAXIMIZED)
+        if (win.windowState != WINDOW_MAXIMIZED)
         {
             shouldUseWorkaround = true;
         }
@@ -110,7 +110,7 @@ restrictRectToScreen: function(browser, rect)
     }
     
     // Don't assume we're on the main monitor!
-    var screenTopLeft = [window.screen.availLeft, window.screen.availTop];
+    var screenTopLeft = [win.screen.availLeft, win.screen.availTop];
     
     var screenRect = this.makeRectFromDims(screenTopLeft, [screenWidth, screenHeight]);
     return this.getRectIntersection(rect, screenRect);

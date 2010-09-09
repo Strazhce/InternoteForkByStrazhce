@@ -245,7 +245,7 @@ iFrameLoaded: function(uiNote)
                     
                     // Check whether off-page.
                     var currNoteRect = this.utils.makeRectFromDims(nextUINote.note.getPos(), nextUINote.note.getDims());
-                    var wasMoved = this.utils.scrollToShowRect(this.browser, currNoteRect);
+                    var wasMoved = this.utils.scrollToShowRect(window, this.browser, currNoteRect);
                     
                     if (wasMoved)
                     {
@@ -394,7 +394,7 @@ adjustNote: function(uiNote, newPos, newDims, newFlipOffset)
         iFrame.style.left = (actualPos[0] + viewportPos[0]) + "px";
         iFrame.style.top  = (actualPos[1] + viewportPos[1]) + "px";
         
-        this.utils.setDisplayed(iFrame, actualDims[0] > 0 && actualDims[1] > 0);
+        this.utils.setDisplayedElts(iFrame, actualDims[0] > 0 && actualDims[1] > 0);
     }
 },
 
@@ -446,7 +446,7 @@ activateDebugFunction: function() {},
 
 createShiftingIFrame: function(suffix, containee, onLoad)
 {
-    var iFrame = this.utils.createHTMLElement("iframe");
+    var iFrame = this.utils.createHTMLElement("iframe", document);
     iFrame.setAttribute("id", "internote-iframe" + suffix);
     iFrame.setAttribute("style", "background-color: transparent; border: none; position: fixed; display: none;");
     iFrame.setAttribute("class", "internote-iframe");

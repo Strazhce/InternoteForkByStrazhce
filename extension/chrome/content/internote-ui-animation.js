@@ -185,8 +185,9 @@ internoteAnimation.SequentialAnimation.prototype.indicateStart = function()
 internoteAnimation.SequentialAnimation.prototype.doStep = function(ratioDone)
 {
     //dump("internoteAnimation.SequentialAnimation.doStep RatioDone = " + ratioDone + "\n");
-    
-    internoteUtilities.assertError(this.stageNum < this.stageCount, "Animation already completed.");
+
+    var utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+    utils.assertError(this.stageNum < this.stageCount, "Animation already completed.");
     
     if (this.stageEnd <= ratioDone)
     {
@@ -253,6 +254,9 @@ internoteAnimation.AnimationDriver = function AnimationDriver(utils, animation)
     this.initEventDispatcher();
     this.createEvent("animationCompleted");
 };
+
+internoteAnimation.AnimationDriver.prototype =
+    new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher();
 
 internoteAnimation.AnimationDriver.prototype.stepTime = 50;
 
@@ -358,8 +362,6 @@ internoteAnimation.AnimationDriver.prototype.hurry = function()
     this.dispatchEvent("animationCompleted", new internoteAnimation.AnimationCompleteEvent(this.animation) );
 };
 
-InternoteEventDispatcher.prototype.incorporateED(internoteAnimation.AnimationDriver.prototype);
-
 //////////////////////
 // Specific Animations
 //////////////////////
@@ -418,7 +420,8 @@ internoteAnimation.getFlipAnimation = function(utils, noteUI, displayUI, uiNote)
     
     phase1.doStep = phase2.doStep = function(timeRatioDone)
     {
-        internoteUtilities.assertWarn(timeRatioDone != null, "Oops");
+        var utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+        utils.assertWarn(timeRatioDone != null, "Oops");
         
         if (multiAnimation.stageNum == 1) timeRatioDone += 1; // get the second half of the cosine function
         
