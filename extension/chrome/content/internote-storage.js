@@ -223,9 +223,7 @@ observePrefsChanges: function()
         }
     });
     
-    var prefsBranch = this.prefs.prefs;
-    prefsBranch.QueryInterface(this.utils.getCIInterface("nsIPrefBranch2"));
-    prefsBranch.addObserver("", {observe: observeFunc}, false);
+    this.prefs.addPrefsObserver(observeFunc);
 },
 
 toggleNoteDisplay: function()

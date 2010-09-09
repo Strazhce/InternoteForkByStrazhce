@@ -207,4 +207,10 @@ setDefaultColors: function(foreColor, backColor)
     }
 },
 
+addPrefsObserver: function(observeFunc)
+{
+    this.prefsBranch.QueryInterface(this.utils.getCIInterface("nsIPrefBranch2"));
+    this.prefsBranch.addObserver("", {observe: observeFunc}, false);
+},
+
 };
