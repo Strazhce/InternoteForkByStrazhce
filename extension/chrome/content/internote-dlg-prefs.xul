@@ -30,8 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             onload="internotePrefsDialog.init();"
             ondialogaccept="return internotePrefsDialog.onAccept();"
             buttons="accept,cancel"
-            screenX="24" screenY="24" width="700px" height="630px"
-            persist="screenX screenY width height">
+            persist="screenX screenY">
 
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>

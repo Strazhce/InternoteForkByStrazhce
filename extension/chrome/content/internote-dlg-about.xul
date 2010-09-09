@@ -28,14 +28,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         buttons="accept"
         buttonlabelaccept="&internote.closeButton.label;"
         persist="screenX screenY"
-        screenX="24" screenY="24" width="600" height="600"
         onload="internoteAboutDlg.init();" >
     
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js" />
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js" />
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils-sysinfo.js" />
     <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-about.js" />
-    <vbox flex="1">
+    
+    <vbox>
         <hbox>
             <spacer flex="1" />
             <groupbox>

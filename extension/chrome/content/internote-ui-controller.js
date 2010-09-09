@@ -1165,7 +1165,7 @@ userOpensAbout: function()
     try
     {
         this.prefsDialog = window.openDialog('chrome://internote/content/internote-dlg-about.xul',
-                                                'internoteabout', 'centerscreen, modal', window);
+                                             'internoteabout', 'centerscreen, modal, resizable', window);
         if (this.prefsDialog == null)
         {
             this.showMessage("WindowOpenFailed");
