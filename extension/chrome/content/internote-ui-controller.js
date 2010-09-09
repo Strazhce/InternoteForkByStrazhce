@@ -39,9 +39,7 @@
 // The UI makes extensive use of the UINote class, this includes variables for the various UI elements,
 // as well as a reference to the corresponding Note class used by the back-end storage.
 
-Components.utils.import("resource://internotejs/internote-shared-global.jsm");
-
-var internoteUIController = {
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller = {
 
 DRAG_MODE_NONE:    0,
 DRAG_MODE_MOVE:    1,
@@ -111,27 +109,31 @@ checkViewportEvent: null,
 // Initialisation, Destruction
 ///////////////////////////////
 
+initConnections: function(windowGlobal)
+{
+    this.windowGlobal = windowGlobal;
+    
+    this.noteUI    = this.windowGlobal.noteUI;
+    this.balloonUI = this.windowGlobal.balloonUI;
+    
+    this.sharedGlobal = windowGlobal.sharedGlobal;
+    
+    this.utils     = this.sharedGlobal.utils;
+    this.prefs     = this.sharedGlobal.prefs;
+    this.consts    = this.sharedGlobal.consts;
+    
+    this.StorageWatcher = this.sharedGlobal.StorageWatcher;
+},
+
 init: function()
 {
-    this.global    = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
-    
-    this.utils     = this.global.utils;
-    this.prefs     = this.global.prefs;
-    this.consts    = this.global.consts;
-    
-    this.StorageWatcher = this.global.StorageWatcher;
-    
-    this.noteUI    = internoteNoteUI;
-    this.balloonUI = internoteBalloonUI;
-    this.anim      = internoteAnimation;    
-    
     this.utils.init(window);
-    this.prefs.init(this.utils, this.consts);
+    this.prefs.init();
     
-    this.displayUI = this.chooseDisplayUI();
+    this.displayUI = this.windowGlobal.displayUI = this.chooseDisplayUI();
     
     // This will provide a global object shared between windows
-    this.storage   = this.global.makeStorage(document);
+    this.storage   = this.sharedGlobal.makeStorage(document);
     
     this.utils.assertError(this.storage != null, "Failed to initialize storage.");
     
@@ -184,9 +186,8 @@ init: function()
         return this.utils.getViewportDims(window, this.currentBrowser);
     });
     
-    this.displayUI.init(this.prefs, this.utils, this.noteUI, getViewportDimsFunc);
-    this.noteUI   .init(this.prefs, this.utils, this.consts, this.displayUI.supportsTranslucency());
-    this.anim     .init(this.utils);
+    this.displayUI.init(getViewportDimsFunc);
+    this.noteUI   .init(this.displayUI.supportsTranslucency());
     
     this.utils.addBoundDOMEventListener(window, "unload", this, "destroy", false);
     
@@ -224,7 +225,11 @@ init: function()
         var key    = document.createElement("key");
         key.setAttribute("key",       "g");
         key.setAttribute("modifiers", "alt");
-        key.setAttribute("oncommand", "internoteUIController.activateDebugFunction()");
+        
+        key.addEventListener("command", this.utils.bind(this, function()
+        {
+            this.activateDebugFunction();
+        }), false);
         
         var keySet = document.getElementById("mainKeyset");
         keySet.appendChild(key);
@@ -242,15 +247,15 @@ chooseDisplayUI: function()
 {
     if (this.utils.hasPopupBugs())
     {
-        return internoteDisplayUIFixedIFrames;
+        return this.windowGlobal.displayUIFixedIFrames;
     }
     else if (this.utils.supportsTransparentClickThru())
     {
-        return internoteDisplayUIPopupPane;
+        return this.windowGlobal.displayUIPopupPane;
     }
     else
     {
-        return internoteDisplayUISeparatePopups;
+        return this.windowGlobal.displayUISeparatePopups;
     }
 },
 
@@ -263,14 +268,14 @@ setUpInternote: function()
     
     this.changePage(null, true);
     
-    gBrowser.addProgressListener(this.progressListener,
+    gBrowser.addProgressListener(this.windowGlobal.progressListener,
                                  this.utils.getCIConstant("nsIWebProgress", "NOTIFY_STATE_DOCUMENT"));
 },
 
 tearDownInternote: function()
 {
     this.tearDownOldPage();
-    gBrowser.removeProgressListener(this.progressListener,
+    gBrowser.removeProgressListener(this.windowGlobal.progressListener,
                                     this.utils.getCIConstant("nsIWebProgress", "NOTIFY_STATE_DOCUMENT"));
 },
 
@@ -290,7 +295,7 @@ maybeDisplayNotes: function()
 
 handleCatastrophicFailure: function(alertMessageName)
 {
-    this.global.initialisationFailed = true;
+    this.sharedGlobal.initialisationFailed = true;
     
     try
     {
@@ -382,7 +387,7 @@ destroy: function()
         this.storage.destroy();
     }
     
-    gBrowser.removeProgressListener(this.progressListener);
+    gBrowser.removeProgressListener(this.windowGlobal.progressListener);
 },
 
 imageLoadCheck: function()
@@ -682,7 +687,7 @@ userCreatesNote: function()
 {
     //dump("userCreatesNote\n");
     
-    if (this.global.initialisationFailed)
+    if (this.sharedGlobal.initialisationFailed)
     {
         return;
     }
@@ -928,7 +933,7 @@ userFlipsNote: function(elementOrEvent)
         var startLeft  = parseInt(uiNote.note.left, 10);
         var startWidth = uiNote.note.width;
         
-        var animation = internoteAnimation.getFlipAnimation(this.utils, this.noteUI, this.displayUI, uiNote);
+        var animation = this.windowGlobal.getFlipAnimation(this.windowGlobal, uiNote);
         this.startNoteAnimation(uiNote, animation, this.FLIP_ANIMATION_TIME);
     }
     catch (ex)
@@ -1090,7 +1095,7 @@ userReportsBug: function()
 
 userOpensManager: function(message)
 {
-    if (this.global.initialisationFailed)
+    if (this.sharedGlobal.initialisationFailed)
     {
         return;
     }
@@ -1606,7 +1611,7 @@ chromePrepareShowOnMenuPages: function(note, isURLPrefix)
         var text = startsWithLabel.replace("%1", url);
         var isChecked = (isURLPrefix && url == note.url);
         this.chromePrepareShowOnCreateItem(menuSeparator, text, url, isChecked,
-                                           "internoteUIController.userChoosesPagePrefix(event, popupNode)");
+                                           "internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userChoosesPagePrefix(event, popupNode)");
         
         url = url.substr(0, url.length - 1);
     }
@@ -1637,7 +1642,7 @@ chromePrepareShowOnMenuSites: function(note, isSiteSuffix)
                 var text = endsWithLabel.replace("%1", site);
                 var isChecked = (isSiteSuffix && site == note.url);
                 this.chromePrepareShowOnCreateItem(menuSeparator, text, site, isChecked,
-                                                   "internoteUIController.userChoosesSiteSuffix(event, popupNode)");
+                                                   "internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userChoosesSiteSuffix(event, popupNode)");
                 
                 var index = site.indexOf(".");
                 
@@ -1689,7 +1694,7 @@ chromeActiveWarning: function()
             this.activeWarnCount = 0;
         }
         
-        var newCount = this.global.dumpData.length;
+        var newCount = this.sharedGlobal.dumpData.length;
         
         if (this.activeWarnCount < newCount)
         {
@@ -1765,7 +1770,7 @@ screenCreateNote: function(uiNote, shouldAnimate)
     // Animation should be the very last thing so it doesn't get interrupted by other CPU tasks.
     if (shouldAnimate && this.displayUI.supportsTranslucency())
     {
-        var animation = internoteAnimation.getFadeAnimation(this.utils, uiNote.noteElt, true);
+        var animation = this.windowGlobal.getFadeAnimation(this.windowGlobal, uiNote.noteElt, true);
         this.startNoteAnimation(uiNote, animation, this.CREATE_ANIMATION_TIME);
     }
     else
@@ -1790,7 +1795,7 @@ screenRemoveNote: function(uiNote)
     
     this.noteUI.disableUI(uiNote);
     
-    var animation = internoteAnimation.getFadeAnimation(this.utils, uiNote.noteElt, false);
+    var animation = this.windowGlobal.getFadeAnimation(this.windowGlobal, uiNote.noteElt, false);
     
     var shouldSkipAnimation = !this.displayUI.supportsTranslucency();
     this.startNoteAnimation(uiNote, animation, this.REMOVE_ANIMATION_TIME, this.utils.bind(this, function()
@@ -2336,7 +2341,7 @@ screenMoveNote: function(uiNote)
         var movementDistance = this.utils.coordPairDistance(movementOffset);
         var animationTime = this.MOVE_ANIMATION_TIME + movementDistance;
         
-        var animation = internoteAnimation.getMoveOrResizeAnimation(this.utils, this.noteUI, this.displayUI, uiNote,
+        var animation = this.windowGlobal.getMoveOrResizeAnimation(this.windowGlobal, uiNote,
                                                                     newPosOnViewport, false, false);
         this.startNoteAnimation(uiNote, animation, animationTime);
     }
@@ -2354,12 +2359,12 @@ screenResizeNote: function(uiNote)
         var movementDistance = this.utils.coordPairDistance(movementOffset);
         var animationTime = this.RESIZE_ANIMATION_TIME + 2 * movementDistance;
         
-        var animation = internoteAnimation.getMoveOrResizeAnimation(this.utils, this.noteUI, this.displayUI, uiNote,
+        var animation = this.windowGlobal.getMoveOrResizeAnimation(this.windowGlobal, uiNote,
                                                                     newDims, true, false);
         this.startNoteAnimation(uiNote, animation, animationTime);
         
         //var animation =
-        //    new internoteAnimation.MoveResizeAnimation(this.utils, animationTime,
+        //    new this.windowGlobal.MoveResizeAnimation(this.utils, animationTime,
         //                                               currentDims, newDims, uiNote.setDimsFunc);
         //this.startNoteAnimation(uiNote, animation);
     }
@@ -2380,7 +2385,7 @@ screenUpdateNotesMinimizing: function(uiNotes)
 
         this.hurryNoteAnimation(uiNote);
         
-        var animation = internoteAnimation.getMinimizeAnimation(this.utils, this.noteUI, this.displayUI, uiNote,
+        var animation = this.windowGlobal.getMinimizeAnimation(this.windowGlobal, uiNote,
                                                                 newPosOnViewport, newDims);
         this.startNoteAnimation(uiNote, animation, this.MINIMIZE_ANIMATION_TIME);
     }
@@ -2397,7 +2402,7 @@ screenAdjustMinimized: function(uiNote, animationTime)
     
     if (!this.utils.areCoordPairsEqual(newPosOnViewport, currentPosOnViewport))
     {
-        var animation = internoteAnimation.getMoveOrResizeAnimation(this.utils, this.noteUI, this.displayUI, uiNote,
+        var animation = this.windowGlobal.getMoveOrResizeAnimation(this.windowGlobal, uiNote,
                                                                     newPosOnViewport, false, true);
         this.startNoteAnimation(uiNote, animation, animationTime);
     }
@@ -2565,7 +2570,7 @@ startNoteAnimation: function(uiNote, animation, animationTime, onCompleteExtra, 
     var existingDriver = this.noteAnimations[uiNote.num];
     if (existingDriver != null) existingDriver.hurry();
     
-    var driver = new internoteAnimation.AnimationDriver(this.utils, animation);
+    var driver = new this.windowGlobal.AnimationDriver(this.windowGlobal, animation);
     this.noteAnimations[uiNote.num] = driver;
     
     driver.addEventListener("animationCompleted", this.utils.bind(this, function()
@@ -2648,7 +2653,7 @@ showMessage: function(messageName, shouldTimeout, linkMessageName, linkFunc)
     if (!this.balloonUI.isInitialized)
     {
         var myBody = document.getElementById("main-window");
-        this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
+        this.balloonUI.init("internote-balloon-popup", myBody);
     }
     
     var links = [];
@@ -2664,7 +2669,7 @@ showMessageNow: function(messageName, linkMessageName, linkFunc)
     if (!this.balloonUI.isInitialized)
     {
         var myBody = document.getElementById("main-window");
-        this.balloonUI.init(this.utils, this.anim, "internote-balloon-popup", myBody);
+        this.balloonUI.init("internote-balloon-popup", myBody);
     }
     
     this.balloonUI.popup(this.getLocaleString(messageName), linkMessageName, linkFunc);
@@ -2811,7 +2816,7 @@ onNoteForeRecolored: function(event)
         else
         {
             // This will only happen for a change in another window.
-            var animation = internoteAnimation.getForeRecolorAnimation(this.utils, this.noteUI, uiNote, event.data1);
+            var animation = this.windowGlobal.getForeRecolorAnimation(this.windowGlobal, uiNote, event.data1);
             this.startNoteAnimation(uiNote, animation, this.RECOLOR_ANIMATION_TIME);
         }
     }
@@ -2831,7 +2836,7 @@ onNoteBackRecolored: function(event)
         var uiNote = this.uiNoteLookup[note.num];
         this.utils.assertError(uiNote != null, "UINote is null trying to back-recolor note.");
         
-        var animation = internoteAnimation.getBackRecolorAnimation(this.utils, this.noteUI, uiNote, event.data1);
+        var animation = this.windowGlobal.getBackRecolorAnimation(this.windowGlobal, uiNote, event.data1);
         this.startNoteAnimation(uiNote, animation, this.RECOLOR_ANIMATION_TIME);
     }
     catch (ex)
@@ -2992,6 +2997,8 @@ onNoteReset: function(event)
 
 onNoteDisplayToggled: function()
 {
+    //dump("onNoteDisplayToggled\n");
+
     try
     {
         this.chromeUpdateInternoteIcon();
@@ -3017,6 +3024,8 @@ onNoteDisplayToggled: function()
 
 onTranslucencyPrefSet: function()
 {
+    //dump("onTranslucencyPrefSet\n");
+    
     try
     {
         for (var i = 0; i < this.allUINotes.length; i++)
@@ -3032,6 +3041,8 @@ onTranslucencyPrefSet: function()
 
 onFontSizePrefSet: function()
 {
+    //dump("onFontSizePrefSet\n");
+    
     try
     {
         for (var i = 0; i < this.allUINotes.length; i++)
@@ -3047,6 +3058,8 @@ onFontSizePrefSet: function()
 
 onScrollbarPrefSet: function()
 {
+    //dump("onScrollbarPrefSet\n");
+
     try
     {
         for (var i = 0; i < this.allUINotes.length; i++)
@@ -3062,6 +3075,8 @@ onScrollbarPrefSet: function()
 
 onStatusbarPrefSet: function()
 {
+    //dump("onStatusbarPrefSet\n");
+    
     try
     {
         this.chromeUpdateStatusBarIconDisplay(true);
@@ -3129,7 +3144,16 @@ onPageContentArrived: function()
     }
 },
 
-progressListener: {
+};
+
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.progressListener =
+{
+    initConnections: function(windowGlobal)
+    {
+        this.controller = windowGlobal.controller;
+        this.utils      = windowGlobal.sharedGlobal.utils;
+    },
+    
     QueryInterface : function(aIID)
     {
         if (aIID.equals(this.utils.getCIInterface("nsIWebProgressListener"  )) ||
@@ -3149,10 +3173,10 @@ progressListener: {
             if (stateFlags & STATE_STOP)
             {
                 // There can be other requests (iframes and so on), check it's the right one.
-                if (request != null && request.name == internoteUIController.currentURL)
+                if (request != null && request.name == this.controller.currentURL)
                 {
-                    internoteUIController.onPageContentArrived(); // XXX Needed?
-                    internoteUIController.onPageLoadEnd();
+                    this.controller.onPageContentArrived(); // XXX Needed?
+                    this.controller.onPageLoadEnd();
                 }
             }
         }
@@ -3168,7 +3192,7 @@ progressListener: {
                 {
                     //dump("  Location changed to none.\n");
                     
-                    internoteUIController.onTabChange("about:blank");
+                    this.controller.onTabChange("about:blank");
                 }
                 else {
                     // First check it's the right address, and not an IFrame, etc.
@@ -3181,20 +3205,19 @@ progressListener: {
                         
                         if (progress.isLoadingDocument)
                         {
-                            internoteUIController.onPageLoadStart(newURL);
-                            internoteUIController.onPageContentArrived();
+                            this.controller.onPageLoadStart(newURL);
+                            this.controller.onPageContentArrived();
                         }
                         else
                         {
-                            internoteUIController.onTabChange(newURL);
+                            this.controller.onTabChange(newURL);
                         }
                     }
                 }
             }
             catch (ex)
             {
-                var utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
-                utils.handleException("Exception caught when reporting location change.", ex);
+                this.utils.handleException("Exception caught when reporting location change.", ex);
             }
         }
     },
@@ -3203,32 +3226,33 @@ progressListener: {
     onStatusChange      : function(a,b,c,d)     {},
     onSecurityChange    : function(a,b,c)       {},
     onLinkIconAvailable : function(a)           {},
-},
-
 };
 
 window.addEventListener("load", function()
 {
     //dump("window onload\n");
     
+    var sharedGlobal = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
+    var windowGlobal = internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
+    
     try
     {
         // Check to see if we already failed to initialize a previous window - we don't need to realert.
-        if (internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.initialisationFailed)
+        if (sharedGlobal.initialisationFailed)
         {
             var panel = document.getElementById("internote-panel");
-            panel.parentNode.removeChild(panel);
+            panel.parentNode.removeChild(panel); // XXX Should be hide?
         }
         else
         {
-            internoteUIController.init();
+            windowGlobal.controller.init();
         }
     }
     catch (ex)
     {
         try
         {
-            internoteUIController.handleInitFailure(ex);
+            windowGlobal.controller.handleInitFailure(ex);
         }
         catch (ex2)
         {
@@ -3238,3 +3262,6 @@ window.addEventListener("load", function()
         }
     }
 }, false);
+
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.      initConnections(internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66);
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.progressListener.initConnections(internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66);

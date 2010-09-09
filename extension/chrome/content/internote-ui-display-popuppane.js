@@ -17,21 +17,24 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // This is the Display UI, responsible for displaying the notes within the browser.
 
-var internoteDisplayUIPopupPane = {
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUIPopupPane =
+{
 
 popupPanel:     null,
 innerContainer: null,
 offset: [0, 0],
 autoFocusNote:  null,
 
-init: function(prefs, utils, noteUI, getViewportDimsFunc)
+initConnections: function(windowGlobal)
 {
-    // It seems that a strange limitation with JS Code Modules prevents
-    // global references from callbacks.
-    this.prefs   = prefs;
-    this.utils   = utils;
-    this.noteUI  = noteUI;
+    this.prefs   = windowGlobal.sharedGlobal.prefs;
+    this.utils   = windowGlobal.sharedGlobal.utils;
     
+    this.noteUI  = windowGlobal.noteUI;
+},
+
+init: function(getViewportDimsFunc)
+{
     this.isPanelShown   = false;
     this.isPanelCreated = false;
     
@@ -436,3 +439,5 @@ moveEnd: function(uiNote)
 },
 
 };
+
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUIPopupPane.initConnections(internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66);

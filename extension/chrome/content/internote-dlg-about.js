@@ -21,10 +21,10 @@ var internoteAboutDlg =
 
 init: function()
 {
+    this.utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+    
     try
     {
-        this.utils  = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
-        
         this.utils.init(window);
         this.utils.initSysInfo();
         
@@ -44,8 +44,7 @@ init: function()
     }
     catch (ex)
     {
-        var utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
-        utils.handleException("Exception caught when showing about dialog.", ex);
+        this.utils.handleException("Exception caught when showing about dialog.", ex);
     }
 },
 

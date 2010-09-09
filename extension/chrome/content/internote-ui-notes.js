@@ -22,7 +22,7 @@
 // XXX Probably can remove "enabled" stuff, or at least integrate it with makeStaticImage which
 // is used instead (maybe some extra UI changes for disabling).
 
-var internoteNoteUI =
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.noteUI =
 {
 NOTE_BORDER_SIZE: 2,
 NOTE_OUTER_SIZE: 10,
@@ -48,12 +48,15 @@ noteFlipImage: new Image(),
 // Externally called methods
 /////////////////////////////////
 
-init: function(prefs, utils, consts, supportsTranslucency)
+initConnections: function(windowGlobal)
 {
-    this.utils   = utils;
-    this.prefs   = prefs;
-    this.consts  = consts;
-    
+    this.utils   = windowGlobal.sharedGlobal.utils;
+    this.prefs   = windowGlobal.sharedGlobal.prefs;
+    this.consts  = windowGlobal.sharedGlobal.consts;
+},
+
+init: function(supportsTranslucency)
+{
     this.supportsTranslucency = supportsTranslucency;
     
     // XXX Can't find a constructor for this?
@@ -1083,7 +1086,7 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
         }
         catch (ex)
         {
-            internoteUtilities.handleException("AB", ex);
+            this.utils.handleException("AB", ex);
         }
     }, false);
     */
@@ -1162,6 +1165,8 @@ createBackSide: function(doc, uiNote, onClickBackSide)
 
 drawNoteBackground: function(uiNote)
 {
+    //dump("internoteNoteUI.drawNoteBackground\n");
+    
     this.utils.assertClassError(uiNote, "UINote", "Note is not a UINote when drawing note background.");
     //uiNote.checkInvariant();
     
@@ -1436,3 +1441,5 @@ isStaticImage: function(uiNote)
 },
 
 };
+
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.noteUI.initConnections(internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66);

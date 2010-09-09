@@ -180,9 +180,9 @@ getErrorInfo: function(internoteVersion, callback)
             var extensionText = extensionDescs.join(", ");
             
             var text = "";
-            for (var i = 0; i < this.global.dumpData.length; i++)
+            for (var i = 0; i < this.sharedGlobal.dumpData.length; i++)
             {
-                text += this.global.dumpData[i];
+                text += this.sharedGlobal.dumpData[i];
             }
             
             text = text.replace(/\n\n\n+/g, "\n\n");

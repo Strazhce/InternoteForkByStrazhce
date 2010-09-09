@@ -21,7 +21,8 @@
 // It includes a search feature, the ability to export/print notes, and to edit, delete or reset
 // the location of notes.
 
-var internoteManager = {
+var internoteManager =
+{
 
 searchMapping: [],
 searchWatcher: null,
@@ -40,14 +41,14 @@ actions: ["deleteSelected", "resetSelected", "exportSelected",
 init: function()
 {
     //dump("internoteManager.init\n");
-    this.global  = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
+    this.sharedGlobal  = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
     
-    this.utils   = this.global.utils;
-    this.prefs   = this.global.prefs;
-    this.consts  = this.global.consts;
-    this.storage = this.global.storage;
+    this.utils   = this.sharedGlobal.utils;
+    this.prefs   = this.sharedGlobal.prefs;
+    this.consts  = this.sharedGlobal.consts;
+    this.storage = this.sharedGlobal.storage;
     
-    this.StorageWatcher = this.global.StorageWatcher;
+    this.StorageWatcher = this.sharedGlobal.StorageWatcher;
     
     try
     {

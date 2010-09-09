@@ -20,7 +20,7 @@
 // This implementation creates a popup per note.  This doesn't scale too well
 // but is necessary for platforms that have issues with the popup pane.
 
-var internoteDisplayUISeparatePopups = {
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUISeparatePopups = {
 
 autoFocusNote:  null,
 
@@ -31,14 +31,16 @@ actualPosLookup:  [],
 actualDimsLookup: [],
 noteOrder:        [], // We use this to avoid unnecessary reopens.
 
-init: function(prefs, utils, noteUI, getViewportDimsFunc)
+initConnections: function(windowGlobal)
 {
-    // It seems that a strange limitation with JS Code Modules prevents
-    // global references from callbacks.
-    this.prefs   = prefs;
-    this.utils   = utils;
-    this.noteUI  = noteUI;
+    this.prefs   = windowGlobal.sharedGlobal.prefs;
+    this.utils   = windowGlobal.sharedGlobal.utils;
     
+    this.noteUI  = windowGlobal.noteUI;
+},
+
+init: function(getViewportDimsFunc)
+{
     this.getViewportDimsFunc = getViewportDimsFunc;
 },
 
@@ -531,3 +533,5 @@ moveEnd: function(uiNote)
 activateDebugFunction: function() {},
 
 };
+
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUISeparatePopups.initConnections(internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66);

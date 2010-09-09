@@ -26,7 +26,7 @@ init: function()
     this.prefs = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs;
     
     this.utils.init(window);
-    this.prefs.init(this.utils);
+    this.prefs.init();
     
     document.getElementById("saveFolderField").value = this.prefs.getSaveLocationPref();
     

@@ -21,7 +21,7 @@
 // translucency, so we only use it on Linux where that isn't supported for
 // popups anyway.
 
-var internoteDisplayUIFixedIFrames = {
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUIFixedIFrames = {
 
 autoFocusNote:  null,
 
@@ -31,14 +31,16 @@ actualPosLookup:  [],
 actualDimsLookup: [],
 flipLookup:       [],
 
+initConnections: function(windowGlobal)
+{
+    this.prefs   = windowGlobal.sharedGlobal.prefs;
+    this.utils   = windowGlobal.sharedGlobal.utils;
+    
+    this.noteUI  = windowGlobal.noteUI;
+},
+
 init: function(prefs, utils, noteUI, getViewportDimsFunc)
 {
-    // It seems that a strange limitation with JS Code Modules prevents
-    // global references from callbacks.
-    this.prefs   = prefs;
-    this.utils   = utils;
-    this.noteUI  = noteUI;
-    
     this.getViewportDimsFunc = getViewportDimsFunc;
 },
 
@@ -552,3 +554,5 @@ getShiftingIFrameContainee: function(iFrame)
 },
 
 };
+
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUIFixedIFrames.initConnections(internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66);

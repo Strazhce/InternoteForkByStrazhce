@@ -75,9 +75,9 @@ init: function(anyWindow)
     
     this.navigator = anyWindow.navigator;
     
-    this.global = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
+    this.sharedGlobal = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
     
-    this.consts = this.global.consts;
+    this.consts = this.sharedGlobal.consts;
 },
 
 ifNull: function(value, defaultVal)
@@ -147,7 +147,7 @@ openURL: function(url)
     var mediator = this.getCCService("@mozilla.org/appshell/window-mediator;1", "nsIWindowMediator");
     var recentWindow = mediator.getMostRecentWindow("navigator:browser");
     
-    this.utils.assertError(recentWindow != null, "Could not find window.", recentWindow);
+    this.assertError(recentWindow != null, "Could not find window.", recentWindow);
     recentWindow.delayedOpenTab(url);
 },
 
@@ -228,9 +228,9 @@ quietStackMessage: function(msg)
 doubleDump: function(dumpMessage)
 {
     dump(dumpMessage);
-    if (this.global.dumpData.length < this.MAX_DUMP_DATA_SIZE)
+    if (this.sharedGlobal.dumpData.length < this.MAX_DUMP_DATA_SIZE)
     {
-        this.global.dumpData.push(dumpMessage);
+        this.sharedGlobal.dumpData.push(dumpMessage);
     }
 },
 
@@ -1061,6 +1061,16 @@ createInterval: function(callback, timeoutMS)
 cancelTimer: function(timer)
 {
     timer.cancel();
+},
+
+// This expression uses the shape of the cosine function to model a movement that starts slowly,
+// ends slowly, but is quicker in the middle, which is desirable for move & resize animations.
+// The expression's transformations on cos are because it is necessary to translate a number
+// between 0 and 1 to another number between 0 and 1, where "proportion of time complete"
+// is the input, and "proportion of distance complete" is the output.
+translateMovement: function(timeRatioDone)
+{
+    return (1 - Math.cos(timeRatioDone * Math.PI)) / 2;
 },
 
 });

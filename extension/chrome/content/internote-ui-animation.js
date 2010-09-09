@@ -50,11 +50,8 @@
 
 // There is also an animationCompleted event in the driver.
 
-var internoteAnimation = {
-    init: function(utils) { this.utils = utils; }
-};
-
-internoteAnimation.AnimationCompleteEvent = function AnimationCompleteEvent(animation, data)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.AnimationCompleteEvent = 
+function AnimationCompleteEvent(animation, data)
 {
     this.animation = animation;
     this.data = data;
@@ -64,7 +61,8 @@ internoteAnimation.AnimationCompleteEvent = function AnimationCompleteEvent(anim
 // Basic Animation Class
 ////////////////////
 
-internoteAnimation.Animation = function Animation(type, doStep, onStart, onComplete)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.Animation =
+function Animation(type, doStep, onStart, onComplete)
 {
     this.type       = type; // just for debugging
     
@@ -74,27 +72,33 @@ internoteAnimation.Animation = function Animation(type, doStep, onStart, onCompl
     this.onComplete = onComplete;
 };
 
-internoteAnimation.Animation.prototype.indicateStart = function()
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.Animation.prototype =
+{
+
+indicateStart: function()
 {
     if (this.onStart != null)
     {
         this.onStart();
     }
-};
+},
 
-internoteAnimation.Animation.prototype.indicateComplete = function()
+indicateComplete: function()
 {
     if (this.onComplete != null)
     {
         this.onComplete();
     }
+},
+
 };
 
 ////////////////////////////
 // Parallel Animation Class
 ////////////////////////////
 
-internoteAnimation.ParallelAnimation = function ParallelAnimation(animations, onStart, onComplete)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.ParallelAnimation =
+function ParallelAnimation(animations, onStart, onComplete)
 {
     this.type = "parallel";
     this.animations = animations;
@@ -103,7 +107,10 @@ internoteAnimation.ParallelAnimation = function ParallelAnimation(animations, on
     this.onComplete = onComplete;
 };
 
-internoteAnimation.ParallelAnimation.prototype.indicateStart = function()
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.ParallelAnimation.prototype =
+{
+
+indicateStart: function()
 {
     if (this.onStart != null)
     {
@@ -113,18 +120,18 @@ internoteAnimation.ParallelAnimation.prototype.indicateStart = function()
     {
         animation.indicateStart();
     }
-};
+},
 
-internoteAnimation.ParallelAnimation.prototype.doStep = function(ratioDone)
+doStep: function(ratioDone)
 {
     //dump("internoteAnimation.ParallelAnimation.doStep RatioDone = " + ratioDone + "\n");
     for each (var animation in this.animations)
     {
         animation.doStep(ratioDone);
     }
-};
+},
 
-internoteAnimation.ParallelAnimation.prototype.indicateComplete = function()
+indicateComplete: function()
 {
     for each (var animation in this.animations)
     {
@@ -134,13 +141,16 @@ internoteAnimation.ParallelAnimation.prototype.indicateComplete = function()
     {
         this.onComplete();
     }
+},
+
 };
 
 //////////////////////////////
 // Sequential Animation Class
 //////////////////////////////
 
-internoteAnimation.SequentialAnimation = function SequentialAnimation(stages, proportions, onStart, onComplete)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.SequentialAnimation =
+function SequentialAnimation(stages, proportions, onStart, onComplete)
 {
     this.type = "multi";
     
@@ -166,7 +176,10 @@ internoteAnimation.SequentialAnimation = function SequentialAnimation(stages, pr
     this.onComplete = onComplete;
 };
 
-internoteAnimation.SequentialAnimation.prototype.indicateStart = function()
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.SequentialAnimation.prototype =
+{
+
+indicateStart: function()
 {
     this.stageNum = 0;
     
@@ -180,9 +193,9 @@ internoteAnimation.SequentialAnimation.prototype.indicateStart = function()
     }
     
     this.stages[0].indicateStart();
-};
+},
 
-internoteAnimation.SequentialAnimation.prototype.doStep = function(ratioDone)
+doStep: function(ratioDone)
 {
     //dump("internoteAnimation.SequentialAnimation.doStep RatioDone = " + ratioDone + "\n");
 
@@ -226,9 +239,9 @@ internoteAnimation.SequentialAnimation.prototype.doStep = function(ratioDone)
     //dump("  AnimationDone = " + animationDone + "\n");
     
     this.stages[this.stageNum].doStep(animationDone);
-};
+},
 
-internoteAnimation.SequentialAnimation.prototype.indicateComplete = function()
+indicateComplete: function()
 {
     // There no need to call anything on the last stage, because the previous
     // call to SequentialAnimation.doStep(1) should have done that.
@@ -237,15 +250,20 @@ internoteAnimation.SequentialAnimation.prototype.indicateComplete = function()
     {
         this.onComplete();
     }
+},
+
 };
 
 //////////////////
 // AnimationDriver
 //////////////////
 
-internoteAnimation.AnimationDriver = function AnimationDriver(utils, animation)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.AnimationDriver =
+function AnimationDriver(windowGlobal, animation)
 {
-    this.utils = utils;
+    this.utils     = windowGlobal.sharedGlobal.utils;
+    
+    this.AnimationCompleteEvent = windowGlobal.AnimationCompleteEvent;
     
     this.animation = animation;
     
@@ -255,12 +273,14 @@ internoteAnimation.AnimationDriver = function AnimationDriver(utils, animation)
     this.createEvent("animationCompleted");
 };
 
-internoteAnimation.AnimationDriver.prototype =
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.AnimationDriver.prototype =
     new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher();
 
-internoteAnimation.AnimationDriver.prototype.stepTime = 50;
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.AnimationDriver.prototype.incorporate("AnimationDriver", {
 
-internoteAnimation.AnimationDriver.prototype.start = function(animationTime)
+stepTime: 50,
+
+start: function(animationTime)
 {
     this.utils.assertError(this.utils.isPositiveNumber(animationTime), "Bad animation time.", animationTime);
     
@@ -283,9 +303,9 @@ internoteAnimation.AnimationDriver.prototype.start = function(animationTime)
     
     this.startTime = new Date().getTime();
     this.interval = this.utils.createInterval(this.utils.bind(this, this.animateStep), this.stepTime);
-};
+},
 
-internoteAnimation.AnimationDriver.prototype.delayedStart = function(delayTime, animationTime)
+delayedStart: function(delayTime, animationTime)
 {
     this.utils.assertError(!this.isStarted, "Can't delay start an already started animation.");
     
@@ -294,9 +314,9 @@ internoteAnimation.AnimationDriver.prototype.delayedStart = function(delayTime, 
         this.delayTimeout = null;
         this.start(animationTime);
     }), delayTime);
-};
+},
 
-internoteAnimation.AnimationDriver.prototype.animateStep = function()
+animateStep: function()
 {
     try
     {
@@ -311,7 +331,7 @@ internoteAnimation.AnimationDriver.prototype.animateStep = function()
             this.abandonTimer();
             this.animation.doStep(1);
             this.animation.indicateComplete();
-            this.dispatchEvent("animationCompleted", new internoteAnimation.AnimationCompleteEvent(this.animation) );
+            this.dispatchEvent("animationCompleted", new this.AnimationCompleteEvent(this.animation) );
         }
         else
         {
@@ -328,9 +348,9 @@ internoteAnimation.AnimationDriver.prototype.animateStep = function()
         this.utils.handleException("Exception caught during animation step.", ex);
         this.abandonTimer();
     }
-};
+},
 
-internoteAnimation.AnimationDriver.prototype.abandonTimer = function()
+abandonTimer: function()
 {
     this.utils.assertWarn(this.delayTimeout == null || this.interval == null, "Both set when abandoning animation timer.");
     
@@ -345,9 +365,9 @@ internoteAnimation.AnimationDriver.prototype.abandonTimer = function()
         this.utils.cancelTimer(this.interval);
         this.interval = null;
     }
-};
+},
 
-internoteAnimation.AnimationDriver.prototype.hurry = function()
+hurry: function()
 {
     if (!this.isStarted)
     {
@@ -359,15 +379,20 @@ internoteAnimation.AnimationDriver.prototype.hurry = function()
     this.animation.doStep(1);
     this.animation.indicateComplete();
     this.abandonTimer();
-    this.dispatchEvent("animationCompleted", new internoteAnimation.AnimationCompleteEvent(this.animation) );
-};
+    this.dispatchEvent("animationCompleted", new this.AnimationCompleteEvent(this.animation) );
+},
+
+});
 
 //////////////////////
 // Specific Animations
 //////////////////////
 
-internoteAnimation.getFadeAnimation = function(utils, element, shouldFadeIn)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getFadeAnimation =
+function(windowGlobal, element, shouldFadeIn)
 {
+    var utils = windowGlobal.sharedGlobal.utils;
+    
     if (typeof(element) == "string")
     {
         element = document.getElementById(element);
@@ -380,12 +405,18 @@ internoteAnimation.getFadeAnimation = function(utils, element, shouldFadeIn)
     return new this.Animation("fade", stepFunc);
 };
 
-internoteAnimation.getFlipAnimation = function(utils, noteUI, displayUI, uiNote)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getFlipAnimation =
+function(windowGlobal, uiNote)
 {
+    var utils     = windowGlobal.sharedGlobal.utils;
+    
+    var noteUI    = windowGlobal.noteUI;
+    var displayUI = windowGlobal.displayUI;
+
     var phase1 = new this.Animation("flip1");
     var phase2 = new this.Animation("flip2");
     
-    var multiAnimation = new internoteAnimation.SequentialAnimation([phase1, phase2], [1, 1]);
+    var multiAnimation = new windowGlobal.SequentialAnimation([phase1, phase2], [1, 1]);
     
     var startPos  = displayUI.getScreenPosition(uiNote);
     var startDims = noteUI.   getDims          (uiNote);
@@ -454,21 +485,17 @@ internoteAnimation.getFlipAnimation = function(utils, noteUI, displayUI, uiNote)
     return multiAnimation;
 };
 
-// This expression uses the shape of the cosine function to model a movement that starts slowly,
-// ends slowly, but is quicker in the middle, which is desirable for move & resize animations.
-// The expression's transformations on cos are because it is necessary to translate a number
-// between 0 and 1 to another number between 0 and 1, where "proportion of time complete"
-// is the input, and "proportion of distance complete" is the output.
-internoteAnimation.translateMovement = function(timeRatioDone)
-{
-    return (1 - Math.cos(timeRatioDone * Math.PI)) / 2;
-};
-
 // This moves between one 2D "coordinate" to another in a straight line.  The time/distance relationship is
 // usually non-linear - it moves slower at the beginning and end.
 // This can be used for moving or resizing, depending on whether the pairs are pos or dims.
-internoteAnimation.getMoveOrResizeAnimation = function(utils, noteUI, displayUI, uiNote, endPair, isResize, shouldForceLinear)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getMoveOrResizeAnimation =
+function(windowGlobal, uiNote, endPair, isResize, shouldForceLinear)
 {
+    var utils     = windowGlobal.sharedGlobal.utils;
+    
+    var noteUI    = windowGlobal.noteUI;
+    var displayUI = windowGlobal.displayUI;
+    
     var animation = new this.Animation(isResize ? "resize" : "move");
     
     var startPair;
@@ -487,7 +514,7 @@ internoteAnimation.getMoveOrResizeAnimation = function(utils, noteUI, displayUI,
     
     animation.doStep = function(timeRatioDone)
     {
-        var distanceDone = shouldForceLinear ? timeRatioDone : internoteAnimation.translateMovement(timeRatioDone);
+        var distanceDone = shouldForceLinear ? timeRatioDone : utils.translateMovement(timeRatioDone);
         var interpolatedValue = utils.interpolateCoordPair(distanceDone, startPair, endPair);
         
         //dump("  MoveResize RatioDone = " + timeRatioDone + " " + distanceDone + "\n");
@@ -510,8 +537,14 @@ internoteAnimation.getMoveOrResizeAnimation = function(utils, noteUI, displayUI,
 // A move and resize animation does both moving and resizing at the same time.  However such animations
 // are suspectible to a "bouncing" effect on the bottom/right where the corner bounces back and forth
 // between adjecent pixels.  To avoid this we use the bottomRight instead of the dims.
-internoteAnimation.getMoveAndResizeAnimation = function(utils, noteUI, displayUI, uiNote, endNWPos, endDims)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getMoveAndResizeAnimation =
+function(windowGlobal, uiNote, endNWPos, endDims)
 {
+    var utils     = windowGlobal.sharedGlobal.utils;
+    
+    var noteUI    = windowGlobal.noteUI;
+    var displayUI = windowGlobal.displayUI;
+    
     var animation = new this.Animation("moveresize");
     
     var startNWPos, startSEPos;
@@ -535,7 +568,7 @@ internoteAnimation.getMoveAndResizeAnimation = function(utils, noteUI, displayUI
     
     animation.doStep = function(timeRatioDone)
     {
-        var distanceDone = internoteAnimation.translateMovement(timeRatioDone);
+        var distanceDone = utils.translateMovement(timeRatioDone);
         var interpolatedNWPos = utils.interpolateCoordPair(distanceDone, startNWPos, endNWPos);
         var interpolatedSEPos = utils.interpolateCoordPair(distanceDone, startSEPos, endSEPos);
         
@@ -555,7 +588,8 @@ internoteAnimation.getMoveAndResizeAnimation = function(utils, noteUI, displayUI
     return animation;
 };
 
-internoteAnimation.getNullAnimation = function()
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getNullAnimation =
+function()
 {
     var animation = new this.Animation("null");
     animation.doStep           = function() {};
@@ -564,15 +598,21 @@ internoteAnimation.getNullAnimation = function()
     return animation;
 };
 
-internoteAnimation.getMinimizeAnimation = function(utils, noteUI, displayUI, uiNote, endPos, endDims)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getMinimizeAnimation =
+function(windowGlobal, uiNote, endPos, endDims)
 {
-    this.utils.assertError(this.utils.isCoordPair(endPos),        "Invalid pos.",  endPos );
-    this.utils.assertError(this.utils.isNonNegCoordPair(endDims), "Invalid dims.", endDims);
+    var utils     = windowGlobal.sharedGlobal.utils;
     
-    var moveResizeAnimation = this.getMoveAndResizeAnimation(utils, noteUI, displayUI, uiNote, endPos, endDims);
+    var noteUI    = windowGlobal.noteUI;
+    var displayUI = windowGlobal.displayUI;
     
-    var fadeLittleAnimation = this.getFadeAnimation(utils, uiNote.littleText, uiNote.note.isMinimized)
-    var fadeBigAnimation    = this.getFadeAnimation(utils, uiNote.midBotBox,  !uiNote.note.isMinimized);
+    utils.assertError(utils.isCoordPair(endPos),        "Invalid pos.",  endPos );
+    utils.assertError(utils.isNonNegCoordPair(endDims), "Invalid dims.", endDims);
+    
+    var moveResizeAnimation = this.getMoveAndResizeAnimation(windowGlobal, uiNote, endPos, endDims);
+    
+    var fadeLittleAnimation = this.getFadeAnimation(windowGlobal, uiNote.littleText, uiNote.note.isMinimized)
+    var fadeBigAnimation    = this.getFadeAnimation(windowGlobal, uiNote.midBotBox,  !uiNote.note.isMinimized);
     
     var fadeAnimations = uiNote.note.isMinimized ? [fadeBigAnimation,    fadeLittleAnimation] :
                                                    [fadeLittleAnimation, fadeBigAnimation   ];
@@ -592,8 +632,13 @@ internoteAnimation.getMinimizeAnimation = function(utils, noteUI, displayUI, uiN
     return wholeAnimation;
 };
 
-internoteAnimation.getForeRecolorAnimation = function(utils, noteUI, uiNote, endColor)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getForeRecolorAnimation =
+function(windowGlobal, uiNote, endColor)
 {
+    var utils     = windowGlobal.sharedGlobal.utils;
+    
+    var noteUI    = windowGlobal.noteUI;
+    
     var animation = new this.Animation("forerecolor");
     
     var startColorArr, endColorArr;
@@ -615,8 +660,13 @@ internoteAnimation.getForeRecolorAnimation = function(utils, noteUI, uiNote, end
     return animation;
 };
 
-internoteAnimation.getBackRecolorAnimation = function(utils, noteUI, uiNote, endColor)
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getBackRecolorAnimation =
+function(windowGlobal, uiNote, endColor)
 {
+    var utils     = windowGlobal.sharedGlobal.utils;
+    
+    var noteUI    = windowGlobal.noteUI;
+    
     var animation = new this.Animation("backrecolor");
     
     var startColorArr, endColorArr;
@@ -630,7 +680,6 @@ internoteAnimation.getBackRecolorAnimation = function(utils, noteUI, uiNote, end
     
     animation.doStep = function(timeRatioDone)
     {
-        //var distanceDone = internoteAnimation.translateMovement(timeRatioDone);
         var interpolatedColor = utils.interpolateColor(timeRatioDone, startColorArr, endColorArr);
         var hexColor = utils.formatHexColor(interpolatedColor);
         noteUI.setBackColor(uiNote, hexColor, false);

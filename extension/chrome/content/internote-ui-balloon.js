@@ -21,7 +21,7 @@
 
 // This displays a "speech balloon" to the user attached to the internote statusbar icon.
 
-var internoteBalloonUI =
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.balloonUI =
 {
 
 balloonPanel: null,
@@ -42,12 +42,17 @@ CLOSE_SIZE: 10,
 
 messageQueue: [],
 
-init: function(utils, anim, id, container)
+initConnections: function(windowGlobal)
+{
+    this.windowGlobal = windowGlobal;
+    
+    this.utils = windowGlobal.sharedGlobal.utils;
+},
+
+init: function(id, container)
 {
     //dump("internoteBalloonUI.init\n");
     
-    this.utils     = utils;
-    this.anim      = anim;
     this.id        = id;
     this.container = container;
     this.STANDARD_MARGIN = Math.floor(this.ROUNDED_CORNER_SIZE / 2);
@@ -277,11 +282,11 @@ onBalloonAnimComplete: function()
 
 startAnimation: function(displayTime)
 {
-    var fadeAnimation = this.anim.getFadeAnimation(this.utils, this.balloonPanel, false);
+    var fadeAnimation = this.windowGlobal.getFadeAnimation(this.windowGlobal, this.balloonPanel, false);
     fadeAnimation.onComplete = this.utils.bind(this, this.onBalloonAnimComplete);
     
     this.balloonAnimDriver =
-        new this.anim.AnimationDriver(this.utils, fadeAnimation);
+        new this.windowGlobal.AnimationDriver(this.windowGlobal, fadeAnimation);
     
     if (this.utils.supportsTranslucentPopups())
     {
@@ -341,3 +346,5 @@ drawCanvas: function()
 },
 
 };
+
+internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.balloonUI.initConnections(internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66);

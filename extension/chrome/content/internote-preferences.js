@@ -23,11 +23,14 @@ if (internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs == null)
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs =
 {
 
-init: function(utils, consts)
+initConnections: function(sharedGlobal)
 {
-    this.utils  = utils;
-    this.consts = consts;
-    
+    this.utils  = sharedGlobal.utils;
+    this.consts = sharedGlobal.consts;
+},
+
+init: function()
+{
     this.prefsBranch = this.utils.getCCService("@mozilla.org/preferences-service;1", "nsIPrefService").getBranch("internote.");
 },
 
@@ -218,5 +221,7 @@ addPrefsObserver: function(observeFunc)
 },
 
 };
+
+internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs.initConnections(internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66);
 
 }

@@ -44,6 +44,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-storage.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-watcher.js"/>
+
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-windowglobal.js"/>
+
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-balloon.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-animation.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-notes.js"/>
@@ -52,10 +55,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-display-separatepopups.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-controller.js"/>
 
+
 <commandset id="mainCommandSet">
-    <command id="cmd_newNote"             oncommand="internoteUIController.userCreatesNote();" />
-    <command id="cmd_minimizeAll"         oncommand="internoteUIController.userMinimizesAll();" />
-    <command id="cmd_showInternoteManger" oncommand="internoteUIController.userOpensManager();" />
+    <command id="cmd_newNote"             oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCreatesNote();" />
+    <command id="cmd_minimizeAll"         oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll();" />
+    <command id="cmd_showInternoteManger" oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensManager();" />
 </commandset>
 
 <keyset id="mainKeyset">
@@ -66,27 +70,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 <menupopup id="menu_ToolsPopup">
     <menu accesskey="&internote.appName.accesskey;" label="&internote.appName.label;" class="menu-iconic" image="chrome://internote/skin/internote16.png" insertafter="javascriptConsole">
-        <menupopup id="internote-main-menu" onpopupshowing="internoteUIController.chromePrepareMainMenu();">
+        <menupopup id="internote-main-menu" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareMainMenu();">
             <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accesskey;"
-                      oncommand="internoteUIController.userCreatesNote();" />
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCreatesNote();" />
             <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-main" accesskey="&internote.minimizeAllCmd.accesskey;"
-                      oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(true);" disabled="true"/>
             <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-main" accesskey="&internote.unminimizeAllCmd.accesskey;"
-                      oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(false);" style="display: none;" />
             <menuitem label="&internote.openManagerCmd.label;..." accesskey="&internote.openManagerCmd.accesskey;"
-                      oncommand="internoteUIController.userOpensManager();" />
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensManager();" />
             <menuseparator />
             <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-main"
-                      oncommand="internoteUIController.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;" />
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;" />
             <menuseparator />
             <menuitem label="&internote.openPrefsCmd.label;..." accesskey="&internote.openPrefsCmd.accesskey;"
-                      oncommand="internoteUIController.userOpensPrefs();" />
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensPrefs();" />
             <menuitem label="&internote.helpCmd.label;..." accesskey="&internote.helpCmd.accesskey;"
-                      oncommand="internoteUIController.userOpensHelp();" />
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensHelp();" />
             <menuitem label="&internote.reportBugCmd.label;..." accesskey="&internote.reportBugCmd.accesskey;"
-                      oncommand="internoteUIController.userReportsBug();" />
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userReportsBug();" />
             <menuitem label="&internote.aboutCmd.label;..." accesskey="&internote.aboutCmd.accesskey;"
-                      oncommand="internoteUIController.userOpensAbout();" />
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensAbout();" />
         </menupopup>
     </menu>
 </menupopup>
@@ -96,71 +100,71 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 </toolbarpalette>
 
 <popupset id="mainPopupSet">
-    <tooltip id="internote-popup" onpopupshowing="internoteUIController.chromePrepareTooltip();">
+    <tooltip id="internote-popup" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareTooltip();">
         <vbox flex="1">
             <label id="internote-popup-label" value=""/>
         </vbox>
     </tooltip>
     
-    <menupopup id="internote-popup-menu" onpopupshowing="internoteUIController.chromePrepareStatusBarMenu();">
+    <menupopup id="internote-popup-menu" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareStatusBarMenu();">
         <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accesskey;"
-                  oncommand="internoteUIController.userCreatesNote();" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCreatesNote();" />
         <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-statusbar" accesskey="&internote.minimizeAllCmd.accesskey;"
-                  oncommand="internoteUIController.userMinimizesAll(true);" disabled="true"/>
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(true);" disabled="true"/>
         <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-statusbar" accesskey="&internote.unminimizeAllCmd.accesskey;"
-                  oncommand="internoteUIController.userMinimizesAll(false);" style="display: none;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(false);" style="display: none;" />
         <menuitem label="&internote.openManagerCmd.label;..." accesskey="&internote.openManagerCmd.accesskey;"
-                  oncommand="internoteUIController.userOpensManager();" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensManager();" />
         <menuseparator />
         <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-statusbar"
-                  oncommand="internoteUIController.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;"/>
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;"/>
         <menuseparator />
         <menuitem label="&internote.openPrefsCmd.label;..." accesskey="&internote.openPrefsCmd.accesskey;"
-                  oncommand="internoteUIController.userOpensPrefs();" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensPrefs();" />
         <menuitem label="&internote.helpCmd.label;" accesskey="&internote.helpCmd.accesskey;"
-                  oncommand="internoteUIController.userOpensHelp();" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensHelp();" />
         <menuitem label="&internote.reportBugCmd.label;..." accesskey="&internote.reportBugCmd.accesskey;"
-                  oncommand="internoteUIController.userReportsBug();" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userReportsBug();" />
         <menuitem label="&internote.aboutCmd.label;..." accesskey="&internote.aboutCmd.accesskey;"
-                  oncommand="internoteUIController.userOpensAbout();" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensAbout();" />
     </menupopup>
     
-    <menupopup id="internote-note-menu" onpopupshowing="internoteUIController.chromePrepareContextMenu(popupNode);">
+    <menupopup id="internote-note-menu" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareContextMenu(popupNode);">
         <!-- Don't use command directly so we can disable them separately. -->
         <menuitem label="&internote.cutTextCmd.label;"    id="internote-context-cut-text" class="internote-text-command"
-                  oncommand="internoteUIController.userCutsText();" accesskey="&internote.cutTextCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCutsText();" accesskey="&internote.cutTextCmd.accesskey;" />
         <menuitem label="&internote.copyTextCmd.label;"   id="internote-context-copy-text" class="internote-text-command"
-                  oncommand="internoteUIController.userCopiesText();" accesskey="&internote.copyTextCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCopiesText();" accesskey="&internote.copyTextCmd.accesskey;" />
         <menuitem label="&internote.pasteTextCmd.label;"  id="internote-context-paste-text" class="internote-text-command"
-                  oncommand="internoteUIController.userPastesText();" accesskey="&internote.pasteTextCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userPastesText();" accesskey="&internote.pasteTextCmd.accesskey;" />
         <menuitem label="&internote.deleteTextCmd.label;" id="internote-context-delete-text" class="internote-text-command"
-                  oncommand="internoteUIController.userDeletesText();" accesskey="&internote.deleteTextCmd.accesskey;"/>
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userDeletesText();" accesskey="&internote.deleteTextCmd.accesskey;"/>
         <menuitem label="&internote.selectAllCmd.label;"  id="internote-context-select-all" class="internote-text-command"
-                  oncommand="internoteUIController.userSelectsAll();" accesskey="&internote.selectAllCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userSelectsAll();" accesskey="&internote.selectAllCmd.accesskey;" />
         <menuitem label="&internote.setDefaultColorsCmd.label;" id="internote-context-default-colors" class="internote-color-command"
-                  oncommand="internoteUIController.userSetsDefaultColors(popupNode);" accesskey="&internote.setDefaultColorsCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userSetsDefaultColors(popupNode);" accesskey="&internote.setDefaultColorsCmd.accesskey;" />
         <menuseparator />
         <menuitem label="&internote.deleteNoteCmd.label;"        id="internote-context-delete-note" class="menuitem-iconic"
-                  oncommand="internoteUIController.userRemovesNote(popupNode);" accesskey="&internote.deleteNoteCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userRemovesNote(popupNode);" accesskey="&internote.deleteNoteCmd.accesskey;" />
         <menuitem label="&internote.minimizeNoteCmd.label;"      id="internote-context-minimize-note" class="menuitem-iconic"
-                  oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.minimizeNoteCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesNote(popupNode);" accesskey="&internote.minimizeNoteCmd.accesskey;" />
         <menuitem label="&internote.unminimizeNoteCmd.label;"    id="internote-context-unminimize-note" class="menuitem-iconic"
-                  oncommand="internoteUIController.userMinimizesNote(popupNode);" accesskey="&internote.unminimizeNoteCmd.accesskey;" style="display: none;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesNote(popupNode);" accesskey="&internote.unminimizeNoteCmd.accesskey;" style="display: none;" />
         <menuitem label="&internote.chooseColorsCmd.label;"      id="internote-context-choose-colors" class="menuitem-iconic"
-                  oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.chooseColorsCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userFlipsNote(popupNode);" accesskey="&internote.chooseColorsCmd.accesskey;" />
         <menuitem label="&internote.editTextCmd.label;"          id="internote-context-edit-text" class="menuitem-iconic"
-                  oncommand="internoteUIController.userFlipsNote(popupNode);" accesskey="&internote.editTextCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userFlipsNote(popupNode);" accesskey="&internote.editTextCmd.accesskey;" />
         <menuitem label="&internote.viewInOpenManagerCmd.label;" id="internote-view-in-manager"
-                  oncommand="internoteUIController.userViewsInManager(popupNode);" accesskey="&internote.viewInOpenManagerCmd.accesskey;" />
+                  oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userViewsInManager(popupNode);" accesskey="&internote.viewInOpenManagerCmd.accesskey;" />
         <menuseparator />
         <menu label="&internote.showsOnMenuCmd.label;" accesskey="&internote.showsOnMenuCmd.accesskey;">
-            <menupopup id="internote-showson-menu-popup" onpopupshowing="internoteUIController.chromePrepareShowOnMenu(popupNode);">
+            <menupopup id="internote-showson-menu-popup" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareShowOnMenu(popupNode);">
                 <menuitem label="&internote.showsOnPageCmd.label;" type="radio" name="showson" id="internote-match-url"
-                          oncommand="internoteUIController.userChoosesMatchURL(popupNode);" accesskey="&internote.showsOnPageCmd.accesskey;" />
+                          oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userChoosesMatchURL(popupNode);" accesskey="&internote.showsOnPageCmd.accesskey;" />
                 <menuitem label="&internote.showsOnSiteCmd.label;" type="radio" name="showson" id="internote-match-site"
-                          oncommand="internoteUIController.userChoosesMatchSite(popupNode);" accesskey="&internote.showsOnSiteCmd.accesskey;" />
+                          oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userChoosesMatchSite(popupNode);" accesskey="&internote.showsOnSiteCmd.accesskey;" />
                 <menuitem label="&internote.showsOnAllCmd.label;"  type="radio" name="showson" id="internote-match-all"
-                          oncommand="internoteUIController.userChoosesMatchAll(popupNode);" accesskey="&internote.showsOnAllCmd.accesskey;" />
+                          oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userChoosesMatchAll(popupNode);" accesskey="&internote.showsOnAllCmd.accesskey;" />
                 <menuitem label="&internote.showsRegexpCmd.label;" type="radio" name="showson" id="internote-match-regexp"
                           accesskey="&internote.showsRegexpCmd.accesskey;" />
                 <menuseparator id="internote-showon-menu-pages-sep" />
@@ -169,9 +173,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   <!-- Dynamic stuff goes here. -->
                 <menuseparator />
                 <menuitem label="&internote.ignoreParamsCmd.label; (&internote.ignoreParamsCmd.label2;)" type="checkbox" id="internote-ignore-params"
-                          accesskey="&internote.ignoreParamsCmd.accesskey;" oncommand="internoteUIController.userIgnoresParams(event, popupNode);" />
+                          accesskey="&internote.ignoreParamsCmd.accesskey;" oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userIgnoresParams(event, popupNode);" />
                 <menuitem label="&internote.ignoreAnchorCmd.label; (&internote.ignoreAnchorCmd.label2;)" type="checkbox" id="internote-ignore-anchor"
-                          accesskey="&internote.ignoreAnchorCmd.accesskey;" oncommand="internoteUIController.userIgnoresAnchor(event, popupNode);" />
+                          accesskey="&internote.ignoreAnchorCmd.accesskey;" oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userIgnoresAnchor(event, popupNode);" />
             </menupopup>
         </menu>
     </menupopup>
@@ -180,7 +184,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <statusbar id="status-bar">
     <statusbarpanel class="statusbarpanel-iconic" id="internote-panel"
                     label="&internote.newNoteCmd.label;" src="chrome://internote/skin/newnote16.png"
-                    onclick="if (!event.button) internoteUIController.userCreatesNote();"
+                    onclick="if (!event.button) internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCreatesNote();"
                     context="internote-popup-menu"
                     tooltip="internote-popup" />
 </statusbar>
