@@ -321,6 +321,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
             
             this.delayTimeout = this.utils.createTimeout(this.utils.bind(this, function()
             {
+                actionFunc.call(this, this.element);
                 this.delayTimeout = null;
                 this.startRepeating();
             }), delayTime);
