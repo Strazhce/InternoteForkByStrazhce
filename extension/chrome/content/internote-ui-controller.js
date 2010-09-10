@@ -615,8 +615,12 @@ removePageListeners: function()
         this.utils.removeBoundDOMEventListener(this.currentBrowser, "resize", this, "screenCheckAspects", true);
         this.utils.removeBoundDOMEventListener(this.currentBrowser, "scroll", this, "screenCheckAspects", true);
         
-        this.utils.cancelTimer(this.checkViewportEvent);
-        this.checkViewportEvent = null;
+        // Should be there, but check just in case for robustness.
+        if (this.checkViewportEvent != null)
+        {
+            this.utils.cancelTimer(this.checkViewportEvent);
+            this.checkViewportEvent = null;
+        }
     }
     else
     {
