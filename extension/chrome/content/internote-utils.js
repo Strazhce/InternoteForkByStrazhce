@@ -346,7 +346,7 @@ handleException: function(msg, ex, obj)
 
 hexDigit: function(i)
 {
-    return i.toString(16);
+    return i.toString(16).toUpperCase();
 },
 
 // Creates a bound version of a callback with the correct "this" pointer.

@@ -404,8 +404,8 @@ setNoteData: function(note)
         var urlData = this.treeView.getManagerURLData(note);
         var [category, url] = this.utils.simpleSplit(urlData, ":");
         
-        var backColor = this.consts.BACKGROUND_COLOR_SWABS.indexOf(note.backColor);
-        var foreColor = this.consts.FOREGROUND_COLOR_SWABS.indexOf(note.foreColor);
+        var backColor = this.consts.BACKGROUND_COLOR_SWABS.indexOf(note.backColor.toUpperCase());
+        var foreColor = this.consts.FOREGROUND_COLOR_SWABS.indexOf(note.foreColor.toUpperCase());
         
         // Handle custom colour - full UI not supported yet.
         if (backColor == -1)
