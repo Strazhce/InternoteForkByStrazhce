@@ -1750,18 +1750,23 @@ chromeActiveWarning: function()
         
         if (this.activeWarnCount < newCount)
         {
+            this.utils.doubleDump("Changing ...\n");
+        
             this.activeWarnCount = newCount;
             
             if (this.prefs.shouldUseStatusbar())
             {
                 if (document == null)
                 {
-                    this.utils.dumpTraceData(window);
+                    // XXX For temporary bug detection only ... remove.
+                    this.utils.doubleDumpTraceData(window);
+                    this.utils.doubleDumpTraceData(this);
                 }
                 
                 var panel = document.getElementById("internote-panel");
                 if (panel != null)
                 {
+                    this.utils.doubleDump("Found it ...\n");
                     if (panel.style.backgroundColor == "red")
                     {
                         panel.removeAttribute("style");
@@ -1782,6 +1787,7 @@ chromeActiveWarning: function()
     {
         try
         {
+            this.utils.doubleDumpTraceData(this);
             this.utils.cancelTimer(this.activeWarningInterval);
         }
         catch (ex2)
