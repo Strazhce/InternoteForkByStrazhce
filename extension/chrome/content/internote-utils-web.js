@@ -392,23 +392,26 @@ isValidSite: function(site)
     // List those where we can exclude two domains, eg com.au.
     var threeComponentTLDs = ["au", "uk"];
     
-    var firstPos = site.indexOf(".");
-    var lastPos  = site.lastIndexOf(".");
+    var components = site.split(/\./);
     
-    if (firstPos == -1)
+    var hasEmptyStringComponent = components.some(function(component) { return component == ""; });
+    
+    if (hasEmptyStringComponent)
     {
-        // No dots.
         return false;
     }
-    else if (firstPos != lastPos)
+    else if (components.length == 1)
     {
-        // At least two dots.
+        return false;
+    }
+    else if (components.length >= 3)
+    {
         return true;
     }
     else
     {
         // One dot, valid as long as it's not a country code that has subdomains.
-        var possibleTLD = site.substr(lastPos + 1);
+        var possibleTLD = components[components.length - 1];
         return threeComponentTLDs.indexOf(possibleTLD) == -1;
     }
 },
