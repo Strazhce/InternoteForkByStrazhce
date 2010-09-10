@@ -97,6 +97,16 @@ addNote: function(uiNote, pos, dims)
     
     this.adjustNote(uiNote, pos, dims);
     
+    this.addNoteToInnerContainer(uiNote);
+    
+    if (!containerBeingCreated)
+    {
+        this.noteUI.noteShown(uiNote);
+    }
+},
+
+addNoteToInnerContainer: function(uiNote)
+{
     for (var i = 0; i < this.innerContainer.childNodes.length; i++)
     {
         var noteNum = this.utils.getNoteNum(this.innerContainer.childNodes[i]);
@@ -109,11 +119,6 @@ addNote: function(uiNote, pos, dims)
     }
     
     this.innerContainer.appendChild(uiNote.noteElt);
-    
-    if (!containerBeingCreated)
-    {
-        this.noteUI.noteShown(uiNote);
-    }
 },
 
 removeNote: function(uiNote)

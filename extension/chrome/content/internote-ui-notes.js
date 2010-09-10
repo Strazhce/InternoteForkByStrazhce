@@ -688,7 +688,8 @@ updateScrollbarPresence: function(uiNote)
 {
     //dump("updateScrollbarPresence " + uiNote.num + "\n");
     
-    var hasScrollbar = uiNote.scrollHandler.isNecessary() && !uiNote.isFlipped;
+    var isScrollNecessary = uiNote.scrollHandler.isNecessary();
+    var hasScrollbar = isScrollNecessary && !uiNote.isFlipped;
     
     if (this.prefs.shouldUseNativeScrollbar())
     {
@@ -704,7 +705,7 @@ updateScrollbarPresence: function(uiNote)
         uiNote.eastDeck.setAttribute("selectedIndex", hasScrollbar ? 1 : 0);
     }
     
-    if (!uiNote.scrollHandler.isNecessary())
+    if (!isScrollNecessary)
     {
         uiNote.textArea.scrollTop = 0;
     }
