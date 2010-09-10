@@ -193,8 +193,12 @@ parseURL: function(url)
                          ? null
                          : decodeURIComponent(regexpResults[8].replace(/^#/, ""));
             
+            var site     = regexpResults[4];
+            var protocol = regexpResults[1];
+            
             var isValidPath = (path.charAt(0) == "/");
-            var isValidPort = (regexpResults[5] == null) || this.isValidPortString(regexpResults[5]);
+            var isValidPort = (port == null) || this.isValidPortString(port);
+            var isValidSite = this.isValidSite(site);
             
             if (params != null)
             {
@@ -203,11 +207,11 @@ parseURL: function(url)
                                .map(this.parseParam, this);
             }
             
-            if (isValidPort)
+            if (isValidPath && isValidPort && isValidSite)
             {
                 path = (path == "/") ? [] : (path.replace(/^\//, "").split("/").map(decodeURIComponent));
                 port = (port == null) ? null : parseInt(port, 10);
-                return { protocol: regexpResults[1], userName: userName, password: password, site: regexpResults[4],
+                return { protocol: protocol, userName: userName, password: password, site: site,
                          port: port, path: path, params: params, anchor: anchor };
             }
             else
