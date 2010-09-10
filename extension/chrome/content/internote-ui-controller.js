@@ -1236,12 +1236,15 @@ userSelectsAll: function()
     document.getElementById("cmd_selectAll").doCommand();
 },
 
-userChoosesMatchURL: function(element)
+userChoosesMatchURL: function()
 {
     //dump("userChoosesMatchURL\n");
     
     try
     {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         this.storage.setMatch(note, this.currentURL, this.storage.URL_MATCH_URL);
     }
@@ -1251,12 +1254,15 @@ userChoosesMatchURL: function(element)
     }
 },
 
-userChoosesMatchSite: function(element)
+userChoosesMatchSite: function()
 {
     //dump("userChoosesMatchSite\n");
     
     try
     {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         this.storage.setMatch(note, this.utils.getURLSite(this.currentURL), this.storage.URL_MATCH_SITE);
     }
@@ -1266,12 +1272,15 @@ userChoosesMatchSite: function(element)
     }
 },
 
-userChoosesMatchAll: function(element)
+userChoosesMatchAll: function()
 {
     //dump("userChoosesMatchAll\n");
     
     try
     {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         this.storage.setMatch(note, "", this.storage.URL_MATCH_ALL);
     }
@@ -1281,12 +1290,15 @@ userChoosesMatchAll: function(element)
     }
 },
 
-userChoosesPagePrefix: function(ev, element)
+userChoosesPagePrefix: function(ev)
 {
     //dump("userChoosesPagePrefix\n");
     
     try
     {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         var url = ev.target.getUserData("internote-data");
         this.storage.setMatch(note, url, this.storage.URL_MATCH_PREFIX);
@@ -1297,12 +1309,15 @@ userChoosesPagePrefix: function(ev, element)
     }
 },
 
-userChoosesSiteSuffix: function(ev, element)
+userChoosesSiteSuffix: function(ev)
 {
     //dump("userChoosesSiteSuffix\n");
     
     try
     {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         var site = ev.target.getUserData("internote-data");
         this.storage.setMatch(note, site, this.storage.URL_MATCH_SUFFIX);
@@ -1313,10 +1328,13 @@ userChoosesSiteSuffix: function(ev, element)
     }
 },
 
-userIgnoresAnchor: function(ev, element)
+userIgnoresAnchor: function(ev)
 {
     try
     {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         this.storage.setIgnoreAnchor(note, ev.target.getAttribute("checked") == "true");
     }
@@ -1326,10 +1344,13 @@ userIgnoresAnchor: function(ev, element)
     }
 },
 
-userIgnoresParams: function(ev, element)
+userIgnoresParams: function(ev)
 {
     try
     {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         this.storage.setIgnoreParams(note, ev.target.getAttribute("checked") == "true");
     }
@@ -1339,10 +1360,13 @@ userIgnoresParams: function(ev, element)
     }
 },
 
-userSetsDefaultColors: function(element)
+userSetsDefaultColors: function()
 {
     try
     {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         this.prefs.setDefaultColors(note.foreColor, note.backColor);
         
@@ -1417,6 +1441,24 @@ chromePrepareTooltip: function()
     }
 },
 
+chromeGetPopupNode: function(popup)
+{
+    if (popup.triggerNode != null)
+    {
+        // FF4
+        return popup.triggerNode;
+    }
+    else if (popupNode != null)
+    {
+        // FF3
+        return popupNode;
+    }
+    else
+    {
+        this.assertErrorNotHere("Can't get popup node.");
+    }
+},
+
 chromePrepareStatusBarMenu: function()
 {
     this.chromePrepareMenu("statusbar");
@@ -1478,12 +1520,15 @@ chromeUpdateDisplayCheckbox: function()
     }
 },
 
-chromePrepareContextMenu: function(element)
+chromePrepareContextMenu: function()
 {
     //dump("chromePrepareContextMenu\n");
     
     try
     {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+    
         var uiNote = this.uiNoteLookup[this.utils.getNoteNum(element)];
         
         var isFlipped   = uiNote.isFlipped;
@@ -1543,10 +1588,13 @@ chromePrepareContextMenu: function(element)
     }
 },
 
-chromePrepareShowOnMenu: function(element)
+chromePrepareShowOnMenu: function()
 {
     try
     {
+        var popup = document.getElementById("internote-showson-menu-popup");
+        var element = this.chromeGetPopupNode(popup);
+        
         var note = this.storage.allNotes[this.utils.getNoteNum(element)];
         
         // First set the radio checkboxes for the static items.
@@ -1615,7 +1663,7 @@ chromePrepareShowOnMenuPages: function(note, isURLPrefix)
         var text = startsWithLabel.replace("%1", url);
         var isChecked = (isURLPrefix && url == note.url);
         this.chromePrepareShowOnCreateItem(menuSeparator, text, url, isChecked,
-                                           "internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userChoosesPagePrefix(event, popupNode)");
+                                           "internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userChoosesPagePrefix(event)");
         
         url = url.substr(0, url.length - 1);
     }
@@ -1646,7 +1694,7 @@ chromePrepareShowOnMenuSites: function(note, isSiteSuffix)
                 var text = endsWithLabel.replace("%1", site);
                 var isChecked = (isSiteSuffix && site == note.url);
                 this.chromePrepareShowOnCreateItem(menuSeparator, text, site, isChecked,
-                                                   "internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userChoosesSiteSuffix(event, popupNode)");
+                                                   "internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userChoosesSiteSuffix(event)");
                 
                 var index = site.indexOf(".");
                 
@@ -1742,6 +1790,70 @@ chromeActiveWarning: function()
         }
         
         this.utils.handleException("Chrome warning failed", ex);
+    }
+},
+
+chromeUserRemovesNote: function()
+{
+    //dump("chromeUserRemovesNote\n");
+    
+    try
+    {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        this.userRemovesNote(element);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught while removing note in context menu.", ex);
+    }
+},
+
+chromeUserMinimizesNote: function()
+{
+    //dump("chromeUserMinimizesNote\n");
+    
+    try
+    {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        this.userMinimizesNote(element);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught while minimizing/restoring note in context menu.", ex);
+    }
+},
+
+chromeUserFlipsNote: function()
+{
+    //dump("chromeUserFlipsNote\n");
+    
+    try
+    {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        this.userFlipsNote(element);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught while flipping note in context menu.", ex);
+    }
+},
+
+chromeUserViewsInManager: function()
+{
+    //dump("chromeUserViewsInManager\n");
+    
+    try
+    {
+        var popup = document.getElementById("internote-note-menu");
+        var element = this.chromeGetPopupNode(popup);
+        this.userViewsInManager(element);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught while flipping note in context menu.", ex);
     }
 },
 
