@@ -269,6 +269,8 @@ assertWarn: function(condition, msg, obj)
             this.doubleDumpTraceData(obj);
         }
         
+        this.sharedGlobal.errorCount++;
+        
         this.doubleDump("\n");
     }
 },
@@ -286,6 +288,8 @@ assertError: function(condition, msg, obj)
         this.doubleDumpTraceData(obj);
         
         this.doubleDump("\n");
+        
+        this.sharedGlobal.errorCount++;
         
         throw new Error(errorMsg);
     }
@@ -308,6 +312,8 @@ assertWarnNotHere : function(msg, obj)
     this.doubleDump("Extra Data: ");
     this.doubleDumpTraceData(obj);
     
+    this.sharedGlobal.errorCount++;
+    
     this.doubleDump("\n");
 },
 
@@ -325,6 +331,8 @@ assertErrorNotHere : function(msg, obj)
     
     this.doubleDump("\n");
     
+    this.sharedGlobal.errorCount++;
+    
     throw new Error(errorMsg);
 },
 
@@ -340,6 +348,8 @@ handleException: function(msg, ex, obj)
     
     this.doubleDump("Extra Data: ");
     this.doubleDumpTraceData(obj);
+    
+    this.sharedGlobal.errorCount++;
     
     this.doubleDump("\n");
 },

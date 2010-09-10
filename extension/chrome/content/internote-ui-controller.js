@@ -130,6 +130,10 @@ init: function()
     this.utils.init(window);
     this.prefs.init();
     
+    this.utils.doubleDump("Internote starting up ...\n");
+    
+    this.utils.assertError(this.storage == null, "UIController is already initialized.", this);
+    
     this.displayUI = this.windowGlobal.displayUI = this.chooseDisplayUI();
     
     // This will provide a global object shared between windows
@@ -231,7 +235,7 @@ init: function()
         keySet.appendChild(key);
     }
     
-    dump("Internote startup successful\n");
+    this.utils.doubleDump("Internote startup successful.\n");
 },
 
 getLocaleString: function(messageName)
@@ -1694,7 +1698,7 @@ chromeActiveWarning: function()
             this.activeWarnCount = 0;
         }
         
-        var newCount = this.sharedGlobal.dumpData.length;
+        var newCount = this.sharedGlobal.errorCount;
         
         if (this.activeWarnCount < newCount)
         {
@@ -1705,7 +1709,7 @@ chromeActiveWarning: function()
                 if (document == null)
                 {
                     this.utils.dumpTraceData(window);
-                }            
+                }
                 
                 var panel = document.getElementById("internote-panel");
                 if (panel != null)
@@ -1734,8 +1738,9 @@ chromeActiveWarning: function()
         }
         catch (ex2)
         {
-            dump("Failed to clear interval.");
+            this.utils.handleException("Failed to cancel interval timer.", ex2);
         }
+        
         this.utils.handleException("Chrome warning failed", ex);
     }
 },
