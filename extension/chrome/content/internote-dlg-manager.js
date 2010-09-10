@@ -369,6 +369,10 @@ clearNoteData : function ()
     document.getElementById("noteText").setAttribute("disabled", "true");
     
     this.isUpdating = false;
+    
+    // Remove any old note-not-showing warnings.
+    var notificationBox = document.getElementById("noteProblemNotificationBox");
+    notificationBox.removeAllNotifications(true);
 },
 
 updateValue: function(id, value)
@@ -466,6 +470,8 @@ setNoteData: function(note)
         }
         
         this.configureURLSection(this.noteBeingEdited, category, url);
+        
+        this.checkForInvalidURL();
     }
     else
     {
@@ -554,6 +560,35 @@ configureURLSection: function(note, category, url)
     {
         document.getElementById("goToLink").style.color  = "blue";
         document.getElementById("goToLink").style.cursor = "pointer";
+    }
+},
+
+checkForInvalidURL: function()
+{
+    var urlData = this.treeView.getManagerURLData(this.noteBeingEdited);
+    
+    var notificationBox = document.getElementById("noteProblemNotificationBox");
+    
+    var oldNotification = notificationBox.getNotificationWithValue("not_showing_message");
+    var wasPreviouslyInvalid = (oldNotification != null);
+    var isInvalid = (this.utils.startsWith(urlData, "blank") || this.utils.startsWith(urlData, "invalid"));
+    
+    if (isInvalid && !wasPreviouslyInvalid)
+    {
+        var urlLabelDeck = document.getElementById("urlLabelDeck");
+        var urlFieldName = urlLabelDeck.selectedPanel.getAttribute("value").replace(/:/, "");
+        var message = this.getLocaleString("NoteDoesntShowWarning");
+        message = message.replace("%1", urlFieldName);
+        
+        notificationBox.appendNotification(message, "not_showing_message", null, notificationBox.PRIORITY_WARNING_MEDIUM);
+    }
+    else if (!isInvalid && wasPreviouslyInvalid)
+    {
+        notificationBox.removeNotification(oldNotification);
+    }
+    else
+    {
+        // Do nothing, keep presence or absence of notification the same.
     }
 },
 
@@ -1221,7 +1256,7 @@ userImportsNotes: function(fileType, filter)
             var message = this.getLocaleString(messageType);
             message = message.replace("%1", addedCount).replace("%2", foundCount);
             
-            var notificationBox = document.getElementById("notificationBox");
+            var notificationBox = document.getElementById("feedbackNotificationBox");
             notificationBox.removeAllNotifications(true);
             notificationBox.appendNotification(message, "import_message", null, notificationBox.PRIORITY_INFO_MEDIUM);
         }
@@ -1280,7 +1315,7 @@ userExportsNotes: function(text, noteCount, fileType, filter, extension, default
         var message = this.getLocaleString("ExportMessage");
         message = message.replace("%1", noteCount);
         
-        var notificationBox = document.getElementById("notificationBox");
+        var notificationBox = document.getElementById("feedbackNotificationBox");
         notificationBox.removeAllNotifications(true);
         notificationBox.appendNotification(message, "export_message", null, notificationBox.PRIORITY_INFO_MEDIUM);        
     }

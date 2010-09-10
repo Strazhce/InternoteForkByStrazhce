@@ -105,7 +105,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       </popup>
     </popupset>
     
-    <notificationbox id="notificationBox" flex="1">
+    <notificationbox id="noteProblemNotificationBox" flex="1">
+    <notificationbox id="feedbackNotificationBox" flex="1">
     
     <hbox flex="2">
         <vbox flex="3" id="leftPanel">
@@ -248,6 +249,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         </vbox>
     </hbox>
     
+    </notificationbox>
     </notificationbox>
     
     <stringbundleset id="stringbundleset">
