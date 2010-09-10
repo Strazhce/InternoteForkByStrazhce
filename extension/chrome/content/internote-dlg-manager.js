@@ -721,11 +721,18 @@ userEditsData: function(event)
             
             this.storage.setMatch           (this.noteBeingEdited,   noteURLVal, matchType);
             this.storage.setText            (this.noteBeingEdited,   noteTextVal);
-            this.storage.setBackColor       (this.noteBeingEdited,   this.consts.BACKGROUND_COLOR_SWABS[backColorVal]);
-            this.storage.setForeColor       (this.noteBeingEdited,   this.consts.FOREGROUND_COLOR_SWABS[foreColorVal]);
             this.storage.setIsMinimizedMulti([this.noteBeingEdited], isMinimized);
             this.storage.setIgnoreAnchor    (this.noteBeingEdited,   ignoreAnchor);
             this.storage.setIgnoreParams    (this.noteBeingEdited,   ignoreParams);
+            
+            if (backColorVal != -1)
+            {
+                this.storage.setBackColor       (this.noteBeingEdited,   this.consts.BACKGROUND_COLOR_SWABS[backColorVal]);
+            }
+            if (foreColorVal != -1)
+            {
+                this.storage.setForeColor       (this.noteBeingEdited,   this.consts.FOREGROUND_COLOR_SWABS[foreColorVal]);
+            }
             
             this.configureURLSection(this.noteBeingEdited);
         }
