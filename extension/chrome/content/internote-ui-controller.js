@@ -1448,10 +1448,10 @@ chromeGetPopupNode: function(popup)
         // FF4
         return popup.triggerNode;
     }
-    else if (popupNode != null)
+    else if (document.popupNode != null)
     {
         // FF3
-        return popupNode;
+        return document.popupNode;
     }
     else
     {
