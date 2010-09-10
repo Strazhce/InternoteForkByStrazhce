@@ -1722,6 +1722,11 @@ treeView : {
                 {
                     return "blankurl:";
                 }
+                else if (note.matchType == this.storage.URL_MATCH_PREFIX)
+                {
+                    // URL prefixes don't need to be valid.
+                    return "category:" + note.url;
+                }
                 else
                 {
                     return "invalidurl:";

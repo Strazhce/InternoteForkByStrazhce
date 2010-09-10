@@ -862,7 +862,16 @@ matchesURL: function(note, pageURL)
         var noteURLCanon = this.getEffectiveURL(note);
         var pageURLCanon = this.processEffectiveURL(pageURL, this.URL_MATCH_URL, note.ignoreAnchor, note.ignoreParams);
         
-        if (note.matchType == this.URL_MATCH_URL)
+        if (note.matchType == this.URL_MATCH_ALL)
+        {
+            return true;
+        }
+        else if (noteURL == "")
+        {
+            // Except for all mode, missing data should never match, even for url prefix, regexp, etc.
+            return false;
+        }
+        else if (note.matchType == this.URL_MATCH_URL)
         {
             return pageURLCanon == noteURLCanon;
         }
@@ -870,16 +879,8 @@ matchesURL: function(note, pageURL)
         {
             try
             {
-                if (noteURL == "")
-                {
-                    // Blank regexp is treated as match none not match all.
-                    return false;
-                }
-                else
-                {
-                    return pageURL.match(noteURL) ||
-                           (pageURL != null && pageURLCanon.match(noteURL));
-                }
+                return pageURL.match(noteURL) ||
+                       (pageURL != null && pageURLCanon.match(noteURL));
             }
             catch (ex2)
             {
@@ -911,10 +912,6 @@ matchesURL: function(note, pageURL)
             var noteSite = this.getEffectiveSite(note);
             var pageSite = this.utils.getURLSite(pageURL);
             return this.utils.isSiteSuffix(pageSite, noteSite);
-        }
-        else if (note.matchType == this.URL_MATCH_ALL)
-        {
-            return true;
         }
         else
         {
