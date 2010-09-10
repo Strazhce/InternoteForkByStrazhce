@@ -174,9 +174,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <textbox id="noteURL" oninput="internoteManager.userEditsData()" />
             <hbox>
                 <checkbox id="ignoreAnchor" flex="1" oncommand="internoteManager.userEditsData()" style="font-weight: bold;" width="100px"
-                          label="&internote.ignoreAnchorCmd.label;" tooltiptext="&internote.ignoreAnchorCmd.label; (&internote.ignoreAnchorCmd.label2;)" />
+                          label="&internote.ignoreAnchorCmd.label;" normaltooltiptext="&internote.ignoreAnchorCmd.label; (&internote.ignoreAnchorCmd.label2;)" />
                 <checkbox id="ignoreParams" flex="1" oncommand="internoteManager.userEditsData()" style="font-weight: bold;" width="100px"
-                          label="&internote.ignoreParamsCmd.label;" tooltiptext="&internote.ignoreParamsCmd.label; (&internote.ignoreParamsCmd.label2;)" />
+                          label="&internote.ignoreParamsCmd.label;" normaltooltiptext="&internote.ignoreParamsCmd.label; (&internote.ignoreParamsCmd.label2;)" />
             </hbox>
             </groupbox>
             <groupbox flex="1">

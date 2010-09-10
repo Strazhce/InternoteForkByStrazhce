@@ -512,6 +512,8 @@ configureURLSection: function(note, category, url)
     ignoreAnchor.removeAttribute("disabled");
     ignoreParams.removeAttribute("disabled");
     
+    var notForMatchTypeTooltip = this.getLocaleString("NotForMatchTypeTooltip");
+    
     if (note == null || note.matchType == this.storage.URL_MATCH_URL)
     {
         urlLabelDeck.setAttribute("selectedIndex", "0");
@@ -549,6 +551,14 @@ configureURLSection: function(note, category, url)
     {
         ignoreAnchor.setAttribute("disabled", "true");
         ignoreParams.setAttribute("disabled", "true");
+        
+        ignoreAnchor.setAttribute("tooltiptext", notForMatchTypeTooltip);
+        ignoreParams.setAttribute("tooltiptext", notForMatchTypeTooltip);
+    }
+    else
+    {
+        ignoreAnchor.setAttribute("tooltiptext", ignoreAnchor.getAttribute("normaltooltiptext"));
+        ignoreParams.setAttribute("tooltiptext", ignoreParams.getAttribute("normaltooltiptext"));
     }
     
     if (category == "regexp" || !this.isValidURLOrSite())
