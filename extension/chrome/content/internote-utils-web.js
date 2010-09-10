@@ -198,7 +198,7 @@ parseURL: function(url)
             
             var isValidPath = (path.charAt(0) == "/");
             var isValidPort = (port == null) || this.isValidPortString(port);
-            var isValidSite = this.isValidSite(site);
+            var isValidSite = this.isValidURLSite(site, protocol);
             
             if (params != null)
             {
