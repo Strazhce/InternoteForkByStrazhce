@@ -862,6 +862,11 @@ matchesURL: function(note, pageURL)
         var noteURLCanon = this.getEffectiveURL(note);
         var pageURLCanon = this.processEffectiveURL(pageURL, this.URL_MATCH_URL, note.ignoreAnchor, note.ignoreParams);
         
+        if (pageURLCanon == null)
+        {
+            pageURLCanon = pageURL;
+        }
+        
         if (note.matchType == this.URL_MATCH_ALL)
         {
             return true;
