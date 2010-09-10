@@ -225,11 +225,7 @@ init: function()
         var key    = document.createElement("key");
         key.setAttribute("key",       "g");
         key.setAttribute("modifiers", "alt");
-        
-        key.addEventListener("command", this.utils.bind(this, function()
-        {
-            this.activateDebugFunction();
-        }), false);
+        key.setAttribute("oncommand", "internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.activateDebugFunction()");
         
         var keySet = document.getElementById("mainKeyset");
         keySet.appendChild(key);
