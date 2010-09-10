@@ -39,7 +39,7 @@ initConnections: function(windowGlobal)
     this.noteUI  = windowGlobal.noteUI;
 },
 
-init: function(prefs, utils, noteUI, getViewportDimsFunc)
+init: function(getViewportDimsFunc)
 {
     this.getViewportDimsFunc = getViewportDimsFunc;
 },

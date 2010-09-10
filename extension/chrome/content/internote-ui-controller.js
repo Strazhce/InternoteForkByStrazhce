@@ -1702,6 +1702,11 @@ chromeActiveWarning: function()
             
             if (this.prefs.shouldUseStatusbar())
             {
+                if (document == null)
+                {
+                    this.utils.dumpTraceData(window);
+                }            
+                
                 var panel = document.getElementById("internote-panel");
                 if (panel != null)
                 {
