@@ -47,7 +47,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <script type="application/x-javascript" src="chrome://global/content/printUtils.js"/>
     
     <popupset>
-      <popup id="actionsMenu">
+      <menupopup id="actionsMenu">
         <menuitem id="selectAll"        label="&internote.selectAllCmd.label;" accesskey="&internote.selectAllCmd.accesskey;"
                   oncommand="internoteManager.userSelectsAll();" />
         <menuitem id="expandSelected"   label="&internote.expandSelectedCmd.label;" accesskey="&internote.expandSelectedCmd.accesskey;"
@@ -102,7 +102,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   accesskey="&internote.printAllCmd.accesskey;" />
         <menuitem id="printSelected" label="&internote.printSelectedCmd.label;..."  oncommand="internoteManager.userPrintsNotes(true);"
                   accesskey="&internote.printSelectedCmd.accesskey;" />
-      </popup>
+      </menupopup>
     </popupset>
     
     <notificationbox id="noteProblemNotificationBox" flex="1">
