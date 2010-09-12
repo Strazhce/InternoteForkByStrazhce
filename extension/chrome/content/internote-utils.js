@@ -338,10 +338,31 @@ assertErrorNotHere : function(msg, obj)
 
 handleException: function(msg, ex, obj)
 {
+    // Check for XPConnect exception first, because we'll get an exception accessing a non-existent field.
+    if (ex.location != null)
+    {
+        var location = ex.location;
+        var stack = "";
+        while (location != null)
+        {
+            stack += "@" + location.fileName + ":" + location.lineNumber + "\n";
+            location = location.caller;
+        }
+    }
+    else if (ex.stack != null)
+    {
+        var stack = ex.stack;
+    }
+    else
+    {
+        var stack = "No stack found!\n";
+    }
+    
     var errorMsg = "Exception Caught." + "\n" +
                    msg + "\n" +
                    "Exception: " + ex.message + "(" + ex.fileName + ":" + ex.lineNumber + ")\n" +
-                   "Stack:\n" + ex.stack;
+                   "Stack:\n" + stack;
+    
     this.Cu.reportError(errorMsg);
     
     this.doubleDump("\n\n" + errorMsg + "\n\n");
