@@ -10,3 +10,12 @@ treechildren::-moz-tree-cell-text(special_data)
 treechildren::-moz-tree-cell-text(url_regexp) {
     font-weight: bold;
 }
+
+#searchButton {
+    list-style-image: url("chrome://internote/skin/closesearch.png");
+    -moz-image-region: rect(0 32px 16px 16px);
+}
+
+#searchButton:hover {
+    -moz-image-region: rect(0 16px 16px 0);
+}

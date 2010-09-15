@@ -125,17 +125,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 </treecols>
                 <treechildren id="searchResultChildren" />
             </tree>
-            <hbox>
-                <button id="notesActions" type="menu" popup="actionsMenu" 
+            <hbox align="center">
+                <spacer width="5px" />
+                <button id="notesActions" type="menu" popup="actionsMenu" style="margin: 0;"
                         label="&internote.actionsCmd.label;" accesskey="&internote.actionsCmd.accesskey;" />
                 <spacer width="10px" />
-                <hbox flex="1" style="width: 90%;" align="center">
-                    <label control="searchFilter" value="&internote.searchQuery.label;" />
-                    <textbox id="searchFilter" oninput="internoteManager.updateSearchResults()" flex="1" style="height: 2em;" />
-                    <label value="X" tooltiptext="&internote.closeResults.tooltip;"
-                           style="background-color: lightgray; opacity: .75; width: 1.5em; height: 1.5em; text-align: center; padding-top: .1em;"
-                           onclick="internoteManager.clearSearchResults()" />
-                </hbox>
+                <label control="searchFilter" value="&internote.searchQuery.label;" style="margin: 0;" />
+                <spacer width="5px" />
+                <textbox id="searchFilter" oninput="internoteManager.updateSearchResults()" flex="1" style="margin: 0; height: 2em;" />
+                <spacer width="5px" />
+                <image id="searchButton" tooltiptext="&internote.closeResults.tooltip;" onclick="internoteManager.clearSearchResults()" />
+                <spacer width="5px" />
             </hbox>
         </vbox>
         <splitter id="splitter" state="collapsed" collapse="after" resizeafter="closest" />
