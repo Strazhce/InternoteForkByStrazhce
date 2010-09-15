@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://internote/skin/prefs.css" type="text/css"?>
 
 <!DOCTYPE prefsDialog [
 <!ENTITY % prefsDTD  SYSTEM "chrome://internote/locale/prefs.dtd"  >%prefsDTD;
@@ -41,16 +42,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
     <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-prefs.js"/>
     
-    <prefpane id="internotePreferencesPane" image="chrome://internote/skin/prefs.png" flex="1">
+    <prefpane id="generalPrefsPane" image="chrome://internote/skin/prefs.png" flex="1">
         <preferences>
-            <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
-            <preference id="backColorPreference"       name="internote.defaultnotecolor" type="string"/>
-            <preference id="foreColorPreference"       name="internote.defaulttextcolor" type="string"/>
-            <preference id="defaultPositionPreference" name="internote.defaultposition"  type="string"/>
-            <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
-            <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
-            <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
-            <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
             <preference id="statusbarPreference"       name="internote.usestatusbar"     type="bool"/>
             <preference id="saveLocationPreference"    name="internote.savelocation"     type="file"/>
             <preference id="changeLocationPreference"  name="internote.changelocation"   type="bool"/>
@@ -146,6 +139,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     </rows>
                 </grid>
             </groupbox>
+        </vbox>            
+    </prefpane>
+    
+    <prefpane id="appearancePrefsPane" image="chrome://internote/skin/prefs.png" flex="1">
+        <preferences>
+            <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
+            <preference id="backColorPreference"       name="internote.defaultnotecolor" type="string"/>
+            <preference id="foreColorPreference"       name="internote.defaulttextcolor" type="string"/>
+            <preference id="defaultPositionPreference" name="internote.defaultposition"  type="string"/>
+            <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
+            <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
+            <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
+            <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
+        </preferences>     
+        <vbox flex="1">        
             <groupbox>
                 <caption label="&internote.generalPrefs.caption;"/>
                 <grid>
@@ -176,6 +184,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </groupbox>
         </vbox>
     </prefpane>
+    
     <stringbundleset id="stringbundleset">
         <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
     </stringbundleset>
