@@ -112,9 +112,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                                 </menupopup>
                             </menulist>
                         </row>
-                        <description>
-                            (&internote.adjustDefaults.desc;)
-                        </description>
+                        <description>&internote.adjustDefaults.desc;</description>
                     </rows>
                 </grid>
             </groupbox>
@@ -160,9 +158,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                             <checkbox id="askBeforeDeleteCheckBox" preference="askBeforeDeletePreference" label="&internote.confirmDeleteCBox.label;" />
                             <checkbox id="statusbarCheckBox"       preference="statusbarPreference"       label="&internote.useStatusBarCBox.label;" />
                         </row>
-                        <description>
-                            (&internote.confirmProviso.desc;)
-                        </description>
+                        <description>&internote.confirmProviso.desc;</description>
                     </rows>
                 </grid>
             </groupbox>
@@ -174,12 +170,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <textbox id="saveFolderField" flex="1" />
                         <button id="chooseFolder" label="&internote.browseButton.label;" />
                     </hbox>
-                    <description>
-                        (&internote.storageRestartProviso.desc;)
-                    </description>
-                    <description>
-                        (&internote.storageMoveProviso.desc;)
-                    </description>
+                    <description>&internote.storageRestartProviso.desc;</description>
+                    <description>&internote.storageMoveProviso.desc;</description>
                 </vbox>
             </groupbox>
         </vbox>

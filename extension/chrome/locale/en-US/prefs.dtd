@@ -24,7 +24,7 @@
 <!ENTITY internote.bottomRightPos.value       "Bottom-Right">
 <!ENTITY internote.centerPos.value            "Center">
 
-<!ENTITY internote.adjustDefaults.desc        "These are defaults which may be changed for individual notes later using the note's borders or the flip button.">
+<!ENTITY internote.adjustDefaults.desc        "(These are defaults which may be changed for individual notes later using the note's borders or the flip button.)">
 
 <!ENTITY internote.globalStylePrefs.caption   "Options for All Notes">
 
@@ -40,11 +40,11 @@
 
 <!ENTITY internote.confirmDeleteCBox.label    "Confirm Deletion">
 <!ENTITY internote.useStatusBarCBox.label     "Show Internote in Status Bar">
-<!ENTITY internote.confirmProviso.desc        "Using the manager to delete multiple notes always asks for confirmation.">
+<!ENTITY internote.confirmProviso.desc        "(Using the manager to delete multiple notes always asks for confirmation.)">
 
 <!ENTITY internote.storagePrefs.caption       "Storage Options">
 
 <!ENTITY internote.useAlternativeCBox.label   "Use Alternative Location">
 <!ENTITY internote.browseButton.label         "Browse...">
-<!ENTITY internote.storageRestartProviso.desc "New locations won't be used until Firefox is restarted.">
-<!ENTITY internote.storageMoveProviso.desc    "Existing notes won't be moved to new locations, however you may import them using &quot;Manage All Notes&quot; on the Internote menu.">
+<!ENTITY internote.storageRestartProviso.desc "(New locations won't be used until Firefox is restarted.)">
+<!ENTITY internote.storageMoveProviso.desc    "(Existing notes won't be moved to new locations, however you may import them using &quot;Manage All Notes&quot; on the Internote menu.)">
