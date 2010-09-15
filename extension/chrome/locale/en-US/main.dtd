@@ -1,7 +1,6 @@
 <!-- Main Menus -->
 
-<!ENTITY internote.appName.label              "Internote">
-<!ENTITY internote.appName.accesskey          "N">
+<!-- AppName in "common.dtd". -->
 
 <!ENTITY internote.newNoteCmd.label           "Add New Note">
 

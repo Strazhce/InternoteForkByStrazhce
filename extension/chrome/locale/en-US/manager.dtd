@@ -40,7 +40,8 @@
 
 <!ENTITY internote.expandSelectedCmd.label    "Expand Selected">
 <!ENTITY internote.collapseSelectedCmd.label  "Collapse Selected">
-
+  <!-- Select All in "common.dtd". -->
+  
 <!ENTITY internote.deleteSelectedCmd.label    "Delete Selected">
 <!ENTITY internote.resetSelectedCmd.label     "Reset Position of Selected">
 

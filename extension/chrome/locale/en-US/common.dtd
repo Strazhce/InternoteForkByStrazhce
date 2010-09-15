@@ -1,3 +1,6 @@
+<!ENTITY internote.appName.label              "Internote">
+<!ENTITY internote.appName.accesskey          "N">
+
 <!ENTITY internote.cancelButton.label         "Cancel">
 <!ENTITY internote.closeButton.label          "Close">
 
