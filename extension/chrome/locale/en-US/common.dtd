@@ -1,8 +1,14 @@
+<!-- App Name -->
+
 <!ENTITY internote.appName.label              "Internote">
 <!ENTITY internote.appName.accesskey          "N">
 
+<!-- Dialog Buttons -->
+
 <!ENTITY internote.cancelButton.label         "Cancel">
 <!ENTITY internote.closeButton.label          "Close">
+
+<!-- Color Names -->
 
 <!ENTITY internote.bananaColor.value          "Banana">
 <!ENTITY internote.melonColor.value           "Melon">
@@ -17,6 +23,8 @@
 <!ENTITY internote.roseColor.value            "Rose">
 <!ENTITY internote.aluminumColor.value        "Aluminum">
 <!ENTITY internote.snowColor.value            "Snow">
+
+<!-- Commands that appear in several places -->
 
 <!ENTITY internote.ignoreParamsCmd.label      "Ignore Parameters">
 <!ENTITY internote.ignoreAnchorCmd.label      "Ignore Anchor">
