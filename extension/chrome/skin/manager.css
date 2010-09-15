@@ -19,3 +19,7 @@ treechildren::-moz-tree-cell-text(url_regexp) {
 #searchButton:hover {
     -moz-image-region: rect(0 16px 16px 0);
 }
+
+#searchButton:active {
+    -moz-image-region: rect(0 48px 16px 32px);
+}
