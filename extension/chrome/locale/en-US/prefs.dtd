@@ -1,0 +1,42 @@
+<!-- Preferences Dialog -->
+
+<!ENTITY internote.prefsDialog.title          "Options for Internote">
+
+<!ENTITY internote.defaultStylePrefs.caption  "Options for New Notes">
+<!ENTITY internote.globalStylePrefs.caption   "Options for All Notes">
+<!ENTITY internote.generalPrefs.caption       "General Options">
+<!ENTITY internote.storagePrefs.caption       "Storage Options">
+
+<!ENTITY internote.fontSize.label             "Font Size">
+
+<!ENTITY internote.defaultNoteColor.label     "Default Note Color">
+<!ENTITY internote.defaultTextColor.label     "Default Text Color">
+<!ENTITY internote.defaultSize.label          "Default Note Size">
+<!ENTITY internote.defaultPos.label           "Default Note Position">
+
+<!ENTITY internote.topLeftPos.value           "Top-Left">
+<!ENTITY internote.topRightPos.value          "Top-Right">
+<!ENTITY internote.bottomLeftPos.value        "Bottom-Left">
+<!ENTITY internote.bottomRightPos.value       "Bottom-Right">
+<!ENTITY internote.centerPos.value            "Center">
+
+<!ENTITY internote.tinySize.value             "Tiny">
+<!ENTITY internote.normalSize.value           "Normal">
+<!ENTITY internote.largeSize.value            "Large">
+<!ENTITY internote.giantSize.value            "Giant">
+<!ENTITY internote.megaSize.value             "Mega">
+
+<!ENTITY internote.useAlternativeCBox.label   "Use Alternative Location">
+
+<!ENTITY internote.useTranslucencyCBox.label  "Translucent Notes">
+<!ENTITY internote.useHighlightableCBox.label "Highlightable Text (use border to move)">
+<!ENTITY internote.useNativeScrollCBox.label  "Use OS Scrollbar instead of Internote Scrollbar">
+<!ENTITY internote.confirmDeleteCBox.label    "Confirm Deletion">
+<!ENTITY internote.useStatusBarCBox.label     "Show Internote in Status Bar">
+
+<!ENTITY internote.browseButton.label         "Browse">
+
+<!ENTITY internote.storageRestartProviso.desc "New locations won't be used until Firefox is restarted.">
+<!ENTITY internote.storageMoveProviso.desc    "Existing notes won't be moved to new locations, however you may import them using &quot;Manage All Notes&quot; on the Internote menu.">
+<!ENTITY internote.confirmProviso.desc        "Using the manager to delete multiple notes always asks for confirmation.">
+<!ENTITY internote.adjustDefaults.desc        "These are defaults which may be changed for individual notes later using the note's borders or the flip button.">

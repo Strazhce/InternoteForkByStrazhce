@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<!DOCTYPE window SYSTEM "chrome://internote/locale/internote.dtd">
+
+<!DOCTYPE prefsDialog [
+<!ENTITY % prefsDTD  SYSTEM "chrome://internote/locale/prefs.dtd"  >%prefsDTD;
+<!ENTITY % commonDTD SYSTEM "chrome://internote/locale/common.dtd" >%commonDTD;
+]>
 
 <!--
 Internote Extension

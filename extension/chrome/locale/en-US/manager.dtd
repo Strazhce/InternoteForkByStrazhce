@@ -1,0 +1,89 @@
+<!-- Manager Dialog -->
+
+<!ENTITY internote.managerDialog.title        "Manage Internotes">
+
+<!ENTITY internote.searchQuery.label          "Search">
+<!ENTITY internote.searchResults.label        "Search Results">
+
+<!ENTITY internote.noteScope.caption          "Note Scope">
+<!ENTITY internote.noteData.caption           "Note Data">
+<!ENTITY internote.thisNoteActions.caption    "Actions on This Note">
+
+<!ENTITY internote.noteURL.label              "URL">
+<!ENTITY internote.noteSite.label             "Site">
+<!ENTITY internote.noteURLPrefix.label        "URL Starts with">
+<!ENTITY internote.noteSiteSuffix.label       "Site Ends with">
+<!ENTITY internote.noteURLRegexp.label        "URL RegExp">
+
+<!ENTITY internote.noteMatchType.label        "On which pages?">
+<!ENTITY internote.createTime.label           "Created">
+<!ENTITY internote.modfnTime.label            "Modified">
+<!ENTITY internote.isMinimizedCBox.label      "Minimized?">
+<!ENTITY internote.text.label                 "Text">
+<!ENTITY internote.backColor.label            "Note Color">
+<!ENTITY internote.foreColor.label            "Text Color">
+
+<!ENTITY internote.goLink.label               "Go to Page">
+
+<!ENTITY internote.noteList.columnTitle       "Notes">
+
+<!ENTITY internote.urlMatchExact.value        "One Only">
+<!ENTITY internote.urlMatchSite.value         "On This Site Only">
+<!ENTITY internote.urlMatchStarts.value       "Where URL Starts with ...">
+<!ENTITY internote.urlMatchSuffix.value       "On Sites Ending with ...">
+<!ENTITY internote.urlMatchAll.value          "All (Universal Note)">
+<!ENTITY internote.urlMatchRegexp.value       "Matching RegExp">
+
+<!-- Manager Menu Commands -->
+
+<!ENTITY internote.importCmd.label            "Import">
+
+<!ENTITY internote.expandSelectedCmd.label    "Expand Selected">
+<!ENTITY internote.collapseSelectedCmd.label  "Collapse Selected">
+
+<!ENTITY internote.deleteSelectedCmd.label    "Delete Selected">
+<!ENTITY internote.resetSelectedCmd.label     "Reset Position of Selected">
+
+<!ENTITY internote.printSelectedCmd.label     "Print Selected">
+<!ENTITY internote.exportSelectedCmd.label    "Export Selected">
+
+<!ENTITY internote.printAllCmd.label          "Print All">
+<!ENTITY internote.exportAllCmd.label         "Export All">
+
+<!ENTITY internote.fromV3Cmd.label            "From Internote v3"> 
+<!ENTITY internote.fromV2Cmd.label            "From Internote v2">
+
+<!ENTITY internote.toV3Cmd.label              "To Internote v3"> 
+<!ENTITY internote.toV2Cmd.label              "To Internote v2">
+<!ENTITY internote.toBookmarksCmd.label       "To Bookmarks">
+<!ENTITY internote.toTextCmd.label            "To Text">
+<!ENTITY internote.toHTMLCmd.label            "To HTML">
+
+<!ENTITY internote.importCmd.accesskey        "I">
+<!ENTITY internote.expandSelectedCmd.accesskey "X">
+<!ENTITY internote.collapseSelectedCmd.accesskey "C">
+<!ENTITY internote.deleteSelectedCmd.accesskey "D">
+<!ENTITY internote.resetSelectedCmd.accesskey "R">
+<!ENTITY internote.printSelectedCmd.accesskey "S">
+<!ENTITY internote.exportSelectedCmd.accesskey "L">
+<!ENTITY internote.printAllCmd.accesskey      "P">
+<!ENTITY internote.exportAllCmd.accesskey     "E">
+<!ENTITY internote.fromV3Cmd.accesskey        "3">
+<!ENTITY internote.fromV2Cmd.accesskey        "2">
+<!ENTITY internote.toV3Cmd.accesskey          "3">
+<!ENTITY internote.toV2Cmd.accesskey          "2">
+<!ENTITY internote.toBookmarksCmd.accesskey   "B">
+<!ENTITY internote.toTextCmd.accesskey        "T">
+<!ENTITY internote.toHTMLCmd.accesskey        "H">
+
+<!ENTITY internote.actionsCmd.label           "Actions">
+<!ENTITY internote.deleteCurrentCmd.label     "Delete Note">
+<!ENTITY internote.resetCurrentCmd.label      "Reset Position">
+
+<!ENTITY internote.actionsCmd.accesskey       "A">
+<!ENTITY internote.deleteCurrentCmd.accesskey "D">
+<!ENTITY internote.resetCurrentCmd.accesskey  "R">
+
+<!-- Manager Tooltips -->
+
+<!ENTITY internote.closeResults.tooltip       "Close Search Results">

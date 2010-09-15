@@ -1,0 +1,72 @@
+<!-- Main Menus -->
+
+<!ENTITY internote.appName.label              "Internote">
+<!ENTITY internote.appName.accesskey          "N">
+
+<!ENTITY internote.newNoteCmd.label           "Add New Note">
+
+<!ENTITY internote.openManagerCmd.label       "Manage All Notes">
+<!ENTITY internote.openPrefsCmd.label         "Options">
+<!ENTITY internote.helpCmd.label              "Help">
+<!ENTITY internote.reportBugCmd.label         "Report Bug">
+<!ENTITY internote.aboutCmd.label             "About Internote">
+
+<!ENTITY internote.displayNotesCmd.label      "Display Notes">
+
+<!ENTITY internote.minimizeAllCmd.label       "Minimize This Page's Notes">
+<!ENTITY internote.unminimizeAllCmd.label     "Restore This Page's Notes">
+
+<!ENTITY internote.newNoteCmd.accesskey       "N">
+<!ENTITY internote.openManagerCmd.accesskey   "M">
+<!ENTITY internote.openPrefsCmd.accesskey     "P">
+<!ENTITY internote.helpCmd.accesskey          "H">
+<!ENTITY internote.reportBugCmd.accesskey     "R">
+<!ENTITY internote.aboutCmd.accesskey         "A">
+<!ENTITY internote.displayNotesCmd.accesskey  "D">
+<!ENTITY internote.minimizeAllCmd.accesskey   "E">
+<!ENTITY internote.unminimizeAllCmd.accesskey "E">
+
+<!-- Note Context Menu -->
+
+<!ENTITY internote.cutTextCmd.label           "Cut">
+<!ENTITY internote.copyTextCmd.label          "Copy">
+<!ENTITY internote.pasteTextCmd.label         "Paste">
+<!ENTITY internote.deleteTextCmd.label        "Delete">
+  <!-- Select All in "common.dtd". -->
+
+<!ENTITY internote.setDefaultColorsCmd.label  "Use as Default Colors">
+
+<!ENTITY internote.deleteNoteCmd.label        "Delete Note">
+<!ENTITY internote.chooseColorsCmd.label      "Choose New Colors">
+<!ENTITY internote.editTextCmd.label          "Edit Text">
+<!ENTITY internote.minimizeNoteCmd.label      "Minimize Note">
+<!ENTITY internote.unminimizeNoteCmd.label    "Restore Note">
+<!ENTITY internote.viewInOpenManagerCmd.label "Manage Note">
+
+<!ENTITY internote.showsOnMenuCmd.label       "Shows On">
+<!ENTITY internote.showsOnPageCmd.label       "This Page Only">
+<!ENTITY internote.showsOnSiteCmd.label       "This Site Only">
+<!ENTITY internote.showsOnAllCmd.label        "All Pages">
+<!ENTITY internote.showsRegexpCmd.label       "Pages Matching Regular Expression">
+
+<!ENTITY internote.cutTextCmd.accesskey       "T">
+<!ENTITY internote.copyTextCmd.accesskey      "C">
+<!ENTITY internote.pasteTextCmd.accesskey     "P">
+<!ENTITY internote.deleteTextCmd.accesskey    "D">
+<!ENTITY internote.setDefaultColorsCmd.accesskey "U">
+<!ENTITY internote.deleteNoteCmd.accesskey    "L">
+<!ENTITY internote.chooseColorsCmd.accesskey  "E">
+<!ENTITY internote.editTextCmd.accesskey      "E">
+<!ENTITY internote.minimizeNoteCmd.accesskey  "N">
+<!ENTITY internote.unminimizeNoteCmd.accesskey "N">
+<!ENTITY internote.viewInOpenManagerCmd.accesskey "G">
+
+<!ENTITY internote.showsOnMenuCmd.accesskey   "H">
+<!ENTITY internote.showsOnPageCmd.accesskey   "G">
+<!ENTITY internote.showsOnSiteCmd.accesskey   "S">
+<!ENTITY internote.showsOnAllCmd.accesskey    "A">
+<!ENTITY internote.showsRegexpCmd.accesskey   "R">
+
+<!-- Ignore Params/Anchor labels in "common.dtd". -->
+<!ENTITY internote.ignoreParamsCmd.accesskey  "P">
+<!ENTITY internote.ignoreAnchorCmd.accesskey  "C">

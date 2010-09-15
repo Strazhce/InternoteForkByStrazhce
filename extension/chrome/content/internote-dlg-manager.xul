@@ -2,7 +2,10 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://internote/skin/manager.css" type="text/css"?>
 
-<!DOCTYPE window SYSTEM "chrome://internote/locale/internote.dtd">
+<!DOCTYPE managerDialog [
+<!ENTITY % managerDTD SYSTEM "chrome://internote/locale/manager.dtd" >%managerDTD;
+<!ENTITY % commonDTD  SYSTEM "chrome://internote/locale/common.dtd"  >%commonDTD;
+]>
 
 <!--
 Internote Extension
