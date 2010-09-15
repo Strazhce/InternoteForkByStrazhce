@@ -2,19 +2,19 @@ radio[pane] {
     list-style-image: url("chrome://internote/skin/prefspaneicons.png");
 }
 
-radio[pane=internoteGeneralPane] {
+radio[pane=generalPrefsPane] {
     -moz-image-region: rect(0px, 32px, 32px, 0px);
 }
 
-radio[pane=internoteGeneralPane]:hover, radio[pane=internoteGeneralPane][selected="true"]  {
+radio[pane=generalPrefsPane]:hover, radio[pane=generalPrefsPane][selected="true"]  {
     -moz-image-region: rect(32px, 32px, 64px, 0px)
 }
 
-radio[pane=internoteAppearancePane] {
+radio[pane=appearancePrefsPane] {
     -moz-image-region: rect(0px, 64px, 32px, 32px);
 }
 
-radio[pane=internoteAppearancePane]:hover, radio[pane=internoteAppearancePane][selected="true"]  {
+radio[pane=appearancePrefsPane]:hover, radio[pane=appearancePrefsPane][selected="true"]  {
     -moz-image-region: rect(32px, 64px, 64px, 32px)
 }
 

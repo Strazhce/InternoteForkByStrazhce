@@ -2,6 +2,8 @@
 
 <!-- Appearance -->
 
+<!ENTITY internote.appearancePrefsPane.title  "Appearance">
+
 <!ENTITY internote.tinySize.value             "Tiny">
 <!ENTITY internote.normalSize.value           "Normal">
 <!ENTITY internote.largeSize.value            "Large">
@@ -30,11 +32,13 @@
 
 <!ENTITY internote.fontSize.label             "Font Size:">
   <!-- Sizes defined at the top. -->
-<!ENTITY internote.useTranslucencyCBox.label  "Translucent Notes">
-<!ENTITY internote.useHighlightableCBox.label "Highlightable Text (use border to move)">
+<!ENTITY internote.useTranslucencyCBox.label  "Translucent (See-Through) Notes">
+<!ENTITY internote.useHighlightableCBox.label "Highlightable Text (Use Border to Move)">
 <!ENTITY internote.useNativeScrollCBox.label  "Use OS Scrollbar instead of Internote Scrollbar">
 
 <!-- General Options -->
+
+<!ENTITY internote.generalPrefsPane.title     "General">
 
 <!ENTITY internote.generalPrefs.caption       "General Options">
 

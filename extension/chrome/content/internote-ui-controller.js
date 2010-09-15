@@ -1151,7 +1151,7 @@ userOpensPrefs: function()
         else
         {
             this.prefsDialog = window.openDialog('chrome://internote/content/internote-dlg-prefs.xul',
-                                                 'internoteprefs', 'centerscreen, resizable', window);
+                                                 'internoteprefs', 'chrome,titlebar,toolbar,centerscreen,dialog=yes,resizable', window);
             if (this.prefsDialog == null)
             {
                 this.showMessage("WindowOpenFailed");
