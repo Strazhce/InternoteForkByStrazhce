@@ -24,31 +24,31 @@
 <!ENTITY internote.resetSelectedCmd.label        "Reset Position of Selected">
 <!ENTITY internote.resetSelectedCmd.accesskey    "R">
 
-<!ENTITY internote.printSelectedCmd.label        "Print Selected">
+<!ENTITY internote.printSelectedCmd.label        "Print Selected...">
 <!ENTITY internote.printSelectedCmd.accesskey    "S">
-<!ENTITY internote.printAllCmd.label             "Print All">
+<!ENTITY internote.printAllCmd.label             "Print All...">
 <!ENTITY internote.printAllCmd.accesskey         "P">
 
 <!ENTITY internote.importCmd.label               "Import">
 <!ENTITY internote.importCmd.accesskey           "I">
-<!ENTITY internote.fromV3Cmd.label               "From Internote v3"> 
+<!ENTITY internote.fromV3Cmd.label               "From Internote v3..."> 
 <!ENTITY internote.fromV3Cmd.accesskey           "3">
-<!ENTITY internote.fromV2Cmd.label               "From Internote v2">
+<!ENTITY internote.fromV2Cmd.label               "From Internote v2...">
 <!ENTITY internote.fromV2Cmd.accesskey           "2">
 
 <!ENTITY internote.exportSelectedCmd.label       "Export Selected">
 <!ENTITY internote.exportSelectedCmd.accesskey   "L">
 <!ENTITY internote.exportAllCmd.label            "Export All">
 <!ENTITY internote.exportAllCmd.accesskey        "E">
-<!ENTITY internote.toV3Cmd.label                 "To Internote v3"> 
+<!ENTITY internote.toV3Cmd.label                 "To Internote v3..."> 
 <!ENTITY internote.toV3Cmd.accesskey             "3">
-<!ENTITY internote.toV2Cmd.label                 "To Internote v2">
+<!ENTITY internote.toV2Cmd.label                 "To Internote v2...">
 <!ENTITY internote.toV2Cmd.accesskey             "2">
-<!ENTITY internote.toBookmarksCmd.label          "To Bookmarks">
+<!ENTITY internote.toBookmarksCmd.label          "To Bookmarks...">
 <!ENTITY internote.toBookmarksCmd.accesskey      "B">
-<!ENTITY internote.toTextCmd.label               "To Text">
+<!ENTITY internote.toTextCmd.label               "To Text...">
 <!ENTITY internote.toTextCmd.accesskey           "T">
-<!ENTITY internote.toHTMLCmd.label               "To HTML">
+<!ENTITY internote.toHTMLCmd.label               "To HTML...">
 <!ENTITY internote.toHTMLCmd.accesskey           "H">
 
 <!-- Right Panel -->
