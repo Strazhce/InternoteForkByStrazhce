@@ -32,8 +32,8 @@
 
 <!ENTITY internote.fontSize.label             "Font Size:">
   <!-- Sizes defined at the top. -->
-<!ENTITY internote.useTranslucencyCBox.label  "Translucent (See-Through) Notes">
-<!ENTITY internote.useHighlightableCBox.label "Highlightable Text (Use Border to Move)">
+<!ENTITY internote.useTranslucencyCBox.label  "Translucent Notes">
+<!ENTITY internote.useHighlightableCBox.label "Highlightable Text (use border to move)">
 <!ENTITY internote.useNativeScrollCBox.label  "Use OS Scrollbar instead of Internote Scrollbar">
 
 <!-- General Options -->
