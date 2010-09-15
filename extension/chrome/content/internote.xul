@@ -80,19 +80,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(true);" disabled="true"/>
             <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-main" accesskey="&internote.unminimizeAllCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(false);" style="display: none;" />
-            <menuitem label="&internote.openManagerCmd.label;..." accesskey="&internote.openManagerCmd.accesskey;"
+            <menuitem label="&internote.openManagerCmd.label;" accesskey="&internote.openManagerCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensManager();" />
             <menuseparator />
             <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-main"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;" />
             <menuseparator />
-            <menuitem label="&internote.openPrefsCmd.label;..." accesskey="&internote.openPrefsCmd.accesskey;"
+            <menuitem label="&internote.openPrefsCmd.label;" accesskey="&internote.openPrefsCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensPrefs();" />
-            <menuitem label="&internote.helpCmd.label;..." accesskey="&internote.helpCmd.accesskey;"
+            <menuitem label="&internote.helpCmd.label;" accesskey="&internote.helpCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensHelp();" />
-            <menuitem label="&internote.reportBugCmd.label;..." accesskey="&internote.reportBugCmd.accesskey;"
+            <menuitem label="&internote.reportBugCmd.label;" accesskey="&internote.reportBugCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userReportsBug();" />
-            <menuitem label="&internote.aboutCmd.label;..." accesskey="&internote.aboutCmd.accesskey;"
+            <menuitem label="&internote.aboutCmd.label;" accesskey="&internote.aboutCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensAbout();" />
         </menupopup>
     </menu>
@@ -116,19 +116,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(true);" disabled="true"/>
         <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-statusbar" accesskey="&internote.unminimizeAllCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(false);" style="display: none;" />
-        <menuitem label="&internote.openManagerCmd.label;..." accesskey="&internote.openManagerCmd.accesskey;"
+        <menuitem label="&internote.openManagerCmd.label;" accesskey="&internote.openManagerCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensManager();" />
         <menuseparator />
         <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-statusbar"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;"/>
         <menuseparator />
-        <menuitem label="&internote.openPrefsCmd.label;..." accesskey="&internote.openPrefsCmd.accesskey;"
+        <menuitem label="&internote.openPrefsCmd.label;" accesskey="&internote.openPrefsCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensPrefs();" />
         <menuitem label="&internote.helpCmd.label;" accesskey="&internote.helpCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensHelp();" />
-        <menuitem label="&internote.reportBugCmd.label;..." accesskey="&internote.reportBugCmd.accesskey;"
+        <menuitem label="&internote.reportBugCmd.label;" accesskey="&internote.reportBugCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userReportsBug();" />
-        <menuitem label="&internote.aboutCmd.label;..." accesskey="&internote.aboutCmd.accesskey;"
+        <menuitem label="&internote.aboutCmd.label;" accesskey="&internote.aboutCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensAbout();" />
     </menupopup>
     

@@ -63,47 +63,47 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <menuitem id="resetSelected"  label="&internote.resetSelectedCmd.label;"   oncommand="internoteManager.userResetsNotes(true);"
                   accesskey="&internote.resetSelectedCmd.accesskey;"/>
         <menuseparator />
-        <menu id="import" label="&internote.importCmd.label;..." accesskey="&internote.importCmd.accesskey;">
+        <menu id="import" label="&internote.importCmd.label;" accesskey="&internote.importCmd.accesskey;">
           <menupopup>
-            <menuitem id="importV3" label="&internote.fromV3Cmd.label;..." accesskey="&internote.fromV3Cmd.accesskey;"
+            <menuitem id="importV3" label="&internote.fromV3Cmd.label;" accesskey="&internote.fromV3Cmd.accesskey;"
                       oncommand="internoteManager.userImportsNotesInV3();" />
-            <menuitem id="importV2" label="&internote.fromV2Cmd.label;..." accesskey="&internote.fromV2Cmd.accesskey;"
+            <menuitem id="importV2" label="&internote.fromV2Cmd.label;" accesskey="&internote.fromV2Cmd.accesskey;"
                       oncommand="internoteManager.userImportsNotesInV2();" />
           </menupopup>
         </menu>
         <menuseparator />
-        <menu id="exportAll" label="&internote.exportAllCmd.label;..." accesskey="&internote.exportAllCmd.accesskey;">
+        <menu id="exportAll" label="&internote.exportAllCmd.label;" accesskey="&internote.exportAllCmd.accesskey;">
           <menupopup>
-            <menuitem id="exportAllV3"        label="&internote.toV3Cmd.label;..." accesskey="&internote.toV3Cmd.accesskey;"
+            <menuitem id="exportAllV3"        label="&internote.toV3Cmd.label;" accesskey="&internote.toV3Cmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInV3(false);" />
-            <menuitem id="exportAllHTML"      label="&internote.toHTMLCmd.label;..." accesskey="&internote.toHTMLCmd.accesskey;"
+            <menuitem id="exportAllHTML"      label="&internote.toHTMLCmd.label;" accesskey="&internote.toHTMLCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInHTML(false);" />
-            <menuitem id="exportAllText"      label="&internote.toTextCmd.label;..." accesskey="&internote.toTextCmd.accesskey;"
+            <menuitem id="exportAllText"      label="&internote.toTextCmd.label;" accesskey="&internote.toTextCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInText(false);" />
-            <menuitem id="exportAllBookmarks" label="&internote.toBookmarksCmd.label;..." accesskey="&internote.toBookmarksCmd.accesskey;"
+            <menuitem id="exportAllBookmarks" label="&internote.toBookmarksCmd.label;" accesskey="&internote.toBookmarksCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInBookmarks(false);" />
-            <menuitem id="exportAllV2"        label="&internote.toV2Cmd.label;..." accesskey="&internote.toV2Cmd.accesskey;"
+            <menuitem id="exportAllV2"        label="&internote.toV2Cmd.label;" accesskey="&internote.toV2Cmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInV2(false);" />
           </menupopup>
         </menu>
-        <menu id="exportSelected" label="&internote.exportSelectedCmd.label;..." accesskey="&internote.exportSelectedCmd.accesskey;" >
+        <menu id="exportSelected" label="&internote.exportSelectedCmd.label;" accesskey="&internote.exportSelectedCmd.accesskey;" >
           <menupopup>
-            <menuitem id="exportSelectedV3"        label="&internote.toV3Cmd.label;..." accesskey="&internote.toV3Cmd.accesskey;"
+            <menuitem id="exportSelectedV3"        label="&internote.toV3Cmd.label;" accesskey="&internote.toV3Cmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInV3(true);" />
-            <menuitem id="exportSelectedHTML"      label="&internote.toHTMLCmd.label;..." accesskey="&internote.toHTMLCmd.accesskey;"
+            <menuitem id="exportSelectedHTML"      label="&internote.toHTMLCmd.label;" accesskey="&internote.toHTMLCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInHTML(true);" />
-            <menuitem id="exportSelectedText"      label="&internote.toTextCmd.label;..." accesskey="&internote.toTextCmd.accesskey;"
+            <menuitem id="exportSelectedText"      label="&internote.toTextCmd.label;" accesskey="&internote.toTextCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInText(true);" />
-            <menuitem id="exportSelectedBookmarks" label="&internote.toBookmarksCmd.label;..." accesskey="&internote.toBookmarksCmd.accesskey;"
+            <menuitem id="exportSelectedBookmarks" label="&internote.toBookmarksCmd.label;" accesskey="&internote.toBookmarksCmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInBookmarks(true);" />
-            <menuitem id="exportSelectedV2"        label="&internote.toV2Cmd.label;..." accesskey="&internote.toV2Cmd.accesskey;"
+            <menuitem id="exportSelectedV2"        label="&internote.toV2Cmd.label;" accesskey="&internote.toV2Cmd.accesskey;"
                       oncommand="internoteManager.userExportsNotesInV2(true);" />
           </menupopup>
         </menu>
         <menuseparator />
-        <menuitem id="printAll"      label="&internote.printAllCmd.label;..."   oncommand="internoteManager.userPrintsNotes(false);"
+        <menuitem id="printAll"      label="&internote.printAllCmd.label;"   oncommand="internoteManager.userPrintsNotes(false);"
                   accesskey="&internote.printAllCmd.accesskey;" />
-        <menuitem id="printSelected" label="&internote.printSelectedCmd.label;..."  oncommand="internoteManager.userPrintsNotes(true);"
+        <menuitem id="printSelected" label="&internote.printSelectedCmd.label;"  oncommand="internoteManager.userPrintsNotes(true);"
                   accesskey="&internote.printSelectedCmd.accesskey;" />
       </menupopup>
     </popupset>
@@ -130,7 +130,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         style="font-weight: bold;" popup="actionsMenu" />
                 <spacer width="10px" />
                 <hbox flex="1" style="width: 90%;" align="center">
-                    <label control="searchFilter" value="&internote.searchQuery.label;:" style="font-weight: bold;" />
+                    <label control="searchFilter" value="&internote.searchQuery.label;" style="font-weight: bold;" />
                     <textbox id="searchFilter" oninput="internoteManager.updateSearchResults()" flex="1" style="height: 2em;" />
                     <label value="X" tooltiptext="&internote.closeResults.tooltip;"
                            style="background-color: lightgray; opacity: .75; width: 1.5em; height: 1.5em; text-align: center; padding-top: .1em;"
@@ -159,18 +159,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </hbox>
             <hbox>
                 <deck flex="1" id="urlLabelDeck">
-                    <label control="noteURL" value="&internote.noteURL.label;:" id="mainURLLabel"
+                    <label control="noteURL" value="&internote.noteURL.label;" id="mainURLLabel"
                            style="font-weight: bold;" class="editlabel" />
-                    <label control="noteURL" value="&internote.noteURLPrefix.label;:"
+                    <label control="noteURL" value="&internote.noteURLPrefix.label;"
                            style="font-weight: bold;" class="editlabel" />
-                    <label control="noteURL" value="&internote.noteURLRegexp.label;:"
+                    <label control="noteURL" value="&internote.noteURLRegexp.label;"
                            style="font-weight: bold;" class="editlabel" />
-                    <label control="noteURL" value="&internote.noteSite.label;:"
+                    <label control="noteURL" value="&internote.noteSite.label;"
                            style="font-weight: bold;" class="editlabel" />
-                    <label control="noteURL" value="&internote.noteSiteSuffix.label;:"
+                    <label control="noteURL" value="&internote.noteSiteSuffix.label;"
                            style="font-weight: bold;" class="editlabel" />
                 </deck>
-                <label flex="1" id="goToLink" value="&internote.goLink.label;..."
+                <label flex="1" id="goToLink" value="&internote.goLink.label;"
                        style="color: gray; text-decoration: underline;"
                        onclick="internoteManager.openURL();" />
             </hbox>
@@ -187,7 +187,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
             <hbox>
                 <hbox pack="start" align="center" flex="1">
-                    <label control="noteText" value="&internote.text.label;:" class="editlabel" style="font-weight: bold;" width="100px" />
+                    <label control="noteText" value="&internote.text.label;" class="editlabel" style="font-weight: bold;" width="100px" />
                 </hbox>
                 <hbox pack="end" align="center" flex="1">
                     <checkbox id="isMinimized" oncommand="internoteManager.userEditsData()"
@@ -203,15 +203,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 </columns>
                 <rows>
                     <row align="center">
-                        <label class="editlabel" value="&internote.createTime.label;:" style="font-weight: bold;" width="100px" />
+                        <label class="editlabel" value="&internote.createTime.label;" style="font-weight: bold;" width="100px" />
                         <label id="noteCreateTime" value="" crop="end" />
                     </row>
                     <row align="center">
-                        <label class="editlabel" control="noteModfnTime" value="&internote.modfnTime.label;:" style="font-weight: bold;" width="100px" />
+                        <label class="editlabel" control="noteModfnTime" value="&internote.modfnTime.label;" style="font-weight: bold;" width="100px" />
                         <label id="noteModfnTime" value="" crop="end" />
                     </row>
                     <row align="center">
-                        <label class="editlabel" value="&internote.backColor.label;:" control="colorEntryBox" style="font-weight: bold;" width="100px" />
+                        <label class="editlabel" value="&internote.backColor.label;" control="colorEntryBox" style="font-weight: bold;" width="100px" />
                         <menulist id="colorEntryBox">
                             <menupopup>
                                 <menuitem value="0" label="&internote.bananaColor.value;" />
@@ -224,7 +224,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         </menulist>
                     </row>
                     <row align="center">
-                        <label class="editlabel" value="&internote.foreColor.label;:" control="textColorEntryBox" style="font-weight: bold;" width="100px" />
+                        <label class="editlabel" value="&internote.foreColor.label;" control="textColorEntryBox" style="font-weight: bold;" width="100px" />
                         <menulist id="textColorEntryBox">
                             <menupopup>
                                 <menuitem value="0" label="&internote.charcoalColor.value;" />

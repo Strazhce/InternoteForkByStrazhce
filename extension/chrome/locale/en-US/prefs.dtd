@@ -1,5 +1,3 @@
-<!-- Preferences Dialog -->
-
 <!ENTITY internote.prefsDialog.title          "Options for Internote">
 
 <!-- Appearance -->
@@ -12,14 +10,14 @@
 
 <!ENTITY internote.defaultStylePrefs.caption  "Options for New Notes">
 
-<!ENTITY internote.defaultNoteColor.label     "Default Note Color">
-<!ENTITY internote.defaultTextColor.label     "Default Text Color">
+<!ENTITY internote.defaultNoteColor.label     "Default Note Color:">
+<!ENTITY internote.defaultTextColor.label     "Default Text Color:">
   <!-- Colors defined in common.dtd. -->
 
-<!ENTITY internote.defaultSize.label          "Default Note Size">
+<!ENTITY internote.defaultSize.label          "Default Note Size:">
   <!-- Sizes defined at the top. -->
 
-<!ENTITY internote.defaultPos.label           "Default Note Position">
+<!ENTITY internote.defaultPos.label           "Default Note Position:">
 <!ENTITY internote.topLeftPos.value           "Top-Left">
 <!ENTITY internote.topRightPos.value          "Top-Right">
 <!ENTITY internote.bottomLeftPos.value        "Bottom-Left">
@@ -30,13 +28,14 @@
 
 <!ENTITY internote.globalStylePrefs.caption   "Options for All Notes">
 
-<!ENTITY internote.fontSize.label             "Font Size">
+<!ENTITY internote.fontSize.label             "Font Size:">
   <!-- Sizes defined at the top. -->
 <!ENTITY internote.useTranslucencyCBox.label  "Translucent Notes">
 <!ENTITY internote.useHighlightableCBox.label "Highlightable Text (use border to move)">
 <!ENTITY internote.useNativeScrollCBox.label  "Use OS Scrollbar instead of Internote Scrollbar">
 
 <!-- General Options -->
+
 <!ENTITY internote.generalPrefs.caption       "General Options">
 
 <!ENTITY internote.confirmDeleteCBox.label    "Confirm Deletion">
@@ -46,6 +45,6 @@
 <!ENTITY internote.storagePrefs.caption       "Storage Options">
 
 <!ENTITY internote.useAlternativeCBox.label   "Use Alternative Location">
-<!ENTITY internote.browseButton.label         "Browse">
+<!ENTITY internote.browseButton.label         "Browse...">
 <!ENTITY internote.storageRestartProviso.desc "New locations won't be used until Firefox is restarted.">
 <!ENTITY internote.storageMoveProviso.desc    "Existing notes won't be moved to new locations, however you may import them using &quot;Manage All Notes&quot; on the Internote menu.">

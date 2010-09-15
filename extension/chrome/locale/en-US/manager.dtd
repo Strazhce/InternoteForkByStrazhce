@@ -4,7 +4,7 @@
 
 <!ENTITY internote.noteList.columnTitle          "Notes">
 
-<!ENTITY internote.searchQuery.label             "Search">
+<!ENTITY internote.searchQuery.label             "Search:">
 <!ENTITY internote.searchResults.label           "Search Results">
 <!ENTITY internote.closeResults.tooltip          "Close Search Results">
 
@@ -65,20 +65,20 @@
 
 <!ENTITY internote.goLink.label                  "Go to Page">
 
-<!ENTITY internote.noteURL.label                 "URL">
-<!ENTITY internote.noteSite.label                "Site">
-<!ENTITY internote.noteURLPrefix.label           "URL Starts with">
-<!ENTITY internote.noteSiteSuffix.label          "Site Ends with">
-<!ENTITY internote.noteURLRegexp.label           "URL RegExp">
+<!ENTITY internote.noteURL.label                 "URL:">
+<!ENTITY internote.noteSite.label                "Site:">
+<!ENTITY internote.noteURLPrefix.label           "URL Starts with:">
+<!ENTITY internote.noteSiteSuffix.label          "Site Ends with:">
+<!ENTITY internote.noteURLRegexp.label           "URL RegExp:">
 
 <!ENTITY internote.noteData.caption              "Note Data">
 
-<!ENTITY internote.createTime.label              "Created">
-<!ENTITY internote.modfnTime.label               "Modified">
+<!ENTITY internote.createTime.label              "Created:">
+<!ENTITY internote.modfnTime.label               "Modified:">
 <!ENTITY internote.isMinimizedCBox.label         "Minimized?">
-<!ENTITY internote.text.label                    "Text">
-<!ENTITY internote.backColor.label               "Note Color">
-<!ENTITY internote.foreColor.label               "Text Color">
+<!ENTITY internote.text.label                    "Text:">
+<!ENTITY internote.backColor.label               "Note Color:">
+<!ENTITY internote.foreColor.label               "Text Color:">
 
 <!ENTITY internote.thisNoteActions.caption       "Actions on This Note">
 

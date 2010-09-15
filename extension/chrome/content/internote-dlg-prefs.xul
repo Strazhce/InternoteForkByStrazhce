@@ -68,7 +68,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     </columns>
                     <rows>
                         <row align="center">
-                            <label value="&internote.defaultNoteColor.label;:" control="colorEntryBox" />
+                            <label value="&internote.defaultNoteColor.label;" control="colorEntryBox" />
                             <menulist id="colorEntryBox" preference="backColorPreference">
                                 <menupopup>
                                     <menuitem value="0" label="&internote.bananaColor.value;" />
@@ -79,7 +79,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                                     <menuitem value="5" label="&internote.cauliflowerColor.value;" />
                                 </menupopup>
                             </menulist>
-                            <label value="&internote.defaultSize.label;:" control="sizeEntryBox" />
+                            <label value="&internote.defaultSize.label;" control="sizeEntryBox" />
                             <menulist id="sizeEntryBox" preference="defaultSizePreference">
                                 <menupopup>
                                     <menuitem value="0" label="&internote.tinySize.value;" />
@@ -90,7 +90,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                             </menulist>
                         </row>
                         <row align="center">
-                            <label value="&internote.defaultTextColor.label;:" control="textColorEntryBox" />
+                            <label value="&internote.defaultTextColor.label;" control="textColorEntryBox" />
                             <menulist id="textColorEntryBox" preference="foreColorPreference">
                                 <menupopup>
                                     <menuitem value="0" label="&internote.charcoalColor.value;" />
@@ -101,7 +101,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                                     <menuitem value="5" label="&internote.snowColor.value;" />
                                 </menupopup>
                             </menulist>
-                            <label value="&internote.defaultPos.label;:" control="defaultNotePosition" />
+                            <label value="&internote.defaultPos.label;" control="defaultNotePosition" />
                             <menulist id="defaultNotePosition" preference="defaultPositionPreference">
                                 <menupopup>
                                     <menuitem value="0" label="&internote.topLeftPos.value;" />
@@ -128,7 +128,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <rows>
                         <row>
                             <hbox align="center">
-                                <label value="&internote.fontSize.label;:" control="fontSizeEntryBox" />
+                                <label value="&internote.fontSize.label;" control="fontSizeEntryBox" />
                                 <menulist id="fontSizeEntryBox" preference="fontSizePreference">
                                     <menupopup>
                                         <menuitem value="10" label="&internote.tinySize.value;" />
@@ -172,7 +172,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;"/>
                     <hbox>
                         <textbox id="saveFolderField" flex="1" />
-                        <button id="chooseFolder" label="&internote.browseButton.label;..." />
+                        <button id="chooseFolder" label="&internote.browseButton.label;" />
                     </hbox>
                     <description>
                         (&internote.storageRestartProviso.desc;)

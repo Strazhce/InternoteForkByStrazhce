@@ -8,19 +8,19 @@
 <!ENTITY internote.minimizeAllCmd.accesskey       "E">
 <!ENTITY internote.unminimizeAllCmd.label         "Restore This Page's Notes">
 <!ENTITY internote.unminimizeAllCmd.accesskey     "E">
-<!ENTITY internote.openManagerCmd.label           "Manage All Notes">
+<!ENTITY internote.openManagerCmd.label           "Manage All Notes...">
 <!ENTITY internote.openManagerCmd.accesskey       "M">
 
 <!ENTITY internote.displayNotesCmd.label          "Display Notes">
 <!ENTITY internote.displayNotesCmd.accesskey      "D">
 
-<!ENTITY internote.openPrefsCmd.label             "Options">
+<!ENTITY internote.openPrefsCmd.label             "Options...">
 <!ENTITY internote.openPrefsCmd.accesskey         "P">
-<!ENTITY internote.helpCmd.label                  "Help">
+<!ENTITY internote.helpCmd.label                  "Help...">
 <!ENTITY internote.helpCmd.accesskey              "H">
-<!ENTITY internote.reportBugCmd.label             "Report Bug">
+<!ENTITY internote.reportBugCmd.label             "Report Bug...">
 <!ENTITY internote.reportBugCmd.accesskey         "R">
-<!ENTITY internote.aboutCmd.label                 "About Internote">
+<!ENTITY internote.aboutCmd.label                 "About Internote...">
 <!ENTITY internote.aboutCmd.accesskey             "A">
 
 <!-- Note Context Menu -->
