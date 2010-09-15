@@ -338,6 +338,10 @@ assertErrorNotHere : function(msg, obj)
 
 handleException: function(msg, ex, obj)
 {
+    // We need to distinguish Javascript and XPConnect exceptions:
+    // JS Exceptions have a "fileName" property, and a "stack" string property
+    // XPConnect Exceptions have a "filename" property, and put stack frame info in a linked list called "location"
+
     // Check for XPConnect exception first, because we'll get an exception accessing a non-existent field.
     if (ex.location != null)
     {
@@ -345,13 +349,16 @@ handleException: function(msg, ex, obj)
         var stack = "";
         while (location != null)
         {
-            stack += "@" + location.fileName + ":" + location.lineNumber + "\n";
+            stack += "@" + location.filename + ":" + location.lineNumber + "\n";
             location = location.caller;
         }
+        
+        var fileName = ex.filename;
     }
     else if (ex.stack != null)
     {
         var stack = ex.stack;
+        var fileName = ex.fileName;
     }
     else
     {
@@ -360,7 +367,7 @@ handleException: function(msg, ex, obj)
     
     var errorMsg = "Exception Caught." + "\n" +
                    msg + "\n" +
-                   "Exception: " + ex.message + "(" + ex.fileName + ":" + ex.lineNumber + ")\n" +
+                   "Exception: " + ex.message + "\n" +
                    "Stack:\n" + stack;
     
     this.Cu.reportError(errorMsg);
