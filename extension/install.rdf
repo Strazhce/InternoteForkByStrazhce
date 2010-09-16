@@ -40,21 +40,24 @@
     <em:homepageURL>http://internote.sourceforge.net/</em:homepageURL>
     <em:iconURL>chrome://internote/skin/internote128.png</em:iconURL>
 
-    <em:contributor>Ildikó Balla (Internote3, Beta Testing)</em:contributor>
+    <em:contributor>Ildikó Balla (Internote3, Beta Testing, Logo)</em:contributor>
+    <em:contributor>Robert Horton (Internote3, Development)</em:contributor>
     <em:contributor>Justin Lewis (Internote2, Beta Testing)</em:contributor>
     <em:contributor>Robert Horton (Internote2, Beta Testing)</em:contributor>
 
-    <em:translator>Rickart (Internote2, Simplified Chinese Translation)</em:translator>
-    <em:translator>AlleyKat (Internote2, Danish Translation)</em:translator>
-    <em:translator>Goofy (Internote2, French Translation)</em:translator>
-    <em:translator>neue.medien (Internote2, German Translation)</em:translator>
-    <em:translator>Rastislav Hubočan (Internote2, Slovak Translation)</em:translator>
-    <em:translator>Pedro (Internote2, Italian Translation)</em:translator>
-    <em:translator>Teboga (Internote2, Brazilian Portuguese Translation)</em:translator>
-    <em:translator>miles (Internote2, Slovenian Translation)</em:translator>
-    <em:translator>urko (Internote2, Spanish Translation)</em:translator>
-    <em:translator>Alf (Internote2, Dutch Translation)</em:translator>
-    <em:translator>stalker48 (Internote2, Russian Translation)</em:translator>
-    <em:translator>Heon Oh (Internote2, Korean Translation)</em:translator>
+    <em:translator>Leszek(teo)Życzkowski (Polish)</em:translator>
+    <em:translator>Rickart (2.0, Simplified Chinese)</em:translator>
+    <em:translator>AlleyKat (2.0, Danish)</em:translator>
+    <em:translator>Goofy (2.0, French)</em:translator>
+    <em:translator>neue.medien (2.0, German)</em:translator>
+    <em:translator>Rastislav Hubočan (2.0, Slovak)</em:translator>
+    <em:translator>Pedro (2.0, Italian)</em:translator>
+    <em:translator>Teboga (2.0, Brazilian Portuguese)</em:translator>
+    <em:translator>miles (2.0, Slovenian)</em:translator>
+    <em:translator>urko (2.0, Spanish)</em:translator>
+    <em:translator>Alf (2.0, Dutch)</em:translator>
+    <em:translator>stalker48 (2.0, Russian)</em:translator>
+    <em:translator>Heon Oh (2.0, Korean)</em:translator>
+
   </Description>
 </RDF>
