@@ -1,4 +1,4 @@
-<!ENTITY internote.prefsDialog.title          "Options for Internote">
+﻿<!ENTITY internote.prefsDialog.title          "Options for Internote">
 
 <!-- Appearance -->
 
@@ -49,6 +49,6 @@
 <!ENTITY internote.storagePrefs.caption       "Storage Options">
 
 <!ENTITY internote.useAlternativeCBox.label   "Use Alternative Location">
-<!ENTITY internote.browseButton.label         "Browse...">
+<!ENTITY internote.browseButton.label         "Browse…">
 <!ENTITY internote.storageRestartProviso.desc "(New locations won't be used until Firefox is restarted.)">
 <!ENTITY internote.storageMoveProviso.desc    "(Existing notes won't be moved to new locations, however you may import them using &quot;Manage All Notes&quot; on the Internote menu.)">
