@@ -42,32 +42,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils-sysinfo.js" />
     <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-bugreport.js" />
     
-    <vbox flex="1">
-        <description>&internote.infoThanks.desc;</description>
-        
-        <description>&internote.reportComments.desc;</description>
-        <textbox id="extra-info" rows="4" columns="40" flex="1" multiline="true" />
-        
-        <description>&internote.infoType.desc; &internote.infoDisclaimer.desc;</description>
-        
-        <!-- XUL expander tag doesn't seem to work properly, it includes a funny button on the right in 3.6.8 Win7,
-             emulate it instead. -->
-        <hbox>
-            <button type="disclosure" id="disclosure" open="false" onclick="internoteBugReportDlg.openDisclosure();" style="cursor: pointer;" />
-            <label flex="1">&internote.infoWhy.desc;</label>
-        </hbox>
-        <vbox id="expanded" style="-moz-padding-start: 30px" collapsed="true">
-            <description>&internote.infoReasons1.desc;</description>
-            <description>&internote.infoReasons2.desc;</description>
-        </vbox>
-        
-        <textbox id="errors-text" style="border: 2px black;" rows="4" columns="40" flex="1" multiline="true" value="???" />
-        
-        <!-- Disabled until auto-submission.
-        <description>&internote.reportEmail.desc;</description>
-        <textbox id="email" rows="1" columns="40" />
-        -->
+    <description>&internote.infoThanks.desc;</description>
+    
+    <description>&internote.reportComments.desc;</description>
+    <textbox id="extra-info" rows="4" columns="40" flex="1" multiline="true" />
+    
+    <description>&internote.infoType.desc; &internote.infoDisclaimer.desc;</description>
+    
+    <!-- XUL expander tag doesn't seem to work properly, it includes a funny button on the right in 3.6.8 Win7,
+         emulate it instead. -->
+    <hbox>
+        <button type="disclosure" id="disclosure" open="false" onclick="internoteBugReportDlg.openDisclosure();" style="cursor: pointer;" />
+        <label flex="1">&internote.infoWhy.desc;</label>
+    </hbox>
+    <vbox id="expanded" style="-moz-padding-start: 30px" collapsed="true">
+        <description>&internote.infoReasons1.desc;</description>
+        <description>&internote.infoReasons2.desc;</description>
     </vbox>
+    
+    <textbox id="errors-text" style="border: 2px black;" rows="4" columns="40" flex="1" multiline="true" value="???" />
+    
+    <!-- Disabled until auto-submission.
+    <description>&internote.reportEmail.desc;</description>
+    <textbox id="email" rows="1" columns="40" />
+    -->
     
     <description>&internote.sendInstructions.desc;</description>
     <hbox align="center">

@@ -49,88 +49,86 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <preference id="changeLocationPreference"  name="internote.changelocation"   type="bool"/>
             <preference id="askBeforeDeletePreference" name="internote.askbeforedelete"  type="bool"/>
         </preferences>
-        <vbox flex="1">
-            <groupbox>
-                <caption label="&internote.defaultStylePrefs.caption;" />
-                <grid>
-                    <columns>
-                        <column />
-                        <column />
-                    </columns>
-                    <rows>
-                        <row align="center">
-                            <label value="&internote.defaultNoteColor.label;" control="colorEntryBox" />
-                            <menulist id="colorEntryBox" preference="backColorPreference">
-                                <menupopup>
-                                    <menuitem value="0" label="&internote.bananaColor.value;" />
-                                    <menuitem value="1" label="&internote.melonColor.value;" />
-                                    <menuitem value="2" label="&internote.blueberryColor.value;" />
-                                    <menuitem value="3" label="&internote.limeColor.value;" />
-                                    <menuitem value="4" label="&internote.grapeColor.value;" />
-                                    <menuitem value="5" label="&internote.cauliflowerColor.value;" />
-                                </menupopup>
-                            </menulist>
-                        </row>
-                        <row align="center">
-                            <label value="&internote.defaultTextColor.label;" control="textColorEntryBox" />
-                            <menulist id="textColorEntryBox" preference="foreColorPreference">
-                                <menupopup>
-                                    <menuitem value="0" label="&internote.charcoalColor.value;" />
-                                    <menuitem value="1" label="&internote.topsoilColor.value;" />
-                                    <menuitem value="2" label="&internote.grassColor.value;" />
-                                    <menuitem value="3" label="&internote.roseColor.value;" />
-                                    <menuitem value="4" label="&internote.aluminumColor.value;" />
-                                    <menuitem value="5" label="&internote.snowColor.value;" />
-                                </menupopup>
-                            </menulist>
-                        </row>
-                        <row align="center">
-                            <label value="&internote.defaultSize.label;" control="sizeEntryBox" />
-                            <menulist id="sizeEntryBox" preference="defaultSizePreference">
-                                <menupopup>
-                                    <menuitem value="0" label="&internote.tinySize.value;" />
-                                    <menuitem value="1" label="&internote.normalSize.value;" />
-                                    <menuitem value="2" label="&internote.largeSize.value;" />
-                                    <menuitem value="3" label="&internote.giantSize.value;" />
-                                </menupopup>
-                            </menulist>
-                        </row>
-                        <row align="center">
-                            <label value="&internote.defaultPos.label;" control="defaultNotePosition" />
-                            <menulist id="defaultNotePosition" preference="defaultPositionPreference">
-                                <menupopup>
-                                    <menuitem value="0" label="&internote.topLeftPos.value;" />
-                                    <menuitem value="1" label="&internote.topRightPos.value;" />
-                                    <menuitem value="2" label="&internote.bottomLeftPos.value;" />
-                                    <menuitem value="3" label="&internote.bottomRightPos.value;" />
-                                    <menuitem value="4" label="&internote.centerPos.value;" />
-                                </menupopup>
-                            </menulist>
-                        </row>
-                        <description>&internote.adjustDefaults.desc;</description>
-                    </rows>
-                </grid>
-            </groupbox>
-            <groupbox>
-                <caption label="&internote.globalStylePrefs.caption;" />
-                
-                <hbox align="center">
-                    <label value="&internote.fontSize.label;" control="fontSizeEntryBox" />
-                    <menulist id="fontSizeEntryBox" preference="fontSizePreference">
-                        <menupopup>
-                            <menuitem value="10" label="&internote.tinySize.value;" />
-                            <menuitem value="12" label="&internote.normalSize.value;" />
-                            <menuitem value="14" label="&internote.largeSize.value;" />
-                            <menuitem value="16" label="&internote.giantSize.value;" />
-                            <menuitem value="18" label="&internote.megaSize.value;" />
-                        </menupopup>
-                    </menulist>
-                </hbox>
-                <checkbox id="highlightableCheckBox"   preference="highlightablePreference"   label="&internote.useHighlightableCBox.label;" />
-                <checkbox id="defaultTransCheckBox"    preference="transparencyPreference"    label="&internote.useTranslucencyCBox.label;" />
-                <checkbox id="scrollbarCheckBox"       preference="nativeScrollPreference"    label="&internote.useNativeScrollCBox.label;" />
-            </groupbox>
-        </vbox>            
+        <groupbox>
+            <caption label="&internote.defaultStylePrefs.caption;" />
+            <grid>
+                <columns>
+                    <column />
+                    <column />
+                </columns>
+                <rows>
+                    <row align="center">
+                        <label value="&internote.defaultNoteColor.label;" control="colorEntryBox" />
+                        <menulist id="colorEntryBox" preference="backColorPreference">
+                            <menupopup>
+                                <menuitem value="0" label="&internote.bananaColor.value;" />
+                                <menuitem value="1" label="&internote.melonColor.value;" />
+                                <menuitem value="2" label="&internote.blueberryColor.value;" />
+                                <menuitem value="3" label="&internote.limeColor.value;" />
+                                <menuitem value="4" label="&internote.grapeColor.value;" />
+                                <menuitem value="5" label="&internote.cauliflowerColor.value;" />
+                            </menupopup>
+                        </menulist>
+                    </row>
+                    <row align="center">
+                        <label value="&internote.defaultTextColor.label;" control="textColorEntryBox" />
+                        <menulist id="textColorEntryBox" preference="foreColorPreference">
+                            <menupopup>
+                                <menuitem value="0" label="&internote.charcoalColor.value;" />
+                                <menuitem value="1" label="&internote.topsoilColor.value;" />
+                                <menuitem value="2" label="&internote.grassColor.value;" />
+                                <menuitem value="3" label="&internote.roseColor.value;" />
+                                <menuitem value="4" label="&internote.aluminumColor.value;" />
+                                <menuitem value="5" label="&internote.snowColor.value;" />
+                            </menupopup>
+                        </menulist>
+                    </row>
+                    <row align="center">
+                        <label value="&internote.defaultSize.label;" control="sizeEntryBox" />
+                        <menulist id="sizeEntryBox" preference="defaultSizePreference">
+                            <menupopup>
+                                <menuitem value="0" label="&internote.tinySize.value;" />
+                                <menuitem value="1" label="&internote.normalSize.value;" />
+                                <menuitem value="2" label="&internote.largeSize.value;" />
+                                <menuitem value="3" label="&internote.giantSize.value;" />
+                            </menupopup>
+                        </menulist>
+                    </row>
+                    <row align="center">
+                        <label value="&internote.defaultPos.label;" control="defaultNotePosition" />
+                        <menulist id="defaultNotePosition" preference="defaultPositionPreference">
+                            <menupopup>
+                                <menuitem value="0" label="&internote.topLeftPos.value;" />
+                                <menuitem value="1" label="&internote.topRightPos.value;" />
+                                <menuitem value="2" label="&internote.bottomLeftPos.value;" />
+                                <menuitem value="3" label="&internote.bottomRightPos.value;" />
+                                <menuitem value="4" label="&internote.centerPos.value;" />
+                            </menupopup>
+                        </menulist>
+                    </row>
+                    <description>&internote.adjustDefaults.desc;</description>
+                </rows>
+            </grid>
+        </groupbox>
+        <groupbox>
+            <caption label="&internote.globalStylePrefs.caption;" />
+            
+            <hbox align="center">
+                <label value="&internote.fontSize.label;" control="fontSizeEntryBox" />
+                <menulist id="fontSizeEntryBox" preference="fontSizePreference">
+                    <menupopup>
+                        <menuitem value="10" label="&internote.tinySize.value;" />
+                        <menuitem value="12" label="&internote.normalSize.value;" />
+                        <menuitem value="14" label="&internote.largeSize.value;" />
+                        <menuitem value="16" label="&internote.giantSize.value;" />
+                        <menuitem value="18" label="&internote.megaSize.value;" />
+                    </menupopup>
+                </menulist>
+            </hbox>
+            <checkbox id="highlightableCheckBox"   preference="highlightablePreference"   label="&internote.useHighlightableCBox.label;" />
+            <checkbox id="defaultTransCheckBox"    preference="transparencyPreference"    label="&internote.useTranslucencyCBox.label;" />
+            <checkbox id="scrollbarCheckBox"       preference="nativeScrollPreference"    label="&internote.useNativeScrollCBox.label;" />
+        </groupbox>
     </prefpane>
     
     <prefpane id="generalPrefsPane" label="&internote.generalPrefsPane.title;" flex="1">

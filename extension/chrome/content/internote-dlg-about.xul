@@ -38,63 +38,61 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils-sysinfo.js" />
     <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-about.js" />
     
-    <vbox>
+    <hbox>
+        <spacer flex="1" />
         <hbox>
-            <spacer flex="1" />
-            <hbox>
-                <spacer style="min-width: 20px; max-width: 20px;" />
-                <vbox pack="center">
-                    <image src="chrome://internote/skin/internote128.png" pack="center"
-                           style="min-width: 128px; max-width: 128px; min-height: 128px; max-height: 128px;" />
-                </vbox>
-                <spacer style="min-width: 20px; max-width: 20px;" />
-                <vbox>
-                    <bbox pack="center">
-                        <label value="&internote.appName.label;" style="font-size: 3em;" />
-                        <spacer style="min-width: 20px;" />
-                        <label value="&internote.aboutVersion.label;" style="font-size: 1.5em;" />
-                        <label value="?" id="version-number" style="font-size: 1.5em;" />
-                    </bbox>
-                    <hbox pack="center">
-                        <label id="app-description" value="" style="font-size: 1.2em;" crop="right" />
-                    </hbox>
-                    <hbox pack="center">
-                        <label value="Internote Home Page" onclick="internoteAboutDlg.openHomePage();"
-                               style="color: blue; text-decoration: underline; cursor: pointer;"/>
-                    </hbox>
-                </vbox>
-                <spacer style="min-width: 20px; max-width: 20px;" />
-            </hbox>
-            <spacer flex="1" />
-        </hbox>
-        
-        <hbox>
-            <vbox flex="1">
-                <groupbox flex="1" pack="center" style="padding: 0px 10px;">
-                    <caption label="&internote.aboutCreators.caption;" />
-                    <vbox id="creators" />
-                </groupbox>
-                
-                <groupbox flex="1" pack="center" style="padding: 0px 10px;">
-                    <caption label="&internote.aboutDevelopers.caption;" />
-                    <vbox id="developers" />
-                </groupbox>
-                
-                <groupbox flex="1" pack="center" style="padding: 0px 10px;">
-                    <caption label="&internote.aboutContributors.caption;" />
-                    <vbox id="contributors" />
-                </groupbox>
+            <spacer style="min-width: 20px; max-width: 20px;" />
+            <vbox pack="center">
+                <image src="chrome://internote/skin/internote128.png" pack="center"
+                       style="min-width: 128px; max-width: 128px; min-height: 128px; max-height: 128px;" />
             </vbox>
+            <spacer style="min-width: 20px; max-width: 20px;" />
+            <vbox>
+                <bbox pack="center">
+                    <label value="&internote.appName.label;" style="font-size: 3em;" />
+                    <spacer style="min-width: 20px;" />
+                    <label value="&internote.aboutVersion.label;" style="font-size: 1.5em;" />
+                    <label value="?" id="version-number" style="font-size: 1.5em;" />
+                </bbox>
+                <hbox pack="center">
+                    <label id="app-description" value="" style="font-size: 1.2em;" crop="right" />
+                </hbox>
+                <hbox pack="center">
+                    <label value="Internote Home Page" onclick="internoteAboutDlg.openHomePage();"
+                           style="color: blue; text-decoration: underline; cursor: pointer;"/>
+                </hbox>
+            </vbox>
+            <spacer style="min-width: 20px; max-width: 20px;" />
+        </hbox>
+        <spacer flex="1" />
+    </hbox>
+    
+    <hbox>
+        <vbox flex="1">
+            <groupbox flex="1" pack="center" style="padding: 0px 10px;">
+                <caption label="&internote.aboutCreators.caption;" />
+                <vbox id="creators" />
+            </groupbox>
             
-            <vbox flex="1">
-                <groupbox flex="1" pack="center" style="padding: 0px 10px;">
-                    <caption label="&internote.aboutTranslators.caption;" />
-                    <vbox id="translators" />
-                </groupbox>
-            </vbox>
-        </hbox>
-    </vbox>
-
+            <groupbox flex="1" pack="center" style="padding: 0px 10px;">
+                <caption label="&internote.aboutDevelopers.caption;" />
+                <vbox id="developers" />
+            </groupbox>
+            
+            <groupbox flex="1" pack="center" style="padding: 0px 10px;">
+                <caption label="&internote.aboutContributors.caption;" />
+                <vbox id="contributors" />
+            </groupbox>
+        </vbox>
+        
+        <vbox flex="1">
+            <groupbox flex="1" pack="center" style="padding: 0px 10px;">
+                <caption label="&internote.aboutTranslators.caption;" />
+                <vbox id="translators" />
+            </groupbox>
+        </vbox>
+    </hbox>
+    
     <stringbundleset id="stringbundleset">
         <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
     </stringbundleset>
