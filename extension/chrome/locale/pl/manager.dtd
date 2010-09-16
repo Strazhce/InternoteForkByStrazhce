@@ -1,0 +1,88 @@
+<!-- Left Panel -->
+
+<!ENTITY internote.managerDialog.title           "Menedżer notatek">
+
+<!ENTITY internote.noteList.columnTitle          "Notatki">
+
+<!ENTITY internote.searchQuery.label             "Szukaj:">
+<!ENTITY internote.searchResults.label           "Wyniki szukania">
+<!ENTITY internote.closeResults.tooltip          "Zamknij wyniki szukania">
+
+<!-- Left Panel Menu Commands -->
+
+<!ENTITY internote.actionsCmd.label              "Działania">
+<!ENTITY internote.actionsCmd.accesskey          "D">
+
+<!ENTITY internote.expandSelectedCmd.label       "Rozwiń zaznaczone">
+<!ENTITY internote.expandSelectedCmd.accesskey   "O">
+<!ENTITY internote.collapseSelectedCmd.label     "Zwiń zaznaczone">
+<!ENTITY internote.collapseSelectedCmd.accesskey "Z">
+  <!-- Select All in common.dtd. -->
+  
+<!ENTITY internote.deleteSelectedCmd.label       "Usuń zaznaczone">
+<!ENTITY internote.deleteSelectedCmd.accesskey   "S">
+<!ENTITY internote.resetSelectedCmd.label        "Resetuj położenie zaznaczonej">
+<!ENTITY internote.resetSelectedCmd.accesskey    "S">
+
+<!ENTITY internote.printAllCmd.label             "Drukuj wszystko…">
+<!ENTITY internote.printAllCmd.accesskey         "D">
+<!ENTITY internote.printSelectedCmd.label        "Drukuj zaznaczone…">
+<!ENTITY internote.printSelectedCmd.accesskey    "Z">
+
+<!ENTITY internote.importCmd.label               "Importuj…">
+<!ENTITY internote.importCmd.accesskey           "I">
+<!ENTITY internote.fromV3Cmd.label               "Z Internote v3…"> 
+<!ENTITY internote.fromV3Cmd.accesskey           "3">
+<!ENTITY internote.fromV2Cmd.label               "Z Internote v2…">
+<!ENTITY internote.fromV2Cmd.accesskey           "2">
+
+<!ENTITY internote.exportSelectedCmd.label       "Eksportuj zaznaczone…">
+<!ENTITY internote.exportSelectedCmd.accesskey   "Z">
+<!ENTITY internote.exportAllCmd.label            "Eksportuj wszystko…">
+<!ENTITY internote.exportAllCmd.accesskey        "E">
+<!ENTITY internote.toV3Cmd.label                 "Jako Internote v3…">
+<!ENTITY internote.toV3Cmd.accesskey             "3"> 
+<!ENTITY internote.toV2Cmd.label                 "Jako Internote v2…">
+<!ENTITY internote.toV2Cmd.accesskey             "2">
+<!ENTITY internote.toBookmarksCmd.label          "Jako zakładki…">
+<!ENTITY internote.toBookmarksCmd.accesskey      "K">
+<!ENTITY internote.toTextCmd.label               "Jako tekst…">
+<!ENTITY internote.toTextCmd.accesskey           "T">
+<!ENTITY internote.toHTMLCmd.label               "Jako HTML…">
+<!ENTITY internote.toHTMLCmd.accesskey           "H">
+
+<!-- Right Panel -->
+
+<!ENTITY internote.noteScope.caption             "Konfiguracja notatki">
+
+<!ENTITY internote.noteMatchType.label           "Na których stronach?">
+<!ENTITY internote.urlMatchExact.value           "Tylko jedna">
+<!ENTITY internote.urlMatchStarts.value          "URL zaczyna się od…">
+<!ENTITY internote.urlMatchSite.value            "Tylko na tej witrynie">
+<!ENTITY internote.urlMatchSuffix.value          "Na witrynach kończących się na…">
+<!ENTITY internote.urlMatchAll.value             "Wszystkich (uniwersalna notatka)">
+<!ENTITY internote.urlMatchRegexp.value          "Odpowiadających RegExp">
+
+<!ENTITY internote.goLink.label                  "Przejdź na stronę…">
+
+<!ENTITY internote.noteURL.label                 "URL:">
+<!ENTITY internote.noteSite.label                "Witryna:">
+<!ENTITY internote.noteURLPrefix.label           "URL zaczyna się od:">
+<!ENTITY internote.noteSiteSuffix.label          "Witryna kończąca się na:">
+<!ENTITY internote.noteURLRegexp.label           "URL RegExp:">
+
+<!ENTITY internote.noteData.caption              "Dane notatki">
+
+<!ENTITY internote.createTime.label              "Utworzono:">
+<!ENTITY internote.modfnTime.label               "Zmodyfikowano:">
+<!ENTITY internote.isMinimizedCBox.label         "Zminimalizowana?">
+<!ENTITY internote.text.label                    "Tekst:">
+<!ENTITY internote.backColor.label               "Kolor notatki:">
+<!ENTITY internote.foreColor.label               "Kolor tekstu:">
+
+<!ENTITY internote.thisNoteActions.caption       "Działania na tej notatce">
+
+<!ENTITY internote.deleteCurrentCmd.label        "Usuń notatkę">
+<!ENTITY internote.deleteCurrentCmd.accesskey    "U">
+<!ENTITY internote.resetCurrentCmd.label         "Resetuj położenie">
+<!ENTITY internote.resetCurrentCmd.accesskey     "R">

@@ -1,0 +1,54 @@
+<!ENTITY internote.prefsDialog.title          "Internote – ustawienia">
+
+<!-- Appearance -->
+
+<!ENTITY internote.appearancePrefsPane.title  "Wygląd">
+
+<!ENTITY internote.tinySize.value             "mały">
+<!ENTITY internote.normalSize.value           "normalny">
+<!ENTITY internote.largeSize.value            "duży">
+<!ENTITY internote.giantSize.value            "bardzo duży">
+<!ENTITY internote.megaSize.value             "ogromny">
+
+<!ENTITY internote.defaultStylePrefs.caption  "Ustawienia dla nowych notatek">
+
+<!ENTITY internote.defaultNoteColor.label     "Domyślny kolor notatki:">
+<!ENTITY internote.defaultTextColor.label     "Domyslny kolor tekstu:">
+  <!-- Colors defined in common.dtd. -->
+  
+<!ENTITY internote.defaultSize.label          "Domyślna wielkość notatki:">
+  <!-- Sizes defined at the top. -->
+
+<!ENTITY internote.defaultPos.label           "Domyślne położenie notatki:">
+<!ENTITY internote.topLeftPos.value           "lewa góra">
+<!ENTITY internote.topRightPos.value          "prawa góra">
+<!ENTITY internote.bottomLeftPos.value        "lewy dół">
+<!ENTITY internote.bottomRightPos.value       "prawy dół">
+<!ENTITY internote.centerPos.value            "środek">
+
+<!ENTITY internote.adjustDefaults.desc        "To są domyślne ustawienia, które można później zmienić indywidualnie dla każdej notatki używając znacznika zmiany rozmiaru i przycisku edycji/zmiany kolorów znajdujących się w notatce.">
+
+<!ENTITY internote.globalStylePrefs.caption   "Ustawienia dla wszystkich notatek">
+
+<!ENTITY internote.fontSize.label             "Rozmiar czcionki:">
+  <!-- Sizes defined at the top. -->
+<!ENTITY internote.useTranslucencyCBox.label  "Półprzezroczyste notatki">
+<!ENTITY internote.useHighlightableCBox.label "Wyróżniaj zaznaczony tekst">
+<!ENTITY internote.useNativeScrollCBox.label  "Używaj systemowego paska przewijania w notatkach">
+
+<!-- General Options -->
+
+<!ENTITY internote.generalPrefsPane.title     "Ogólne">
+
+<!ENTITY internote.generalPrefs.caption       "Ustawienia ogólne">
+
+<!ENTITY internote.confirmDeleteCBox.label    "Potwierdzaj usunięcie notatek">
+<!ENTITY internote.useStatusBarCBox.label     "Wyświetlaj Internote na pasku stanu">
+<!ENTITY internote.confirmProviso.desc        "Usuwając wiele notatek z poziomu menedżera notatek będzie wyświetlana prośba o potwierdzenie operacji.">
+
+<!ENTITY internote.storagePrefs.caption       "Ustawienia zapisywania">
+
+<!ENTITY internote.useAlternativeCBox.label   "Alternatywne położenie">
+<!ENTITY internote.browseButton.label         "Przeglądaj…">
+<!ENTITY internote.storageRestartProviso.desc "Zmiana ustawień położenia wymaga ponownego uruchomienia Firefoksa.">
+<!ENTITY internote.storageMoveProviso.desc    "Nie można przenieść istniejących notatek do nowego położenia, ale można je zaimportować używając opcji „Zarządzaj notatkami” znajdującej się w menu Internote.">

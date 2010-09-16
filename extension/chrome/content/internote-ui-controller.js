@@ -981,7 +981,7 @@ userMinimizesNote: function(elementOrEvent)
             }
             else
             {
-                this.showMessage("RestoreOffscreenMessage");
+                this.showMessage("NoteDisappearedMessage");
             }
         }
     }

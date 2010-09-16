@@ -17,7 +17,7 @@
 <!ENTITY internote.expandSelectedCmd.accesskey   "X">
 <!ENTITY internote.collapseSelectedCmd.label     "Collapse Selected">
 <!ENTITY internote.collapseSelectedCmd.accesskey "C">
-  <!-- Select All in "common.dtd". -->
+  <!-- Select All in common.dtd. -->
   
 <!ENTITY internote.deleteSelectedCmd.label       "Delete Selected">
 <!ENTITY internote.deleteSelectedCmd.accesskey   "D">
