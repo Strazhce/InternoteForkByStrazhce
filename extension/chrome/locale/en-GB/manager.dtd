@@ -1,0 +1,88 @@
+<!-- Left Panel -->
+
+<!ENTITY internote.managerDialog.title           "Manage Internotes">
+
+<!ENTITY internote.noteList.columnTitle          "Notes">
+
+<!ENTITY internote.searchQuery.label             "Search:">
+<!ENTITY internote.searchResults.label           "Search Results">
+<!ENTITY internote.closeResults.tooltip          "Close Search Results">
+
+<!-- Left Panel Menu Commands -->
+
+<!ENTITY internote.actionsCmd.label              "Actions">
+<!ENTITY internote.actionsCmd.accesskey          "A">
+
+<!ENTITY internote.expandSelectedCmd.label       "Expand Selected">
+<!ENTITY internote.expandSelectedCmd.accesskey   "X">
+<!ENTITY internote.collapseSelectedCmd.label     "Collapse Selected">
+<!ENTITY internote.collapseSelectedCmd.accesskey "C">
+  <!-- Select All in common.dtd. -->
+  
+<!ENTITY internote.deleteSelectedCmd.label       "Delete Selected">
+<!ENTITY internote.deleteSelectedCmd.accesskey   "D">
+<!ENTITY internote.resetSelectedCmd.label        "Reset Position of Selected">
+<!ENTITY internote.resetSelectedCmd.accesskey    "R">
+
+<!ENTITY internote.printSelectedCmd.label        "Print Selected...">
+<!ENTITY internote.printSelectedCmd.accesskey    "S">
+<!ENTITY internote.printAllCmd.label             "Print All...">
+<!ENTITY internote.printAllCmd.accesskey         "P">
+
+<!ENTITY internote.importCmd.label               "Import">
+<!ENTITY internote.importCmd.accesskey           "I">
+<!ENTITY internote.fromV3Cmd.label               "From Internote v3..."> 
+<!ENTITY internote.fromV3Cmd.accesskey           "3">
+<!ENTITY internote.fromV2Cmd.label               "From Internote v2...">
+<!ENTITY internote.fromV2Cmd.accesskey           "2">
+
+<!ENTITY internote.exportSelectedCmd.label       "Export Selected">
+<!ENTITY internote.exportSelectedCmd.accesskey   "L">
+<!ENTITY internote.exportAllCmd.label            "Export All">
+<!ENTITY internote.exportAllCmd.accesskey        "E">
+<!ENTITY internote.toV3Cmd.label                 "To Internote v3..."> 
+<!ENTITY internote.toV3Cmd.accesskey             "3">
+<!ENTITY internote.toV2Cmd.label                 "To Internote v2...">
+<!ENTITY internote.toV2Cmd.accesskey             "2">
+<!ENTITY internote.toBookmarksCmd.label          "To Bookmarks...">
+<!ENTITY internote.toBookmarksCmd.accesskey      "B">
+<!ENTITY internote.toTextCmd.label               "To Text...">
+<!ENTITY internote.toTextCmd.accesskey           "T">
+<!ENTITY internote.toHTMLCmd.label               "To HTML...">
+<!ENTITY internote.toHTMLCmd.accesskey           "H">
+
+<!-- Right Panel -->
+
+<!ENTITY internote.noteScope.caption             "Note Scope">
+
+<!ENTITY internote.noteMatchType.label           "On which pages?">
+<!ENTITY internote.urlMatchExact.value           "One Only">
+<!ENTITY internote.urlMatchSite.value            "On This Site Only">
+<!ENTITY internote.urlMatchStarts.value          "Where URL Starts with ...">
+<!ENTITY internote.urlMatchSuffix.value          "On Sites Ending with ...">
+<!ENTITY internote.urlMatchAll.value             "All (Universal Note)">
+<!ENTITY internote.urlMatchRegexp.value          "Matching RegExp">
+
+<!ENTITY internote.goLink.label                  "Go to Page">
+
+<!ENTITY internote.noteURL.label                 "URL:">
+<!ENTITY internote.noteSite.label                "Site:">
+<!ENTITY internote.noteURLPrefix.label           "URL Starts with:">
+<!ENTITY internote.noteSiteSuffix.label          "Site Ends with:">
+<!ENTITY internote.noteURLRegexp.label           "URL RegExp:">
+
+<!ENTITY internote.noteData.caption              "Note Data">
+
+<!ENTITY internote.createTime.label              "Created:">
+<!ENTITY internote.modfnTime.label               "Modified:">
+<!ENTITY internote.isMinimizedCBox.label         "Minimised?">
+<!ENTITY internote.text.label                    "Text:">
+<!ENTITY internote.backColor.label               "Note Colour:">
+<!ENTITY internote.foreColor.label               "Text Colour:">
+
+<!ENTITY internote.thisNoteActions.caption       "Actions on This Note">
+
+<!ENTITY internote.deleteCurrentCmd.label        "Delete Note">
+<!ENTITY internote.deleteCurrentCmd.accesskey    "D">
+<!ENTITY internote.resetCurrentCmd.label         "Reset Position">
+<!ENTITY internote.resetCurrentCmd.accesskey     "R">
