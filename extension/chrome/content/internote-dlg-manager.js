@@ -1124,6 +1124,8 @@ initSearchResults: function(searchTerm)
     this.searchWatcher.addBoundEventListener("noteEdited",  this, "onSearchNoteEdited");
     
     this.searchWatcher.updateFilter(this.getSearchFilter(searchTerm));
+    
+    this.utils.setEnabledIDs(document, "searchButton", true);
 },
 
 destroySearchResults: function()
@@ -1139,6 +1141,8 @@ destroySearchResults: function()
     
     this.searchWatcher.destroy();
     this.searchWatcher = null;
+    
+    this.utils.setEnabledIDs(document, "searchButton", false);
 },
 
 updateSearchResults: function()
