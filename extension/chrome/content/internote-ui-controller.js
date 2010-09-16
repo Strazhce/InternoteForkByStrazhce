@@ -1151,7 +1151,7 @@ userOpensPrefs: function()
         else
         {
             this.prefsDialog = window.openDialog('chrome://internote/content/internote-dlg-prefs.xul',
-                                                 'internoteprefs', 'chrome,titlebar,toolbar,centerscreen,dialog=yes,resizable', window);
+                                                 'internoteprefs', 'chrome,titlebar,toolbar,centerscreen,dialog=yes', window);
             if (this.prefsDialog == null)
             {
                 this.showMessage("WindowOpenFailed");
@@ -1169,7 +1169,7 @@ userOpensAbout: function()
     try
     {
         this.prefsDialog = window.openDialog('chrome://internote/content/internote-dlg-about.xul',
-                                             'internoteabout', 'centerscreen, modal, resizable', window);
+                                             'internoteabout', 'centerscreen,modal', window);
         if (this.prefsDialog == null)
         {
             this.showMessage("WindowOpenFailed");

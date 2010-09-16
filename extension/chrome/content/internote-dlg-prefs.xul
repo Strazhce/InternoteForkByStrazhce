@@ -28,14 +28,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 
-<prefwindow id="internote-prefs-dialog"
+<prefwindow id="internotePrefsDialog"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
             xmlns:html="http://www.w3.org/1999/xhtml"
             title="&internote.prefsDialog.title;"
             onload="internotePrefsDialog.init();"
             ondialogaccept="return internotePrefsDialog.onAccept();"
             buttons="accept,cancel"
-            persist="screenX screenY width height">
+            maxwidth="390">
 
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>

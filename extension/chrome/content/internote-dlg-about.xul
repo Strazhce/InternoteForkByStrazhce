@@ -26,12 +26,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 
-<dialog id="internoteAbout"
+<dialog id="internoteAboutDialog"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         title="&internote.aboutDialog.title;"
         buttons="accept"
         buttonlabelaccept="&internote.closeButton.label;"
-        persist="screenX screenY"
         onload="internoteAboutDlg.init();" >
     
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js" />
@@ -42,32 +41,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <vbox>
         <hbox>
             <spacer flex="1" />
-            <groupbox>
-                <hbox>
-                    <spacer style="min-width: 20px; max-width: 20px;" />
-                    <vbox pack="center">
-                        <image src="chrome://internote/skin/internote128.png" pack="center"
-                               style="min-width: 128px; max-width: 128px; min-height: 128px; max-height: 128px;" />
-                    </vbox>
-                    <spacer style="min-width: 20px; max-width: 20px;" />
-                    <vbox>
-                        <bbox pack="center">
-                            <label value="&internote.appName.label;" style="font-size: 3em;" />
-                            <spacer style="min-width: 20px;" />
-                            <label value="&internote.aboutVersion.label;" style="font-size: 1.5em;" />
-                            <label value="?" id="version-number" style="font-size: 1.5em;" />
-                        </bbox>
-                        <hbox pack="center">
-                            <label id="app-description" value="" style="font-size: 1.2em;" crop="right" />
-                        </hbox>
-                        <hbox pack="center">
-                            <label value="Internote Home Page" onclick="internoteAboutDlg.openHomePage();"
-                                   style="color: blue; text-decoration: underline; cursor: pointer;"/>
-                        </hbox>
-                    </vbox>
-                    <spacer style="min-width: 20px; max-width: 20px;" />
-                </hbox>
-            </groupbox>
+            <hbox>
+                <spacer style="min-width: 20px; max-width: 20px;" />
+                <vbox pack="center">
+                    <image src="chrome://internote/skin/internote128.png" pack="center"
+                           style="min-width: 128px; max-width: 128px; min-height: 128px; max-height: 128px;" />
+                </vbox>
+                <spacer style="min-width: 20px; max-width: 20px;" />
+                <vbox>
+                    <bbox pack="center">
+                        <label value="&internote.appName.label;" style="font-size: 3em;" />
+                        <spacer style="min-width: 20px;" />
+                        <label value="&internote.aboutVersion.label;" style="font-size: 1.5em;" />
+                        <label value="?" id="version-number" style="font-size: 1.5em;" />
+                    </bbox>
+                    <hbox pack="center">
+                        <label id="app-description" value="" style="font-size: 1.2em;" crop="right" />
+                    </hbox>
+                    <hbox pack="center">
+                        <label value="Internote Home Page" onclick="internoteAboutDlg.openHomePage();"
+                               style="color: blue; text-decoration: underline; cursor: pointer;"/>
+                    </hbox>
+                </vbox>
+                <spacer style="min-width: 20px; max-width: 20px;" />
+            </hbox>
             <spacer flex="1" />
         </hbox>
         
