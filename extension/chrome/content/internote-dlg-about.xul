@@ -41,18 +41,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <hbox>
         <spacer flex="1" />
         <hbox>
-            <spacer style="min-width: 20px; max-width: 20px;" />
+            <spacer width="20" />
             <vbox pack="center">
                 <image src="chrome://internote/skin/internote128.png" pack="center"
                        style="min-width: 128px; max-width: 128px; min-height: 128px; max-height: 128px;" />
             </vbox>
-            <spacer style="min-width: 20px; max-width: 20px;" />
+            <spacer width="20" />
             <vbox>
                 <bbox pack="center">
-                    <label value="&internote.appName.label;" style="font-size: 3em;" />
-                    <spacer style="min-width: 20px;" />
-                    <label value="&internote.aboutVersion.label;" style="font-size: 1.5em;" />
-                    <label value="?" id="version-number" style="font-size: 1.5em;" />
+                    <label value="&internote.appName.label;" style="font-size: 3em; margin: 0;" />
+                    <spacer width="15" />
+                    <label value="&internote.aboutVersion.label;" style="font-size: 1.5em; margin: 0;" />
+                    <spacer width="15" />
+                    <label value="?" id="version-number" style="font-size: 1.5em; margin: 0;" />
                 </bbox>
                 <hbox pack="center">
                     <label id="app-description" value="" style="font-size: 1.2em;" crop="right" />
@@ -62,7 +63,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                            style="color: blue; text-decoration: underline; cursor: pointer;"/>
                 </hbox>
             </vbox>
-            <spacer style="min-width: 20px; max-width: 20px;" />
+            <spacer width="20" />
         </hbox>
         <spacer flex="1" />
     </hbox>
