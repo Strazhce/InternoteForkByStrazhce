@@ -265,12 +265,7 @@ popupShown: function(event, uiNote)
                         while (nextUINote.note.isMinimized);
                     }
                     
-                    // Check whether off-page.
-                    var currNoteRect = this.utils.makeRectFromDims(nextUINote.note.getPos(), nextUINote.note.getDims());
-                    this.utils.scrollToShowRect(window, this.browser, currNoteRect);
-                    
-                    this.focusNote(nextUINote);
-                    this.raiseNote(nextUINote);
+                    this.scrollToNote(nextUINote);
                     
                     ev.preventDefault();
                     ev.stopPropagation();
@@ -286,6 +281,15 @@ popupShown: function(event, uiNote)
     {
         this.utils.handleException("Exception caught when popup shown.", ex);
     }
+},
+
+scrollToNote: function(uiNote)
+{
+    var currNoteRect = this.utils.makeRectFromDims(uiNote.note.getPos(), uiNote.note.getDims());
+    this.utils.scrollToShowRect(window, this.browser, currNoteRect);
+    
+    this.focusNote(uiNote);
+    this.raiseNote(uiNote);
 },
 
 handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled, pageResized)

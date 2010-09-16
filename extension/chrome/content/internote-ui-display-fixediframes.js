@@ -245,20 +245,7 @@ iFrameLoaded: function(uiNote)
                         while (nextUINote.note.isMinimized);
                     }
                     
-                    // Check whether off-page.
-                    var currNoteRect = this.utils.makeRectFromDims(nextUINote.note.getPos(), nextUINote.note.getDims());
-                    var wasMoved = this.utils.scrollToShowRect(window, this.browser, currNoteRect);
-                    
-                    if (wasMoved)
-                    {
-                        // Might not be able to focus the note yet, wait until handleChangedAspects.
-                        this.autoFocusNote = nextUINote;
-                    }
-                    else
-                    {
-                        this.focusNote(nextUINote);
-                        this.raiseNote(nextUINote);
-                    }
+                    this.scrollToNote(nextUINote);
                     
                     ev.preventDefault();
                     ev.stopPropagation();
@@ -273,6 +260,24 @@ iFrameLoaded: function(uiNote)
     catch (ex)
     {
         this.utils.handleException("Exception caught when iFrame loaded.", ex);
+    }
+},
+
+scrollToNote: function(uiNote)
+{
+    // Check whether off-page.
+    var currNoteRect = this.utils.makeRectFromDims(uiNote.note.getPos(), uiNote.note.getDims());
+    var wasMoved = this.utils.scrollToShowRect(window, this.browser, currNoteRect);
+    
+    if (wasMoved)
+    {
+        // Might not be able to focus the note yet, wait until handleChangedAspects.
+        this.autoFocusNote = uiNote;
+    }
+    else
+    {
+        this.focusNote(uiNote);
+        this.raiseNote(uiNote);
     }
 },
 

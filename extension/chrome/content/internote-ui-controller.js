@@ -981,7 +981,9 @@ userMinimizesNote: function(elementOrEvent)
             }
             else
             {
-                this.showMessage("NoteDisappearedMessage");
+                this.showMessage("NoteDisappearedMessage", true, "GoThereLabel", this.utils.bind(this, function() {
+                    this.displayUI.scrollToNote(this.uiNoteLookup[noteNum]);
+                }));
             }
         }
     }

@@ -375,6 +375,15 @@ positionPane: function()
     }
 },
 
+scrollToNote: function(uiNote)
+{
+    var currNoteRect = this.utils.makeRectFromDims(uiNote.note.getPos(), uiNote.note.getDims());
+    this.utils.scrollToShowRect(window, this.browser, currNoteRect);
+    
+    this.focusNote(uiNote);
+    this.raiseNote(uiNote);
+},
+
 handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects\n");
