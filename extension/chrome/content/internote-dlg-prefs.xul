@@ -149,7 +149,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <checkbox id="defaultTransCheckBox"  preference="transparencyPreference"  label="&internote.useTranslucencyCBox.label;" />
       <checkbox id="scrollbarCheckBox"     preference="nativeScrollPreference"  label="&internote.useNativeScrollCBox.label;" />
     </groupbox>
-    <separator height="30" />
+    <!-- Work around bug #343964 -->
+    <separator height="60" />
   </prefpane>
 
   <stringbundleset id="stringbundleset">
