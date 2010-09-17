@@ -30,18 +30,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 <prefwindow id="internotePrefsDialog"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-            xmlns:html="http://www.w3.org/1999/xhtml"
             title="&internote.prefsDialog.title;"
             onload="internotePrefsDialog.init();"
             ondialogaccept="return internotePrefsDialog.onAccept();"
-            buttons="accept,cancel"
             maxwidth="390">
 
-    <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
-    <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
-    <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
-    <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-prefs.js"/>
-    
     <prefpane id="appearancePrefsPane" label="&internote.appearancePrefsPane.title;" flex="1">
         <preferences>
             <preference id="statusbarPreference"       name="internote.usestatusbar"     type="bool"/>
@@ -162,6 +155,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </groupbox>
         </vbox>
     </prefpane>
+    
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
+    <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-prefs.js"/>
     
     <stringbundleset id="stringbundleset">
         <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
