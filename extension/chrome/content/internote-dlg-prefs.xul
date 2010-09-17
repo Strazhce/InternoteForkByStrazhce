@@ -35,6 +35,33 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             ondialogaccept="return internotePrefsDialog.onAccept();"
             maxwidth="390">
 
+  <prefpane id="generalPrefsPane" label="&internote.generalPrefsPane.title;" flex="1">
+    <preferences>
+      <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
+      <preference id="backColorPreference"       name="internote.defaultnotecolor" type="string"/>
+      <preference id="foreColorPreference"       name="internote.defaulttextcolor" type="string"/>
+      <preference id="defaultPositionPreference" name="internote.defaultposition"  type="string"/>
+      <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
+      <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
+      <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
+      <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
+    </preferences>
+    <groupbox>
+      <caption label="&internote.generalPrefs.caption;"/>
+      <checkbox id="askBeforeDeleteCheckBox" preference="askBeforeDeletePreference" label="&internote.confirmDeleteCBox.label;" />
+      <checkbox id="statusbarCheckBox"       preference="statusbarPreference"       label="&internote.useStatusBarCBox.label;" />
+    </groupbox>
+    <groupbox>
+      <caption label="&internote.storagePrefs.caption;"/>
+      <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;"/>
+      <hbox>
+        <textbox id="saveFolderField" flex="1" />
+        <button id="chooseFolder" label="&internote.browseButton.label;" />
+      </hbox>
+      <description>&internote.storageRestartProviso.desc;</description>
+      <description>&internote.storageMoveProviso.desc;</description>
+    </groupbox>
+  </prefpane>
   <prefpane id="appearancePrefsPane" label="&internote.appearancePrefsPane.title;" flex="1">
     <preferences>
       <preference id="statusbarPreference"       name="internote.usestatusbar"    type="bool"/>
@@ -123,33 +150,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <checkbox id="scrollbarCheckBox"     preference="nativeScrollPreference"  label="&internote.useNativeScrollCBox.label;" />
     </groupbox>
     <separator height="30" />
-  </prefpane>
-  <prefpane id="generalPrefsPane" label="&internote.generalPrefsPane.title;" flex="1">
-    <preferences>
-      <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
-      <preference id="backColorPreference"       name="internote.defaultnotecolor" type="string"/>
-      <preference id="foreColorPreference"       name="internote.defaulttextcolor" type="string"/>
-      <preference id="defaultPositionPreference" name="internote.defaultposition"  type="string"/>
-      <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
-      <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
-      <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
-      <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
-    </preferences>
-    <groupbox>
-      <caption label="&internote.generalPrefs.caption;"/>
-      <checkbox id="askBeforeDeleteCheckBox" preference="askBeforeDeletePreference" label="&internote.confirmDeleteCBox.label;" />
-      <checkbox id="statusbarCheckBox"       preference="statusbarPreference"       label="&internote.useStatusBarCBox.label;" />
-    </groupbox>
-    <groupbox>
-      <caption label="&internote.storagePrefs.caption;"/>
-      <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;"/>
-      <hbox>
-        <textbox id="saveFolderField" flex="1" />
-        <button id="chooseFolder" label="&internote.browseButton.label;" />
-      </hbox>
-      <description>&internote.storageRestartProviso.desc;</description>
-      <description>&internote.storageMoveProviso.desc;</description>
-    </groupbox>
   </prefpane>
 
   <stringbundleset id="stringbundleset">
