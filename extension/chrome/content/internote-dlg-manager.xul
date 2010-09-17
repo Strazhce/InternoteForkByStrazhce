@@ -237,13 +237,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           </groupbox>
           
           <groupbox>
-          <caption label="&internote.thisNoteActions.caption;"/>
-          <hbox>
-            <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;" 
-                    accesskey="&internote.deleteCurrentCmd.accesskey;" onclick="internoteManager.userDeletesNotes(false)" />
-            <button id="resetCurrentNote"  label="&internote.resetCurrentCmd.label;"
-                    accesskey="&internote.resetCurrentCmd.accesskey;" onclick="internoteManager.userResetsNotes (false)" />
-          </hbox>
+            <caption label="&internote.thisNoteActions.caption;"/>
+            <hbox>
+              <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;" 
+                      accesskey="&internote.deleteCurrentCmd.accesskey;" onclick="internoteManager.userDeletesNotes(false)" />
+              <button id="resetCurrentNote"  label="&internote.resetCurrentCmd.label;"
+                      accesskey="&internote.resetCurrentCmd.accesskey;" onclick="internoteManager.userResetsNotes (false)" />
+            </hbox>
           </groupbox>
         </vbox>
       </hbox>
