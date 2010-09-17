@@ -4,7 +4,26 @@ overlay chrome://browser/content/browser.xul chrome://internote/content/internot
 resource internotejs components/
 
 locale internote en-US chrome/locale/en-US/
+locale internote ca-AD chrome/locale/ca-AD/
+locale internote da-DK chrome/locale/da-DK/
+#locale internote de    chrome/locale/de/
+locale internote es-ES chrome/locale/es-ES/
 locale internote en-GB chrome/locale/en-GB/
+locale internote fr-FR chrome/locale/fr-FR/
+locale internote gl-ES chrome/locale/gl-ES/
+locale internote hr-HR chrome/locale/hr-HR/
+locale internote it-IT chrome/locale/it-IT/
+locale internote ko    chrome/locale/ko/
+locale internote nl    chrome/locale/nl/
+locale internote pl    chrome/locale/pl/
+locale internote pt-BR chrome/locale/pt-BR/
+locale internote ro-RO chrome/locale/ro-RO/
+locale internote ru    chrome/locale/ru/
+locale internote sk-SK chrome/locale/sk-SK/
+locale internote sl-Sl chrome/locale/sl-Sl/
+locale internote tr-TR chrome/locale/tr-TR/
+locale internote uk-UA chrome/locale/uk-UA/
+locale internote zh-CN chrome/locale/zh-CN/
 
 skin internote classic/1.0 chrome/skin/
 style chrome://global/content/customizeToolbar.xul chrome://internote/skin/overlay.css
