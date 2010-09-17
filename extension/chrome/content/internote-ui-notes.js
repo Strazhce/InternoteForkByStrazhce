@@ -19,9 +19,6 @@
 
 // This is the Note UI, responsible for drawing the UI inside individual notes.
 
-// XXX Probably can remove "enabled" stuff, or at least integrate it with makeStaticImage which
-// is used instead (maybe some extra UI changes for disabling).
-
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.noteUI =
 {
 NOTE_BORDER_SIZE: 2,
@@ -537,7 +534,6 @@ fixTextArea: function(uiNote, dims)
     this.utils.fixDOMEltDims(uiNote.textArea, textDims);
 },
 
-// Firefox doesn't support flexing canvases!
 fixScrollLine: function(uiNote, height)
 {
     var scrollbarHeight = height - 2 * this.NOTE_OUTER_SIZE - 2 * this.NOTE_SPACING
@@ -898,7 +894,6 @@ createLittleText: function(doc, uiNote)
     
     littleText.addEventListener("mousedown", function(ev) { ev.preventDefault(); }, true);
     littleText.addEventListener("focus",     function(ev) { littleText.blur(); }, true); // This seems necessary as right-click focuses.
-    //this.utils.addBoundDOMEventListener(littleText, "mousedown", obj, propertyName, useCapture)
     
     return littleText;
 },
@@ -944,7 +939,7 @@ createResizeHandle: function(doc, uiNote, onResizeStart)
 /*
 // An attempt to use an XUL textarea.  This does not work yet because:
 // (a) there seems to be no way to turn off the native scrollbar
-// (b) there seems to be no way for get the real scrollHeight.
+// (b) there seems to be no way to get the real scrollHeight.
 createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
 {
     var textArea = uiNote.textArea = this.utils.createXULElement("textbox", doc);
@@ -1194,17 +1189,17 @@ drawNoteBackground: function(uiNote)
     // draw the glassy highlighted background
     var gradient = context.createLinearGradient(0, 0, 0, h);
     
-    // We blend the colours here before putting them in so we only need to do one
-    // pass and so get the correct alpha throughout.
+    // We blend the colours here before putting them in the gradient so we only need
+    // to do one pass and so get the correct alpha throughout.
     
     // We blend an colour with alpha over a colour without, giving an opaque colour.
     var topColorArray    = this.utils.lighten(uiNote.backColorArray, 0.6);
     var bottomColorArray = this.utils.lighten(uiNote.backColorArray, 0.3);
     
     // Now we add an alpha so all colours have constant alpha.
-    topColorArray    = this.utils.addAlpha(topColorArray,         alpha);
-    bottomColorArray = this.utils.addAlpha(bottomColorArray,      alpha);
-    var mainColorArray   = this.utils.addAlpha(uiNote.backColorArray, alpha);
+    topColorArray      = this.utils.addAlpha(topColorArray,         alpha);
+    bottomColorArray   = this.utils.addAlpha(bottomColorArray,      alpha);
+    var mainColorArray = this.utils.addAlpha(uiNote.backColorArray, alpha);
     
     var mainColor   = this.utils.formatRGBAColor(mainColorArray  );
     var topColor    = this.utils.formatRGBAColor(topColorArray   );
@@ -1364,6 +1359,8 @@ getForeColorSwabFromPoint: function(x, y)
     return null;
 },
 
+// This takes a snapshot of the UI and displays that instead of the UI.  Then we are
+// free to scale it to perform a flip animation.
 makeStaticImage: function(uiNote, dims)
 {
     this.utils.assertError(uiNote != null, "UINote is null when making note static.");
