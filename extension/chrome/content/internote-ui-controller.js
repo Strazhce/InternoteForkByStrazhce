@@ -1885,11 +1885,6 @@ screenCreateNote: function(uiNote, shouldAnimate)
     this.utils.assertClassError(uiNote, "UINote", "Not a UINote when calling screenCreateNote.");
     this.utils.assertError(!this.displayUI.doesNoteExist(uiNote.num), "Note is already on-screen.");
     
-    if (this.allUINotes.length > 0 && !this.arePageListeners)
-    {
-        this.addPageListeners();
-    }
-    
     var posOnViewport = this.screenCalcNotePosOnViewport(uiNote);
     this.utils.assertError(this.utils.isCoordPair(posOnViewport), "Bad pos on viewport.", posOnViewport);
     
@@ -1913,6 +1908,11 @@ screenCreateNote: function(uiNote, shouldAnimate)
     if (this.utils.doRectsOverlap(noteRectOnViewport, viewportRect))
     {
         this.hasSeenUINote[uiNote.num] = 1;
+    }
+    
+    if (this.allUINotes.length > 0 && !this.arePageListeners)
+    {
+        this.addPageListeners();
     }
 },
 
