@@ -4,6 +4,7 @@ overlay chrome://browser/content/browser.xul chrome://internote/content/internot
 resource internotejs components/
 
 locale internote en-US chrome/locale/en-US/
+
 locale internote ca-AD chrome/locale/ca-AD/
 locale internote da-DK chrome/locale/da-DK/
 #locale internote de    chrome/locale/de/
