@@ -30,7 +30,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 <dialog id="internoteManager"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        xmlns:html="http://www.w3.org/1999/xhtml"
         title="&internote.managerDialog.title;"
         onload="internoteManager.init()"
         onunload="internoteManager.destroy();"
@@ -254,6 +253,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
     </stringbundleset>
     
-    <html:iframe id="internote-scratch-frame" src="about:blank" style="height: 0px; width: 0px; overflow: hidden; border: none;"/>
+    <iframe id="internote-scratch-frame" src="about:blank" style="max-height: 0; min-height: 0; overflow: hidden;"/>
     
 </dialog>
