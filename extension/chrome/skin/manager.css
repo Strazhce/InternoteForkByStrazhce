@@ -12,18 +12,18 @@ treechildren::-moz-tree-cell-text(url_regexp) {
 }
 
 #searchButton {
-    list-style-image: url("chrome://global/skin/icons/close.png");
-    -moz-image-region: rect(0 16px 16px 0px);
+    list-style-image: url("chrome://internote/skin/closesearch.png");
+    -moz-image-region: rect(0 14px 14px 0px);
 }
 
 #searchButton:hover:active:not([disabled="true"]){
-    -moz-image-region: rect(0 48px 16px 32px);
+    -moz-image-region: rect(0 42px 14px 28px);
 }
 
 #searchButton:hover {
-    -moz-image-region: rect(0 32px 16px 16px);
+    -moz-image-region: rect(0 28px 14px 14px);
 }
 
 #searchButton[disabled="true"] {
-    -moz-image-region: rect(0 64px 16px 48px);
+    -moz-image-region: rect(0 56px 14px 42px);
 }
