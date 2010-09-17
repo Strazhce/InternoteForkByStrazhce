@@ -37,14 +37,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
   <prefpane id="appearancePrefsPane" label="&internote.appearancePrefsPane.title;" flex="1">
     <preferences>
-      <preference id="statusbarPreference"       name="internote.usestatusbar"     type="bool"/>
-      <preference id="saveLocationPreference"    name="internote.savelocation"     type="file"/>
-      <preference id="changeLocationPreference"  name="internote.changelocation"   type="bool"/>
-      <preference id="askBeforeDeletePreference" name="internote.askbeforedelete"  type="bool"/>
+      <preference id="statusbarPreference"       name="internote.usestatusbar"    type="bool"/>
+      <preference id="saveLocationPreference"    name="internote.savelocation"    type="file"/>
+      <preference id="changeLocationPreference"  name="internote.changelocation"  type="bool"/>
+      <preference id="askBeforeDeletePreference" name="internote.askbeforedelete" type="bool"/>
     </preferences>
     <groupbox>
       <caption label="&internote.defaultStylePrefs.caption;" />
-      <grid>
+      <grid flex="1">
         <columns>
           <column />
           <column />
@@ -99,13 +99,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
               </menupopup>
             </menulist>
           </row>
+          <separator class="thin" />
           <description>&internote.adjustDefaults.desc;</description>
         </rows>
       </grid>
     </groupbox>
     <groupbox>
       <caption label="&internote.globalStylePrefs.caption;" />
-      
       <hbox align="center">
         <label value="&internote.fontSize.label;" control="fontSizeEntryBox" />
         <menulist id="fontSizeEntryBox" preference="fontSizePreference">
@@ -118,12 +118,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           </menupopup>
         </menulist>
       </hbox>
-      <checkbox id="highlightableCheckBox"   preference="highlightablePreference"   label="&internote.useHighlightableCBox.label;" />
-      <checkbox id="defaultTransCheckBox"    preference="transparencyPreference"    label="&internote.useTranslucencyCBox.label;" />
-      <checkbox id="scrollbarCheckBox"       preference="nativeScrollPreference"    label="&internote.useNativeScrollCBox.label;" />
+      <checkbox id="highlightableCheckBox" preference="highlightablePreference" label="&internote.useHighlightableCBox.label;" />
+      <checkbox id="defaultTransCheckBox"  preference="transparencyPreference"  label="&internote.useTranslucencyCBox.label;" />
+      <checkbox id="scrollbarCheckBox"     preference="nativeScrollPreference"  label="&internote.useNativeScrollCBox.label;" />
     </groupbox>
+    <separator height="30" />
   </prefpane>
-  
   <prefpane id="generalPrefsPane" label="&internote.generalPrefsPane.title;" flex="1">
     <preferences>
       <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
@@ -134,7 +134,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
       <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
       <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
-    </preferences>     
+    </preferences>
     <groupbox>
       <caption label="&internote.generalPrefs.caption;"/>
       <checkbox id="askBeforeDeleteCheckBox" preference="askBeforeDeletePreference" label="&internote.confirmDeleteCBox.label;" />
@@ -142,24 +142,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     </groupbox>
     <groupbox>
       <caption label="&internote.storagePrefs.caption;"/>
-      <vbox>
-        <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;"/>
-        <hbox>
-          <textbox id="saveFolderField" flex="1" />
-          <button id="chooseFolder" label="&internote.browseButton.label;" />
-        </hbox>
-        <description>&internote.storageRestartProviso.desc;</description>
-        <description>&internote.storageMoveProviso.desc;</description>
-      </vbox>
+      <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;"/>
+      <hbox>
+        <textbox id="saveFolderField" flex="1" />
+        <button id="chooseFolder" label="&internote.browseButton.label;" />
+      </hbox>
+      <description>&internote.storageRestartProviso.desc;</description>
+      <description>&internote.storageMoveProviso.desc;</description>
     </groupbox>
   </prefpane>
-  
+
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
+  </stringbundleset>
+
   <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
   <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
   <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
   <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-prefs.js"/>
-  
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
-  </stringbundleset>
+
 </prefwindow>
