@@ -2,6 +2,8 @@ Internote version 3.0 is Copyright 2010 Matthew Tuck.  It is based on Internote 
 
 The majority of this software is licensed under the GNU General Public License v2 or later.
 
+Translations are copyright of the individual translators, listed in "install.rdf", and are licensed in the same way as the product.
+
 The following attributions and licenses apply to the artwork distributed under the chrome/skin directory of this product.
 
 internote*.png, arrow*.png: Designed by Ildikó Balla, copyright transferred to Matthew Tuck. Licensed under GPLv2 or later.
