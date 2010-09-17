@@ -135,25 +135,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
             <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
         </preferences>     
-        <vbox flex="1">        
-            <groupbox>
-                <caption label="&internote.generalPrefs.caption;"/>
-                <checkbox id="askBeforeDeleteCheckBox" preference="askBeforeDeletePreference" label="&internote.confirmDeleteCBox.label;" />
-                <checkbox id="statusbarCheckBox"       preference="statusbarPreference"       label="&internote.useStatusBarCBox.label;" />
-            </groupbox>
-            <groupbox>
-                <caption label="&internote.storagePrefs.caption;"/>
-                <vbox>
-                    <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;"/>
-                    <hbox>
-                        <textbox id="saveFolderField" flex="1" />
-                        <button id="chooseFolder" label="&internote.browseButton.label;" />
-                    </hbox>
-                    <description>&internote.storageRestartProviso.desc;</description>
-                    <description>&internote.storageMoveProviso.desc;</description>
-                </vbox>
-            </groupbox>
-        </vbox>
+        <groupbox>
+            <caption label="&internote.generalPrefs.caption;"/>
+            <checkbox id="askBeforeDeleteCheckBox" preference="askBeforeDeletePreference" label="&internote.confirmDeleteCBox.label;" />
+            <checkbox id="statusbarCheckBox"       preference="statusbarPreference"       label="&internote.useStatusBarCBox.label;" />
+        </groupbox>
+        <groupbox>
+            <caption label="&internote.storagePrefs.caption;"/>
+            <vbox>
+                <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;"/>
+                <hbox>
+                    <textbox id="saveFolderField" flex="1" />
+                    <button id="chooseFolder" label="&internote.browseButton.label;" />
+                </hbox>
+                <description>&internote.storageRestartProviso.desc;</description>
+                <description>&internote.storageMoveProviso.desc;</description>
+            </vbox>
+        </groupbox>
     </prefpane>
     
     <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
