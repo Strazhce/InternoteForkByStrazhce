@@ -1206,6 +1206,8 @@ generateNotesInHTML: function(notes, scratchDoc)
     noteCharset.setAttribute("http-equiv", "Content-Type");
     noteCharset.setAttribute("content",    "text/html; charset=utf-8");
     
+    this.removeAllChildNodes(scratchDoc.body);
+    
     scratchDoc.body.appendChild(noteDiv);
     scratchDoc.getElementsByTagName("head")[0].appendChild(noteCharset);
     
