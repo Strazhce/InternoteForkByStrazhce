@@ -8,5 +8,5 @@ The following attributions and licenses apply to the artwork distributed under t
 
 internote*.png, arrow*.png: Designed by Ildikó Balla, copyright transferred to Matthew Tuck. Licensed under GPLv2 or later.
 closesearch.png: Taken from Firefox3's default theme. Firefox3 is licensed under the GPLv2, as well as other licenses. See Firefox3 for licensing details.
-prefspaneicons.png "Clipboard": Taken from Tango Desktop Project, which is in the public domain.
+prefspaneicons.png "Clipboard": Designed by Leszek Zyczkowski (teo), based on edit-paste.svg taken from the Tango Desktop Project, which is in the public domain.
 prefspaneicons.png "Notes", newnote*.png, pref.png: Unknown attribution, taken from Internote 2.1.  Please contact Tim Horton for more details.
