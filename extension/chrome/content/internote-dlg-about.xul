@@ -62,6 +62,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <label value="Internote Home Page" onclick="internoteAboutDlg.openHomePage();"
                            style="color: blue; text-decoration: underline; cursor: pointer;"/>
                 </hbox>
+                <spacer height="10" />
+                <description style="max-width: 390px; font-size: 0.8em;">&internote.licensing.label;</description>
             </vbox>
             <spacer width="20" />
         </hbox>
