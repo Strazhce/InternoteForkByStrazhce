@@ -1790,7 +1790,7 @@ chromeActiveWarning: function()
         try
         {
             this.utils.doubleDumpTraceData(this);
-            this.utils.cancelTimer(this.activeWarningInterval);
+            this.utils.cancelTimer(this.activeWarnInterval);
         }
         catch (ex2)
         {
