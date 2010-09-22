@@ -53,6 +53,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-balloon.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-animation.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-notes.js"/>
+<script type="application/x-javascript" src="chrome://internote/content/internote-ui-display-browserstack.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-display-fixediframes.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-display-popuppane.js"/>
 <script type="application/x-javascript" src="chrome://internote/content/internote-ui-display-separatepopups.js"/>

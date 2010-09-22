@@ -91,6 +91,11 @@ hasPopupBugs: function()
     }
 },
 
+hasBrowserStack: function(browser)
+{
+    return browser.parentNode.localName == "stack";
+},
+
 hasMinimizeIconCentered: function()
 {
     return this.getPlatform() == "mac";

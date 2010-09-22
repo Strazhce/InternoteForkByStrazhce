@@ -136,6 +136,8 @@ init: function()
     
     this.displayUI = this.windowGlobal.displayUI = this.chooseDisplayUI();
     
+    this.utils.assertError(this.displayUI != null, "Failed to initialize display UI.");
+    
     // This will provide a global object shared between windows
     this.storage   = this.sharedGlobal.makeStorage(document);
     
@@ -245,7 +247,13 @@ getLocaleString: function(messageName)
 
 chooseDisplayUI: function()
 {
-    if (this.utils.hasPopupBugs())
+    var browser = this.utils.getCurrentBrowser(gBrowser);
+    
+    if (this.utils.hasBrowserStack(browser))
+    {
+        return this.windowGlobal.displayUIBrowserStack;
+    }    
+    else if (this.utils.hasPopupBugs())
     {
         return this.windowGlobal.displayUIFixedIFrames;
     }
