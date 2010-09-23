@@ -28,7 +28,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 
-<dialog id="internoteManager"
+<dialog id="internoteManagerDialog"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         title="&internote.managerDialog.title;"
         onload="internoteManager.init()"
@@ -36,8 +36,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         buttons="accept"
         buttonlabelaccept="&internote.closeButton.label;"
         persist="screenX screenY width height"
-        screenX="24" screenY="24" width="800px" height="700px">
-    
+        screenX="24" screenY="24" width="700" height="550">
+
   <script type="application/x-javascript" src="chrome://internote/content/internote-consts.js"/>
   <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
   <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
@@ -47,7 +47,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
   <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-manager.js"/>
   <script type="application/x-javascript" src="chrome://global/content/printUtils.js"/>
-  
+
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
+  </stringbundleset>
+
   <popupset>
     <menupopup id="actionsMenu">
       <menuitem id="selectAll"        label="&internote.selectAllCmd.label;" accesskey="&internote.selectAllCmd.accesskey;"
@@ -109,9 +113,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   
   <notificationbox id="noteProblemNotificationBox" flex="1">
     <notificationbox id="feedbackNotificationBox" flex="1">
-  
-      <hbox flex="2">
-        <vbox flex="3" id="leftPanel">
+      <hbox flex="1">
+        <vbox flex="1" id="leftPanel">
+          <separator height="10"/>
           <tree id="noteList" flex="2" onselect="internoteManager.userSelectsTreeElement();" hidecolumnpicker="true">
             <treecols>
               <treecol id="element" label="&internote.noteList.columnTitle;" primary="true" flex="1"/>
@@ -124,24 +128,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </treecols>
             <treechildren id="searchResultChildren" />
           </tree>
+          <separator class="thin" />
           <hbox align="center">
-            <spacer width="5px" />
-            <button id="notesActions" type="menu" popup="actionsMenu" style="margin: 0;"
-                    label="&internote.actionsCmd.label;" accesskey="&internote.actionsCmd.accesskey;" />
-            <spacer width="10px" />
-            <label control="searchFilter" value="&internote.searchQuery.label;" style="margin: 0;" />
-            <spacer width="5px" />
-            <textbox id="searchFilter" oninput="internoteManager.updateSearchResults()" flex="1" style="margin: 0; height: 2em;" />
-            <spacer width="5px" />
+            <button id="notesActions" type="menu" popup="actionsMenu" label="&internote.actionsCmd.label;"
+                    accesskey="&internote.actionsCmd.accesskey;" />
+            <spacer width="10" />
+            <label control="searchFilter" value="&internote.searchQuery.label;" class="plain" />
+            <textbox id="searchFilter" oninput="internoteManager.updateSearchResults()" flex="1" />
             <image id="searchButton" tooltiptext="&internote.closeResults.tooltip;" disabled="true" onclick="internoteManager.clearSearchResults()" />
-            <spacer width="5px" />
+            <spacer width="5" />
           </hbox>
         </vbox>
-        <splitter id="splitter" state="collapsed" collapse="after" resizeafter="closest" />
+        <splitter id="splitter" collapse="after">
+          <grippy />
+        </splitter>
         <vbox flex="1" id="rightPanel">
           <groupbox>
             <caption label="&internote.noteScope.caption;"/>
-            
             <hbox align="center">
               <label control="matchTypeEntryBox" value="&internote.noteMatchType.label;" class="editlabel" />
               <menulist id="matchTypeEntryBox" align="center" flex="1">
@@ -157,57 +160,50 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </hbox>
             <hbox>
               <deck flex="1" id="urlLabelDeck">
-                <label control="noteURL" value="&internote.noteURL.label;"        class="editlabel"
-                       id="mainURLLabel" />
+                <label control="noteURL" value="&internote.noteURL.label;" id="mainURLLabel" class="editlabel" />
                 <label control="noteURL" value="&internote.noteURLPrefix.label;"  class="editlabel" />
                 <label control="noteURL" value="&internote.noteURLRegexp.label;"  class="editlabel" />
                 <label control="noteURL" value="&internote.noteSite.label;"       class="editlabel" />
                 <label control="noteURL" value="&internote.noteSiteSuffix.label;" class="editlabel" />
               </deck>
-              <label flex="1" id="goToLink" value="&internote.goLink.label;"
-                     style="color: gray; text-decoration: underline;"
-                     onclick="internoteManager.openURL();" />
+              <spacer flex="1" />
+              <label id="goToLink" class="link" value="&internote.goLink.label;" onclick="internoteManager.openURL();" />
             </hbox>
             <textbox id="noteURL" oninput="internoteManager.userEditsData()" />
             <hbox>
-              <checkbox id="ignoreAnchor" flex="1" oncommand="internoteManager.userEditsData()" width="100px"
-                        label="&internote.ignoreAnchorCmd.label;"
-                        normaltooltiptext="&internote.ignoreAnchorCmd.label; (&internote.ignoreAnchorCmd.label2;)" />
-              <checkbox id="ignoreParams" flex="1" oncommand="internoteManager.userEditsData()" width="100px"
-                        label="&internote.ignoreParamsCmd.label;"
-                        normaltooltiptext="&internote.ignoreParamsCmd.label; (&internote.ignoreParamsCmd.label2;)" />
+              <checkbox id="ignoreAnchor" flex="1" oncommand="internoteManager.userEditsData()"
+                        label="&internote.ignoreAnchorCmd.label;" normaltooltiptext="&internote.ignoreAnchorCmd.label; (&internote.ignoreAnchorCmd.label2;)" />
+              <checkbox id="ignoreParams" flex="1" oncommand="internoteManager.userEditsData()"
+                        label="&internote.ignoreParamsCmd.label;" normaltooltiptext="&internote.ignoreParamsCmd.label; (&internote.ignoreParamsCmd.label2;)" />
             </hbox>
           </groupbox>
           <groupbox flex="1">
             <caption label="&internote.noteData.caption;"/>
-
-            <hbox>
-              <hbox pack="start" align="center" flex="1">
-                <label control="noteText" value="&internote.text.label;" class="editlabel" width="100px" />
-              </hbox>
-              <hbox pack="end" align="center" flex="1">
-                <checkbox id="isMinimized" oncommand="internoteManager.userEditsData()"
-                          label="&internote.isMinimizedCBox.label;" width="100px" />
-              </hbox>
+            <hbox align="center">
+              <label control="noteText" value="&internote.text.label;" class="editlabel" />
+              <spacer flex="1" />
+              <checkbox id="isMinimized" oncommand="internoteManager.userEditsData()"
+                        label="&internote.isMinimizedCBox.label;" />
             </hbox>
-            
-            <textbox id="noteText" multiline="true" oninput="internoteManager.userEditsData()" flex="1" />
+            <hbox flex="1">
+              <textbox id="noteText" multiline="true" oninput="internoteManager.userEditsData()" flex="1" spellcheck="true" />
+            </hbox>
             <grid>
               <columns>
                 <column />
-                <column flex="5" />
+                <column flex="1" />
               </columns>
               <rows>
                 <row align="center">
-                  <label class="editlabel" value="&internote.createTime.label;" width="100px" />
+                  <label class="editlabel" value="&internote.createTime.label;" />
                   <label id="noteCreateTime" value="" crop="end" />
                 </row>
                 <row align="center">
-                  <label class="editlabel" control="noteModfnTime" value="&internote.modfnTime.label;" width="100px" />
-                  <label id="noteModfnTime" value="" crop="end" />
+                  <label class="editlabel" control="noteModfnTime" value="&internote.modfnTime.label;" />
+                  <label id="noteModfnTime" value="" crop="end"/>
                 </row>
                 <row align="center">
-                  <label class="editlabel" value="&internote.backColor.label;" control="colorEntryBox" width="100px" />
+                  <label class="editlabel" value="&internote.backColor.label;" control="colorEntryBox" />
                   <menulist id="colorEntryBox">
                     <menupopup>
                       <menuitem value="0" label="&internote.bananaColor.value;" />
@@ -220,7 +216,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   </menulist>
                 </row>
                 <row align="center">
-                  <label class="editlabel" value="&internote.foreColor.label;" control="textColorEntryBox" width="100px" />
+                  <label class="editlabel" value="&internote.foreColor.label;" control="textColorEntryBox" />
                   <menulist id="textColorEntryBox">
                     <menupopup>
                       <menuitem value="0" label="&internote.charcoalColor.value;" />
@@ -235,11 +231,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
               </rows>
             </grid>
           </groupbox>
-          
           <groupbox>
             <caption label="&internote.thisNoteActions.caption;"/>
-            <hbox>
-              <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;" 
+            <hbox class="button-box">
+              <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;"
                       accesskey="&internote.deleteCurrentCmd.accesskey;" onclick="internoteManager.userDeletesNotes(false)" />
               <button id="resetCurrentNote"  label="&internote.resetCurrentCmd.label;"
                       accesskey="&internote.resetCurrentCmd.accesskey;" onclick="internoteManager.userResetsNotes (false)" />
@@ -247,14 +242,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           </groupbox>
         </vbox>
       </hbox>
-  
     </notificationbox>
   </notificationbox>
   
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
-  </stringbundleset>
+  <iframe id="internote-scratch-frame" src="about:blank" />
   
-  <iframe id="internote-scratch-frame" src="about:blank" style="max-height: 0; min-height: 0; overflow: hidden;"/>
-    
 </dialog>

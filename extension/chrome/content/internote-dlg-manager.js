@@ -33,7 +33,7 @@ suppressSelectionChangeEvents: false,
 noteBeingEdited: null,
 
 editingFields: ["noteURL", "colorEntryBox", "textColorEntryBox", "ignoreAnchor", "ignoreParams",
-                "deleteCurrentNote", "resetCurrentNote", "matchTypeEntryBox", "isMinimized"],
+                "deleteCurrentNote", "resetCurrentNote", "matchTypeEntryBox", "isMinimized", "goToLink"],
 
 actions: ["deleteSelected", "resetSelected", "exportSelected",
           "printSelected", "expandSelected", "collapseSelected"],
@@ -97,6 +97,19 @@ init: function()
                 this.utils.handleException("Exception caught when key pressed.", ex);
             }
         }), false);
+        
+        // We now lock the splitter in place by giving a width attribute to the right panel.
+        // This prevents the splitter stuttering with slight movements, when we later reload
+        // data in the right-side panel.
+        var dialog   = document.getElementById("internoteManagerDialog");
+        var splitter = document.getElementById("splitter");
+        
+        var nonSplitterWidth = dialog.width - splitter.width;
+        var rightWidth = Math.floor(nonSplitterWidth / 2);
+        var leftWidth  = nonSplitterWidth - rightWidth;
+        
+        document.getElementById("leftPanel" ).setAttribute("width", leftWidth );
+        document.getElementById("rightPanel").setAttribute("width", rightWidth);
     }
     catch (ex)
     {
@@ -346,11 +359,6 @@ clearNoteData : function ()
     
     this.isUpdating = true; // XXX Can you make this unnecessary?
     
-    document.getElementById("goToLink").style.color = "gray";
-    document.getElementById("goToLink").style.cursor = "";
-    
-    document.getElementById("splitter").setAttribute("state", "collapsed");
-    
     document.getElementById("noteText")      .value = "";
     document.getElementById("noteCreateTime").value = "";
     document.getElementById("noteModfnTime") .value = "";
@@ -480,23 +488,6 @@ setNoteData: function(note)
     }
     
     this.isUpdating = false;
-    
-    if (note != null)
-    {
-        // We now lock the splitter in place by giving a width attribute to the right panel.
-        // This prevents the splitter stuttering with slight movements, when we later reload
-        // data in the right-side panel.
-        var rightPanel = document.getElementById("rightPanel");
-        if (rightPanel.getAttribute("width") == "")
-        {
-            var dialog = document.getElementById("internoteManager");
-            var currentWidth = this.utils.removePx(getComputedStyle(dialog, null).width) / 2;
-            rightPanel.setAttribute("width", currentWidth);
-        }
-        
-        document.getElementById("splitter").setAttribute("state", "open");
-    }
-    
 },
 
 configureURLSection: function(note, category, url)
@@ -561,16 +552,8 @@ configureURLSection: function(note, category, url)
         ignoreParams.setAttribute("tooltiptext", ignoreParams.getAttribute("normaltooltiptext"));
     }
     
-    if (category == "regexp" || !this.isValidURLOrSite())
-    {
-        document.getElementById("goToLink").style.color  = "gray";
-        document.getElementById("goToLink").style.cursor = "";
-    }
-    else
-    {
-        document.getElementById("goToLink").style.color  = "blue";
-        document.getElementById("goToLink").style.cursor = "pointer";
-    }
+    var isLinkEnabled = (category != "regexp" && this.isValidURLOrSite());
+    this.utils.setEnabledIDs(document, "goToLink", isLinkEnabled);
 },
 
 checkForInvalidURL: function()

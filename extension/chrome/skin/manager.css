@@ -11,6 +11,22 @@ treechildren::-moz-tree-cell-text(url_regexp) {
     font-weight: bold;
 }
 
+.link {
+    text-decoration: underline;
+    
+    color:  blue;
+    cursor: pointer;
+}
+
+.link[disabled="true"] {
+    color:  gray;
+    cursor: default;
+}    
+
+.button-box {
+    overflow: hidden;
+}
+
 #searchButton {
     list-style-image: url("chrome://internote/skin/closesearch.png");
     -moz-image-region: rect(0 14px 14px 0px);
@@ -26,4 +42,14 @@ treechildren::-moz-tree-cell-text(url_regexp) {
 
 #searchButton[disabled="true"] {
     -moz-image-region: rect(0 56px 14px 42px);
+}
+
+#internote-scratch-frame {
+    height: 0px;
+    width:  0px;
+    overflow: hidden;
+}
+
+.button-box {
+    overflow: hidden;
 }
