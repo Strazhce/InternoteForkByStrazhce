@@ -102,7 +102,7 @@ init: function()
         // This prevents the splitter stuttering with slight movements, when we later reload
         // data in the right-side panel.
         var dialog   = document.getElementById("internoteManagerDialog");
-        var splitter = document.getElementById("splitter");
+        var splitter = document.getElementById("mainSplitter");
         
         var nonSplitterWidth = dialog.width - splitter.width;
         var rightWidth = Math.floor(nonSplitterWidth / 2);
@@ -1095,9 +1095,6 @@ initSearchResults: function(searchTerm)
 {
     this.searchMapping = [];
     
-    var resultsList = document.getElementById("resultsList");
-    resultsList.style.display = "";
-    
     var extraReevaluateEvents = ["noteEdited"];
     this.searchWatcher =
         new this.StorageWatcher(this.storage, null, extraReevaluateEvents, []);
@@ -1108,14 +1105,12 @@ initSearchResults: function(searchTerm)
     
     this.searchWatcher.updateFilter(this.getSearchFilter(searchTerm));
     
+    this.utils.setDisplayedIDs(document, ["resultsList", "searchSplitter"], true);
     this.utils.setEnabledIDs(document, "searchButton", true);
 },
 
 destroySearchResults: function()
 {
-    var resultsList = document.getElementById("resultsList");
-    resultsList.style.display = "none";
-    
     var searchResultsPane = document.getElementById("searchResultChildren");
     while (searchResultsPane.hasChildNodes())
     {
@@ -1125,7 +1120,8 @@ destroySearchResults: function()
     this.searchWatcher.destroy();
     this.searchWatcher = null;
     
-    this.utils.setEnabledIDs(document, "searchButton", false);
+    this.utils.setDisplayedIDs(document, ["resultsList", "searchSplitter"], false);
+    this.utils.setEnabledIDs(document, "searchButton", true);
 },
 
 updateSearchResults: function()

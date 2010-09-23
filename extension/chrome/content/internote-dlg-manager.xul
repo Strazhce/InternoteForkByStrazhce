@@ -122,6 +122,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </treecols>
             <treechildren />
           </tree>
+          <splitter id="searchSplitter" style="display: none;" />
           <tree id="resultsList" flex="1" onselect="internoteManager.userSelectsSearchElement();" hidecolumnpicker="true" style="display: none;">
             <treecols>
               <treecol id="elementsr" label="&internote.searchResults.label;" primary="true" flex="1"/>
@@ -139,7 +140,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <spacer width="5" />
           </hbox>
         </vbox>
-        <splitter id="splitter" collapse="after">
+        <splitter id="mainSplitter" collapse="after">
           <grippy />
         </splitter>
         <vbox flex="1" id="rightPanel">
