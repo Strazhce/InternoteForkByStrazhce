@@ -71,8 +71,6 @@ insertContributorsSection: function(installRDF, tagName, sectionID)
     {
         var label = document.createElement("label");
         label.setAttribute("value", this.utils.trim(peopleElts[i].firstChild.data));
-        label.setAttribute("class", "plain");
-        label.setAttribute("style", "font-size: 0.8em;");
         developersElt.appendChild(label);
     }
 },

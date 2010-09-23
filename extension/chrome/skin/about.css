@@ -1,0 +1,39 @@
+#internote-logo {
+    list-style-image: url("chrome://internote/skin/internote128.png");
+}
+
+.app-name {
+    font-size: 3em;
+}
+
+.version-number {
+    font-size: 1.5em;
+}
+
+.app-description {
+    font-size: 1.2em;
+}
+
+.app-licensing {
+    font-size: 0.8em;
+}
+
+.link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.contributors {
+    padding: 0px 10px;
+    font-size: 0.8em;
+}
+
+.contributors > label {
+    -moz-appearance:  none        !important;
+    background-color: transparent !important;
+    margin:           0px         !important;
+    padding:          0px         !important;
+    border:           none        !important;
+}
+
