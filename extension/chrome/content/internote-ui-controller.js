@@ -798,10 +798,10 @@ userResizesNote: function(event)
     try
     {
         this.utils.assertError(event != null, "Null event when starting drag.");
-    
+        
         var noteNum = this.utils.getNoteNum(event.target);
         var uiNote = this.uiNoteLookup[noteNum];
-    
+        
         var onDragMouseMoved = this.utils.bind(this, function(event, offset, uiNote) {
             // XXX Limit resize to viewport?
             this.screenSetModifiedNoteDims(uiNote, offset);
