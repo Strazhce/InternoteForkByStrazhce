@@ -53,3 +53,7 @@ treechildren::-moz-tree-cell-text(url_regexp) {
 .button-box {
     overflow: hidden;
 }
+
+tree {
+    overflow: hidden; /* Prevents scrollbar of a really small area overflowing. */
+}
