@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://internote/skin/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://internote/skin/overlay_mac.css" type="text/css"?>
 
 <!DOCTYPE overlay [
 <!ENTITY % mainDTD   SYSTEM "chrome://internote/locale/main.dtd"   >%mainDTD;

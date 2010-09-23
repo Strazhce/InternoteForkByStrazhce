@@ -1,7 +1,0 @@
-#newInternoteButton {
-  list-style-image: url("chrome://internote/skin/newnote32.png");
-}
-
-toolbar[iconsize="small"] #newInternoteButton {
-  list-style-image: url("chrome://internote/skin/newnote24.png");
-}
