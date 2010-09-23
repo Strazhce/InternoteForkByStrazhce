@@ -870,16 +870,15 @@ userDeletesNotes: function (shouldDeleteAllSelected)
     {
         var notesToDelete = shouldDeleteAllSelected ? this.getAllSelectedNotes() : [ this.noteBeingEdited ];
         
-        if (notesToDelete.length != 1)
+        if (notesToDelete.length == 0)
+        {
+            return;
+        }
+        else if (notesToDelete.length > 1)
         {
             // If there are multiple notes, we confirm regardless of the preference, due to the
             // danger.  This could be removed once there is undo.
             var confirmMessage = this.getLocaleString("DeleteMultipleConfirm");
-            var isConfirmed = confirm(confirmMessage);
-        }
-        else if (this.prefs.shouldAskBeforeDelete())
-        {
-            var confirmMessage = this.getLocaleString("DeleteSingleConfirm");
             var isConfirmed = confirm(confirmMessage);
         }
         else
