@@ -881,6 +881,11 @@ userDeletesNotes: function (shouldDeleteAllSelected)
             var confirmMessage = this.getLocaleString("DeleteMultipleConfirm");
             var isConfirmed = confirm(confirmMessage);
         }
+        else if (this.prefs.shouldAskBeforeDelete())
+        {
+            var confirmMessage = this.getLocaleString("DeleteSingleConfirm");
+            var isConfirmed = confirm(confirmMessage);
+        }
         else
         {
             var isConfirmed = true;
