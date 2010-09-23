@@ -973,25 +973,18 @@ userMinimizesNote: function(elementOrEvent)
         
         if (!note.isMinimized)
         {
+            var uiNote = this.uiNoteLookup[noteNum];
+            
             var currNoteRect = this.utils.makeRectFromDims(this.storage.getPos(note), this.storage.getDims(note));
             var viewportRect = this.utils.getViewportRect(window, this.currentBrowser);
+            
             if (this.utils.doRectsOverlap(viewportRect, currNoteRect))
             {
-                var animationDriver = this.noteAnimations[noteNum];
-                // XXX This will fail if animations off is ever added since that will instantaneously hurry the anim before we can add this?
-                this.utils.assertError(animationDriver != null, "Couldn't find restore animation.", animationDriver);
-                
-                animationDriver.addEventListener("animationCompleted", this.utils.bind(this, function()
-                {
-                    var uiNote = this.uiNoteLookup[noteNum];
-                    this.displayUI.focusNote(uiNote);
-                }));
+                this.handleNoteRestoredOnscreen(uiNote);
             }
             else
             {
-                this.showMessage("NoteDisappearedMessage", true, "GoThereLabel", this.utils.bind(this, function() {
-                    this.displayUI.scrollToNote(this.uiNoteLookup[noteNum]);
-                }));
+                this.handleNotesDisappeared(uiNote, false);
             }
         }
     }
@@ -1213,6 +1206,27 @@ userMinimizesAll: function(shouldBeMinimized)
             }
             
             this.storage.setIsMinimizedMulti(notes, shouldBeMinimized);
+            
+            if (!shouldBeMinimized)
+            {
+                var viewportRect = this.utils.getViewportRect(window, this.currentBrowser);
+                
+                var [onscreenNotes, offscreenNotes] = this.utils.filterSplit(this.allUINotes, this.utils.bind(this, function(uiNote) { 
+                    var currNoteRect = this.utils.makeRectFromDims(this.storage.getPos(uiNote.note),
+                                                                   this.storage.getDims(uiNote.note));
+                    return this.utils.doRectsOverlap(viewportRect, currNoteRect);
+                }));
+                
+                if (onscreenNotes.length >= 1)
+                {
+                    this.handleNoteRestoredOnscreen(onscreenNotes[0]);
+                }
+                
+                if (offscreenNotes.length >= 1)
+                {
+                    this.handleNotesDisappeared(offscreenNotes[0], this.allUINotes.length >= 2);
+                }
+            }
         }
     }
     catch (ex)
@@ -1392,6 +1406,27 @@ userSetsDefaultColors: function()
     {
         this.utils.handleException("Exception caught when setting default colors.", ex);
     }
+},
+
+handleNoteRestoredOnscreen: function(uiNote)
+{
+    var animationDriver = this.noteAnimations[uiNote.num];
+    // XXX This will fail if animations off is ever added since that will instantaneously hurry the anim before we can add this?
+    this.utils.assertError(animationDriver != null, "Couldn't find restore animation.", animationDriver);
+    
+    animationDriver.addEventListener("animationCompleted", this.utils.bind(this, function()
+    {
+        this.displayUI.focusNote(uiNote);
+    }));
+},
+
+handleNotesDisappeared: function(firstUINote, areMultiple)
+{
+    var messageName = areMultiple ? "NotesDisappearedMessage" : "NoteDisappearedMessage";
+    this.showMessage(messageName, true, "GoThereLabel", this.utils.bind(this, function() {
+        this.displayUI.scrollToNote(this.uiNoteLookup[firstUINote.num]);
+        this.displayUI.focusNote(firstUINote);
+    }));
 },
 
 //////////////////////

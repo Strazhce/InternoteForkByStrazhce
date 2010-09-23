@@ -979,6 +979,21 @@ filterMap: function(arr, func)
     return results;
 },
 
+filterSplit: function(arr, func)
+{
+    var trueResults  = [];
+    var falseResults = [];
+    
+    for (var i = 0; i < arr.length; i++)
+    {
+        var passesTest = func(arr[i]);
+        var resultsSet = passesTest ? trueResults : falseResults;
+        resultsSet.push(arr[i]);
+    }
+    
+    return [trueResults, falseResults];
+},
+
 sgn: function(x)
 {
     if      (x < 0) return -1;
