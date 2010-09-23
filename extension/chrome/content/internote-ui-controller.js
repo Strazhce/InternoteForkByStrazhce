@@ -1935,6 +1935,29 @@ screenCreateNote: function(uiNote, shouldAnimate)
     
     this.displayUI.addNote(uiNote, posOnViewport, noteDims);
     
+    // Handle TAB key in a general way.  Not all display UIs support it otherwise
+    // (since offscreen stuff might not exist), Shift-TAB in the popup pane will
+    // alternate rather than go backwards for some reason.
+    this.noteUI.addTabListener(uiNote, this.utils.bind(this, function(isBackward)
+    {
+        this.utils.assertError(!uiNote.note.isMinimized, "Tabbed from minimized note.", uiNote.note);
+        
+        var index = this.allUINotes.indexOf(uiNote);
+        var len = this.allUINotes.length;
+        var nextUINote;
+        
+        var offset = isBackward ? -1 : +1;
+        
+        do
+        {
+            index = (index + offset + len) % len; // len is adding to prevent it ever going negative
+            nextUINote = this.allUINotes[index];
+        }
+        while (nextUINote.note.isMinimized);
+        
+        this.displayUI.scrollToNote(nextUINote);
+    }));
+    
     // Animation should be the very last thing so it doesn't get interrupted by other CPU tasks.
     if (shouldAnimate && this.displayUI.supportsTranslucency())
     {

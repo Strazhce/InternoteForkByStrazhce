@@ -90,6 +90,28 @@ addFocusListener: function(uiNote, func)
     uiNote.textArea.addEventListener("focus", func, false);
 },
 
+addTabListener: function(uiNote, func)
+{
+    uiNote.textArea.addEventListener("keypress", this.utils.bind(this, function(ev)
+    {
+        try
+        {
+            this.utils.assertError(!uiNote.note.isMinimized, "Tabbed from minimized note.", uiNote.note);
+            
+            if (ev.keyCode == ev.DOM_VK_TAB)
+            {
+                func(ev.shiftKey);
+                ev.preventDefault();
+                ev.stopPropagation();
+            }
+        }
+        catch (ex)
+        {
+            this.utils.handleException("Exception caught when handling key press.", ex);
+        }
+    }), false);
+},
+
 makeUINote: function(note)
 {
     // We use this inner function so UINote is not global yet it isn't anonymous for debugging.

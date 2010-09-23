@@ -213,49 +213,6 @@ iFrameLoaded: function(uiNote)
         }
         
         this.noteUI.noteShown(uiNote);
-        
-        uiNote.textArea.addEventListener("keypress", this.utils.bind(this, function(ev)
-        {
-            try
-            {
-                if (ev.keyCode == ev.DOM_VK_TAB)
-                {
-                    this.utils.assertError(!uiNote.note.isMinimized, "Tabbed from minimized note.", uiNote.note);
-                    
-                    var index = this.allUINotes.indexOf(uiNote);
-                    var len = this.allUINotes.length;
-                    var nextUINote;
-                    
-                    if (ev.shiftKey)
-                    {
-                        do
-                        {
-                            index = (index - 1 + len) % len;
-                            nextUINote = this.allUINotes[index];
-                        }
-                        while (nextUINote.note.isMinimized);
-                    }
-                    else
-                    {
-                        do
-                        {
-                            index = (index + 1) % len;
-                            nextUINote = this.allUINotes[index];
-                        }
-                        while (nextUINote.note.isMinimized);
-                    }
-                    
-                    this.scrollToNote(nextUINote);
-                    
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                }
-            }
-            catch (ex)
-            {
-                this.utils.handleException("Exception caught when handling key press.", ex);
-            }
-        }), false);
     }
     catch (ex)
     {
