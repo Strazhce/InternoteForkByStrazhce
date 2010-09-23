@@ -359,18 +359,18 @@ clearNoteData : function ()
     
     this.isUpdating = true; // XXX Can you make this unnecessary?
     
-    document.getElementById("noteText")      .value = "";
-    document.getElementById("noteCreateTime").value = "";
-    document.getElementById("noteModfnTime") .value = "";
-    document.getElementById("noteURL")       .value = "";
+    this.updateText("noteText",       "");
+    this.updateText("noteCreateTime", "");
+    this.updateText("noteModfnTime",  "");
+    this.updateText("noteURL",        "");
     
-    document.getElementById("colorEntryBox"    ).value = 0;
-    document.getElementById("textColorEntryBox").value = 0;
-    document.getElementById("matchTypeEntryBox").value = 0;
+    this.updateList("colorEntryBox",     0);
+    this.updateList("textColorEntryBox", 0);
+    this.updateList("matchTypeEntryBox", 0);
     
-    document.getElementById("isMinimized") .checked = "";
-    document.getElementById("ignoreAnchor").checked = "";
-    document.getElementById("ignoreParams").checked = "";
+    this.updateCheck("isMinimized",  "");
+    this.updateCheck("ignoreAnchor", "");
+    this.updateCheck("ignoreParams", "");
     
     this.utils.setEnabledIDs(document, this.editingFields, false);
     this.utils.setEnabledElts(document.getElementsByClassName("editlabel"), false);
@@ -383,12 +383,23 @@ clearNoteData : function ()
     notificationBox.removeAllNotifications(true);
 },
 
-updateValue: function(id, value)
+updateText: function(id, value)
 {
     var elt = document.getElementById(id);
     if (elt.value != value)
     {
         elt.value = value;
+        elt.setAttribute("tooltiptext", value);
+    }
+},
+
+updateList: function(id, value)
+{
+    var elt = document.getElementById(id);
+    if (elt.value != value)
+    {
+        elt.value = value;
+        elt.setAttribute("tooltiptext", elt.selectedItem.getAttribute("label"));
     }
 },
 
@@ -453,17 +464,18 @@ setNoteData: function(note)
             }
         }
         
-        this.updateValue("noteText",          note.text);
-        this.updateValue("noteCreateTime",    convertTime(note.createTime));
-        this.updateValue("noteModfnTime",     convertTime(note.modfnTime));
-        this.updateValue("noteURL",           note.url);
-        this.updateValue("matchTypeEntryBox", note.matchType);
-        this.updateValue("colorEntryBox",     backColor);
-        this.updateValue("textColorEntryBox", foreColor);
+        this.updateText("noteText",       note.text);
+        this.updateText("noteCreateTime", convertTime(note.createTime));
+        this.updateText("noteModfnTime",  convertTime(note.modfnTime));
+        this.updateText("noteURL",        note.url);
         
-        this.updateCheck("isMinimized",       note.isMinimized );
-        this.updateCheck("ignoreAnchor",      note.ignoreAnchor);
-        this.updateCheck("ignoreParams",      note.ignoreParams);
+        this.updateList("matchTypeEntryBox", note.matchType);
+        this.updateList("colorEntryBox",     backColor);
+        this.updateList("textColorEntryBox", foreColor);
+        
+        this.updateCheck("isMinimized",  note.isMinimized );
+        this.updateCheck("ignoreAnchor", note.ignoreAnchor);
+        this.updateCheck("ignoreParams", note.ignoreParams);
         
         this.utils.setEnabledIDs(document, this.editingFields, true);
         this.utils.setEnabledElts(document.getElementsByClassName("editlabel"), true);
