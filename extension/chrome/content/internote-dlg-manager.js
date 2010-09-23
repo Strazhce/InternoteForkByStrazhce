@@ -889,8 +889,6 @@ userDeletesNotes: function (shouldDeleteAllSelected)
         
         if (isConfirmed)
         {
-            var notesToDelete = shouldDeleteAllSelected ? this.getAllSelectedNotes() : [ this.noteBeingEdited ];
-            
             for (var i = 0; i < notesToDelete.length; i++)
             {
                 this.storage.removeNote(notesToDelete[i]);
@@ -1194,7 +1192,7 @@ openURL : function ()
                 this.utils.openURL(noteURL);
                 
                 // Close the manager.
-                document.getElementById("internoteManager").acceptDialog();
+                document.getElementById("internoteManagerDialog").acceptDialog();
             }
         }
     }
