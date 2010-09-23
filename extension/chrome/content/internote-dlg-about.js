@@ -35,7 +35,7 @@ init: function()
             var internoteVersion = this.utils.getInternoteVersion(installRDF);
             this.fixVersionNumber(internoteVersion);
             this.insertContributors(installRDF);
-            this.fixDescription(installRDF);
+            this.fixDescription();
         }
         else
         {
@@ -82,11 +82,9 @@ fixVersionNumber: function(internoteVersion)
     document.getElementById("version-number").setAttribute("value", internoteVersion);
 },
 
-fixDescription: function(installRDF)
+fixDescription: function()
 {
-    var descElt = installRDF.getElementsByTagName("em:description", this.MOZ_RDF_URL)[0];
-    var descText = descElt.firstChild.data;
-    
+    var descText = this.getLocaleString("extensions.{e3631030-7c02-11da-a72b-0800200c9a66}.description")
     document.getElementById("app-description").setAttribute("value", descText);
 },
 
