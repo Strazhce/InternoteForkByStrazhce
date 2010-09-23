@@ -1126,10 +1126,7 @@ initSearchResults: function(searchTerm)
 destroySearchResults: function()
 {
     var searchResultsPane = document.getElementById("searchResultChildren");
-    while (searchResultsPane.hasChildNodes())
-    {
-        searchResultsPane.removeChild(searchResultsPane.firstChild);
-    }
+    this.utils.removeAllChildNodes(searchResultsPane);
     
     this.searchWatcher.destroy();
     this.searchWatcher = null;
