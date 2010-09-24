@@ -148,7 +148,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <caption label="&internote.noteScope.caption;"/>
             <hbox align="center">
               <label control="matchTypeEntryBox" value="&internote.noteMatchType.label;" class="editlabel" />
-              <menulist id="matchTypeEntryBox" align="center" flex="1">
+              <menulist id="matchTypeEntryBox" align="center" flex="1" sizetopopup="none">
                 <menupopup>
                   <menuitem value="0" label="&internote.urlMatchExact.value;" />
                   <menuitem value="2" label="&internote.urlMatchStarts.value;" />
