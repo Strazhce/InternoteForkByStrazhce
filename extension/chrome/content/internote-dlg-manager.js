@@ -1132,7 +1132,7 @@ destroySearchResults: function()
     this.searchWatcher = null;
     
     this.utils.setDisplayedIDs(document, ["resultsList", "searchSplitter"], false);
-    this.utils.setEnabledIDs(document, "searchButton", true);
+    this.utils.setEnabledIDs(document, "searchButton", false);
 },
 
 updateSearchResults: function()
