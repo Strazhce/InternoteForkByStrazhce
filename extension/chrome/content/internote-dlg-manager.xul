@@ -145,7 +145,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         </splitter>
         <vbox flex="1" id="rightPanel">
           <groupbox>
-            <caption label="&internote.noteScope.caption;"/>
+            <caption label="&internote.noteScope.caption;" class="editlabel"/>
             <hbox align="center">
               <label control="matchTypeEntryBox" value="&internote.noteMatchType.label;" class="editlabel" />
               <menulist id="matchTypeEntryBox" align="center" flex="1" sizetopopup="none">
@@ -179,7 +179,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </hbox>
           </groupbox>
           <groupbox flex="1">
-            <caption label="&internote.noteData.caption;"/>
+            <caption label="&internote.noteData.caption;" class="editlabel" />
             <hbox align="center">
               <label control="noteText" value="&internote.text.label;" class="editlabel" />
               <spacer flex="1" />
@@ -233,7 +233,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </grid>
           </groupbox>
           <groupbox>
-            <caption label="&internote.thisNoteActions.caption;"/>
+            <caption label="&internote.thisNoteActions.caption;" class="editlabel" />
             <hbox class="button-box">
               <button id="deleteCurrentNote" label="&internote.deleteCurrentCmd.label;"
                       accesskey="&internote.deleteCurrentCmd.accesskey;" onclick="internoteManager.userDeletesNotes(false)" />

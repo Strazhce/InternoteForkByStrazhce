@@ -21,7 +21,11 @@ treechildren::-moz-tree-cell-text(url_regexp) {
 .link[disabled="true"] {
     color:  gray;
     cursor: default;
-}    
+}
+
+caption[disabled="true"] {
+	color: gray;
+}
 
 .button-box {
     overflow: hidden;
