@@ -37,14 +37,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
   <prefpane id="generalPrefsPane" label="&internote.generalPrefsPane.title;" flex="1">
     <preferences>
-      <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
-      <preference id="backColorPreference"       name="internote.defaultnotecolor" type="string"/>
-      <preference id="foreColorPreference"       name="internote.defaulttextcolor" type="string"/>
-      <preference id="defaultPositionPreference" name="internote.defaultposition"  type="string"/>
-      <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
-      <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
-      <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
-      <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
+      <preference id="statusbarPreference"       name="internote.usestatusbar"    type="bool"/>
+      <preference id="askBeforeDeletePreference" name="internote.askbeforedelete" type="bool"/>
+      <preference id="changeLocationPreference"  name="internote.changelocation"  type="bool"/>
+      <preference id="saveLocationPreference"    name="internote.savelocation"    type="string"/>
     </preferences>
     <groupbox>
       <caption label="&internote.generalPrefs.caption;"/>
@@ -53,21 +49,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     </groupbox>
     <groupbox>
       <caption label="&internote.storagePrefs.caption;"/>
-      <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;"/>
-      <hbox>
-        <textbox id="saveFolderField" flex="1" />
-        <button id="chooseFolder" label="&internote.browseButton.label;" />
-      </hbox>
+      <checkbox id="alternativeLocationCheckbox" label="&internote.useAlternativeCBox.label;" preference="changeLocationPreference" />
+      <notificationbox id="saveLocationWarning">
+        <hbox>
+          <textbox id="saveLocationField" flex="1" preference="saveLocationPreference"
+                   oninput="internotePrefsDialog.checkSaveLocation();" />
+          <button id="chooseFolder" label="&internote.browseButton.label;" />
+        </hbox>
+      </notificationbox>
       <description class="storagelabel">&internote.storageRestartProviso.desc;</description>
       <description class="storagelabel">&internote.storageMoveProviso.desc;</description>
     </groupbox>
   </prefpane>
   <prefpane id="appearancePrefsPane" label="&internote.appearancePrefsPane.title;" flex="1">
     <preferences>
-      <preference id="statusbarPreference"       name="internote.usestatusbar"    type="bool"/>
-      <preference id="saveLocationPreference"    name="internote.savelocation"    type="file"/>
-      <preference id="changeLocationPreference"  name="internote.changelocation"  type="bool"/>
-      <preference id="askBeforeDeletePreference" name="internote.askbeforedelete" type="bool"/>
+      <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
+      <preference id="backColorPreference"       name="internote.defaultnotecolor" type="string"/>
+      <preference id="foreColorPreference"       name="internote.defaulttextcolor" type="string"/>
+      <preference id="defaultPositionPreference" name="internote.defaultposition"  type="string"/>
+      <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
+      <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
+      <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
+      <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
     </preferences>
     <groupbox>
       <caption label="&internote.defaultStylePrefs.caption;" />
@@ -149,8 +152,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <checkbox id="defaultTransCheckBox"  preference="transparencyPreference"  label="&internote.useTranslucencyCBox.label;" />
       <checkbox id="scrollbarCheckBox"     preference="nativeScrollPreference"  label="&internote.useNativeScrollCBox.label;" />
     </groupbox>
-    <!-- Work around bug #343964 -->
-    <separator height="60" />
+    <!-- Work around bug #343964 and provide space for notification box message. -->
+    <separator height="100" />
   </prefpane>
 
   <stringbundleset id="stringbundleset">

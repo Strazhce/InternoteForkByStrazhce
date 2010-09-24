@@ -28,19 +28,15 @@ init: function()
     this.utils.init(window);
     this.prefs.init();
     
-    document.getElementById("saveFolderField").value = this.prefs.getSaveLocationPref();
-    
     this.alternativeLocationCheckbox = document.getElementById("alternativeLocationCheckbox");
-    this.saveFolderField             = document.getElementById("saveFolderField");
+    this.saveLocationField           = document.getElementById("saveLocationField");
     this.chooseFolderButton          = document.getElementById("chooseFolder");
     
-    this.alternativeLocationCheckbox.checked = this.prefs.shouldUseOtherSaveLoc();
-    this.saveFolderField            .value   = this.prefs.getSaveLocationPref();
-    
     this.utils.addBoundDOMEventListener(this.alternativeLocationCheckbox, "click",   this, "userTogglesLocationCheckbox", false);
-    this.utils.addBoundDOMEventListener(this.chooseFolderButton,          "command", this, "userSetsSaveLocation",      false);
+    this.utils.addBoundDOMEventListener(this.chooseFolderButton,          "command", this, "userBrowsesSaveLocation",     false);
     
     this.userTogglesLocationCheckbox();
+    this.checkSaveLocation();
 },
 
 getLocaleString: function(messageName)
@@ -52,36 +48,72 @@ onAccept: function()
 {
     try
     {
-        if (!this.alternativeLocationCheckbox.checked || this.saveFolderField.value == "")
+        if (!this.alternativeLocationCheckbox.checked)
         {
-            this.prefs.setSaveLocationPref(null);
             return true;
         }
         else
         {
-            var dir = this.utils.getFile(this.saveFolderField.value);
+            var saveLocation = this.saveLocationField.value;
+            var dir = this.utils.getFileOrNull(saveLocation);
+            var dirExists = (dir != null && dir.exists());
             
-            if (!dir.exists())
+            if (!dirExists)
             {
                 alert(this.getLocaleString("DirDoesntExistError"));
-                return false;
             }
-            else
-            {
-                this.prefs.setSaveLocationPref(this.saveFolderField.value);
-                return true;
-            }
+            
+            return dirExists;
         }
     }
     catch (ex)
     {
         this.utils.handleException("Error validating storage directory.", ex);
-        alert(this.getLocaleString("DirDoesntExistError"));
         return false;
     }
 },
 
-userSetsSaveLocation: function ()
+checkSaveLocation: function()
+{
+    try
+    {
+        if (this.alternativeLocationCheckbox.checked)
+        {
+            var saveLocation = this.saveLocationField.value;
+            var dir = this.utils.getFileOrNull(saveLocation);
+            var dirExists = (dir != null && dir.exists());
+            
+            var notificationBox = document.getElementById("saveLocationWarning");
+            var warningExists = (notificationBox.currentNotification != null);
+            
+            if (dirExists && warningExists)
+            {
+                notificationBox.removeAllNotifications();
+            }
+            else if (!dirExists && !warningExists)
+            {
+                var message = this.getLocaleString("DirDoesntExistError");
+                notificationBox.appendNotification(message, "direrror", null, notificationBox.PRIORITY_WARNING_HIGH);
+            }
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when user changed save location.", ex);
+    }
+},
+
+changeSaveLocation: function(path)
+{
+    this.saveLocationField.value = path;
+    
+    // Let the preference system know about the change.
+    var ev = document.createEvent("Event");
+    ev.initEvent("change", true, false);
+    this.saveLocationField.dispatchEvent(ev);
+},
+
+userBrowsesSaveLocation: function ()
 {
     try
     {
@@ -101,8 +133,10 @@ userSetsSaveLocation: function ()
         if (picker.show() == nsIFilePicker.returnOK)
         {
             var saveDir = picker.file.QueryInterface(this.utils.getCIInterface("nsILocalFile"));
-            this.saveFolderField.value = saveDir.path;
+            this.changeSaveLocation(saveDir.path);
         }
+        
+        this.checkSaveLocation();
     }
     catch (ex)
     {
@@ -114,13 +148,13 @@ userTogglesLocationCheckbox: function(ev)
 {
     try
     {
-		var isEnabled = this.alternativeLocationCheckbox.checked;
-		this.utils.setEnabledElts([this.saveFolderField, this.chooseFolderButton], isEnabled);
-		this.utils.setEnabledElts(document.getElementsByClassName("storagelabel"), isEnabled);
-		
+        var isEnabled = this.alternativeLocationCheckbox.checked;
+        this.utils.setEnabledElts([this.saveLocationField, this.chooseFolderButton], isEnabled);
+        this.utils.setEnabledElts(document.getElementsByClassName("storagelabel"), isEnabled);
+        
         if (!isEnabled)
         {
-            this.saveFolderField.value = this.utils.getProfileDir().path;
+            this.changeSaveLocation(this.utils.getProfileDir().path);
         }
     }
     catch (ex)

@@ -132,6 +132,36 @@ getFile: function(path)
     return dir;
 },
 
+getFileOrNull: function(path)
+{
+    try
+    {
+        if (path == "")
+        {
+            return null;
+        }
+        
+        var file = this.getFile(path);
+        
+        if (file.exists())
+        {
+            return file;
+        }
+        else
+        {
+            return null;
+        }
+    }
+    catch (ex)
+    {
+        if (ex.name != "NS_ERROR_FILE_UNRECOGNIZED_PATH")
+        {
+            this.utils.handleException("Exception caught while getting file.", ex);
+        }
+        return null;
+    }
+},
+
 pushArray: function(target, source, targetIndex)
 {
     if (targetIndex == null) targetIndex = target.length;

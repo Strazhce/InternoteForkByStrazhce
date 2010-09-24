@@ -147,15 +147,7 @@ getSaveLocationPref: function()
 getModifiedSaveLocation: function()
 {
     var loc = this.getSaveLocationPref();
-    
-    if (loc == "")
-    {
-        return null;
-    }
-    else
-    {
-        return this.utils.getFile(loc);
-    }
+    return this.utils.getFileOrNull(loc);
 },
 
 // XXX Demagic
