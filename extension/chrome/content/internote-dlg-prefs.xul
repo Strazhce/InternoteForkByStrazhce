@@ -58,8 +58,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <textbox id="saveFolderField" flex="1" />
         <button id="chooseFolder" label="&internote.browseButton.label;" />
       </hbox>
-      <description>&internote.storageRestartProviso.desc;</description>
-      <description>&internote.storageMoveProviso.desc;</description>
+      <description class="storagelabel">&internote.storageRestartProviso.desc;</description>
+      <description class="storagelabel">&internote.storageMoveProviso.desc;</description>
     </groupbox>
   </prefpane>
   <prefpane id="appearancePrefsPane" label="&internote.appearancePrefsPane.title;" flex="1">

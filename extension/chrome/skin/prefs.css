@@ -18,3 +18,6 @@ radio[pane=appearancePrefsPane]:hover, radio[pane=appearancePrefsPane][selected=
     -moz-image-region: rect(32px, 64px, 64px, 32px)
 }
 
+description[disabled="true"] {
+	color: gray;
+}

@@ -114,16 +114,13 @@ userTogglesLocationCheckbox: function(ev)
 {
     try
     {
-        if (this.alternativeLocationCheckbox.checked)
-        {
-            this.saveFolderField.disabled = "";
-            this.chooseFolderButton.disabled = "";
-        }
-        else
+		var isEnabled = this.alternativeLocationCheckbox.checked;
+		this.utils.setEnabledElts([this.saveFolderField, this.chooseFolderButton], isEnabled);
+		this.utils.setEnabledElts(document.getElementsByClassName("storagelabel"), isEnabled);
+		
+        if (!isEnabled)
         {
             this.saveFolderField.value = this.utils.getProfileDir().path;
-            this.saveFolderField.disabled = "true";
-            this.chooseFolderButton.disabled = "true";
         }
     }
     catch (ex)
