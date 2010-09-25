@@ -60,7 +60,7 @@ onAccept: function()
             
             if (!dirExists)
             {
-                alert(this.getLocaleString("DirDoesntExistError"));
+				this.utils.alert(window, "DirDoesntExistError", "DirDoesntExistTitle");
             }
             
             return dirExists;

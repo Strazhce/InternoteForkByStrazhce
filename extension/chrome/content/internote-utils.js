@@ -1156,6 +1156,45 @@ translateMovement: function(timeRatioDone)
     return (1 - Math.cos(timeRatioDone * Math.PI)) / 2;
 },
 
+alert: function(window, messageName, titleName)
+{
+	var promptService = this.getCCService("@mozilla.org/embedcomp/prompt-service;1", "nsIPromptService");
+    var messageText = this.getLocaleString(window.document, messageName);
+	var titleText   = this.getLocaleString(window.document, titleName  );
+	promptService.alert(window, titleText, messageText);
+},
+
+confirm: function(window, messageName, titleName)
+{
+	var promptService = this.getCCService("@mozilla.org/embedcomp/prompt-service;1", "nsIPromptService");
+	this.dumpTraceData(messageName);
+	this.dumpTraceData(titleName);
+    var messageText = this.getLocaleString(window.document, messageName);
+	var titleText   = this.getLocaleString(window.document, titleName  );
+	this.dumpTraceData(messageText);
+	this.dumpTraceData(titleText);
+	return promptService.confirm(window, titleText, messageText);
+},
+
+confirmCheck: function(window, messageName, titleName, checkName, checkCallback)
+{
+	var promptService = this.getCCService("@mozilla.org/embedcomp/prompt-service;1", "nsIPromptService");
+    var messageText = this.getLocaleString(window.document, messageName);
+	var titleText   = this.getLocaleString(window.document, titleName  );
+	var checkText   = this.getLocaleString(window.document, checkName  );
+	
+	var isChecked = {value: false};
+	
+	var result = promptService.confirmCheck(window, titleText, messageText, checkText, isChecked);
+	
+	if (isChecked.value)
+	{
+		checkCallback();
+	}
+	
+	return result;
+},
+
 });
 
 }

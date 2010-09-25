@@ -291,9 +291,7 @@ maybeDisplayNotes: function()
 {
     if (!this.storage.areNotesDisplaying)
     {
-        var displayMessage = this.getLocaleString("DisplayQuestion");
-        
-        var shouldDisplay = confirm(displayMessage);
+        var shouldDisplay = this.utils.confirm(window, "DisplayQuestion", "DisplayQuestionTitle");
         
         if (shouldDisplay) {
             this.storage.toggleNoteDisplay();
@@ -772,7 +770,11 @@ userRemovesNote: function(elementOrEvent)
             if (this.prefs.shouldAskBeforeDelete())
             {
                 // While notes are popups they are not affected by modality, so we need a special method.
-                deleteConfirmed = this.confirmDialog(this.getLocaleString("DeleteSingleConfirm"));
+                deleteConfirmed = this.confirmCheckDialog("DeleteSingleConfirm", "DeleteConfirmTitle", "NeverAskOption",
+				    this.utils.bind(this, function()
+					{
+						this.prefs.setAskBeforeDelete(false);
+					}));
             }
             
             if (deleteConfirmed)
@@ -2898,7 +2900,7 @@ maybeShowOffscreenMessage: function()
 //////////////////////////////
 
 // While the notes are in popups modal dialogs won't disable them, so we need to do so manually.
-confirmDialog: function(text)
+confirmCheckDialog: function(messageName, titleName, checkName, checkCallback)
 {
     this.hurryAllNoteAnimations();
     
@@ -2907,7 +2909,7 @@ confirmDialog: function(text)
         this.noteUI.setIsEnabled(this.allUINotes[i], false);
     }
     
-    var confirmResult = confirm(text);
+    var confirmResult = this.utils.confirmCheck(window, messageName, titleName, checkName, checkCallback);
     
     for (var i = 0; i < this.allUINotes.length ; i++)
     {
