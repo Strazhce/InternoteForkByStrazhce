@@ -44,35 +44,6 @@ getLocaleString: function(messageName)
     return this.utils.getLocaleString(document, messageName);
 },
 
-onAccept: function()
-{
-    try
-    {
-        if (!this.alternativeLocationCheckbox.checked)
-        {
-            return true;
-        }
-        else
-        {
-            var saveLocation = this.saveLocationField.value;
-            var dir = this.utils.getFileOrNull(saveLocation);
-            var dirExists = (dir != null && dir.exists());
-            
-            if (!dirExists)
-            {
-				this.utils.alert(window, "DirDoesntExistError", "DirDoesntExistTitle");
-            }
-            
-            return dirExists;
-        }
-    }
-    catch (ex)
-    {
-        this.utils.handleException("Error validating storage directory.", ex);
-        return false;
-    }
-},
-
 checkSaveLocation: function()
 {
     try

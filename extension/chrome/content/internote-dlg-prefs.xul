@@ -32,7 +32,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
             title="&internote.prefsDialog.title;"
             onload="internotePrefsDialog.init();"
-            ondialogaccept="return internotePrefsDialog.onAccept();"
             maxwidth="390">
 
   <prefpane id="generalPrefsPane" label="&internote.generalPrefsPane.title;" flex="1">
