@@ -333,10 +333,9 @@ getURLTreeIndex: function(searchURL)
     return -1;
 },
 
-getRowNote: function(treeIndex)
+getRowNoteNum: function(treeIndex)
 {
-    var noteNum = this.treeView.treeData[treeIndex][this.treeView.COL_LOOKUP];
-    return this.storage.allNotes[noteNum];
+    return this.treeView.treeData[treeIndex][this.treeView.COL_LOOKUP];
 },
 
 getNotesToActUpon: function(shouldActUponSelection)
@@ -669,7 +668,7 @@ getSingleSelectedRow: function(selection)
     return treeIndex.value;
 },
 
-userSelectsElement: function(mainTree, otherTree, getNotesFunc)
+userSelectsElement: function(mainTree, otherTree, getNoteNumsFunc)
 {
     //dump("internoteManager.userSelectsTreeElement\n");
     
@@ -699,7 +698,9 @@ userSelectsElement: function(mainTree, otherTree, getNotesFunc)
         var treeIndex = this.getSingleSelectedRow(mainSelection);
         if (!mainTree.isContainer(treeIndex))
         {
-            this.setNoteData(getNotesFunc(treeIndex)[0]);
+            var noteNum = this.utils.getSingleElement(getNoteNumsFunc(treeIndex));
+            var note = this.storage.allNotes[noteNum]
+            this.setNoteData(note);
         }
         else
         {
@@ -717,7 +718,7 @@ userSelectsTreeElement: function()
     try
     {
         var resultsList = document.getElementById("resultsList");
-        this.userSelectsElement(this.treeView, resultsList.view, this.utils.bind(this, this.getNotesFromTree));
+        this.userSelectsElement(this.treeView, resultsList.view, this.utils.bind(this, this.getNoteNumsFromTree));
     }
     catch (ex)
     {
@@ -730,7 +731,7 @@ userSelectsSearchElement: function()
     try
     {
         var resultsList = document.getElementById("resultsList");
-        this.userSelectsElement(resultsList.view, this.treeView, this.utils.bind(this, this.getNotesFromSearch));
+        this.userSelectsElement(resultsList.view, this.treeView, this.utils.bind(this, this.getNoteNumsFromSearch));
     }
     catch (ex)
     {
@@ -803,9 +804,9 @@ userResetsNotes: function(shouldResetAllSelected)
     }
 },
 
-getViewSelectedNotes: function(treeView, getNotesFunc)
+getViewSelectedNoteNums: function(treeView, getNoteNumsFunc)
 {
-    //dump("internoteManager.getViewSelectedNotes\n");
+    //dump("internoteManager.getViewSelectedNoteNums\n");
     
     // Convert a list of selected ranges of notes to a straight list of notes.
     var start = {};
@@ -819,49 +820,50 @@ getViewSelectedNotes: function(treeView, getNotesFunc)
         selection.getRangeAt(t, start, end);
         for (var v = start.value; v <= end.value; v++)
         {
-            this.utils.pushArray(selectedNotes, getNotesFunc(v));
+            this.utils.pushArray(selectedNotes, getNoteNumsFunc(v));
         }
     }
     
-    //selectedNotes.sort(this.utils.numericSort);
-    
-    return selectedNotes;
+    // We must remove dupes, eg if we select a note and its category too.
+    return this.utils.getSortedUniqueValues(selectedNotes);
 },
 
-getNotesFromTree: function(treeIndex)
+getNoteNumsFromTree: function(treeIndex)
 {
     if (this.treeView.isContainer(treeIndex))
     {
         var urlData = this.treeView.treeData[treeIndex][this.treeView.COL_LOOKUP];
-        return this.treeView.getNotesForManagerURLData(urlData);
+        return this.treeView.getNotesForManagerURLData(urlData).map(function(note)
+        {
+            return note.num;
+        });
     }
     else
     {
-        return [this.getRowNote(treeIndex)];
+        return [this.getRowNoteNum(treeIndex)];
     }
 },
 
-getNotesFromSearch: function(treeIndex)
+getNoteNumsFromSearch: function(treeIndex)
 {
-    var noteNum = this.searchMapping[treeIndex];
-    return [this.storage.allNotes[noteNum]];
+    return this.searchMapping[treeIndex];
 },
 
 // XXX What a ridiculous kludge.
 getAllSelectedNotes: function()
 {
-    var selectedNotes = this.getViewSelectedNotes(this.treeView, this.utils.bind(this, this.getNotesFromTree));
+    var selectedNoteNums = this.getViewSelectedNoteNums(this.treeView, this.utils.bind(this, this.getNoteNumsFromTree));
     
-    if (selectedNotes.length == 0)
+    if (selectedNoteNums.length == 0)
     {
         var resultsList = document.getElementById("resultsList");
         if (resultsList.view != null)
         {
-            selectedNotes = this.getViewSelectedNotes(resultsList.view, this.utils.bind(this, this.getNotesFromSearch));
+            selectedNoteNums = this.getViewSelectedNoteNums(resultsList.view, this.utils.bind(this, this.getNoteNumsFromSearch));
         }
     }
     
-    return selectedNotes;
+    return selectedNoteNums.map(function(noteNum) { return this.storage.allNotes[noteNum]; }, this);
 },
 
 userDeletesNotes: function (shouldDeleteAllSelected)
@@ -878,15 +880,15 @@ userDeletesNotes: function (shouldDeleteAllSelected)
         {
             // If there are multiple notes, we confirm regardless of the preference, due to the
             // danger.  This could be removed once there is undo.
-			var isConfirmed = this.utils.confirm(window, "DeleteMultipleConfirm", "DeleteConfirmTitle");
+            var isConfirmed = this.utils.confirm(window, "DeleteMultipleConfirm", "DeleteConfirmTitle");
         }
         else if (this.prefs.shouldAskBeforeDelete())
         {
-			var isConfirmed = this.utils.confirmCheck(window, "DeleteSingleConfirm", "DeleteConfirmTitle", "NeverAskOption",
-				this.utils.bind(this, function()
-				{
-					this.prefs.setAskBeforeDelete(false);
-				}));
+            var isConfirmed = this.utils.confirmCheck(window, "DeleteSingleConfirm", "DeleteConfirmTitle", "NeverAskOption",
+                this.utils.bind(this, function()
+                {
+                    this.prefs.setAskBeforeDelete(false);
+                }));
         }
         else
         {

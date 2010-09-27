@@ -736,13 +736,14 @@ removeNote: function(note)
     //dump("InternoteStorage.removeNote\n");
     
     this.utils.assertError(note != null, "Can't remove null note.");
+    this.utils.assertError(this.allNotes[note.num] != null, "Can't find note to delete. Already deleted?");
     
     // Remove the note from the XML store.
     // Because we're using custom XML we can't use getElementById, so a note.xml field
     // has been created for this purpose.  A DTD should probably be defined so that it can.
     var xmlNote = note.xml;
     this.utils.assertError(xmlNote != null, "Could not find XML note to delete.");
-
+    
     xmlNote.parentNode.removeChild(xmlNote);
     
     // Remove the note from the num lookup.
