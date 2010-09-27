@@ -1345,13 +1345,13 @@ userChangesExpandOnSelected: function(shouldBeExpanded)
         var selection = this.treeView.selection;
         var rangeCount = selection.getRangeCount();
         
-        // We need to loop through ranges in reverse order, so that expanding changing the index of
-        // later URLs is not a problem. There seems to be no guarantee getRangeAt is sorted, so we
-        // must sort them.  Also, because we want convert notes to URLs to allow collapsing if the
-        // user has just selected a note, this creates a similar problem if there are two selected
-        // notes within a URL (the second note will have a bad index after collapse).  Thus we must
-        // do the conversion before the sorting - the easiest solution is converting to individual
-        // URL indexes before sorting.
+        // We need to loop through ranges in reverse order, so that expanding/collapsing changing
+        // the index of later categories is not a problem. There seems to be no guarantee getRangeAt
+        // is sorted, so we must sort them.  Also, because we want convert notes to categories to
+        // allow collapsing if the user has just selected a note, this creates a similar problem if
+        // there are two selected notes within a category (the second note will have a bad index
+        // after collapse).  Thus we must do the conversion before the sorting - the easiest solution
+        // is converting from note indexes to category indexes before sorting.
         var selected = [];
         
         for (var i = 0; i < rangeCount; i++)
@@ -1367,8 +1367,8 @@ userChangesExpandOnSelected: function(shouldBeExpanded)
         
         selected.sort(this.utils.numericSort);
         
-        // We loop through in reverse.  Dupes (due to multiple notes within a URL selected) are not
-        // a problem since they will have the right state the 2nd time and we only toggle if wrong.
+        // We loop through in reverse.  Dupes (due to multiple notes within a category selected) are
+        // not a problem since they will have the right state the 2nd time and we only toggle if wrong.
         for (var i = selected.length - 1; i >= 0; i--)
         {
             if (this.treeView.isContainerOpen(selected[i]) != shouldBeExpanded)
