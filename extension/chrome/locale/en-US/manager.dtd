@@ -53,7 +53,7 @@
 
 <!-- Right Panel -->
 
-<!ENTITY internote.noteScope.caption             "Note Scope">
+<!ENTITY internote.noteScope.caption             "Note Shows On">
 
 <!ENTITY internote.noteMatchType.label           "On which pages?">
 <!ENTITY internote.urlMatchExact.value           "One Only">
