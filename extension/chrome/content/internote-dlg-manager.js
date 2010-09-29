@@ -699,7 +699,7 @@ userSelectsElement: function(mainTree, otherTree, getNoteNumsFunc)
         if (!mainTree.isContainer(treeIndex))
         {
             var noteNum = this.utils.getSingleElement(getNoteNumsFunc(treeIndex));
-            var note = this.storage.allNotes[noteNum]
+            var note = this.storage.allNotes[noteNum];
             this.setNoteData(note);
         }
         else
@@ -846,7 +846,7 @@ getNoteNumsFromTree: function(treeIndex)
 
 getNoteNumsFromSearch: function(treeIndex)
 {
-    return this.searchMapping[treeIndex];
+    return [this.searchMapping[treeIndex]];
 },
 
 // XXX What a ridiculous kludge.
