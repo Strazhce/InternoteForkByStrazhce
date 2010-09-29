@@ -83,6 +83,16 @@ redrawCloseButton: function(mode)
     this.utils.drawCloseButton(this.closeButton, color);
 },
 
+isMessageShowing: function()
+{
+    return this.balloonAnimDriver != null;
+},
+
+areMessagesPending: function()
+{
+    return this.messageQueue.length > 0;
+},
+
 showMessage: function(message)
 {
     //dump("internoteBalloonUI.showMessage " + this.messageQueue.length + "\n");

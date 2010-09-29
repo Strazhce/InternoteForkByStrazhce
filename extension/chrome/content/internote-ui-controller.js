@@ -104,6 +104,7 @@ allUINotes: [],
 uiNoteLookup: [],
 hasSeenUINote: [],
 checkViewportEvent: null,
+checkMessagesEvent: null,
 
 ///////////////////////////////
 // Initialisation, Destruction
@@ -204,8 +205,6 @@ init: function()
     this.storage.addBoundEventListener("fontSizeChanged",     this, "onFontSizePrefSet");
     this.storage.addBoundEventListener("scrollbarChanged",    this, "onScrollbarPrefSet");
     this.storage.addBoundEventListener("statusbarChanged",    this, "onStatusbarPrefSet");
-    
-    this.utils.addBoundDOMEventListener(window, "focus", this, "onWindowFocused", false);
     
     this.chromeUpdateStatusBarIconDisplay(false);
     this.chromeUpdateInternoteIcon();
@@ -630,6 +629,12 @@ removePageListeners: function()
         {
             this.utils.cancelTimer(this.checkViewportEvent);
             this.checkViewportEvent = null;
+        }
+        
+        if (this.checkMessagesEvent != null)
+        {
+            this.utils.cancelTimer(this.checkMessagesEvent);
+            this.checkMessagesEvent = null;
         }
     }
     else
@@ -1439,7 +1444,11 @@ chromeUpdateStatusBarIconDisplay: function(shouldShowMessage)
 {
     var shouldShowIcon = !internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.initialisationFailed &&
                           this.prefs.shouldUseStatusbar();
-    this.utils.setDisplayedIDs(document, "internote-panel", shouldShowIcon);
+    
+	this.utils.dumpTraceData(internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.initialisationFailed);
+	this.utils.dumpTraceData(this.prefs.shouldUseStatusbar());
+	
+	this.utils.setDisplayedIDs(document, "internote-panel", shouldShowIcon);
     if (shouldShowMessage && !shouldShowIcon)
     {
         this.showMessage("NoStatusBarMessage");
@@ -2860,6 +2869,25 @@ showMessage: function(messageName, shouldTimeout, linkMessageName, linkFunc)
         links.push({messageName: linkMessageName, func: linkFunc});
     }
     this.balloonUI.showMessage({messageName: messageName, links: links, shouldTimeout: shouldTimeout});
+    
+    if (this.balloonUI.areMessagesPending())
+    {
+        this.checkMessagesEvent = this.utils.createInterval(this.utils.bind(this, function()
+        {
+            try
+            {
+                this.balloonUI.checkWhetherToShowMessage();
+                if (this.balloonUI.isMessageShowing())
+                {
+                    this.utils.cancelTimer(this.checkMessagesEvent);
+                }
+            }
+            catch (ex)
+            {
+                this.utils.handleException("Exception while checking messages.", ex);
+            }
+        }), this.CHECK_VIEWPORT_INTERVAL);
+    }
 },
 
 showMessageNow: function(messageName, linkMessageName, linkFunc)
@@ -3290,11 +3318,6 @@ onInternoteStorageFailed: function(ex)
     this.tearDownInternote();
     this.handleCatastrophicFailure("SaveFailedError");
     this.utils.handleException("Caught exception when saving notes.", ex);
-},
-
-onWindowFocused: function()
-{
-    this.balloonUI.checkWhetherToShowMessage();
 },
 
 //////////////////////////
