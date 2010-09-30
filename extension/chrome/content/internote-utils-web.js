@@ -995,6 +995,10 @@ getViewportDims: function(chromeWin, browser)
                 // XXX Should possibly do something.
                 // Do nothing.
             }
+            else if (contentDoc instanceof chromeWin.SVGDocument)
+            {
+                // Need to do something but can't figure out how.
+            }
             else
             {
                 this.assertWarnNotHere("Unhandled document type.", this.getJSClassName());
