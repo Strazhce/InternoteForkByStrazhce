@@ -116,15 +116,14 @@ getFontSize : function()
 
 setEnumPref: function(prefName, newValue)
 {
-    this.utils.assertError(this.prefsBranch.getPrefType(prefName) != 0, "Not an enum pref.", prefName);
+    this.utils.assertError(this.prefsBranch.getPrefType(prefName) == this.prefsBranch.PREF_STRING, "Not an enum pref.", prefName);
     this.prefsBranch.setCharPref(prefName, "" + newValue);
 },
 
 setBoolPref: function(prefName, newValue)
 {
-	this.utils.dumpTraceData(this.prefsBranch);
     this.utils.assertError(this.utils.isBoolean(newValue), "Setting bool pref to non-bool.", newValue);
-	//this.utils.assertError(this.prefsBranch.getPrefType(prefName) != 1, "Not an enum pref.", prefName);
+    this.utils.assertError(this.prefsBranch.getPrefType(prefName) == this.prefsBranch.PREF_BOOL, "Not a boolean pref.", prefName);
     this.prefsBranch.setBoolPref(prefName, newValue);
 },
 

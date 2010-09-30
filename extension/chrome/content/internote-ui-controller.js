@@ -1445,10 +1445,7 @@ chromeUpdateStatusBarIconDisplay: function(shouldShowMessage)
     var shouldShowIcon = !internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.initialisationFailed &&
                           this.prefs.shouldUseStatusbar();
     
-	this.utils.dumpTraceData(internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.initialisationFailed);
-	this.utils.dumpTraceData(this.prefs.shouldUseStatusbar());
-	
-	this.utils.setDisplayedIDs(document, "internote-panel", shouldShowIcon);
+    this.utils.setDisplayedIDs(document, "internote-panel", shouldShowIcon);
     if (shouldShowMessage && !shouldShowIcon)
     {
         this.showMessage("NoStatusBarMessage");
