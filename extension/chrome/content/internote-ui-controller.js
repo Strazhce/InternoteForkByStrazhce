@@ -1193,7 +1193,9 @@ userOpensAbout: function()
 
 userOpensHelp: function()
 {
-    gBrowser.selectedTab = gBrowser.addTab(this.consts.HELP_PAGE);
+    var helpLocale = this.getLocaleString("HelpLocale");
+    var helpFileName = this.consts.HELP_PAGE.replace("%1", helpLocale);
+    gBrowser.selectedTab = gBrowser.addTab(helpFileName);
 },
 
 userMinimizesAll: function(shouldBeMinimized)
