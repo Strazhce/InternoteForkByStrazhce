@@ -70,7 +70,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <spacer width="20" />
   </hbox>
   <separator />
-  <hbox>
+  <hbox id="contributors-box">
     <vbox flex="1">
       <groupbox flex="1">
         <caption label="&internote.aboutCreators.caption;" />

@@ -88,7 +88,7 @@ fixDescription: function()
 
 removeContributors: function()
 {
-    var contributorsBox = document.getElementById("contributors-group");
+    var contributorsBox = document.getElementById("contributors-box");
     
     this.utils.removeAllChildNodes(contributorsBox);
     
