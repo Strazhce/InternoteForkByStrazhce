@@ -10,9 +10,9 @@
     <em:creator>Matthew Tuck</em:creator>
 
     <em:developer>Tim Horton (Internote2, Original Developer)</em:developer>
+    <em:developer>Leszek(teo)Życzkowski (Internote3, XUL Refactoring, Localization Fixes)</em:developer>
 
     <em:contributor>Ildikó Balla (Internote3, Beta Testing, Logo)</em:contributor>
-    <em:contributor>Leszek(teo)Życzkowski (Internote3, Development)</em:contributor>
     <em:contributor>Justin Lewis (Internote2, Beta Testing)</em:contributor>
     <em:contributor>Robert Horton (Internote2, Beta Testing)</em:contributor>
     
@@ -44,7 +44,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
         <em:minVersion>3.0</em:minVersion>
-        <em:maxVersion>4.0b7pre</em:maxVersion>
+        <em:maxVersion>4.0b7</em:maxVersion>
       </Description>
     </em:targetApplication>
 
