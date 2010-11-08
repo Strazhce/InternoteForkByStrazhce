@@ -22,7 +22,7 @@ Components.utils.import("resource://internotejs/internote-shared-global.jsm");
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.consts = {
 
 BUGS_PAGE: "http://internote.sourceforge.net/bugreports.html",
-HELP_PAGE: "http://internote.sourceforge.net/help/%1.xml",
+HELP_PAGE: "http://internote.sourceforge.net/help30/%1.xml",
 
 NOTE_WIDTHS:  [150, 150, 200, 350],
 NOTE_HEIGHTS: [100, 150, 250, 350],
