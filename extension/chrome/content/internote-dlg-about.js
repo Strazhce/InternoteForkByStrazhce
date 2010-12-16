@@ -36,7 +36,7 @@ init: function()
                 this.fixVersionNumber(internoteVersion);
                 this.insertContributors(installRDF);
                 this.fixDescription();
-                //window.sizeToContent();
+                window.sizeToContent();
             }
             else
             {

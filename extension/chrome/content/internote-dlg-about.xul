@@ -70,25 +70,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <spacer width="20" />
   </hbox>
   <separator />
-  <!-- Fix the size of this because in FF4 it's obtained asynchronously and
-       dialog size might not update. -->
   <hbox id="contributors-box">
     <vbox>
-      <groupbox style="min-height: 60px !important; max-height: 40px !important;">
+      <groupbox height="80">
         <caption label="&internote.aboutCreators.caption;" />
         <vbox id="creators" class="contributors" />
       </groupbox>
-      <groupbox style="min-height: 60px !important; max-height: 40px !important;">
+      <groupbox height="80">
         <caption label="&internote.aboutDevelopers.caption;" />
         <vbox id="developers" class="contributors" />
       </groupbox>
-      <groupbox style="min-height: 60px !important; max-height: 40px !important;">
+      <groupbox height="80">
         <caption label="&internote.aboutContributors.caption;" />
         <vbox id="contributors" class="contributors" style="overflow: auto;"/>
       </groupbox>
     </vbox>
     <vbox>
-      <groupbox style="min-height: 180px !important; max-height: 120px !important;">
+      <groupbox height="240">
         <caption label="&internote.aboutTranslators.caption;" />
         <vbox id="translators" class="contributors" />
       </groupbox>
