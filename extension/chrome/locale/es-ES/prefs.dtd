@@ -1,0 +1,38 @@
+<!ENTITY internote.prefsDialog.title "Opciones de Internote">
+<!-- Appearance -->
+<!ENTITY internote.appearancePrefsPane.title "Apariencia">
+<!ENTITY internote.tinySize.value "Pequeño">
+<!ENTITY internote.normalSize.value "Normal">
+<!ENTITY internote.largeSize.value "Grande">
+<!ENTITY internote.giantSize.value "Gigante">
+<!ENTITY internote.megaSize.value "Megagrande">
+<!ENTITY internote.defaultStylePrefs.caption "Opciones para notas nuevas">
+<!ENTITY internote.defaultNoteColor.label "Color de nota predeterminado:">
+<!ENTITY internote.defaultTextColor.label "Color de texto predeterminado:">
+<!-- Colors defined in common.dtd. -->
+<!ENTITY internote.defaultSize.label "Tamaño de nota predeterminado:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.defaultPos.label "Posición de nota predeterminada:">
+<!ENTITY internote.topLeftPos.value "Arriba-Izquierda">
+<!ENTITY internote.topRightPos.value "Arriba-Derecha">
+<!ENTITY internote.bottomLeftPos.value "Abajo-Izquierda">
+<!ENTITY internote.bottomRightPos.value "Abajo-Derecha">
+<!ENTITY internote.centerPos.value "Centros">
+<!ENTITY internote.adjustDefaults.desc "(Estas predisposiciones por defecto pueden modificarse después para cada nota utilizando los bordes de la nota o el botón de voltear).">
+<!ENTITY internote.globalStylePrefs.caption "Opciones para todas las notas">
+<!ENTITY internote.fontSize.label "Tamaño de fuente:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.useTranslucencyCBox.label "Notas translúcidas">
+<!ENTITY internote.useHighlightableCBox.label "Texto resaltable (usar borde para mover)">
+<!ENTITY internote.useNativeScrollCBox.label "Utilizar la barra de desplazamiento del S.O. en vez de la de Internote">
+<!-- General Options -->
+<!ENTITY internote.generalPrefsPane.title "General">
+<!ENTITY internote.generalPrefs.caption "Opciones generales">
+<!ENTITY internote.confirmDeleteCBox.label "Confirmar antes de eliminar">
+<!ENTITY internote.useStatusBarCBox.label "Mostrar Internote en la barra de estado">
+<!ENTITY internote.confirmProviso.desc "(Al utilizar el administrador para eliminar varias notas siempre se pide confirmación)">
+<!ENTITY internote.storagePrefs.caption "Opciones de almacenamiento">
+<!ENTITY internote.useAlternativeCBox.label "Usar ubicación alternativa">
+<!ENTITY internote.browseButton.label "Examinar...">
+<!ENTITY internote.storageRestartProviso.desc "(Las nuevas ubicaciones no se usarán hasta que se reinice Firefox)">
+<!ENTITY internote.storageMoveProviso.desc "(Las notas ya existentes no se moverán a las nuevas ubicaciones, pero puede importarlas mediante &quot;Administrar todas las notas&quot; en el menú de Internote)">

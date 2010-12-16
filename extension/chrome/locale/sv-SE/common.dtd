@@ -1,0 +1,25 @@
+<!-- App Name -->
+<!ENTITY internote.appName.label "Internote">
+<!ENTITY internote.appName.accesskey "n">
+<!-- Dialog Buttons -->
+<!ENTITY internote.closeButton.label "Stäng">
+<!-- Color Names -->
+<!ENTITY internote.bananaColor.value "Banan">
+<!ENTITY internote.melonColor.value "Melon">
+<!ENTITY internote.blueberryColor.value "Blåbär">
+<!ENTITY internote.limeColor.value "Lime">
+<!ENTITY internote.grapeColor.value "Vindruva">
+<!ENTITY internote.cauliflowerColor.value "Blomkål">
+<!ENTITY internote.charcoalColor.value "Träkol">
+<!ENTITY internote.topsoilColor.value "Matjord">
+<!ENTITY internote.grassColor.value "Gräs">
+<!ENTITY internote.roseColor.value "Ros">
+<!ENTITY internote.aluminumColor.value "Aluminium">
+<!ENTITY internote.snowColor.value "Snö">
+<!-- Commands that appear in several places -->
+<!ENTITY internote.ignoreParamsCmd.label "Ignorera parametrar">
+<!ENTITY internote.ignoreAnchorCmd.label "Ignorera ankare">
+<!ENTITY internote.ignoreParamsCmd.label2 "Efter ?-tecken">
+<!ENTITY internote.ignoreAnchorCmd.label2 "Efter #-tecken">
+<!ENTITY internote.selectAllCmd.label "Markera alla">
+<!ENTITY internote.selectAllCmd.accesskey "a">

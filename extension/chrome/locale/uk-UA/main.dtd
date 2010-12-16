@@ -1,0 +1,58 @@
+<!-- Main Menus -->
+<!-- Application menu name in common.dtd. -->
+<!ENTITY internote.newNoteCmd.label "Нова нотатка">
+<!ENTITY internote.newNoteCmd.accesskey "о">
+<!ENTITY internote.minimizeAllCmd.label "Згорнути нотатки для цієї сторінки">
+<!ENTITY internote.minimizeAllCmd.accesskey "З">
+<!ENTITY internote.unminimizeAllCmd.label "Розгорнути нотатки для цієї сторінки">
+<!ENTITY internote.unminimizeAllCmd.accesskey "Р">
+<!ENTITY internote.openManagerCmd.label "Керування всіма нотатками">
+<!ENTITY internote.openManagerCmd.accesskey "К">
+<!ENTITY internote.displayNotesCmd.label "Показати нотатки">
+<!ENTITY internote.displayNotesCmd.accesskey "т">
+<!ENTITY internote.openPrefsCmd.label "Вподобання">
+<!ENTITY internote.openPrefsCmd.accesskey "п">
+<!ENTITY internote.helpCmd.label "Довідка...">
+<!ENTITY internote.helpCmd.accesskey "і">
+<!ENTITY internote.reportBugCmd.label "Повідомити про ваду...">
+<!ENTITY internote.reportBugCmd.accesskey "д">
+<!ENTITY internote.aboutCmd.label "Про Internote...">
+<!ENTITY internote.aboutCmd.accesskey "I">
+<!-- Note Context Menu -->
+<!ENTITY internote.cutTextCmd.label "Вирізати">
+<!ENTITY internote.cutTextCmd.accesskey "и">
+<!ENTITY internote.copyTextCmd.label "Копіювати">
+<!ENTITY internote.copyTextCmd.accesskey "ю">
+<!ENTITY internote.pasteTextCmd.label "Вставити">
+<!ENTITY internote.pasteTextCmd.accesskey "а">
+<!ENTITY internote.deleteTextCmd.label "Стерти">
+<!ENTITY internote.deleteTextCmd.accesskey "е">
+<!-- Select All in common.dtd. -->
+<!ENTITY internote.setDefaultColorsCmd.label "Зробити типовими кольорами">
+<!ENTITY internote.setDefaultColorsCmd.accesskey "ь">
+<!ENTITY internote.deleteNoteCmd.label "Стерти нотатку">
+<!ENTITY internote.deleteNoteCmd.accesskey "у">
+<!ENTITY internote.chooseColorsCmd.label "Вибрати нові кольори">
+<!ENTITY internote.chooseColorsCmd.accesskey "н">
+<!ENTITY internote.editTextCmd.label "Редагувати текст">
+<!ENTITY internote.editTextCmd.accesskey "д">
+<!ENTITY internote.minimizeNoteCmd.label "Згорнути нотатку">
+<!ENTITY internote.minimizeNoteCmd.accesskey "г">
+<!ENTITY internote.unminimizeNoteCmd.label "Відновити нотатку">
+<!ENTITY internote.unminimizeNoteCmd.accesskey "і">
+<!ENTITY internote.viewInOpenManagerCmd.label "Керування нотаткою">
+<!ENTITY internote.viewInOpenManagerCmd.accesskey "р">
+<!ENTITY internote.showsOnMenuCmd.label "Показувати">
+<!ENTITY internote.showsOnMenuCmd.accesskey "з">
+<!ENTITY internote.showsOnPageCmd.label "лише на цій сторінці">
+<!ENTITY internote.showsOnPageCmd.accesskey "й">
+<!ENTITY internote.showsOnSiteCmd.label "лише на цьому сайті">
+<!ENTITY internote.showsOnSiteCmd.accesskey "ц">
+<!ENTITY internote.showsOnAllCmd.label "на всіх сторінках">
+<!ENTITY internote.showsOnAllCmd.accesskey "с">
+<!ENTITY internote.showsRegexpCmd.label "на сторінках, що відповідають регулярному виразу">
+<!ENTITY internote.showsRegexpCmd.accesskey "х">
+<!-- Some elements of this menu are dynamic, and properties. -->
+<!ENTITY internote.ignoreParamsCmd.accesskey "п">
+<!ENTITY internote.ignoreAnchorCmd.accesskey "я">
+<!-- Ignore Params/Anchor labels in common.dtd. -->

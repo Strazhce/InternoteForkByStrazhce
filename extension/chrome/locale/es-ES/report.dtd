@@ -1,0 +1,12 @@
+<!ENTITY internote.bugReportDialog.title "Informando de un fallo en Internote">
+<!ENTITY internote.infoThanks.desc "Gracias por rellenar un informe de fallo - su informe ayudará a mejorar Internote. Cualquier información que envíe se usará exclusivamente para ayudar a solucionar errores.">
+<!ENTITY internote.infoType.desc "Debajo aparecen datos importantes recolectados automáticamente que pueden ayudar a diagnosticar su problema.">
+<!ENTITY internote.infoDisclaimer.desc "Esto incluye su lista de extensiones instaladas, y podría incluir datos sobre sus notas y su sesión de navegación.">
+<!ENTITY internote.sendInstructions.desc "Una vez haya terminado, por favor copie toda la información utilizando el botón inferior, y después vaya a la página web que se indica debajo.">
+<!ENTITY internote.infoWhy.desc "¿Por qué es eso necesario?">
+<!ENTITY internote.infoReasons1.desc "Su lista de extensiones instaladas ayuda a determinar si los problemas de Internote están provocados por un conflicto con otra extensión.">
+<!ENTITY internote.infoReasons2.desc "Cuando se detecta un problema se recogerán todos los datos relativos al mismo para ayudar a determinar por qué se ha producido. Eso puede incluir datos sobre sus notas y su sesión de navegación.">
+<!ENTITY internote.reportComments.desc "Por favor, describa los pasos que desembocaron en el problema, y cualquier otra información que pudiera ser relevante.">
+<!ENTITY internote.reportEmail.desc "Si introduce aquí su correo electrónico es posible que le solicitemos información adicional, si ello fuera necesario para solucionar su problema.">
+<!ENTITY internote.submitBugReportButton.label "Enviar informe de fallo">
+<!ENTITY internote.infoCopy.label "Copiar toda la información">

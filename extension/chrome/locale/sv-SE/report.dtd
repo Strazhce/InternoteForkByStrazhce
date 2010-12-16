@@ -1,0 +1,12 @@
+<!ENTITY internote.bugReportDialog.title "Att rapportera en Internote-bugg">
+<!ENTITY internote.infoThanks.desc "Tack för att du sammanställer en buggrapport - din rapport kommer att hjälpa oss att göra Internote bättre. Informationen du skickar in kommer endast att användas som hjälp för att korrigera buggar.">
+<!ENTITY internote.infoType.desc "Här nedanför finns viktig, automatiskt insamlad data kan vara till hjälp för att diagnostisera ditt problem.">
+<!ENTITY internote.infoDisclaimer.desc "Det innefattar en lista över dina installerade tillägg och kan inkludera data om dina lappar och din webbläsarsession.">
+<!ENTITY internote.sendInstructions.desc "När du är färdig, kopiera all information med hjälp av knappen nedan och gå sedan till webbsidan här nedanför.">
+<!ENTITY internote.infoWhy.desc "Varför behövs allt det här?">
+<!ENTITY internote.infoReasons1.desc "Din lista över installerade tillägg är användbar för att utröna om Internotes problem orsakas av en konflikt med ett annat tillägg.">
+<!ENTITY internote.infoReasons2.desc "När problem upptäcks kommer data relaterad till problemet att samlas in för att hjälpa till att slå fast varför problemet inträffar. Det här kan inkludera data om dina lappar och din webbläsarsession.">
+<!ENTITY internote.reportComments.desc "Var vänlig beskriv stegen som ledde till problemet och allt annat som kan vara relevant.">
+<!ENTITY internote.reportEmail.desc "Om du anger din e-postadress här kan du bli tillfrågad om mer information, ifall det behövs för att rätta till ditt problem.">
+<!ENTITY internote.submitBugReportButton.label "Skicka in buggrapporten">
+<!ENTITY internote.infoCopy.label "Kopiera all information">

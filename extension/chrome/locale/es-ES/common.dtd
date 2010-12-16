@@ -1,0 +1,25 @@
+<!-- App Name -->
+<!ENTITY internote.appName.label "Internote">
+<!ENTITY internote.appName.accesskey "e">
+<!-- Dialog Buttons -->
+<!ENTITY internote.closeButton.label "Cerrar">
+<!-- Color Names -->
+<!ENTITY internote.bananaColor.value "Plátano">
+<!ENTITY internote.melonColor.value "Melón">
+<!ENTITY internote.blueberryColor.value "Arándano">
+<!ENTITY internote.limeColor.value "Lima">
+<!ENTITY internote.grapeColor.value "Uva">
+<!ENTITY internote.cauliflowerColor.value "Coliflor">
+<!ENTITY internote.charcoalColor.value "Carbón">
+<!ENTITY internote.topsoilColor.value "Tierra">
+<!ENTITY internote.grassColor.value "Hierba">
+<!ENTITY internote.roseColor.value "Rosa">
+<!ENTITY internote.aluminumColor.value "Aluminio">
+<!ENTITY internote.snowColor.value "Nieve">
+<!-- Commands that appear in several places -->
+<!ENTITY internote.ignoreParamsCmd.label "Ignorar parámetros">
+<!ENTITY internote.ignoreAnchorCmd.label "Ignorar anchor">
+<!ENTITY internote.ignoreParamsCmd.label2 "Tras el símbolo ?">
+<!ENTITY internote.ignoreAnchorCmd.label2 "Tras el símbolo #">
+<!ENTITY internote.selectAllCmd.label "Seleccionar todo">
+<!ENTITY internote.selectAllCmd.accesskey "t">
