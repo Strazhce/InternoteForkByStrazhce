@@ -526,7 +526,7 @@ loadStorage: function()
 // Attempt to load storage from the specified file.  On failure, return null.
 loadStorageFile: function(storageFile)
 {
-    this.doc = this.utils.loadXML(storageFile);
+    this.doc = this.utils.loadXMLFromFile(storageFile);
     this.notesNode = this.doc.getElementsByTagName("notes")[0];
     var notes = this.loadInternoteV3(this.doc, true);
     

@@ -31,14 +31,15 @@ init: function()
         this.utils.init(window);
         this.utils.initSysInfo();
         
-        var installRDF = this.utils.loadInstallRDF();
-        
-        if (installRDF != null)
+        this.utils.loadInstallRDF(this.utils.bind(this, function(installRDF)
         {
-            this.internoteVersion = this.utils.getInternoteVersion(installRDF);
-            this.adjustErrorInfo(this.internoteVersion);
-        }
-
+            if (installRDF != null)
+            {
+                this.internoteVersion = this.utils.getInternoteVersion(installRDF);
+                this.adjustErrorInfo(this.internoteVersion);
+            }
+        }));
+        
         var textBox = document.getElementById("errors-text");
         textBox.readOnly = true;
         

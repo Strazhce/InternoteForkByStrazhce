@@ -53,26 +53,76 @@ initSysInfo: function()
     }
 },
 
-loadInstallRDF: function()
+loadInstallRDF: function(callback)
 {
-    var file = this.getInstallRDFLocation();
+    if (this.addonManager != null)
+    {
+        this.loadAMInstallRDF(callback);
+    }
+    else if (this.extensionManager != null)
+    {
+        this.loadEMInstallRDF(callback);
+    }
+    else
+    {
+        this.utils.assertErrorNotHere("Couldn't get AM/EM to load install.rdf.");
+        callback(null);
+    }
+},
+
+loadAMInstallRDF: function(callback)
+{
+    const MY_ID = this.consts.MY_ID;
+    const INSTALL_RDF = "install.rdf";
+    
+    if (this.xml != null)
+    {
+        callback(this.xml);    
+    }
+    else
+    {
+        this.addonManager.getAddonByID(MY_ID, this.bind(this, function(addon) {
+            try
+            {
+                var ioService = this.getCCService("@mozilla.org/network/io-service;1", "nsIIOService");
+                var uri = addon.getResourceURI("install.rdf");
+                var stream = ioService.newChannelFromURI(uri).open();
+                this.xml = this.loadXMLFromStream(stream);
+                callback(this.xml);
+            }
+            catch (ex)
+            {
+                this.handleException("Failed to get addon.", ex);
+                callback(null);
+            }
+        }));
+    }
+},
+
+loadEMInstallRDF: function(callback)
+{
+    const MY_ID = this.consts.MY_ID;
+    const INSTALL_RDF = "install.rdf";
+    
+    var file = this.extensionManager.getInstallLocation(MY_ID).getItemFile(MY_ID, INSTALL_RDF);
     
     if (file.exists())
     {
         try
         {
-            return this.loadXML(file);
+            var xml = this.loadXMLFromFile(file);
+            callback(xml);
         }
         catch (ex)
         {
             this.handleException("Failed to load install.rdf.", ex);
-            return null;
+            callback(null);
         }
     }
     else
     {
         this.assertWarnNotHere("Failed to find install.rdf.");
-        return null;
+        callback(null);
     }
 },
 
@@ -82,39 +132,19 @@ getInternoteVersion: function(installRDF)
     return versionElt.firstChild.data;
 },
 
-getInstallRDFLocation: function()
-{
-    var MY_ID = this.consts.MY_ID;
-    
-    if (this.extensionManager != null)
-    {
-        return this.extensionManager.getInstallLocation(MY_ID).getItemFile(MY_ID, "install.rdf");
-    }
-    else
-    {
-        // XXX Support a better method for FF4 if and when mozilla does.
-        var dirService = this.getCCService("@mozilla.org/file/directory_service;1", "nsIProperties");
-        var file = dirService.get("ProfD", this.getCIInterface("nsIFile"));
-        file.append("extensions");
-        file.append(MY_ID);
-        file.append("install.rdf");
-        return file;
-    }
-},
-
 getExtensionList: function(callback)
 {
-    if (this.extensionManager != null)
-    {
-        this.getEMExtensionList(callback);
-    }
-    else if (this.addonManager != null)
+    if (this.addonManager != null)
     {
         this.getAMExtensionList(callback);
     }
+    else if (this.extensionManager != null)
+    {
+        this.getEMExtensionList(callback);
+    }
     else
     {
-        this.utils.assertErrorNotHere("Couldn't get AM/EM.");
+        this.utils.assertErrorNotHere("Couldn't get AM/EM to get extension list.");
         return ["Couldn't get AM/EM."];
     }
 },
