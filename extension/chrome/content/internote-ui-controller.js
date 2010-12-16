@@ -776,10 +776,10 @@ userRemovesNote: function(elementOrEvent)
             {
                 // While notes are popups they are not affected by modality, so we need a special method.
                 deleteConfirmed = this.confirmCheckDialog("DeleteSingleConfirm", "DeleteConfirmTitle", "NeverAskOption",
-				    this.utils.bind(this, function()
-					{
-						this.prefs.setAskBeforeDelete(false);
-					}));
+                    this.utils.bind(this, function()
+                    {
+                        this.prefs.setAskBeforeDelete(false);
+                    }));
             }
             
             if (deleteConfirmed)

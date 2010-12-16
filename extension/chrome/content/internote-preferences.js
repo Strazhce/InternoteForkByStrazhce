@@ -198,7 +198,7 @@ setSaveLocationPref: function(path)
 
 setAskBeforeDelete: function(isSet)
 {
-	this.setBoolPref("askbeforedelete", isSet);
+    this.setBoolPref("askbeforedelete", isSet);
 },
 
 setDefaultColors: function(foreColor, backColor)
