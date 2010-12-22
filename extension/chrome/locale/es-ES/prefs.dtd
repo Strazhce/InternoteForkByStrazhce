@@ -34,5 +34,5 @@
 <!ENTITY internote.storagePrefs.caption "Opciones de almacenamiento">
 <!ENTITY internote.useAlternativeCBox.label "Usar ubicación alternativa">
 <!ENTITY internote.browseButton.label "Examinar...">
-<!ENTITY internote.storageRestartProviso.desc "(Las nuevas ubicaciones no se usarán hasta que se reinice Firefox)">
+<!ENTITY internote.storageRestartProviso.desc "(Las nuevas ubicaciones no se usarán hasta que se reinicie Firefox)">
 <!ENTITY internote.storageMoveProviso.desc "(Las notas ya existentes no se moverán a las nuevas ubicaciones, pero puede importarlas mediante &quot;Administrar todas las notas&quot; en el menú de Internote)">
