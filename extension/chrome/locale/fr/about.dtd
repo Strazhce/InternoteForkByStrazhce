@@ -1,0 +1,9 @@
+<!ENTITY internote.aboutDialog.title "À propos d'Internote">
+<!ENTITY internote.aboutVersion.label "Version">
+<!ENTITY internote.aboutPeople.caption "Ceux qui ont contribué à faire de cette extension ce qu'elle est aujourd'hui">
+<!ENTITY internote.aboutHomePage.label "Page Web d'Internote">
+<!ENTITY internote.aboutCreators.caption "Nouveaux développeurs d'Internote3">
+<!ENTITY internote.aboutDevelopers.caption "Développeurs">
+<!ENTITY internote.aboutContributors.caption "Contributeurs">
+<!ENTITY internote.aboutTranslators.caption "Traducteurs">
+<!ENTITY internote.licensing.label "Internote est un logiciel libre publié sous licence GNU version 2 ou supérieure. Certaines parties du code peuvent être sous une autre licence, mais celle-ci est compatible ou fait partie du domaine public. Pour davantage de détails voyez la page Web d'Internote.">

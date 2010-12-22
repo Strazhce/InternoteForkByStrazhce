@@ -1,0 +1,58 @@
+<!-- Main Menus -->
+<!-- Application menu name in common.dtd. -->
+<!ENTITY internote.newNoteCmd.label "Lägg till ny lapp">
+<!ENTITY internote.newNoteCmd.accesskey "n">
+<!ENTITY internote.minimizeAllCmd.label "Minimera den här sidans lappar">
+<!ENTITY internote.minimizeAllCmd.accesskey "M">
+<!ENTITY internote.unminimizeAllCmd.label "Återställ den här sidans lappar">
+<!ENTITY internote.unminimizeAllCmd.accesskey "Å">
+<!ENTITY internote.openManagerCmd.label "Hantera alla lappar…">
+<!ENTITY internote.openManagerCmd.accesskey "H">
+<!ENTITY internote.displayNotesCmd.label "Visa lappar">
+<!ENTITY internote.displayNotesCmd.accesskey "V">
+<!ENTITY internote.openPrefsCmd.label "Inställningar…">
+<!ENTITY internote.openPrefsCmd.accesskey "I">
+<!ENTITY internote.helpCmd.label "Hjälp…">
+<!ENTITY internote.helpCmd.accesskey "H">
+<!ENTITY internote.reportBugCmd.label "Rapportera bugg…">
+<!ENTITY internote.reportBugCmd.accesskey "R">
+<!ENTITY internote.aboutCmd.label "Om Internote…">
+<!ENTITY internote.aboutCmd.accesskey "O">
+<!-- Note Context Menu -->
+<!ENTITY internote.cutTextCmd.label "Klipp ut">
+<!ENTITY internote.cutTextCmd.accesskey "t">
+<!ENTITY internote.copyTextCmd.label "Kopiera">
+<!ENTITY internote.copyTextCmd.accesskey "K">
+<!ENTITY internote.pasteTextCmd.label "Klistra in">
+<!ENTITY internote.pasteTextCmd.accesskey "l">
+<!ENTITY internote.deleteTextCmd.label "Ta bort">
+<!ENTITY internote.deleteTextCmd.accesskey "T">
+<!-- Markera alla in common.dtd. -->
+<!ENTITY internote.setDefaultColorsCmd.label "Använd som standardfärger">
+<!ENTITY internote.setDefaultColorsCmd.accesskey "f">
+<!ENTITY internote.deleteNoteCmd.label "Ta bort lapp">
+<!ENTITY internote.deleteNoteCmd.accesskey "b">
+<!ENTITY internote.chooseColorsCmd.label "Välj nya färger">
+<!ENTITY internote.chooseColorsCmd.accesskey "y">
+<!ENTITY internote.editTextCmd.label "Redigera text">
+<!ENTITY internote.editTextCmd.accesskey "R">
+<!ENTITY internote.minimizeNoteCmd.label "Minimera lapp">
+<!ENTITY internote.minimizeNoteCmd.accesskey "n">
+<!ENTITY internote.unminimizeNoteCmd.label "Återställ lapp">
+<!ENTITY internote.unminimizeNoteCmd.accesskey "e">
+<!ENTITY internote.viewInOpenManagerCmd.label "Hantera lapp">
+<!ENTITY internote.viewInOpenManagerCmd.accesskey "r">
+<!ENTITY internote.showsOnMenuCmd.label "Visas på">
+<!ENTITY internote.showsOnMenuCmd.accesskey "V">
+<!ENTITY internote.showsOnPageCmd.label "Endast den här sidan">
+<!ENTITY internote.showsOnPageCmd.accesskey "s">
+<!ENTITY internote.showsOnSiteCmd.label "Endast den här webbplatsen">
+<!ENTITY internote.showsOnSiteCmd.accesskey "w">
+<!ENTITY internote.showsOnAllCmd.label "Alla sidor">
+<!ENTITY internote.showsOnAllCmd.accesskey "A">
+<!ENTITY internote.showsRegexpCmd.label "Sidor som matchar reguljärt uttryck">
+<!ENTITY internote.showsRegexpCmd.accesskey "r">
+<!-- Some elements of this menu are dynamic, and properties. -->
+<!ENTITY internote.ignoreParamsCmd.accesskey "p">
+<!ENTITY internote.ignoreAnchorCmd.accesskey "n">
+<!-- Ignore Params/Anchor labels in common.dtd. -->

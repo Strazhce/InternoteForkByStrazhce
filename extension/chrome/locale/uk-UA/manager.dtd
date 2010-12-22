@@ -1,0 +1,69 @@
+<!-- Left Panel -->
+<!ENTITY internote.managerDialog.title "Керування нотатками">
+<!ENTITY internote.noteList.columnTitle "Нотатки">
+<!ENTITY internote.searchQuery.label "Пошук:">
+<!ENTITY internote.searchResults.label "Результати пошуку">
+<!ENTITY internote.closeResults.tooltip "Закрити результати пошуку">
+<!-- Left Panel Menu Commands -->
+<!ENTITY internote.actionsCmd.label "Дії">
+<!ENTITY internote.actionsCmd.accesskey "ї">
+<!ENTITY internote.expandSelectedCmd.label "Розгорнути вибране">
+<!ENTITY internote.expandSelectedCmd.accesskey "о">
+<!ENTITY internote.collapseSelectedCmd.label "Згорнути вибране">
+<!ENTITY internote.collapseSelectedCmd.accesskey "б">
+<!-- Select All in common.dtd. -->
+<!ENTITY internote.deleteSelectedCmd.label "Стерти вибране">
+<!ENTITY internote.deleteSelectedCmd.accesskey "р">
+<!ENTITY internote.resetSelectedCmd.label "Скинути позицію вибраного">
+<!ENTITY internote.resetSelectedCmd.accesskey "ц">
+<!ENTITY internote.printSelectedCmd.label "Друкувати вибране...">
+<!ENTITY internote.printSelectedCmd.accesskey "Д">
+<!ENTITY internote.printAllCmd.label "Друкувати все...">
+<!ENTITY internote.printAllCmd.accesskey "к">
+<!ENTITY internote.importCmd.label "Імпорт">
+<!ENTITY internote.importCmd.accesskey "І">
+<!ENTITY internote.fromV3Cmd.label "З Internote v3…">
+<!ENTITY internote.fromV3Cmd.accesskey "3">
+<!ENTITY internote.fromV2Cmd.label "З Internote v2…">
+<!ENTITY internote.fromV2Cmd.accesskey "2">
+<!ENTITY internote.exportSelectedCmd.label "Експортувати вибране">
+<!ENTITY internote.exportSelectedCmd.accesskey "с">
+<!ENTITY internote.exportAllCmd.label "Експортувати все">
+<!ENTITY internote.exportAllCmd.accesskey "Е">
+<!ENTITY internote.toV3Cmd.label "До Internote v3…">
+<!ENTITY internote.toV3Cmd.accesskey "3">
+<!ENTITY internote.toV2Cmd.label "До Internote v2…">
+<!ENTITY internote.toV2Cmd.accesskey "2">
+<!ENTITY internote.toBookmarksCmd.label "До закладок">
+<!ENTITY internote.toBookmarksCmd.accesskey "з">
+<!ENTITY internote.toTextCmd.label "У текстовий файл...">
+<!ENTITY internote.toTextCmd.accesskey "й">
+<!ENTITY internote.toHTMLCmd.label "В HTML…">
+<!ENTITY internote.toHTMLCmd.accesskey "H">
+<!-- Right Panel -->
+<!ENTITY internote.noteScope.caption "Нотатка відображається:">
+<!ENTITY internote.noteMatchType.label "На яких сторінках?">
+<!ENTITY internote.urlMatchExact.value "лише на одній">
+<!ENTITY internote.urlMatchSite.value "лише на цьому сайті">
+<!ENTITY internote.urlMatchStarts.value "на адресах, що починаються з...">
+<!ENTITY internote.urlMatchSuffix.value "на сайтах, що закінчуються на...">
+<!ENTITY internote.urlMatchAll.value "всюди (універсальна нотатка)">
+<!ENTITY internote.urlMatchRegexp.value "тих, що відповідають регулярному виразу">
+<!ENTITY internote.goLink.label "Перейти на сторінку">
+<!ENTITY internote.noteURL.label "Адреса:">
+<!ENTITY internote.noteSite.label "Сайт:">
+<!ENTITY internote.noteURLPrefix.label "Адреси, що починаються з:">
+<!ENTITY internote.noteSiteSuffix.label "Сайти, що закінчуються на:">
+<!ENTITY internote.noteURLRegexp.label "Регулярний вираз адреси:">
+<!ENTITY internote.noteData.caption "Дата нотатки">
+<!ENTITY internote.createTime.label "Створено:">
+<!ENTITY internote.modfnTime.label "Змінено:">
+<!ENTITY internote.isMinimizedCBox.label "Згорнуто?">
+<!ENTITY internote.text.label "Текст:">
+<!ENTITY internote.backColor.label "Колір нотатки:">
+<!ENTITY internote.foreColor.label "Колір тексту:">
+<!ENTITY internote.thisNoteActions.caption "Дії для цієї нотатки">
+<!ENTITY internote.deleteCurrentCmd.label "Стерти нотатку">
+<!ENTITY internote.deleteCurrentCmd.accesskey "р">
+<!ENTITY internote.resetCurrentCmd.label "Скинути позицію">
+<!ENTITY internote.resetCurrentCmd.accesskey "ц">

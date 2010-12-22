@@ -71,22 +71,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   </hbox>
   <separator />
   <hbox id="contributors-box">
-    <vbox flex="1">
-      <groupbox flex="1">
+    <vbox>
+      <groupbox height="80">
         <caption label="&internote.aboutCreators.caption;" />
         <vbox id="creators" class="contributors" />
       </groupbox>
-      <groupbox flex="1">
+      <groupbox height="80">
         <caption label="&internote.aboutDevelopers.caption;" />
         <vbox id="developers" class="contributors" />
       </groupbox>
-      <groupbox flex="1">
+      <groupbox height="80">
         <caption label="&internote.aboutContributors.caption;" />
-        <vbox id="contributors" class="contributors" />
+        <vbox id="contributors" class="contributors" style="overflow: auto;"/>
       </groupbox>
     </vbox>
-    <vbox flex="1">
-      <groupbox flex="1">
+    <vbox>
+      <groupbox height="240">
         <caption label="&internote.aboutTranslators.caption;" />
         <vbox id="translators" class="contributors" />
       </groupbox>

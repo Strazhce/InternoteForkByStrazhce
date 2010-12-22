@@ -787,12 +787,9 @@ calcScrollbarWidth: function(anyScratchWindowDoc)
     return textArea.offsetWidth - textArea.clientWidth;
 },
 
-loadXML: function(file)
+loadXMLFromStream: function(stream)
 {
-    var parser = new DOMParser();
-    
-    var stream = this.getCCInstance("@mozilla.org/network/file-input-stream;1", "nsIFileInputStream");
-    stream.init(file, 0x01, 0444, 0);
+    var parser = this.getCCInstance("@mozilla.org/xmlextras/domparser;1", "nsIDOMParser");
     
     var doc = parser.parseFromStream(stream, null, stream.available(), "text/xml");
     stream.close();
@@ -805,6 +802,13 @@ loadXML: function(file)
     {
         return doc;
     }
+},
+
+loadXMLFromFile: function(file)
+{
+    var stream = this.getCCInstance("@mozilla.org/network/file-input-stream;1", "nsIFileInputStream");
+    stream.init(file, 0x01, 0444, 0);
+    return this.loadXMLFromStream(stream);
 },
 
 loadXMLFromString: function(string)
@@ -964,8 +968,8 @@ getViewportDims: function(chromeWin, browser)
     {
         this.scrollbarSize = this.calcScrollbarWidth(chromeWin.document);
     }        
-	
-	var contentDoc = browser.contentDocument;
+    
+    var contentDoc = browser.contentDocument;
     
     var viewportDims = this.getDims(browser.boxObject);
     

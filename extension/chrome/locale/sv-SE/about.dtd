@@ -1,0 +1,9 @@
+<!ENTITY internote.aboutDialog.title "Om Internote">
+<!ENTITY internote.aboutVersion.label "Version">
+<!ENTITY internote.aboutPeople.caption "Personer som har hjälpt till att skapa Internote">
+<!ENTITY internote.aboutHomePage.label "Internotes webbplats">
+<!ENTITY internote.aboutCreators.caption "Internote3:s utvecklare">
+<!ENTITY internote.aboutDevelopers.caption "Utvecklare">
+<!ENTITY internote.aboutContributors.caption "Medarbetare">
+<!ENTITY internote.aboutTranslators.caption "Översättare">
+<!ENTITY internote.licensing.label "Internote är gratis mjukvara släppt under licensen GNU General Public License (GPL), version 2 eller senare.  Vissa delar är tillgängliga under andra, men kompatibla, licenser, eller finns som allmän egendom. För närmare detaljer, vänligen gå till Internotes webbsida (se ovan).">

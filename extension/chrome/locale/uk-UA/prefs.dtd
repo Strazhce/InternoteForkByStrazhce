@@ -1,0 +1,38 @@
+<!ENTITY internote.prefsDialog.title "Вподобання Internote">
+<!-- Appearance -->
+<!ENTITY internote.appearancePrefsPane.title "Вигляд">
+<!ENTITY internote.tinySize.value "Маленький">
+<!ENTITY internote.normalSize.value "Нормальний">
+<!ENTITY internote.largeSize.value "Великий">
+<!ENTITY internote.giantSize.value "Величезний">
+<!ENTITY internote.megaSize.value "Мега">
+<!ENTITY internote.defaultStylePrefs.caption "Вподобання для нових нотаток">
+<!ENTITY internote.defaultNoteColor.label "Типовий колір:">
+<!ENTITY internote.defaultTextColor.label "Типовий колір тексту:">
+<!-- Colors defined in common.dtd. -->
+<!ENTITY internote.defaultSize.label "Типовий розмір нотатки:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.defaultPos.label "Типове положення нотатки:">
+<!ENTITY internote.topLeftPos.value "Зверху ліворуч">
+<!ENTITY internote.topRightPos.value "Зверху праворуч">
+<!ENTITY internote.bottomLeftPos.value "Знизу ліворуч">
+<!ENTITY internote.bottomRightPos.value "Знизу праворуч">
+<!ENTITY internote.centerPos.value "У центрі">
+<!ENTITY internote.adjustDefaults.desc "(це вподобання, які можуть бути змінені для окремих нотаток пізніше перетягуванням меж нотатки чи кнопкою перемикання)">
+<!ENTITY internote.globalStylePrefs.caption "Вподобання для всіх нотаток">
+<!ENTITY internote.fontSize.label "Розмір шрифту:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.useTranslucencyCBox.label "Прозорі нотатки">
+<!ENTITY internote.useHighlightableCBox.label "Дозволити виділення тексту (для перетягування нотаток використовуйте межі)">
+<!ENTITY internote.useNativeScrollCBox.label "Використовувати типову смугу прокрутки">
+<!-- General Options -->
+<!ENTITY internote.generalPrefsPane.title "Загальне">
+<!ENTITY internote.generalPrefs.caption "Загальні вподобання">
+<!ENTITY internote.confirmDeleteCBox.label "Підтвердження стирання нотаток">
+<!ENTITY internote.useStatusBarCBox.label "Показувати Internote у рядку стану (панелі додатків)">
+<!ENTITY internote.confirmProviso.desc "(менеджер завжди питатиме вашої згоди перед стиранням кількох нотаток)">
+<!ENTITY internote.storagePrefs.caption "Зберігання нотаток">
+<!ENTITY internote.useAlternativeCBox.label "Використати альтернативне розташування">
+<!ENTITY internote.browseButton.label "Огляд...">
+<!ENTITY internote.storageRestartProviso.desc "(нові розташування будуть задіяні після перезапуску Firefox)">
+<!ENTITY internote.storageMoveProviso.desc "(нотатки, що існують, не будуть переміщені до нового розташування, однак ви можете перенести їх через пункт &quot;Керування всіма нотатками&quot; у меню Internote)">
