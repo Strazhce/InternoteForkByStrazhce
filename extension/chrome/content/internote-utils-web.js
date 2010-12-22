@@ -590,6 +590,26 @@ setEnabledIDs: function(doc, eltNames, isEnabled)
     this.setEnabledElts(elts, isEnabled);
 },
 
+setCheckedElts: function(elts, isChecked)
+{
+    var elts2 = this.isArray(elts) ? elts : [elts];
+    
+    for (var i = 0; i < elts2.length; i++)
+    {
+        var elt = elts2[i];
+        
+        if (isChecked)
+        {
+            elt.setAttribute("checked", "true");
+        }
+        else
+        {
+            elt.removeAttribute("checked");
+        }
+    }
+    
+},
+
 setDisplayedElts: function(elts, isDisplayed)
 {
     var elts2 = this.isArray(elts) ? elts : [elts];

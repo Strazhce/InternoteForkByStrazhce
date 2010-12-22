@@ -73,17 +73,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 <menupopup id="menu_ToolsPopup">
     <menu accesskey="&internote.appName.accesskey;" label="&internote.appName.label;" class="menu-iconic" image="chrome://internote/skin/internote16.png" insertafter="javascriptConsole">
-        <menupopup id="internote-main-menu" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareMainMenu();">
+        <menupopup id="internote-main-menu" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareMenu();">
             <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCreatesNote();" />
-            <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-main" accesskey="&internote.minimizeAllCmd.accesskey;"
+            <menuitem label="&internote.minimizeAllCmd.label;" class="internote-minimize-all" accesskey="&internote.minimizeAllCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(true);" disabled="true"/>
-            <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-main" accesskey="&internote.unminimizeAllCmd.accesskey;"
+            <menuitem label="&internote.unminimizeAllCmd.label;" class="internote-unminimize-all" accesskey="&internote.unminimizeAllCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(false);" style="display: none;" />
             <menuitem label="&internote.openManagerCmd.label;" accesskey="&internote.openManagerCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensManager();" />
             <menuseparator />
-            <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-main"
+            <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" class="internote-display-notes"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;" />
             <menuseparator />
             <menuitem label="&internote.openPrefsCmd.label;" accesskey="&internote.openPrefsCmd.accesskey;"
@@ -98,6 +98,33 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     </menu>
 </menupopup>
 
+<vbox id="appmenuSecondaryPane">
+    <menu accesskey="&internote.appName.accesskey;" label="&internote.appName.label;" class="menu-iconic" image="chrome://internote/skin/internote16.png" insertafter="appmenu_addons">
+        <menupopup id="internote-firefox-menu" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareMenu();">
+            <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accesskey;"
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCreatesNote();" />
+            <menuitem label="&internote.minimizeAllCmd.label;" class="internote-minimize-all" accesskey="&internote.minimizeAllCmd.accesskey;"
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(true);" disabled="true"/>
+            <menuitem label="&internote.unminimizeAllCmd.label;" class="internote-unminimize-all" accesskey="&internote.unminimizeAllCmd.accesskey;"
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(false);" style="display: none;" />
+            <menuitem label="&internote.openManagerCmd.label;" accesskey="&internote.openManagerCmd.accesskey;"
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensManager();" />
+            <menuseparator />
+            <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" class="internote-display-notes"
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;"/>
+            <menuseparator />
+            <menuitem label="&internote.openPrefsCmd.label;" accesskey="&internote.openPrefsCmd.accesskey;"
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensPrefs();" />
+            <menuitem label="&internote.helpCmd.label;" accesskey="&internote.helpCmd.accesskey;"
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensHelp();" />
+            <menuitem label="&internote.reportBugCmd.label;" accesskey="&internote.reportBugCmd.accesskey;"
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userReportsBug();" />
+            <menuitem label="&internote.aboutCmd.label;" accesskey="&internote.aboutCmd.accesskey;"
+                      oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensAbout();" />
+        </menupopup>
+    </menu>
+</vbox>
+
 <toolbarpalette id="BrowserToolbarPalette">
     <toolbarbutton id="newInternoteButton" class="toolbarbutton-1 chromeclass-toolbar-additional" label="&internote.newNoteCmd.label;" command="cmd_newNote" tooltiptext="&internote.newNoteCmd.label;" />
 </toolbarpalette>
@@ -109,17 +136,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         </vbox>
     </tooltip>
     
-    <menupopup id="internote-popup-menu" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareStatusBarMenu();">
+    <menupopup id="internote-popup-menu" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareMenu();">
         <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCreatesNote();" />
-        <menuitem label="&internote.minimizeAllCmd.label;" id="internote-minimize-all-statusbar" accesskey="&internote.minimizeAllCmd.accesskey;"
+        <menuitem label="&internote.minimizeAllCmd.label;" class="internote-minimize-all" accesskey="&internote.minimizeAllCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(true);" disabled="true"/>
-        <menuitem label="&internote.unminimizeAllCmd.label;" id="internote-unminimize-all-statusbar" accesskey="&internote.unminimizeAllCmd.accesskey;"
+        <menuitem label="&internote.unminimizeAllCmd.label;" class="internote-unminimize-all" accesskey="&internote.unminimizeAllCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userMinimizesAll(false);" style="display: none;" />
         <menuitem label="&internote.openManagerCmd.label;" accesskey="&internote.openManagerCmd.accesskey;"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userOpensManager();" />
         <menuseparator />
-        <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" id="internote-display-notes-statusbar"
+        <menuitem label="&internote.displayNotesCmd.label;" type="checkbox" class="internote-display-notes"
                   oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userTogglesDisplay();" checked="true" accesskey="&internote.displayNotesCmd.accesskey;"/>
         <menuseparator />
         <menuitem label="&internote.openPrefsCmd.label;" accesskey="&internote.openPrefsCmd.accesskey;"
