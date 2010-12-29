@@ -1,69 +1,58 @@
 <!-- Main Menus -->
-
-  <!-- Application menu name in common.dtd. -->
-
-<!ENTITY internote.newNoteCmd.label               "Dodaj nową notatkę">
-<!ENTITY internote.newNoteCmd.accesskey           "D">
-<!ENTITY internote.minimizeAllCmd.label           "Minimalizuj notatki z tej strony">
-<!ENTITY internote.minimizeAllCmd.accesskey       "M">
-<!ENTITY internote.unminimizeAllCmd.label         "Przywróć notatki z tej strony">
-<!ENTITY internote.unminimizeAllCmd.accesskey     "P">
-<!ENTITY internote.openManagerCmd.label           "Zarządzaj notatkami…">
-<!ENTITY internote.openManagerCmd.accesskey       "Z">
-
-<!ENTITY internote.displayNotesCmd.label          "Wyświetlaj notatki">
-<!ENTITY internote.displayNotesCmd.accesskey      "W">
-
-<!ENTITY internote.openPrefsCmd.label             "Ustawienia…">
-<!ENTITY internote.openPrefsCmd.accesskey         "U">
-<!ENTITY internote.helpCmd.label                  "Pomoc…">
-<!ENTITY internote.helpCmd.accesskey              "P">
-<!ENTITY internote.reportBugCmd.label             "Zgłoś błąd…">
-<!ENTITY internote.reportBugCmd.accesskey         "B">
-<!ENTITY internote.aboutCmd.label                 "Internote – informacje…">
-<!ENTITY internote.aboutCmd.accesskey             "I">
-
+<!-- Application menu name in common.dtd. -->
+<!ENTITY internote.newNoteCmd.label "Dodaj nową notatkę">
+<!ENTITY internote.newNoteCmd.accesskey "D">
+<!ENTITY internote.minimizeAllCmd.label "Minimalizuj notatki z tej strony">
+<!ENTITY internote.minimizeAllCmd.accesskey "M">
+<!ENTITY internote.unminimizeAllCmd.label "Przywróć notatki z tej strony">
+<!ENTITY internote.unminimizeAllCmd.accesskey "P">
+<!ENTITY internote.openManagerCmd.label "Zarządzaj notatkami…">
+<!ENTITY internote.openManagerCmd.accesskey "Z">
+<!ENTITY internote.displayNotesCmd.label "Wyświetlaj notatki">
+<!ENTITY internote.displayNotesCmd.accesskey "W">
+<!ENTITY internote.openPrefsCmd.label "Ustawienia…">
+<!ENTITY internote.openPrefsCmd.accesskey "U">
+<!ENTITY internote.helpCmd.label "Pomoc…">
+<!ENTITY internote.helpCmd.accesskey "P">
+<!ENTITY internote.reportBugCmd.label "Zgłoś błąd…">
+<!ENTITY internote.reportBugCmd.accesskey "B">
+<!ENTITY internote.aboutCmd.label "Internote – informacje…">
+<!ENTITY internote.aboutCmd.accesskey "I">
 <!-- Note Context Menu -->
-
-<!ENTITY internote.cutTextCmd.label               "Wytnij">
-<!ENTITY internote.cutTextCmd.accesskey           "T">
-<!ENTITY internote.copyTextCmd.label              "Kopiuj">
-<!ENTITY internote.copyTextCmd.accesskey          "K">
-<!ENTITY internote.pasteTextCmd.label             "Wklej">
-<!ENTITY internote.pasteTextCmd.accesskey         "W">
-<!ENTITY internote.deleteTextCmd.label            "Usuń">
-<!ENTITY internote.deleteTextCmd.accesskey        "U">
-  <!-- Select All in common.dtd. -->
-
-<!ENTITY internote.setDefaultColorsCmd.label      "Użyj jako domyślne kolory">
-<!ENTITY internote.setDefaultColorsCmd.accesskey  "D">
-
-<!ENTITY internote.deleteNoteCmd.label            "Usuń notatkę">
-<!ENTITY internote.deleteNoteCmd.accesskey        "S">
-<!ENTITY internote.chooseColorsCmd.label          "Wybierz kolory">
-<!ENTITY internote.chooseColorsCmd.accesskey      "B">
-<!ENTITY internote.editTextCmd.label              "Edytuj tekst">
-<!ENTITY internote.editTextCmd.accesskey          "E">
-<!ENTITY internote.minimizeNoteCmd.label          "Minimalizuj notatkę">
-<!ENTITY internote.minimizeNoteCmd.accesskey      "M">
-<!ENTITY internote.unminimizeNoteCmd.label        "Przywróć notatkę">
-<!ENTITY internote.unminimizeNoteCmd.accesskey    "P">
-<!ENTITY internote.viewInOpenManagerCmd.label     "Zarządzaj notatką">
+<!ENTITY internote.cutTextCmd.label "Wytnij">
+<!ENTITY internote.cutTextCmd.accesskey "T">
+<!ENTITY internote.copyTextCmd.label "Kopiuj">
+<!ENTITY internote.copyTextCmd.accesskey "K">
+<!ENTITY internote.pasteTextCmd.label "Wklej">
+<!ENTITY internote.pasteTextCmd.accesskey "W">
+<!ENTITY internote.deleteTextCmd.label "Usuń">
+<!ENTITY internote.deleteTextCmd.accesskey "U">
+<!-- Select All in common.dtd. -->
+<!ENTITY internote.setDefaultColorsCmd.label "Użyj jako domyślne kolory">
+<!ENTITY internote.setDefaultColorsCmd.accesskey "D">
+<!ENTITY internote.deleteNoteCmd.label "Usuń notatkę">
+<!ENTITY internote.deleteNoteCmd.accesskey "S">
+<!ENTITY internote.chooseColorsCmd.label "Wybierz kolory">
+<!ENTITY internote.chooseColorsCmd.accesskey "B">
+<!ENTITY internote.editTextCmd.label "Edytuj tekst">
+<!ENTITY internote.editTextCmd.accesskey "E">
+<!ENTITY internote.minimizeNoteCmd.label "Minimalizuj notatkę">
+<!ENTITY internote.minimizeNoteCmd.accesskey "M">
+<!ENTITY internote.unminimizeNoteCmd.label "Przywróć notatkę">
+<!ENTITY internote.unminimizeNoteCmd.accesskey "P">
+<!ENTITY internote.viewInOpenManagerCmd.label "Zarządzaj notatką">
 <!ENTITY internote.viewInOpenManagerCmd.accesskey "R">
-
-<!ENTITY internote.showsOnMenuCmd.label           "Wyświetlaj na">
-<!ENTITY internote.showsOnMenuCmd.accesskey       "A">
-<!ENTITY internote.showsOnPageCmd.label           "Tylko na tej stronie">
-<!ENTITY internote.showsOnPageCmd.accesskey       "S">
-<!ENTITY internote.showsOnSiteCmd.label           "Tylko na tej witrynie">
-<!ENTITY internote.showsOnSiteCmd.accesskey       "t">
-<!ENTITY internote.showsOnAllCmd.label            "Na wszystkich stronach">
-<!ENTITY internote.showsOnAllCmd.accesskey        "Z">
-<!ENTITY internote.showsRegexpCmd.label           "Stronach odpowiadających RegExp">
-<!ENTITY internote.showsRegexpCmd.accesskey       "R">
-  <!-- Some elements of this menu are dynamic, and properties. -->
-
-<!ENTITY internote.ignoreParamsCmd.accesskey      "p">
-<!ENTITY internote.ignoreAnchorCmd.accesskey      "K">
-  <!-- Ignore Params/Anchor labels in common.dtd. -->
-
+<!ENTITY internote.showsOnMenuCmd.label "Wyświetlaj na">
+<!ENTITY internote.showsOnMenuCmd.accesskey "A">
+<!ENTITY internote.showsOnPageCmd.label "Tylko na tej stronie">
+<!ENTITY internote.showsOnPageCmd.accesskey "S">
+<!ENTITY internote.showsOnSiteCmd.label "Tylko na tej witrynie">
+<!ENTITY internote.showsOnSiteCmd.accesskey "t">
+<!ENTITY internote.showsOnAllCmd.label "Na wszystkich stronach">
+<!ENTITY internote.showsOnAllCmd.accesskey "Z">
+<!ENTITY internote.showsRegexpCmd.label "Stronach odpowiadających RegExp">
+<!ENTITY internote.showsRegexpCmd.accesskey "R">
+<!-- Some elements of this menu are dynamic, and properties. -->
+<!ENTITY internote.ignoreParamsCmd.accesskey "p">
+<!ENTITY internote.ignoreAnchorCmd.accesskey "K">
+<!-- Ignore Params/Anchor labels in common.dtd. -->

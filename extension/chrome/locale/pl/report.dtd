@@ -1,16 +1,12 @@
-<!ENTITY internote.bugReportDialog.title       "Internote – zgłaszanie błędów">
-
-<!ENTITY internote.infoThanks.desc             "Dziękuję za zgłoszenie błędu. Twoje zgłoszenie pomoże udoskonalić Internote. Wszystkie przesłane informacje będą użyte tylko jako pomoc w rozwiązywaniu błędów.">
-<!ENTITY internote.infoType.desc               "Poniżej znajdują się ważne automatycznie zbierane dane, które mogą pomóc zdiagnozować problem.">
-<!ENTITY internote.infoDisclaimer.desc         "Zawierają one listę zainstalowanych rozszerzeń oraz mogą zawierać dane o notatkach i sesji przeglądania.">
-<!ENTITY internote.sendInstructions.desc       "Po podaniu danych, za pomocą przycisku znajdującego się poniżej, skopiuj wszystkie informacje i przejdź na stronę zgłaszania błędów.">
-
-<!ENTITY internote.infoWhy.desc                "Po co jest to potrzebne?">
-<!ENTITY internote.infoReasons1.desc           "Informacje o zainstalowanych rozszerzeniach są potrzebne do zidentyfikowania czy występujący problem nie jest spowodowany konfliktem z innym rozszerzeniem.">
-<!ENTITY internote.infoReasons2.desc           "Gdy problemy zostaną wykryte, dane mające związek z danym problemem będą zbierane, by pomóc znaleźć przyczynę jego wystąpienia. Dane te mogą zawierać informacje o twoich notatkach i sesji przeglądarki.">
-
-<!ENTITY internote.reportComments.desc         "Opisz kroki, które doprowadziły do wystąpienia problemu i podaj wszystkie informacje z tym związane.">
-<!ENTITY internote.reportEmail.desc            "Jeśli podasz tutaj swój adres e-mail, jeśli zajdzie taka potrzeba, możesz otrzymać prośbę o dodatkowe informacje pomocne w rozwiązaniu problemu.">
-
+<!ENTITY internote.bugReportDialog.title "Internote – zgłaszanie błędów">
+<!ENTITY internote.infoThanks.desc "Dziękuję za zgłoszenie błędu. Twoje zgłoszenie pomoże udoskonalić Internote. Wszystkie przesłane informacje będą użyte tylko jako pomoc w rozwiązywaniu błędów.">
+<!ENTITY internote.infoType.desc "Poniżej znajdują się ważne automatycznie zbierane dane, które mogą pomóc zdiagnozować problem.">
+<!ENTITY internote.infoDisclaimer.desc "Zawierają one listę zainstalowanych rozszerzeń oraz mogą zawierać dane o notatkach i sesji przeglądania.">
+<!ENTITY internote.sendInstructions.desc "Po podaniu danych, za pomocą przycisku znajdującego się poniżej, skopiuj wszystkie informacje i przejdź na stronę zgłaszania błędów.">
+<!ENTITY internote.infoWhy.desc "Po co jest to potrzebne?">
+<!ENTITY internote.infoReasons1.desc "Informacje o zainstalowanych rozszerzeniach są potrzebne do zidentyfikowania czy występujący problem nie jest spowodowany konfliktem z innym rozszerzeniem.">
+<!ENTITY internote.infoReasons2.desc "Gdy problemy zostaną wykryte, dane mające związek z danym problemem będą zbierane, by pomóc znaleźć przyczynę jego wystąpienia. Dane te mogą zawierać informacje o twoich notatkach i sesji przeglądarki.">
+<!ENTITY internote.reportComments.desc "Opisz kroki, które doprowadziły do wystąpienia problemu i podaj wszystkie informacje z tym związane.">
+<!ENTITY internote.reportEmail.desc "Jeśli podasz tutaj swój adres e-mail, jeśli zajdzie taka potrzeba, możesz otrzymać prośbę o dodatkowe informacje pomocne w rozwiązaniu problemu.">
 <!ENTITY internote.submitBugReportButton.label "Zgłoś błąd">
-<!ENTITY internote.infoCopy.label              "Kopiuj informacje">
+<!ENTITY internote.infoCopy.label "Kopiuj informacje">

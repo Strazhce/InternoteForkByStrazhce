@@ -1,0 +1,25 @@
+<!-- App Name -->
+<!ENTITY internote.appName.label "Internote">
+<!ENTITY internote.appName.accesskey "N">
+<!-- Dialog Buttons -->
+<!ENTITY internote.closeButton.label "Bezár">
+<!-- Color Names -->
+<!ENTITY internote.bananaColor.value "Banán">
+<!ENTITY internote.melonColor.value "Sárgadinnye">
+<!ENTITY internote.blueberryColor.value "Áfonya">
+<!ENTITY internote.limeColor.value "Zöld citrom">
+<!ENTITY internote.grapeColor.value "Szőlő">
+<!ENTITY internote.cauliflowerColor.value "Karfiol">
+<!ENTITY internote.charcoalColor.value "Szén">
+<!ENTITY internote.topsoilColor.value "Talaj">
+<!ENTITY internote.grassColor.value "Fűzöld">
+<!ENTITY internote.roseColor.value "Rózsaszín">
+<!ENTITY internote.aluminumColor.value "Alumínium">
+<!ENTITY internote.snowColor.value "Hószín">
+<!-- Commands that appear in several places -->
+<!ENTITY internote.ignoreParamsCmd.label "Paraméterek mellőzése">
+<!ENTITY internote.ignoreAnchorCmd.label "Horgony mellőzése">
+<!ENTITY internote.ignoreParamsCmd.label2 "A ? után">
+<!ENTITY internote.ignoreAnchorCmd.label2 "A # után">
+<!ENTITY internote.selectAllCmd.label "Mindet kijelöl">
+<!ENTITY internote.selectAllCmd.accesskey "K">
