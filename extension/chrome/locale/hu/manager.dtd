@@ -7,10 +7,10 @@
 <!-- Left Panel Menu Commands -->
 <!ENTITY internote.actionsCmd.label "Műveletek">
 <!ENTITY internote.actionsCmd.accesskey "M">
-<!ENTITY internote.expandSelectedCmd.label "Kiválasztottak megnyitása">
-<!ENTITY internote.expandSelectedCmd.accesskey "G">
-<!ENTITY internote.collapseSelectedCmd.label "Kiválasztottak elrejtése">
-<!ENTITY internote.collapseSelectedCmd.accesskey "J">
+<!ENTITY internote.expandSelectedCmd.label "Kiválasztottak kinyitása">
+<!ENTITY internote.expandSelectedCmd.accesskey "K">
+<!ENTITY internote.collapseSelectedCmd.label "Kiválasztottak összecsukása">
+<!ENTITY internote.collapseSelectedCmd.accesskey "S">
 <!-- Select All in common.dtd. -->
 <!ENTITY internote.deleteSelectedCmd.label "Kiválasztottak törlése">
 <!ENTITY internote.deleteSelectedCmd.accesskey "T">
@@ -29,7 +29,7 @@
 <!ENTITY internote.exportSelectedCmd.label "Kiválasztottak exportálása">
 <!ENTITY internote.exportSelectedCmd.accesskey "X">
 <!ENTITY internote.exportAllCmd.label "Összes exportálása">
-<!ENTITY internote.exportAllCmd.accesskey "R">
+<!ENTITY internote.exportAllCmd.accesskey "E">
 <!ENTITY internote.toV3Cmd.label "Internote v3-as fájlba...">
 <!ENTITY internote.toV3Cmd.accesskey "3">
 <!ENTITY internote.toV2Cmd.label "Internote v2-es fájlba...">
@@ -37,19 +37,19 @@
 <!ENTITY internote.toBookmarksCmd.label "Könyvjelzőként...">
 <!ENTITY internote.toBookmarksCmd.accesskey "K">
 <!ENTITY internote.toTextCmd.label "Szöveggént...">
-<!ENTITY internote.toTextCmd.accesskey "Z">
+<!ENTITY internote.toTextCmd.accesskey "S">
 <!ENTITY internote.toHTMLCmd.label "HTML dokumentumként...">
 <!ENTITY internote.toHTMLCmd.accesskey "H">
 <!-- Right Panel -->
-<!ENTITY internote.noteScope.caption "A jegyzet megjelenik">
+<!ENTITY internote.noteScope.caption "A jegyzet megjelenítése">
 <!ENTITY internote.noteMatchType.label "Melyik oldalakon?">
-<!ENTITY internote.urlMatchExact.value "Csak egyen">
+<!ENTITY internote.urlMatchExact.value "Csak egy oldalon">
 <!ENTITY internote.urlMatchSite.value "Csak ezen a honlapon">
 <!ENTITY internote.urlMatchStarts.value "Ha az URL így kezdődik...">
 <!ENTITY internote.urlMatchSuffix.value "Ha az oldal így végződik...">
-<!ENTITY internote.urlMatchAll.value "Mindenhol (Univerzális jegyzet)">
+<!ENTITY internote.urlMatchAll.value "Mindenhol (univerzális jegyzet)">
 <!ENTITY internote.urlMatchRegexp.value "RegExp-nek megfelelően">
-<!ENTITY internote.goLink.label "Menj az oldalra">
+<!ENTITY internote.goLink.label "Ugrás az oldalra">
 <!ENTITY internote.noteURL.label "URL:">
 <!ENTITY internote.noteSite.label "Oldal:">
 <!ENTITY internote.noteURLPrefix.label "URL így kezdődik:">
@@ -65,5 +65,5 @@
 <!ENTITY internote.thisNoteActions.caption "Műveletek ezzel a jegyzettel">
 <!ENTITY internote.deleteCurrentCmd.label "Jegyzet törlése">
 <!ENTITY internote.deleteCurrentCmd.accesskey "T">
-<!ENTITY internote.resetCurrentCmd.label "Hely visszaállítása">
+<!ENTITY internote.resetCurrentCmd.label "Jegyzet helyének visszaállítása">
 <!ENTITY internote.resetCurrentCmd.accesskey "V">

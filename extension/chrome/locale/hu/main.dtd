@@ -2,57 +2,57 @@
 <!-- Application menu name in common.dtd. -->
 <!ENTITY internote.newNoteCmd.label "Új jegyzet">
 <!ENTITY internote.newNoteCmd.accesskey "J">
-<!ENTITY internote.minimizeAllCmd.label "Kicsinyítsd az oldal jegyzeteit">
-<!ENTITY internote.minimizeAllCmd.accesskey "I">
-<!ENTITY internote.unminimizeAllCmd.label "Állítsd vissza az oldal jegyzeteit">
-<!ENTITY internote.unminimizeAllCmd.accesskey "Á">
+<!ENTITY internote.minimizeAllCmd.label "Oldal jegyzeteinek kicsinyítése">
+<!ENTITY internote.minimizeAllCmd.accesskey "L">
+<!ENTITY internote.unminimizeAllCmd.label "Oldal jegyzeteinek visszaállítása">
+<!ENTITY internote.unminimizeAllCmd.accesskey "L">
 <!ENTITY internote.openManagerCmd.label "Minden jegyzet kezelése...">
 <!ENTITY internote.openManagerCmd.accesskey "K">
 <!ENTITY internote.displayNotesCmd.label "Jegyzetek megjelenítése">
-<!ENTITY internote.displayNotesCmd.accesskey "E">
+<!ENTITY internote.displayNotesCmd.accesskey "M">
 <!ENTITY internote.openPrefsCmd.label "Opciók...">
 <!ENTITY internote.openPrefsCmd.accesskey "O">
 <!ENTITY internote.helpCmd.label "Súgó...">
-<!ENTITY internote.helpCmd.accesskey "Ú">
-<!ENTITY internote.reportBugCmd.label "Hiba jelentése...">
+<!ENTITY internote.helpCmd.accesskey "S">
+<!ENTITY internote.reportBugCmd.label "Hibajelentés...">
 <!ENTITY internote.reportBugCmd.accesskey "H">
 <!ENTITY internote.aboutCmd.label "Az Internote-ról...">
-<!ENTITY internote.aboutCmd.accesskey "R">
+<!ENTITY internote.aboutCmd.accesskey "I">
 <!-- Note Context Menu -->
-<!ENTITY internote.cutTextCmd.label "Kivág">
-<!ENTITY internote.cutTextCmd.accesskey "V">
-<!ENTITY internote.copyTextCmd.label "Másol">
-<!ENTITY internote.copyTextCmd.accesskey "Á">
-<!ENTITY internote.pasteTextCmd.label "Beszúr">
-<!ENTITY internote.pasteTextCmd.accesskey "Ú">
-<!ENTITY internote.deleteTextCmd.label "Töröl">
-<!ENTITY internote.deleteTextCmd.accesskey "Ö">
+<!ENTITY internote.cutTextCmd.label "Kivágás">
+<!ENTITY internote.cutTextCmd.accesskey "K">
+<!ENTITY internote.copyTextCmd.label "Másolás">
+<!ENTITY internote.copyTextCmd.accesskey "M">
+<!ENTITY internote.pasteTextCmd.label "Beillesztés">
+<!ENTITY internote.pasteTextCmd.accesskey "B">
+<!ENTITY internote.deleteTextCmd.label "Törlés">
+<!ENTITY internote.deleteTextCmd.accesskey "T">
 <!-- Select All in common.dtd. -->
-<!ENTITY internote.setDefaultColorsCmd.label "Használd alapértelmezett színként">
-<!ENTITY internote.setDefaultColorsCmd.accesskey "N">
-<!ENTITY internote.deleteNoteCmd.label "Töröld a jegyzetet">
-<!ENTITY internote.deleteNoteCmd.accesskey "L">
-<!ENTITY internote.chooseColorsCmd.label "Válassz új színt">
-<!ENTITY internote.chooseColorsCmd.accesskey "V">
+<!ENTITY internote.setDefaultColorsCmd.label "Beállítás alapértelmezett színként">
+<!ENTITY internote.setDefaultColorsCmd.accesskey "A">
+<!ENTITY internote.deleteNoteCmd.label "Jegyzet törlése">
+<!ENTITY internote.deleteNoteCmd.accesskey "R">
+<!ENTITY internote.chooseColorsCmd.label "Új szín választása">
+<!ENTITY internote.chooseColorsCmd.accesskey "N">
 <!ENTITY internote.editTextCmd.label "Szöveg szerkesztése">
-<!ENTITY internote.editTextCmd.accesskey "Z">
+<!ENTITY internote.editTextCmd.accesskey "S">
 <!ENTITY internote.minimizeNoteCmd.label "Jegyzet kicsinyítése">
-<!ENTITY internote.minimizeNoteCmd.accesskey "G">
+<!ENTITY internote.minimizeNoteCmd.accesskey "J">
 <!ENTITY internote.unminimizeNoteCmd.label "Jegyzet visszaállítása">
-<!ENTITY internote.unminimizeNoteCmd.accesskey "Y">
+<!ENTITY internote.unminimizeNoteCmd.accesskey "J">
 <!ENTITY internote.viewInOpenManagerCmd.label "Jegyzet kezelése">
-<!ENTITY internote.viewInOpenManagerCmd.accesskey "S">
+<!ENTITY internote.viewInOpenManagerCmd.accesskey "K">
 <!ENTITY internote.showsOnMenuCmd.label "Megjelenik itt">
-<!ENTITY internote.showsOnMenuCmd.accesskey "T">
+<!ENTITY internote.showsOnMenuCmd.accesskey "M">
 <!ENTITY internote.showsOnPageCmd.label "Csak ezen az oldalon">
-<!ENTITY internote.showsOnPageCmd.accesskey "D">
+<!ENTITY internote.showsOnPageCmd.accesskey "Z">
 <!ENTITY internote.showsOnSiteCmd.label "Csak ezen a honlapon">
-<!ENTITY internote.showsOnSiteCmd.accesskey "P">
+<!ENTITY internote.showsOnSiteCmd.accesskey "H">
 <!ENTITY internote.showsOnAllCmd.label "Minden oldalon">
-<!ENTITY internote.showsOnAllCmd.accesskey "A">
-<!ENTITY internote.showsRegexpCmd.label "Regular Expression-nak megfelelő oldalakon">
+<!ENTITY internote.showsOnAllCmd.accesskey "M">
+<!ENTITY internote.showsRegexpCmd.label "Reguláris kifejezésnek megfelelő oldalakon">
 <!ENTITY internote.showsRegexpCmd.accesskey "R">
 <!-- Some elements of this menu are dynamic, and properties. -->
 <!ENTITY internote.ignoreParamsCmd.accesskey "P">
-<!ENTITY internote.ignoreAnchorCmd.accesskey "C">
+<!ENTITY internote.ignoreAnchorCmd.accesskey "O">
 <!-- Ignore Params/Anchor labels in common.dtd. -->

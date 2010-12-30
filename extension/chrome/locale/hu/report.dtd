@@ -1,12 +1,12 @@
-<!ENTITY internote.bugReportDialog.title "Internote program hiba jelentése">
-<!ENTITY internote.infoThanks.desc "Köszönjük, hogy jelented a program hibát - ez segíteni fog abban, hogy az Internote jobb legyen. A beküldött információt csakis a hiba javításval kapcsolatosan fogjuk felhasználni.">
+<!ENTITY internote.bugReportDialog.title "Internote hibajelentés">
+<!ENTITY internote.infoThanks.desc "Köszönjük, hogy jelenti a program hibát - ez segíteni fog abban, hogy az Internote jobb legyen. A beküldött információt csakis a hiba javításval kapcsolatosan fogjuk felhasználni.">
 <!ENTITY internote.infoType.desc "Alább fontos, automatikusan összegyűjtött adatok találhatóak, melyek segíthetnek a hiba megtalálásában.">
-<!ENTITY internote.infoDisclaimer.desc "Ez a telepített kiterjesztések listáját is tartalmazza és tartalmazhat információkat az ez alkalom során megnyitott oldalakról is.">
-<!ENTITY internote.sendInstructions.desc "Ha befejezted a program hiba leírását, kérjük másold le az összes információt az alábbi gombra kattintva, majd látogasd meg az alábbi weboldalt.">
+<!ENTITY internote.infoDisclaimer.desc "Ez a telepített kiterjesztések listáját is tartalmazza és tartalmazhat információkat az ezen alkalom során megnyitott oldalakról is.">
+<!ENTITY internote.sendInstructions.desc "Ha befejezte a programhiba leírását, kérjük másolja le az összes információt az alábbi gombra kattintva, majd látogassa meg az alábbi weboldalt.">
 <!ENTITY internote.infoWhy.desc "Miért szükséges ez?">
-<!ENTITY internote.infoReasons1.desc "A telepített kiterjesztéseid listája szükséges ahhoz, hogy megállapíthassuk hogy Internote konfliktusba lépett-e bármely más kiterjesztéssel.">
-<!ENTITY internote.infoReasons2.desc "Valahányszor hibát észlel a program, a hibával kapcsolatos adatokat automatikusan összegyűjti a hiba okának kiderítése érdekében. Előfordulhat, hogy ez tartalmaz adatokat a jegyzeteidről és az ez alkalom során megnyitott oldalakról.">
-<!ENTITY internote.reportComments.desc "Kérjük írd le azokat a lépéseket, melyek a hiba megjelenéséhez vezettek és bármi mást is amiről úgy gondolod, hogy fontos lehet.">
-<!ENTITY internote.reportEmail.desc "Ha ide beírod az emailed, beleegyezel abba, hogy a hibával kapcsolatos kérdésekkel hozzád forduljunk, ha ez szükséges a hiba javításához.">
-<!ENTITY internote.submitBugReportButton.label "Hibajelentés elküldése">
+<!ENTITY internote.infoReasons1.desc "A telepített kiterjesztéseinek listája szükséges ahhoz, hogy megállapíthassuk, hogy az Internote konfliktusba lépett-e bármely más kiterjesztéssel.">
+<!ENTITY internote.infoReasons2.desc "Valahányszor hibát észlel a program, a hibával kapcsolatos adatokat automatikusan összegyűjti a hiba okának kiderítése érdekében. Előfordulhat, hogy ez tartalmaz adatokat a jegyzeteiről és az ez alkalom során megnyitott oldalakról.">
+<!ENTITY internote.reportComments.desc "Kérjük írja le azokat a lépéseket, melyek a hiba megjelenéséhez vezettek és bármi mást is amiről úgy gondolja, hogy fontos lehet.">
+<!ENTITY internote.reportEmail.desc "Ha ide beírja az emailcímét, beleegyezik abba, hogy a hibával kapcsolatos kérdéseket tegyünk fel emailen, ha ez szükséges a hiba javításához.">
+<!ENTITY internote.submitBugReportButton.label "Hibajelentés beküldése">
 <!ENTITY internote.infoCopy.label "Összes információ másolása">

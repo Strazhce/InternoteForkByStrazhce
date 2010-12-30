@@ -1,4 +1,4 @@
-<!ENTITY internote.aboutDialog.title "Az Internote programról">
+<!ENTITY internote.aboutDialog.title "Az Internote névjegye">
 <!ENTITY internote.aboutVersion.label "Verziószám">
 <!ENTITY internote.aboutPeople.caption "Azok, akik hozzájárultak ahhoz, hogy az Internote az legyen, ami">
 <!ENTITY internote.aboutHomePage.label "Internote honlap">
@@ -6,4 +6,4 @@
 <!ENTITY internote.aboutDevelopers.caption "Fejlesztők">
 <!ENTITY internote.aboutContributors.caption "Közreműködők">
 <!ENTITY internote.aboutTranslators.caption "Fordítók">
-<!ENTITY internote.licensing.label "Az Internote ingyenes szoftver a GNU General Public License 2-es vagy későbbi verziójának feltételei szerint kiadva. Néhány részek nyilvánosan, illetve különböző de kompatibilis feltételek mellett állnak a nyilvánosság rendelkezésére. Bővebb információkért kérjük látogassa meg az Internote internetes oldalát (fent).">
+<!ENTITY internote.licensing.label "Az Internote szabad szoftver a GNU General Public License 2-es vagy későbbi verziójának feltételei szerint kiadva. Néhány része nyilvánosan, illetve különböző, de kompatibilis feltételek mellett áll a felhasználók rendelkezésére. Bővebb információkért látogassa meg az Internote honlapját (fent).">
