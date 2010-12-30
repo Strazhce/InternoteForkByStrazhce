@@ -99,7 +99,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 </menupopup>
 
 <vbox id="appmenuSecondaryPane">
-    <menu accesskey="&internote.appName.accesskey;" label="&internote.appName.label;" class="menu-iconic" image="chrome://internote/skin/internote16.png" insertafter="appmenu_addons">
+    <menu label="&internote.appName.label;" class="menu-iconic" image="chrome://internote/skin/internote16.png" insertafter="appmenu_addons">
         <menupopup id="internote-firefox-menu" onpopupshowing="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.chromePrepareMenu();">
             <menuitem label="&internote.newNoteCmd.label;" accesskey="&internote.newNoteCmd.accesskey;"
                       oncommand="internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.controller.userCreatesNote();" />
