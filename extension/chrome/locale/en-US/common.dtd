@@ -1,6 +1,8 @@
 <!-- App Name -->
 
 <!ENTITY internote.appName.label              "Internote">
+<!-- This appears on the Firefox Tools menu to access the Internote submenu. Other extensions are likely
+     to unavoidably clash with this accesskey, but you should at least not clash with Firefox. -->
 <!ENTITY internote.appName.accesskey          "N">
 
 <!-- Dialog Buttons -->
