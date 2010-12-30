@@ -20,7 +20,7 @@
 <!ENTITY internote.topsoilColor.value         "Topsoil">
 <!ENTITY internote.grassColor.value           "Grass">
 <!ENTITY internote.roseColor.value            "Rose">
-<!ENTITY internote.aluminumColor.value        "Aluminum">
+<!ENTITY internote.aluminumColor.value        "Aluminium">
 <!ENTITY internote.snowColor.value            "Snow">
 
 <!-- Commands that appear in several places -->
