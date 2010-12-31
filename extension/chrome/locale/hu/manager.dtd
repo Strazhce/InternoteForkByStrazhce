@@ -21,7 +21,7 @@
 <!ENTITY internote.printAllCmd.label "Összes nyomtatása...">
 <!ENTITY internote.printAllCmd.accesskey "Y">
 <!ENTITY internote.importCmd.label "Importálás">
-<!ENTITY internote.importCmd.accesskey "I">
+<!ENTITY internote.importCmd.accesskey "P">
 <!ENTITY internote.fromV3Cmd.label "Internote v3-as fájlból...">
 <!ENTITY internote.fromV3Cmd.accesskey "3">
 <!ENTITY internote.fromV2Cmd.label "Internote v2-es fájlból...">

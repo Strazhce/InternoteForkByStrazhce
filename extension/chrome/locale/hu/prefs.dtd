@@ -24,12 +24,12 @@
 <!-- Sizes defined at the top. -->
 <!ENTITY internote.useTranslucencyCBox.label "Áttetsző jegyzetlapok">
 <!ENTITY internote.useHighlightableCBox.label "Kijelölhető szöveg (lap a határaival mozgatható)">
-<!ENTITY internote.useNativeScrollCBox.label "Használd a rendszer görgetősávját az Internote görgetősávja helyett">
+<!ENTITY internote.useNativeScrollCBox.label "Használja a rendszer görgetősávját az Internote görgetősávja helyett">
 <!-- General Options -->
 <!ENTITY internote.generalPrefsPane.title "Általános">
 <!ENTITY internote.generalPrefs.caption "Általános opciók">
 <!ENTITY internote.confirmDeleteCBox.label "Törlés megerősítése">
-<!ENTITY internote.useStatusBarCBox.label "Mutasd az Internote-ot az állapotsávon">
+<!ENTITY internote.useStatusBarCBox.label "Mutassa az Internote-ot az állapotsávon">
 <!ENTITY internote.confirmProviso.desc "(Több jegyzet kezelőből való törlésekor a program mindig megerősítést kér.)">
 <!ENTITY internote.storagePrefs.caption "Tárolási opciók">
 <!ENTITY internote.useAlternativeCBox.label "Használjon más mentési helyet">

@@ -41,9 +41,9 @@
 <!ENTITY internote.unminimizeNoteCmd.label "Jegyzet visszaállítása">
 <!ENTITY internote.unminimizeNoteCmd.accesskey "J">
 <!ENTITY internote.viewInOpenManagerCmd.label "Jegyzet kezelése">
-<!ENTITY internote.viewInOpenManagerCmd.accesskey "K">
+<!ENTITY internote.viewInOpenManagerCmd.accesskey "Z">
 <!ENTITY internote.showsOnMenuCmd.label "Megjelenik itt">
-<!ENTITY internote.showsOnMenuCmd.accesskey "M">
+<!ENTITY internote.showsOnMenuCmd.accesskey "G">
 <!ENTITY internote.showsOnPageCmd.label "Csak ezen az oldalon">
 <!ENTITY internote.showsOnPageCmd.accesskey "Z">
 <!ENTITY internote.showsOnSiteCmd.label "Csak ezen a honlapon">
@@ -54,5 +54,5 @@
 <!ENTITY internote.showsRegexpCmd.accesskey "R">
 <!-- Some elements of this menu are dynamic, and properties. -->
 <!ENTITY internote.ignoreParamsCmd.accesskey "P">
-<!ENTITY internote.ignoreAnchorCmd.accesskey "O">
+<!ENTITY internote.ignoreAnchorCmd.accesskey "H">
 <!-- Ignore Params/Anchor labels in common.dtd. -->

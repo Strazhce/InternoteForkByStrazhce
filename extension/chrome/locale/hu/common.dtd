@@ -2,7 +2,7 @@
 <!ENTITY internote.appName.label "Internote">
 <!ENTITY internote.appName.accesskey "N">
 <!-- Dialog Buttons -->
-<!ENTITY internote.closeButton.label "Bezár">
+<!ENTITY internote.closeButton.label "Bezárás">
 <!-- Color Names -->
 <!ENTITY internote.bananaColor.value "Banán">
 <!ENTITY internote.melonColor.value "Sárgadinnye">
