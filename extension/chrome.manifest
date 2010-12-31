@@ -11,7 +11,7 @@ locale internote fr    chrome/locale/fr/
 locale internote hu    chrome/locale/hu/
 locale internote pl    chrome/locale/pl/
 locale internote sv-SE chrome/locale/sv-SE/
-locale internote uk-UA chrome/locale/uk-UA/
+locale internote uk    chrome/locale/uk/
 
 skin internote classic/1.0 chrome/skin/
 style chrome://global/content/customizeToolbar.xul chrome://internote/skin/overlay.css
