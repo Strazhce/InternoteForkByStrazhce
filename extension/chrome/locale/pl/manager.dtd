@@ -42,7 +42,7 @@
 <!ENTITY internote.toHTMLCmd.accesskey "H">
 <!-- Right Panel -->
 <!ENTITY internote.noteScope.caption "Konfiguracja notatki">
-<!ENTITY internote.noteMatchType.label "Na których stronach?">
+<!ENTITY internote.noteMatchType.label "Na których witrynach?">
 <!ENTITY internote.urlMatchExact.value "Tylko jedna">
 <!ENTITY internote.urlMatchSite.value "Tylko na tej witrynie">
 <!ENTITY internote.urlMatchStarts.value "URL zaczyna się od…">

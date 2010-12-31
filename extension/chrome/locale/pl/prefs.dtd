@@ -1,14 +1,14 @@
 <!ENTITY internote.prefsDialog.title "Internote – ustawienia">
 <!-- Appearance -->
 <!ENTITY internote.appearancePrefsPane.title "Wygląd">
-<!ENTITY internote.tinySize.value "mały">
-<!ENTITY internote.normalSize.value "normalny">
-<!ENTITY internote.largeSize.value "duży">
-<!ENTITY internote.giantSize.value "bardzo duży">
-<!ENTITY internote.megaSize.value "ogromny">
+<!ENTITY internote.tinySize.value "mała">
+<!ENTITY internote.normalSize.value "normalna">
+<!ENTITY internote.largeSize.value "duża">
+<!ENTITY internote.giantSize.value "bardzo duża">
+<!ENTITY internote.megaSize.value "ogromna">
 <!ENTITY internote.defaultStylePrefs.caption "Ustawienia dla nowych notatek">
 <!ENTITY internote.defaultNoteColor.label "Domyślny kolor notatki:">
-<!ENTITY internote.defaultTextColor.label "Domyslny kolor tekstu:">
+<!ENTITY internote.defaultTextColor.label "Domyślny kolor tekstu:">
 <!-- Colors defined in common.dtd. -->
 <!ENTITY internote.defaultSize.label "Domyślna wielkość notatki:">
 <!-- Sizes defined at the top. -->
