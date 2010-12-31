@@ -1,0 +1,25 @@
+<!-- App Name -->
+<!ENTITY internote.appName.label "Internote">
+<!ENTITY internote.appName.accesskey "n">
+<!-- Dialog Buttons -->
+<!ENTITY internote.closeButton.label "Закрити">
+<!-- Color Names -->
+<!ENTITY internote.bananaColor.value "Банан">
+<!ENTITY internote.melonColor.value "Диня">
+<!ENTITY internote.blueberryColor.value "Чорниця">
+<!ENTITY internote.limeColor.value "Лайм">
+<!ENTITY internote.grapeColor.value "Виноград">
+<!ENTITY internote.cauliflowerColor.value "Цвітна капуста">
+<!ENTITY internote.charcoalColor.value "Вугілля">
+<!ENTITY internote.topsoilColor.value "Ґрунт">
+<!ENTITY internote.grassColor.value "Трава">
+<!ENTITY internote.roseColor.value "Троянда">
+<!ENTITY internote.aluminumColor.value "Алюміній">
+<!ENTITY internote.snowColor.value "Сніг">
+<!-- Commands that appear in several places -->
+<!ENTITY internote.ignoreParamsCmd.label "Ігнорувати параметри">
+<!ENTITY internote.ignoreAnchorCmd.label "Ігнорувати якорі">
+<!ENTITY internote.ignoreParamsCmd.label2 "Після символу &quot;?&quot;">
+<!ENTITY internote.ignoreAnchorCmd.label2 "Після символу &quot;#&quot;">
+<!ENTITY internote.selectAllCmd.label "Вибрати все">
+<!ENTITY internote.selectAllCmd.accesskey "б">

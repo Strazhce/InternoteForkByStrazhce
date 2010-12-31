@@ -16,24 +16,17 @@
     <em:contributor>Justin Lewis (Internote2, Beta Testing)</em:contributor>
     <em:contributor>Robert Horton (Internote2, Beta Testing)</em:contributor>
     
+    <em:translator>Goofy (French)</em:translator>
+    <em:translator>planekati (Hungarian)</em:translator>
     <em:translator>Leszek(teo)Życzkowski (Polish)</em:translator>
-    <em:translator>Rickart (2.0, Simplified Chinese)</em:translator>
-    <em:translator>AlleyKat (2.0, Danish)</em:translator>
-    <em:translator>Goofy (2.0, French)</em:translator>
-    <em:translator>neue.medien (2.0, German)</em:translator>
-    <em:translator>Rastislav Hubočan (2.0, Slovak)</em:translator>
-    <em:translator>Pedro (2.0, Italian)</em:translator>
-    <em:translator>Teboga (2.0, Brazilian Portuguese)</em:translator>
-    <em:translator>miles (2.0, Slovenian)</em:translator>
-    <em:translator>urko (2.0, Spanish)</em:translator>
-    <em:translator>Alf (2.0, Dutch)</em:translator>
-    <em:translator>stalker48 (2.0, Russian)</em:translator>
-    <em:translator>Heon Oh (2.0, Korean)</em:translator>
-
+    <em:translator>urko (Spanish)</em:translator>
+    <em:translator>Mikael Hiort af Ornäs (Swedish)</em:translator>
+    <em:translator>Yaroslav Krytsun (Ukrainian)</em:translator>
+    
     <em:id>{e3631030-7c02-11da-a72b-0800200c9a66}</em:id>
-    <em:version>3.0beta3pre</em:version>
+    <em:version>3.0rc1</em:version>
     <em:type>2</em:type>
-
+    
     <em:aboutURL>chrome://internote/content/internote-dlg-about.xul</em:aboutURL>
     <em:optionsURL>chrome://internote/content/internote-dlg-prefs.xul</em:optionsURL>
     <em:homepageURL>http://internote.sourceforge.net/</em:homepageURL>
@@ -44,7 +37,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
         <em:minVersion>3.0</em:minVersion>
-        <em:maxVersion>4.0b7</em:maxVersion>
+        <em:maxVersion>4.0.*</em:maxVersion>
       </Description>
     </em:targetApplication>
 

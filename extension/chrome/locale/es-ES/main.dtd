@@ -1,0 +1,58 @@
+<!-- Main Menus -->
+<!-- Application menu name in common.dtd. -->
+<!ENTITY internote.newNoteCmd.label "Añadir nueva nota">
+<!ENTITY internote.newNoteCmd.accesskey "n">
+<!ENTITY internote.minimizeAllCmd.label "Minimizar notas de esta página">
+<!ENTITY internote.minimizeAllCmd.accesskey "z">
+<!ENTITY internote.unminimizeAllCmd.label "Restaurar notas de esta página">
+<!ENTITY internote.unminimizeAllCmd.accesskey "u">
+<!ENTITY internote.openManagerCmd.label "Administrar todas las notas...">
+<!ENTITY internote.openManagerCmd.accesskey "A">
+<!ENTITY internote.displayNotesCmd.label "Mostrar notas">
+<!ENTITY internote.displayNotesCmd.accesskey "M">
+<!ENTITY internote.openPrefsCmd.label "Opciones...">
+<!ENTITY internote.openPrefsCmd.accesskey "p">
+<!ENTITY internote.helpCmd.label "Ayuda...">
+<!ENTITY internote.helpCmd.accesskey "y">
+<!ENTITY internote.reportBugCmd.label "Informar de error...">
+<!ENTITY internote.reportBugCmd.accesskey "f">
+<!ENTITY internote.aboutCmd.label "Acerca de Internote...">
+<!ENTITY internote.aboutCmd.accesskey "I">
+<!-- Note Context Menu -->
+<!ENTITY internote.cutTextCmd.label "Cortar">
+<!ENTITY internote.cutTextCmd.accesskey "r">
+<!ENTITY internote.copyTextCmd.label "Copiar">
+<!ENTITY internote.copyTextCmd.accesskey "C">
+<!ENTITY internote.pasteTextCmd.label "Pegar">
+<!ENTITY internote.pasteTextCmd.accesskey "P">
+<!ENTITY internote.deleteTextCmd.label "Eliminar">
+<!ENTITY internote.deleteTextCmd.accesskey "E">
+<!-- Select All in common.dtd. -->
+<!ENTITY internote.setDefaultColorsCmd.label "Usar como colores por defecto">
+<!ENTITY internote.setDefaultColorsCmd.accesskey "U">
+<!ENTITY internote.deleteNoteCmd.label "Eliminar nota">
+<!ENTITY internote.deleteNoteCmd.accesskey "n">
+<!ENTITY internote.chooseColorsCmd.label "Elegir nuevos colores">
+<!ENTITY internote.chooseColorsCmd.accesskey "g">
+<!ENTITY internote.editTextCmd.label "Editar texto">
+<!ENTITY internote.editTextCmd.accesskey "E">
+<!ENTITY internote.minimizeNoteCmd.label "Minimizar nota">
+<!ENTITY internote.minimizeNoteCmd.accesskey "z">
+<!ENTITY internote.unminimizeNoteCmd.label "Restaurar nota">
+<!ENTITY internote.unminimizeNoteCmd.accesskey "R">
+<!ENTITY internote.viewInOpenManagerCmd.label "Administrar nota">
+<!ENTITY internote.viewInOpenManagerCmd.accesskey "A">
+<!ENTITY internote.showsOnMenuCmd.label "Mostrar en">
+<!ENTITY internote.showsOnMenuCmd.accesskey "M">
+<!ENTITY internote.showsOnPageCmd.label "Esta página solamente">
+<!ENTITY internote.showsOnPageCmd.accesskey "g">
+<!ENTITY internote.showsOnSiteCmd.label "Este sitio solamente">
+<!ENTITY internote.showsOnSiteCmd.accesskey "s">
+<!ENTITY internote.showsOnAllCmd.label "Todas las páginas">
+<!ENTITY internote.showsOnAllCmd.accesskey "T">
+<!ENTITY internote.showsRegexpCmd.label "Páginas que coincidan con Expresión regular">
+<!ENTITY internote.showsRegexpCmd.accesskey "x">
+<!-- Some elements of this menu are dynamic, and properties. -->
+<!ENTITY internote.ignoreParamsCmd.accesskey "p">
+<!ENTITY internote.ignoreAnchorCmd.accesskey "h">
+<!-- Ignore Params/Anchor labels in common.dtd. -->

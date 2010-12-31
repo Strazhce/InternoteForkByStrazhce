@@ -1,10 +1,9 @@
-<!ENTITY internote.aboutDialog.title          "Internote – informacje">
-<!ENTITY internote.aboutVersion.label         "Wersja">
-<!ENTITY internote.aboutPeople.caption        "Ludzie, którzy pomogli w rozwoju Internote">
-<!ENTITY internote.aboutHomePage.label        "Strona domowa">
-
-<!ENTITY internote.aboutCreators.caption      "Autor Internote3">
-<!ENTITY internote.aboutDevelopers.caption    "Programiści">
-<!ENTITY internote.aboutContributors.caption  "Współtwórcy">
-<!ENTITY internote.aboutTranslators.caption   "Tłumacze">
-
+<!ENTITY internote.aboutDialog.title "Internote – informacje">
+<!ENTITY internote.aboutVersion.label "Wersja">
+<!ENTITY internote.aboutPeople.caption "Ludzie, którzy pomogli w rozwoju Internote">
+<!ENTITY internote.aboutHomePage.label "Strona domowa">
+<!ENTITY internote.aboutCreators.caption "Autor Internote3">
+<!ENTITY internote.aboutDevelopers.caption "Programiści">
+<!ENTITY internote.aboutContributors.caption "Współtwórcy">
+<!ENTITY internote.aboutTranslators.caption "Tłumacze">
+<!ENTITY internote.licensing.label "Internote jest wolnym oprogramowaniem wydanym na licencji GNU General Public License wersja 2 lub nowszej. Część elementów rządzi się innymi, ale kompatybilnymi licencjami lub są ogólnie dostępne. Więcej informacji znajdziesz na stronie domowej Internote.">

@@ -590,6 +590,26 @@ setEnabledIDs: function(doc, eltNames, isEnabled)
     this.setEnabledElts(elts, isEnabled);
 },
 
+setCheckedElts: function(elts, isChecked)
+{
+    var elts2 = this.isArray(elts) ? elts : [elts];
+    
+    for (var i = 0; i < elts2.length; i++)
+    {
+        var elt = elts2[i];
+        
+        if (isChecked)
+        {
+            elt.setAttribute("checked", "true");
+        }
+        else
+        {
+            elt.removeAttribute("checked");
+        }
+    }
+    
+},
+
 setDisplayedElts: function(elts, isDisplayed)
 {
     var elts2 = this.isArray(elts) ? elts : [elts];
@@ -787,12 +807,9 @@ calcScrollbarWidth: function(anyScratchWindowDoc)
     return textArea.offsetWidth - textArea.clientWidth;
 },
 
-loadXML: function(file)
+loadXMLFromStream: function(stream)
 {
-    var parser = new DOMParser();
-    
-    var stream = this.getCCInstance("@mozilla.org/network/file-input-stream;1", "nsIFileInputStream");
-    stream.init(file, 0x01, 0444, 0);
+    var parser = this.getCCInstance("@mozilla.org/xmlextras/domparser;1", "nsIDOMParser");
     
     var doc = parser.parseFromStream(stream, null, stream.available(), "text/xml");
     stream.close();
@@ -805,6 +822,13 @@ loadXML: function(file)
     {
         return doc;
     }
+},
+
+loadXMLFromFile: function(file)
+{
+    var stream = this.getCCInstance("@mozilla.org/network/file-input-stream;1", "nsIFileInputStream");
+    stream.init(file, 0x01, 0444, 0);
+    return this.loadXMLFromStream(stream);
 },
 
 loadXMLFromString: function(string)
@@ -964,8 +988,8 @@ getViewportDims: function(chromeWin, browser)
     {
         this.scrollbarSize = this.calcScrollbarWidth(chromeWin.document);
     }        
-	
-	var contentDoc = browser.contentDocument;
+    
+    var contentDoc = browser.contentDocument;
     
     var viewportDims = this.getDims(browser.boxObject);
     

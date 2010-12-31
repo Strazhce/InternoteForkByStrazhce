@@ -1,12 +1,9 @@
-<!ENTITY internote.aboutDialog.title          "About Internote">
-<!ENTITY internote.aboutVersion.label         "Version">
-<!ENTITY internote.aboutPeople.caption        "People Who Have Helped Make Internote What It is">
-<!ENTITY internote.aboutHomePage.label        "Internote Home Page">
-
-<!ENTITY internote.aboutCreators.caption      "Internote3 Redeveloper">
-<!ENTITY internote.aboutDevelopers.caption    "Developers">
-<!ENTITY internote.aboutContributors.caption  "Contributors">
-<!ENTITY internote.aboutTranslators.caption   "Translators">
-
-<!ENTITY internote.licensing.label            "Internote is free software released under the GNU General Public License version 2 or later.  Some parts are available under different but compatible licenses, or are in the public domain. For more details please see the Internote Home Page above.">
-
+<!ENTITY internote.aboutDialog.title "About Internote">
+<!ENTITY internote.aboutVersion.label "Version">
+<!ENTITY internote.aboutPeople.caption "People Who Have Helped Make Internote What It is">
+<!ENTITY internote.aboutHomePage.label "Internote Home Page">
+<!ENTITY internote.aboutCreators.caption "Internote3 Redeveloper">
+<!ENTITY internote.aboutDevelopers.caption "Developers">
+<!ENTITY internote.aboutContributors.caption "Contributors">
+<!ENTITY internote.aboutTranslators.caption "Translators">
+<!ENTITY internote.licensing.label "Internote is free software released under the GNU General Public License version 2 or later.  Some parts are available under different but compatible licenses, or are in the public domain. For more details please see the Internote Home Page above.">

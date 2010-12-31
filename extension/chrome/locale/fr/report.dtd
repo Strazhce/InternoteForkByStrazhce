@@ -1,0 +1,12 @@
+<!ENTITY internote.bugReportDialog.title "Rapporter un bogue d'Internote">
+<!ENTITY internote.infoThanks.desc "Merci de soumettre ce bogue - votre rapport nous aidera à améliorer Internote. Les informations que vous nous envoyez serviront exclusivement à résoudre les bogues.">
+<!ENTITY internote.infoType.desc "Vous trouverez ci-dessous des données importantes collectées automatiquement qui peuvent vous aider à diagnostiquer votre problème.">
+<!ENTITY internote.infoDisclaimer.desc "Vous y trouverez la liste de vos extensions installées, et peut-être des données sur vos notes et votre session de navigation.">
+<!ENTITY internote.sendInstructions.desc "Une fois que vous aurez terminé, veuillez copier toutes les informations en utilisant le bouton ci-dessous, puis revenez à la page Web.">
+<!ENTITY internote.infoWhy.desc "Pourquoi est-ce nécessaire ?">
+<!ENTITY internote.infoReasons1.desc "Votre liste d'extensions installées est utile pour déterminer si les problèmes d'Internote sont dus à une incompatibilité avec une autre extension.">
+<!ENTITY internote.infoReasons2.desc "Quand des problèmes sont détectés, les données associées seront récoltées pour aider à en déterminer les causes. Il peut s'agir de données sur vos notes et votre session de navigation.">
+<!ENTITY internote.reportComments.desc "Veuillez décrire les étapes qui ont conduit au problème, et tout ce qui s'y rapporte.">
+<!ENTITY internote.reportEmail.desc "Si vous saisissez votre adresse mail ici, nous pourrons vous demander davantage d'informations, si c'est nécessaire à la résolution du problème.">
+<!ENTITY internote.submitBugReportButton.label "Soumettre un rapport de bogue">
+<!ENTITY internote.infoCopy.label "Copier toutes les informations">

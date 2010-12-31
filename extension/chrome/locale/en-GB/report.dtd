@@ -1,16 +1,12 @@
-<!ENTITY internote.bugReportDialog.title       "Reporting an Internote Bug">
-
-<!ENTITY internote.infoThanks.desc             "Thanks for filing a bug report - your report will help make Internote better. Any information you send will only be used to help fix bugs.">
-<!ENTITY internote.infoType.desc               "Below is important automatically-collected data that may help diagnose your problem.">
-<!ENTITY internote.infoDisclaimer.desc         "This includes your installed extensions list, and might include data about your notes and browsing session.">
-<!ENTITY internote.sendInstructions.desc       "Once you have finished, please copy all of the information using the button below, then go to the webpage below.">
-
-<!ENTITY internote.infoWhy.desc                "Why is this needed?">
-<!ENTITY internote.infoReasons1.desc           "Your list of installed extensions is useful in determining whether Internote problems are caused by a conflict with another extension.">
-<!ENTITY internote.infoReasons2.desc           "When problems are detected, data related to the problem will be gathered to help determine why the problem is occurring. This might include data about your notes and browsing session.">
-
-<!ENTITY internote.reportComments.desc         "Please describe the steps that led to the problem, and anything else relevant.">
-<!ENTITY internote.reportEmail.desc            "If you enter your email here, you can be asked for more information, if it's needed to fix your problem.">
-
+<!ENTITY internote.bugReportDialog.title "Reporting an Internote Bug">
+<!ENTITY internote.infoThanks.desc "Thanks for filing a bug report - your report will help make Internote better. Any information you send will only be used to help fix bugs.">
+<!ENTITY internote.infoType.desc "Below is important automatically-collected data that may help diagnose your problem.">
+<!ENTITY internote.infoDisclaimer.desc "This includes your installed extensions list, and might include data about your notes and browsing session.">
+<!ENTITY internote.sendInstructions.desc "Once you have finished, please copy all of the information using the button below, then go to the webpage below.">
+<!ENTITY internote.infoWhy.desc "Why is this needed?">
+<!ENTITY internote.infoReasons1.desc "Your list of installed extensions is useful in determining whether Internote problems are caused by a conflict with another extension.">
+<!ENTITY internote.infoReasons2.desc "When problems are detected, data related to the problem will be gathered to help determine why the problem is occurring. This might include data about your notes and browsing session.">
+<!ENTITY internote.reportComments.desc "Please describe the steps that led to the problem, and anything else relevant.">
+<!ENTITY internote.reportEmail.desc "If you enter your email here, you can be asked for more information, if it's needed to fix your problem.">
 <!ENTITY internote.submitBugReportButton.label "Submit Bug Report">
-<!ENTITY internote.infoCopy.label              "Copy All Information">
+<!ENTITY internote.infoCopy.label "Copy All Information">

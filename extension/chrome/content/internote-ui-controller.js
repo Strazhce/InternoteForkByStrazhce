@@ -776,10 +776,10 @@ userRemovesNote: function(elementOrEvent)
             {
                 // While notes are popups they are not affected by modality, so we need a special method.
                 deleteConfirmed = this.confirmCheckDialog("DeleteSingleConfirm", "DeleteConfirmTitle", "NeverAskOption",
-				    this.utils.bind(this, function()
-					{
-						this.prefs.setAskBeforeDelete(false);
-					}));
+                    this.utils.bind(this, function()
+                    {
+                        this.prefs.setAskBeforeDelete(false);
+                    }));
             }
             
             if (deleteConfirmed)
@@ -1514,41 +1514,31 @@ chromeGetPopupNode: function(popup)
     }
 },
 
-chromePrepareStatusBarMenu: function()
-{
-    this.chromePrepareMenu("statusbar");
-},
-
-chromePrepareMainMenu: function()
-{
-    this.chromePrepareMenu("main");
-},
-
-chromePrepareMenu: function(prefix)
+chromePrepareMenu: function()
 {
     try
     {
-        var minimizeAllOption   = document.getElementById("internote-minimize-all-" + prefix);
-        var unminimizeAllOption = document.getElementById("internote-unminimize-all-" + prefix);
+        var minimizeAllOptions   = document.getElementsByClassName("internote-minimize-all");
+        var unminimizeAllOptions = document.getElementsByClassName("internote-unminimize-all");
         
         if (this.pageWatcher == null || this.pageWatcher.getCount() <= 0 || !this.storage.areNotesDisplaying)
         {
-            minimizeAllOption.style.display = "";
-            minimizeAllOption.disabled = "true";
-            unminimizeAllOption.style.display = "none";
+            this.utils.setDisplayedElts(minimizeAllOptions, true);
+            this.utils.setEnabledElts  (minimizeAllOptions, false);
+            this.utils.setDisplayedElts(unminimizeAllOptions, false);
         }
         else
         {
             if (this.screenAreAllMinimized())
             {
-                minimizeAllOption.style.display = "none";
-                unminimizeAllOption.style.display = "";
+                this.utils.setDisplayedElts(minimizeAllOptions, false);
+                this.utils.setDisplayedElts(unminimizeAllOptions, true);
             }
             else
             {
-                minimizeAllOption.style.display = "";
-                minimizeAllOption.disabled = "";
-                unminimizeAllOption.style.display = "none";
+                this.utils.setDisplayedElts(minimizeAllOptions, true);
+                this.utils.setEnabledElts  (minimizeAllOptions, true);
+                this.utils.setDisplayedElts(unminimizeAllOptions, false);
             }
         }
     }
@@ -1560,19 +1550,8 @@ chromePrepareMenu: function(prefix)
 
 chromeUpdateDisplayCheckbox: function()
 {
-    var checkbox1 = document.getElementById("internote-display-notes-main");
-    var checkbox2 = document.getElementById("internote-display-notes-statusbar");
-    
-    if (this.storage.areNotesDisplaying)
-    {
-        checkbox1.setAttribute("checked", "true");
-        checkbox2.setAttribute("checked", "true");
-    }
-    else
-    {
-        checkbox1.removeAttribute("checked");
-        checkbox2.removeAttribute("checked");
-    }
+    var checkboxes = document.getElementsByClassName("internote-display-notes");
+    this.utils.setCheckedElts(checkboxes, this.storage.areNotesDisplaying);
 },
 
 chromePrepareContextMenu: function()

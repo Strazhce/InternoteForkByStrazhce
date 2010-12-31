@@ -1,0 +1,9 @@
+<!ENTITY internote.aboutDialog.title "Про Internote">
+<!ENTITY internote.aboutVersion.label "Версія">
+<!ENTITY internote.aboutPeople.caption "Люди, які допомогли зробити Internote таким, яким він є">
+<!ENTITY internote.aboutHomePage.label "Домашня сторінка Internote">
+<!ENTITY internote.aboutCreators.caption "Відновник розробки Internote3">
+<!ENTITY internote.aboutDevelopers.caption "Розробники">
+<!ENTITY internote.aboutContributors.caption "Учасники">
+<!ENTITY internote.aboutTranslators.caption "Перекладачі">
+<!ENTITY internote.licensing.label "Internote - вільне програмне забезпечення, що поширюється за ліцензією GNU General Public License (версія 2 чи пізніша). Деякі частини коду поширюються за іншими, однак сумісними, ліцензіями або є загальнодоступними. Детальнішу інформацію можна отримати на домашній сторінці Internote (див. вище).">

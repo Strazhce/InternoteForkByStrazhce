@@ -49,6 +49,7 @@ caption[disabled="true"] {
 }
 
 #internote-scratch-frame {
+    visibility: hidden;
     height: 0px;
     width:  0px;
     overflow: hidden;

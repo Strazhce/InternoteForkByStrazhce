@@ -28,19 +28,21 @@ init: function()
         this.utils.init(window);
         this.utils.initSysInfo();
         
-        var installRDF = this.utils.loadInstallRDF();
-        
-        if (installRDF != null)
+        this.utils.loadInstallRDF(this.utils.bind(this, function(installRDF)
         {
-            var internoteVersion = this.utils.getInternoteVersion(installRDF);
-            this.fixVersionNumber(internoteVersion);
-            this.insertContributors(installRDF);
-            this.fixDescription();
-        }
-        else
-        {
-            this.removeContributors();
-        }
+            if (installRDF != null)
+            {
+                var internoteVersion = this.utils.getInternoteVersion(installRDF);
+                this.fixVersionNumber(internoteVersion);
+                this.insertContributors(installRDF);
+                this.fixDescription();
+                window.sizeToContent();
+            }
+            else
+            {
+                this.removeContributors();
+            }
+        }));
     }
     catch (ex)
     {
@@ -64,14 +66,14 @@ insertContributors: function(installRDF)
 insertContributorsSection: function(installRDF, tagName, sectionID)
 {
     const MOZ_RDF_URL = "http://www.mozilla.org/2004/em-rdf#";
-    var developersElt = document.getElementById(sectionID);
+    var contributorsElt = document.getElementById(sectionID);
     var peopleElts = installRDF.getElementsByTagName("em:" + tagName, MOZ_RDF_URL);
     
     for (var i = 0; i < peopleElts.length; i++)
     {
         var label = document.createElement("label");
         label.setAttribute("value", this.utils.trim(peopleElts[i].firstChild.data));
-        developersElt.appendChild(label);
+        contributorsElt.appendChild(label);
     }
 },
 

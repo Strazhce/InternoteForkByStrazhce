@@ -1,0 +1,38 @@
+<!ENTITY internote.prefsDialog.title "Internote opciók">
+<!-- Appearance -->
+<!ENTITY internote.appearancePrefsPane.title "Megjelenítés">
+<!ENTITY internote.tinySize.value "Apró">
+<!ENTITY internote.normalSize.value "Normál">
+<!ENTITY internote.largeSize.value "Nagy">
+<!ENTITY internote.giantSize.value "Óriási">
+<!ENTITY internote.megaSize.value "Hatalmas">
+<!ENTITY internote.defaultStylePrefs.caption "Új jegyzetlap opciók">
+<!ENTITY internote.defaultNoteColor.label "Alapértelmezett jegyzetlapszín:">
+<!ENTITY internote.defaultTextColor.label "Alapértelmezett szövegszín:">
+<!-- Colors defined in common.dtd. -->
+<!ENTITY internote.defaultSize.label "Alapértelmezett jegyzetlap méret:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.defaultPos.label "Alapértelmezett jegyzetlap elhelyezés:">
+<!ENTITY internote.topLeftPos.value "Bal-felső">
+<!ENTITY internote.topRightPos.value "Jobb-felső">
+<!ENTITY internote.bottomLeftPos.value "Bal-alsó">
+<!ENTITY internote.bottomRightPos.value "Jobb-alsó">
+<!ENTITY internote.centerPos.value "Közép">
+<!ENTITY internote.adjustDefaults.desc "(Ezek alapértelmezett beállítások melyeket később minden jegyzetlapnál külön meg lehet változtatni a jegyzetlap határa, illetve a megfordító gomb segítségével)">
+<!ENTITY internote.globalStylePrefs.caption "Minden jegyzetre vonatkozó opciók">
+<!ENTITY internote.fontSize.label "Betű mérete:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.useTranslucencyCBox.label "Áttetsző jegyzetlapok">
+<!ENTITY internote.useHighlightableCBox.label "Kijelölhető szöveg (lap a határaival mozgatható)">
+<!ENTITY internote.useNativeScrollCBox.label "Használja a rendszer görgetősávját az Internote görgetősávja helyett">
+<!-- General Options -->
+<!ENTITY internote.generalPrefsPane.title "Általános">
+<!ENTITY internote.generalPrefs.caption "Általános opciók">
+<!ENTITY internote.confirmDeleteCBox.label "Törlés megerősítése">
+<!ENTITY internote.useStatusBarCBox.label "Mutassa az Internote-ot az állapotsávon">
+<!ENTITY internote.confirmProviso.desc "(Több jegyzet kezelőből való törlésekor a program mindig megerősítést kér.)">
+<!ENTITY internote.storagePrefs.caption "Tárolási opciók">
+<!ENTITY internote.useAlternativeCBox.label "Használjon más mentési helyet">
+<!ENTITY internote.browseButton.label "Tallózás...">
+<!ENTITY internote.storageRestartProviso.desc "(Az új mentési hely csak a Firefox újraindítása után lép érvénybe)">
+<!ENTITY internote.storageMoveProviso.desc "(Már meglévő jegyzetek nem másolódnak át az új helyre, de importálhatja őket a &quot;Minden jegyzet kezelése&quot; Internote menű segítségével.)">

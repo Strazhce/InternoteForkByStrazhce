@@ -1,0 +1,38 @@
+<!ENTITY internote.prefsDialog.title "Inställningar för Internote">
+<!-- Appearance -->
+<!ENTITY internote.appearancePrefsPane.title "Utseende">
+<!ENTITY internote.tinySize.value "Liten">
+<!ENTITY internote.normalSize.value "Normalstor">
+<!ENTITY internote.largeSize.value "Stor">
+<!ENTITY internote.giantSize.value "Jättestor">
+<!ENTITY internote.megaSize.value "Ofantlig">
+<!ENTITY internote.defaultStylePrefs.caption "Inställningar för nya lappar">
+<!ENTITY internote.defaultNoteColor.label "Standardlappfärg:">
+<!ENTITY internote.defaultTextColor.label "Standardtextfärg:">
+<!-- Colors defined in common.dtd. -->
+<!ENTITY internote.defaultSize.label "Standardlappstorlek:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.defaultPos.label "Standardlapposition:">
+<!ENTITY internote.topLeftPos.value "Överst till vänster">
+<!ENTITY internote.topRightPos.value "Överst till höger">
+<!ENTITY internote.bottomLeftPos.value "Nederst till vänster">
+<!ENTITY internote.bottomRightPos.value "Nederst till höger">
+<!ENTITY internote.centerPos.value "I mitten">
+<!ENTITY internote.adjustDefaults.desc "(Det här är standardinställningar som kan ändras för enskilda lappar senare genom att använda lappens kantlinjer eller Vänd-knappen.)">
+<!ENTITY internote.globalStylePrefs.caption "Inställningar för alla lappar">
+<!ENTITY internote.fontSize.label "Fontstorlek:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.useTranslucencyCBox.label "Transparenta lappar">
+<!ENTITY internote.useHighlightableCBox.label "Markeringsbar text (använd kantlinjen för att flytta)">
+<!ENTITY internote.useNativeScrollCBox.label "Använd systemets rullningslist istället för Internotes rullningslist">
+<!-- General Options -->
+<!ENTITY internote.generalPrefsPane.title "Allmänt">
+<!ENTITY internote.generalPrefs.caption "Allmänna inställningar">
+<!ENTITY internote.confirmDeleteCBox.label "Bekräfta borttagning">
+<!ENTITY internote.useStatusBarCBox.label "Visa Internote i statusfältet">
+<!ENTITY internote.confirmProviso.desc "(När du använder hanteraren för att ta bort multipla lappar tillfrågas du alltid om bekräftelse.)">
+<!ENTITY internote.storagePrefs.caption "Lagringsinställningar">
+<!ENTITY internote.useAlternativeCBox.label "Använd annan plats">
+<!ENTITY internote.browseButton.label "Bläddra…">
+<!ENTITY internote.storageRestartProviso.desc "(Nya platser kommer inte att användas förrän Firefox har startats om.)">
+<!ENTITY internote.storageMoveProviso.desc "(Befintliga lappar kommer inte att flyttas till nya platser, men du kan importera dem genom att använda &quot;Hantera alla lappar&quot; i Internote-menyn.)">
