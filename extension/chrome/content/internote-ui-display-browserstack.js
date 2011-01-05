@@ -273,7 +273,7 @@ handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled
     
     if (viewportResized && this.displayPanel != null)
     {
-        dump("Fixing ...\n");
+        //dump("Fixing ...\n");
         var viewportDims = this.getViewportDimsFunc();
         this.utils.assertError(this.utils.isNonNegCoordPair(viewportDims), "Invalid dims in handleChangedAspects.", viewportDims);
         
