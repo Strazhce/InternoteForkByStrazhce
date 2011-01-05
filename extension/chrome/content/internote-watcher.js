@@ -17,24 +17,20 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-// Uses: internote-storage.js, internote-utilities.js
-
-// InternoteStorageWatcher presents a subset of the available notes as determined by a
+// StorageWatcher presents a subset of the available notes as determined by a
 // filter function.  It does the job of automatically adding notes to and removing
 // them from the subset and generating the relevant events, in response to underlying
-// adds/removes, as well as changes to notes that mean there is a need reevaluate the
-// filter function.
+// adds/removes, as well as changes to notes that mean there is a need to reevaluate
+// the filter function.
 
 // You can specify which underlying events on notes get passed through to the client of
-// SSW (add/remove is automatic), as well as which of these events will cause a need
-// to reevaluate the filter function.
+// the watcher (add/remove is automatic), as well as which of these events will cause a need
+// to reevaluate the filter function. Failure to specify all the correct reevaluate events
+// can lead to the subset being out-of-date.
 
 // For example, if you are filtering the notes for a specific URL, underlying adds/removes
 // only need be reported for the relevant URL, whereas changing an underlying note's URL
 // can result in the need to add or remove a note to this set.
-
-// This class expects incorporation of the event dispatcher, this needs to be done
-// by initialisation code elsewhere.
 
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.StorageWatcher =
 function InternoteStorageWatcher(storage, filterFn, extraReevaluateEvents, extraPassthruEvents)
@@ -51,6 +47,7 @@ function InternoteStorageWatcher(storage, filterFn, extraReevaluateEvents, extra
     
     this.initEventDispatcher();
     
+	// Initialize the note subset.
     for each (var note in storage.allNotes)
     {
         if (this.doesPassFilter(note))
@@ -60,12 +57,15 @@ function InternoteStorageWatcher(storage, filterFn, extraReevaluateEvents, extra
         }
     }
     
+	// Initialize the events for callers to use.
     this.createEvent("noteAdded");
     this.createEvent("noteRemoved");
-    
+	
+	// Watch for underlying changes.    
     storage.addBoundEventListener("noteAdded",     this, "onNoteAdded");
     storage.addBoundEventListener("noteRemoved",   this, "onNoteRemoved");
     
+	// Set up the passthru and reevaluate events.
     for each (var eventName in extraReevaluateEvents)
     {
         this.createEvent(eventName);
@@ -77,8 +77,6 @@ function InternoteStorageWatcher(storage, filterFn, extraReevaluateEvents, extra
         this.createEvent(eventName);
         storage.addBoundEventListener(eventName, this, "onNeedingPassthru");
     }
-    
-    //this.utils.dumpTraceData(this.noteMap);
 };
 
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.StorageWatcher.prototype =
@@ -88,7 +86,10 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.StorageWatcher.protot
 
 destroy: function(event)
 {
-    this.storage.removeBoundEventListener("noteAdded",   this, "onNoteAdded"  );
+    // The watcher's events can be safely garbage collected, but we must
+	// detach from the underlying storage so the callbacks don't leak.
+	
+	this.storage.removeBoundEventListener("noteAdded",   this, "onNoteAdded"  );
     this.storage.removeBoundEventListener("noteRemoved", this, "onNoteRemoved");
     
     for each (var eventName in this.extraReevaluateEvents)
@@ -102,20 +103,25 @@ destroy: function(event)
     }
 },
 
+// PUBLIC: The number of notes in the subset.
 getCount: function(event)
 {
     return this.count;
 },
 
+// PRIVATE: Used by storage callbacks to add a note to the subset.
 addNote: function(event)
 {
     //dump("InternoteStorageWatcher.addNote " + event.name + "\n");
 
     this.noteMap[event.note.num] = event.note;
     this.count++;
-    this.dispatchEvent("noteAdded", event.clone()); // We clone to prevent overwriting the .name field.
+	
+	// We clone to prevent dispatchEvent overwriting the event.name field.
+    this.dispatchEvent("noteAdded", event.clone()); 
 },
 
+// PRIVATE: Used by storage callbacks to remove a note from the subset.
 removeNote: function(event)
 {
     //dump("InternoteStorageWatcher.removeNote " + event.name + "\n");
@@ -125,6 +131,7 @@ removeNote: function(event)
     this.dispatchEvent("noteRemoved", event.clone());
 },
 
+// PRIVATE: Used by storage callbacks to pass a storage event up as a watcher event.
 passEvent: function(event)
 {
     //dump("InternoteStorageWatcher.passEvent " + event.name + "\n");
@@ -132,6 +139,7 @@ passEvent: function(event)
     this.dispatchEvent(event.name, event);
 },
 
+// PRIVATE: Whether the note should be in the subset according to the filter.
 doesPassFilter: function(note)
 {
     //dump("InternoteStorageWatcher.doesPassFilter\n");
@@ -154,6 +162,7 @@ doesPassFilter: function(note)
     }
 },
 
+// PRIVATE: Callback for when note added to storage.
 onNoteAdded: function(event)
 {
     //dump("InternoteStorageWatcher.onNoteAdded " + event.name + "\n");
@@ -162,6 +171,7 @@ onNoteAdded: function(event)
     if (isNowPresent) this.addNote(event);
 },
 
+// PRIVATE: Callback for when note removed from storage.
 onNoteRemoved: function(event)
 {
     //dump("InternoteStorageWatcher.onNoteRemoved " + event.name + "\n");
@@ -170,6 +180,7 @@ onNoteRemoved: function(event)
     if (wasPreviouslyPresent) this.removeNote(event);
 },
 
+// PRIVATE: Callback for when note change in storage needs reevaluation.
 onNeedingReevaluate: function(event)
 {
     //dump("InternoteStorageWatcher.onNeedingReevaluate " + event.name + "\n");
@@ -184,6 +195,7 @@ onNeedingReevaluate: function(event)
     else                                            this.passEvent (event);
 },
 
+// PRIVATE: Callback for when note change in storage needs to be passed thru.
 onNeedingPassthru: function(event)
 {
     //dump("InternoteStorageWatcher.onNeedingPassthru " + event.name + "\n");
@@ -212,6 +224,7 @@ onNeedingPassthru: function(event)
     }
 },
 
+// PUBLIC: Let the caller change the filter function, updating the subset and generating events.
 updateFilter: function(filterFn)
 {
     this.filterFn = filterFn;
