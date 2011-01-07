@@ -229,11 +229,9 @@ showMessageNow: function(message)
         // so we can then figure out the correct canvas height.
         this.balloonCanvas.height = this.balloonPanel.boxObject.height;
         this.drawCanvas();
-        if (message.shouldTimeout)
-        {
-            var displayTime = this.MIN_DISPLAY_TIME + text.length * 75;
-            this.startAnimation(displayTime);
-        }
+		
+		var displayTime = message.shouldTimeout ? (this.MIN_DISPLAY_TIME + text.length * 75) : 99999999;
+        this.startAnimation(displayTime);
     }), false);
     
     this.balloonDiv.style.cursor = "default";

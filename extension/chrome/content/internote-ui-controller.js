@@ -209,7 +209,34 @@ init: function()
     this.chromeUpdateStatusBarIconDisplay(false);
     this.chromeUpdateInternoteIcon();
     this.chromeUpdateDisplayCheckbox();
+	
+	const PREF_NAME = "upgradetostablewarning";
+	if (this.prefs.prefsBranch.prefHasUserValue(PREF_NAME))
+	{
+		var value = this.prefs.prefsBranch.getIntPref(PREF_NAME);
+		var shouldWarn = (value < 3);
+		if (shouldWarn) {
+			this.prefs.prefsBranch.setIntPref(PREF_NAME, value + 1);
+		}
+	}
+	else {
+		var shouldWarn = true;
+		this.prefs.prefsBranch.setIntPref(PREF_NAME, 1);
+	}
     
+	if (shouldWarn) {
+		this.utils.createTimeout(this.utils.bind(this, function() {
+			this.showMessage(":Hi! Internote 3.0.0 has now been released.\n" +
+                             "If you would prefer not to receive the latest bleeding-edge in-development updates, it is recommended " +
+							 "that you install the normal version of Internote instead of the beta channel version.\n" +
+							 "This message should appear only 3 times.",
+							 false,
+							 ":Go to Installation Page", this.utils.bind(this, function() {
+								gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/2011/");							
+							 }));
+		}), 10000);
+	}
+	
     // See about starting stage 2 of initialisation.
     if (this.noteUI.areImagesLoaded())
     {
