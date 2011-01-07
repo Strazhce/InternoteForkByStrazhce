@@ -5,26 +5,13 @@ resource internotejs components/
 
 locale internote en-US jar:chrome/internote.jar!/locale/en-US/
 
-locale internote ca-AD jar:chrome/internote.jar!/locale/ca-AD/
-locale internote da-DK jar:chrome/internote.jar!/locale/da-DK/
-#locale internote de jar:chrome/internote.jar!/locale/de/
 locale internote es-ES jar:chrome/internote.jar!/locale/es-ES/
 locale internote en-GB jar:chrome/internote.jar!/locale/en-GB/
-locale internote fr-FR jar:chrome/internote.jar!/locale/fr-FR/
-locale internote gl-ES jar:chrome/internote.jar!/locale/gl-ES/
-locale internote hr-HR jar:chrome/internote.jar!/locale/hr-HR/
-locale internote it-IT jar:chrome/internote.jar!/locale/it-IT/
-locale internote ko jar:chrome/internote.jar!/locale/ko/
-locale internote nl jar:chrome/internote.jar!/locale/nl/
-locale internote pl jar:chrome/internote.jar!/locale/pl/
-locale internote pt-BR jar:chrome/internote.jar!/locale/pt-BR/
-locale internote ro-RO jar:chrome/internote.jar!/locale/ro-RO/
-locale internote ru jar:chrome/internote.jar!/locale/ru/
-locale internote sk-SK jar:chrome/internote.jar!/locale/sk-SK/
-locale internote sl-Sl jar:chrome/internote.jar!/locale/sl-Sl/
-locale internote tr-TR jar:chrome/internote.jar!/locale/tr-TR/
-locale internote uk-UA jar:chrome/internote.jar!/locale/uk-UA/
-locale internote zh-CN jar:chrome/internote.jar!/locale/zh-CN/
+locale internote fr    jar:chrome/internote.jar!/locale/fr/
+locale internote hu    jar:chrome/internote.jar!/locale/hu/
+locale internote pl    jar:chrome/internote.jar!/locale/pl/
+locale internote sv-SE jar:chrome/internote.jar!/locale/sv-SE/
+locale internote uk    jar:chrome/internote.jar!/locale/uk/
 
 skin internote classic/1.0 jar:chrome/internote.jar!/skin/
 style chrome://global/content/customizeToolbar.xul chrome://internote/skin/overlay.css
