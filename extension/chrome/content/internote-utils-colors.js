@@ -17,6 +17,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+// This file contains utilities for parsing, formatting and manipulating colors.
+
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("ColorUtils", {
 
 RED_COMP  : 0,
@@ -26,18 +28,21 @@ ALPHA_COMP: 3,
 
 MAX_INTENSITY: 255,
 
+// PUBLIC: Convert a CSS RGB color to a CSS hex color.
 convertRGBToHex : function(color)
 {
     var colorArray = this.parseRGBColor(color);
     return this.formatHexColor(colorArray);
 },
 
+// PUBLIC: Convert a CSS hex color to a CSS RGB color.
 convertHexToRGB : function(color)
 {
     var colorArray = this.parseHexColor(color);
     return this.formatRGBColor(colorArray);
 },
 
+// PUBLIC: Convert a CSS hex color and a given alpha value to a CSS RGBA color.
 convertHexToRGBA : function(color, alpha)
 {
     var colorArray = this.parseHexColor(color);
@@ -45,6 +50,7 @@ convertHexToRGBA : function(color, alpha)
     return this.formatRGBAColor(colorArray);
 },
 
+// PUBLIC: Given an RGBA "front" color array & an RGB "back" color array, calculates the composited colour.
 alphaBlend : function(frontColorArray, backColorArray)
 {
     var translucency = frontColorArray[ALPHA_COMP];
@@ -59,6 +65,7 @@ alphaBlend : function(frontColorArray, backColorArray)
     return [r, g, b];
 },
 
+// PUBLIC: Given an RGB color array and a given alpha value, returns an RGBA color array.
 addAlpha : function(colorArray, alpha)
 {
     this.assertError(colorArray.length == 3, "Not a proper RGB array when adding alpha.");
@@ -66,6 +73,8 @@ addAlpha : function(colorArray, alpha)
     return [colorArray[this.RED_COMP], colorArray[this.GREEN_COMP], colorArray[this.BLUE_COMP], alpha];
 },
 
+// PUBLIC: Given an RGB color array, returns a lighter version, given a proportion.
+// 0.0 = No Change, 1.0 = White
 lighten : function(colorArray, proportion)
 {
     this.assertError(colorArray.length == 3, "Not a proper RGB array when lightening.");
@@ -82,6 +91,8 @@ lighten : function(colorArray, proportion)
     return [r, g, b];
 },
 
+// PUBLIC: Given an RGB color array, returns a darker version, given a proportion.
+// 0.0 = No Change, 1.0 = Black
 darken : function(colorArray, proportion)
 {
     this.assertError(colorArray.length == 3, "Not a proper RGB array when darkening.");
@@ -98,12 +109,14 @@ darken : function(colorArray, proportion)
     return [r, g, b];
 },
 
+// PUBLIC: Given an intensity between 0 and MAX_INTENSITY, formats it to a two-hex-digit string.
 formatHexComponent : function(intensity)
 {
     var roundedIntensity = Math.round(intensity);
     return this.hexDigit(Math.floor(roundedIntensity/16)) + this.hexDigit(roundedIntensity%16);
 },
 
+// PUBLIC: Given a CSS hex color, parses it to an RGB array.
 parseHexColor : function(color)
 {
     this.assertError(this.isHexColor(color), "Not a hex color when parsing.", color);
@@ -113,6 +126,7 @@ parseHexColor : function(color)
     return [r, g, b];
 },
 
+// PUBLIC: Given a CSS RGB color, parses it to an RGB array.
 // XXX Should support percentages.
 parseRGBColor : function(color)
 {
@@ -135,6 +149,7 @@ parseRGBColor : function(color)
     }
 },
 
+// PUBLIC: Given a CSS RGBA color, parses it to an RGBA array.
 // XXX Should support percentages.
 parseRGBAColor : function(color)
 {
@@ -158,6 +173,7 @@ parseRGBAColor : function(color)
     }
 },
 
+// PUBLIC: Given an RGB array, formats it to a CSS hex color.
 formatHexColor : function(array)
 {
     this.assertError(array.length == 3, "Not a proper RGB array when formatting hex color.");
@@ -165,18 +181,21 @@ formatHexColor : function(array)
     return "#" + this.formatHexComponent(r) + this.formatHexComponent(g) + this.formatHexComponent(b);
 },
 
+// PUBLIC: Given an RGB array, formats it to a CSS RGB color.
 formatRGBColor : function(array)
 {
     this.assertError(array.length == 3, "Not a proper RGB array when formatting RGB color.");
     return "rgb(" + array[0] + ", " + array[1] + ", " + array[2] + ")";
 },
 
+// PUBLIC: Given an RGB array, formats it to a CSS RGBA color.
 formatRGBAColor : function(array)
 {
     this.assertError(array.length == 4, "Not a proper RGBA array when formatting RGB color.");
     return "rgba(" + array[0] + ", " + array[1] + ", " + array[2] + ", " + array[3] + ")";
 },
 
+// PUBLIC: Checks whether an object is a valid CSS hex color string.
 isHexColor : function(color)
 {
     if (typeof(color) == "string")
@@ -189,6 +208,7 @@ isHexColor : function(color)
     }
 },
 
+// PUBLIC: Checks whether an object is a valid CSS RGB color string.
 isRGBColor : function(color)
 {
     if (typeof(color) == "string")
@@ -202,6 +222,7 @@ isRGBColor : function(color)
     }
 },
 
+// PUBLIC: Checks whether an object is a valid CSS RGBA color string.
 isRGBAColor : function(color)
 {
     if (typeof(color) == "string")
@@ -215,7 +236,8 @@ isRGBAColor : function(color)
     }
 },
 
-// Linear interpolator between two points.
+// PUBLIC: Linear interpolator between two colors.
+// proportion = 0.0 => color1, proportion = 1.0 => color2
 interpolateColor: function(proportion, color1, color2)
 {
     return [Math.round(this.interpolate(proportion, color1[0], color2[0])),
