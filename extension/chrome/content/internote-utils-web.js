@@ -235,7 +235,7 @@ parseURL: function(url)
         }
         else
         {
-            this.handleException("Unknown error when parsing URL.", ex);
+            this.handleException("Unknown error when parsing URL.", ex, url);
             return null;
         }
     }
@@ -1095,7 +1095,7 @@ getViewportDims: function(chromeWin, browser)
     }
     catch (ex)
     {
-        this.handleException("Exception caught when trying to compensate for scrollbars.", ex);
+        this.handleException("Exception caught when trying to compensate for scrollbars.", ex, url);
     }
     
     this.assertError(this.isCoordPair(viewportDims), "Bad modified viewport dims", viewportDims);
