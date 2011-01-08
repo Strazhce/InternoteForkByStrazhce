@@ -16,8 +16,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-// Uses: internote-ui-display.js, internote-ui-notes.js, internote-utils.js
-
 // The animation system works in two parts.  You need to create an animation, and then an animation driver.
 // There is only one animation driver, but many different animations to choose from.
 
@@ -58,8 +56,11 @@ function AnimationCompleteEvent(animation, data)
 };
 
 ////////////////////
-// Basic Animation Class
+// Simple Animation Class
 ////////////////////
+
+// This is for a simple animation that adjusts something depending
+// on an animation proportion between 0 and 1.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.Animation =
 function Animation(type, doStep, onStart, onComplete)
@@ -75,6 +76,7 @@ function Animation(type, doStep, onStart, onComplete)
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.Animation.prototype =
 {
 
+// PUBLIC: Called on an animation when it starts.
 indicateStart: function()
 {
     if (this.onStart != null)
@@ -83,6 +85,7 @@ indicateStart: function()
     }
 },
 
+// PUBLIC: Called on an animation when it completes.
 indicateComplete: function()
 {
     if (this.onComplete != null)
@@ -97,6 +100,8 @@ indicateComplete: function()
 // Parallel Animation Class
 ////////////////////////////
 
+// This class can be used to perform multiple other animations in parallel.
+
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.ParallelAnimation =
 function ParallelAnimation(animations, onStart, onComplete)
 {
@@ -110,6 +115,7 @@ function ParallelAnimation(animations, onStart, onComplete)
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.ParallelAnimation.prototype =
 {
 
+// PUBLIC: Called on an animation when it starts.
 indicateStart: function()
 {
     if (this.onStart != null)
@@ -122,6 +128,7 @@ indicateStart: function()
     }
 },
 
+// PUBLIC: Called on an animation when a step in done.
 doStep: function(ratioDone)
 {
     //dump("internoteAnimation.ParallelAnimation.doStep RatioDone = " + ratioDone + "\n");
@@ -131,6 +138,7 @@ doStep: function(ratioDone)
     }
 },
 
+// PUBLIC: Called on an animation when it completes.
 indicateComplete: function()
 {
     for each (var animation in this.animations)
@@ -148,6 +156,8 @@ indicateComplete: function()
 //////////////////////////////
 // Sequential Animation Class
 //////////////////////////////
+
+// This class can be used to perform multiple other animations in sequence.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.SequentialAnimation =
 function SequentialAnimation(stages, proportions, onStart, onComplete)
@@ -179,6 +189,7 @@ function SequentialAnimation(stages, proportions, onStart, onComplete)
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.SequentialAnimation.prototype =
 {
 
+// PUBLIC: Called on an animation when it starts.
 indicateStart: function()
 {
     this.stageNum = 0;
@@ -195,6 +206,7 @@ indicateStart: function()
     this.stages[0].indicateStart();
 },
 
+// PUBLIC: Called on an animation when a step in done.
 doStep: function(ratioDone)
 {
     //dump("internoteAnimation.SequentialAnimation.doStep RatioDone = " + ratioDone + "\n");
@@ -241,6 +253,7 @@ doStep: function(ratioDone)
     this.stages[this.stageNum].doStep(animationDone);
 },
 
+// PUBLIC: Called on an animation when it completes.
 indicateComplete: function()
 {
     // There no need to call anything on the last stage, because the previous
@@ -257,6 +270,9 @@ indicateComplete: function()
 //////////////////
 // AnimationDriver
 //////////////////
+
+// This is the driver class. Given an animation (which can be simple, parallel or sequential),
+// it drives it on a timer from start through to end.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.AnimationDriver =
 function AnimationDriver(windowGlobal, animation)
@@ -280,6 +296,7 @@ internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.AnimationDriver.proto
 
 stepTime: 50,
 
+// PUBLIC: Starts the animation.
 start: function(animationTime)
 {
     this.utils.assertError(this.utils.isPositiveNumber(animationTime), "Bad animation time.", animationTime);
@@ -305,6 +322,7 @@ start: function(animationTime)
     this.interval = this.utils.createInterval(this.utils.bind(this, this.animateStep), this.stepTime);
 },
 
+// PUBLIC: Starts the animation after a delay.
 delayedStart: function(delayTime, animationTime)
 {
     this.utils.assertError(!this.isStarted, "Can't delay start an already started animation.");
@@ -316,6 +334,9 @@ delayedStart: function(delayTime, animationTime)
     }), delayTime);
 },
 
+// PRIVATE: This calculates where in time we currently are, and passes the proportion
+// done to the animation so it can update itself. This ensures that a slow computer
+// will do less frames.
 animateStep: function()
 {
     try
@@ -350,6 +371,7 @@ animateStep: function()
     }
 },
 
+// PUBLIC: Abandons the animation, for example if we leave the page where the note is.
 abandonTimer: function()
 {
     this.utils.assertWarn(this.delayTimeout == null || this.interval == null, "Both set when abandoning animation timer.");
@@ -367,6 +389,7 @@ abandonTimer: function()
     }
 },
 
+// PUBLIC: Moves the animation immediately to its end state, for example if another animation is starting!
 hurry: function()
 {
     if (!this.isStarted)
@@ -388,6 +411,8 @@ hurry: function()
 // Specific Animations
 //////////////////////
 
+// Simple animation to fade an element in or out.
+
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getFadeAnimation =
 function(windowGlobal, element, shouldFadeIn)
 {
@@ -404,6 +429,9 @@ function(windowGlobal, element, shouldFadeIn)
        : function(timeRatioDone) { element.style.opacity = Math.pow(timeRatioDone - 1, 2); };
     return new this.Animation("fade", stepFunc);
 };
+
+// Animation to flip a note, by in sequence first reducing the size to 0
+// and then increasing it back to its original size.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getFlipAnimation =
 function(windowGlobal, uiNote)
@@ -485,9 +513,9 @@ function(windowGlobal, uiNote)
     return multiAnimation;
 };
 
-// This moves between one 2D "coordinate" to another in a straight line.  The time/distance relationship is
-// usually non-linear - it moves slower at the beginning and end.
-// This can be used for moving or resizing, depending on whether the pairs are pos or dims.
+// Simple animation to move or resize an element. It changes slower at the beginning and end
+// and faster in the middle, for a nicer animation.
+
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getMoveOrResizeAnimation =
 function(windowGlobal, uiNote, endPair, isResize, shouldForceLinear)
 {
@@ -534,9 +562,10 @@ function(windowGlobal, uiNote, endPair, isResize, shouldForceLinear)
     return animation;
 };
 
-// A move and resize animation does both moving and resizing at the same time.  However such animations
-// are suspectible to a "bouncing" effect on the bottom/right where the corner bounces back and forth
+// A parallel animation that both moves and resizes at once. Such animations are suspectible
+// to a "bouncing" effect on the bottom/right where the corner bounces back and forth
 // between adjecent pixels.  To avoid this we use the bottomRight instead of the dims.
+
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getMoveAndResizeAnimation =
 function(windowGlobal, uiNote, endNWPos, endDims)
 {
@@ -588,6 +617,9 @@ function(windowGlobal, uiNote, endNWPos, endDims)
     return animation;
 };
 
+// A simple animation that does nothing. This is mostly useful when you have a parallel animation
+// of sequential animations, and some of the sequences will sometimes be doing nothing.
+
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getNullAnimation =
 function()
 {
@@ -597,6 +629,8 @@ function()
     animation.indicateComplete = function() {};
     return animation;
 };
+
+// A minimize animation that does move, resize and fade animations in parallel and sequence.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getMinimizeAnimation =
 function(windowGlobal, uiNote, endPos, endDims)
@@ -632,6 +666,8 @@ function(windowGlobal, uiNote, endPos, endDims)
     return wholeAnimation;
 };
 
+// A simple animation that changes a note UI's foreground text color.
+
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getForeRecolorAnimation =
 function(windowGlobal, uiNote, endColor)
 {
@@ -659,6 +695,8 @@ function(windowGlobal, uiNote, endColor)
     
     return animation;
 };
+
+// A simple animation that changes a note UI's background note color.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.getBackRecolorAnimation =
 function(windowGlobal, uiNote, endColor)
