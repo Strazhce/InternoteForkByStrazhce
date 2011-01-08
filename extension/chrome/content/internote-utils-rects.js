@@ -16,8 +16,14 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+// This file contains various utilities for calculating with rectangles.
+
+// Each rectangle has topLeft, bottomRight and dims pairs. They should not be directly
+// modified because they need to be consistent. Instead rectangles should be treated as immutable.
+
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("RectUtils", {
 
+// PRIVATE: Make a new Rectangle object.
 makeRectangle: function()
 {
     // We put the constructor in here so getJSClassName works.
@@ -32,6 +38,8 @@ makeRectangle: function()
     return new Rectangle();
 },
 
+// PUBLIC: Makes a new rectangle from given top-left & bottom-right coordinate pairs,
+// rounding off each coordinate to an integer.
 makeRoundedRect: function(topLeft, bottomRight)
 {
     this.assertError(this.isCoordPair(topLeft),     "Invalid topLeft.");
@@ -44,6 +52,7 @@ makeRoundedRect: function(topLeft, bottomRight)
     return rect;
 },
 
+// PUBLIC: Makes a new rectangle from a given top-left coordinate and dims pairs.
 makeRectFromDims: function(topLeft, dims)
 {
     this.assertError(this.isCoordPair(topLeft),    "Invalid topLeft.", topLeft);
@@ -55,6 +64,7 @@ makeRectFromDims: function(topLeft, dims)
     return rect;
 },
 
+// PUBLIC: Makes a new rectangle from given top-left and bottom-right coordinate pairs.
 makeRectFromCoords: function(topLeft, bottomRight)
 {
     this.assertError(this.isCoordPair(topLeft),     "Invalid topLeft.");
@@ -67,6 +77,7 @@ makeRectFromCoords: function(topLeft, bottomRight)
     return rect;
 },
 
+// PUBLIC: Calculates the intersection of two rectangles.
 getRectIntersection: function(rect1, rect2)
 {
     this.assertError(this.isRectangle(rect1),  "Invalid rect1.");
@@ -79,18 +90,21 @@ getRectIntersection: function(rect1, rect2)
     return this.makeRectFromCoords([xRange[0], yRange[0]], [xRange[1], yRange[1]]);
 },
 
+// PUBLIC: Gets the top-right coordinate of a rectangle.
 getRectTopRight: function(rect)
 {
     this.assertError(this.isRectangle(rect),  "Invalid rect.");
     return [rect.bottomRight[0], rect.topLeft[1]];
 },
 
+// PUBLIC: Gets the bottom-left coordinate of a rectangle.
 getRectBottomLeft: function(rect)
 {
     this.assertError(this.isRectangle(rect),  "Invalid rect.");
     return [rect.topLeft[0], rect.bottomRight[1]];
 },
 
+// PUBLIC: Gets the center coordinate of a rectangle.
 getRectCenter: function(rect)
 {
     this.assertError(this.isRectangle(rect),  "Invalid rect.");
@@ -98,6 +112,7 @@ getRectCenter: function(rect)
             (rect.topLeft[1] + rect.bottomRight[1]) / 2];
 },
 
+// PUBLIC: Checks whether an object is a rectangle.
 isRectangle: function(rect)
 {
     return this.isSpecificJSClass(rect, "Rectangle") &&
@@ -105,6 +120,7 @@ isRectangle: function(rect)
            this.isCoordPair(rect.bottomRight);
 },
 
+// PUBLIC: Clips a coordinate pair to the nearest point inside the specified rectangle.
 restrictPosToRect: function(pos, rect)
 {
     this.assertError(this.isCoordPair(pos),  "Invalid pos.");
@@ -114,12 +130,15 @@ restrictPosToRect: function(pos, rect)
            this.clipToRange(pos[1], rect.topLeft[1], rect.bottomRight[1])];
 },
 
+// PUBLIC: Checks whether two rectangles are equal.
+// Note: For two zero-area rectangles, this may not give expected results.
 areRectsEqual: function(rect1, rect2)
 {
     return this.areCoordPairsEqual(rect1.topLeft,     rect2.topLeft    ) &&
            this.areCoordPairsEqual(rect1.bottomRight, rect2.bottomRight);
 },
 
+// PUBLIC: Checks whether two rectangles overlap. 
 doRectsOverlap: function(rect1, rect2)
 {
     this.assertError(this.isRectangle(rect1),  "Invalid rect1.");
@@ -128,11 +147,13 @@ doRectsOverlap: function(rect1, rect2)
     return (overlapRect.dims[0] > 0 && overlapRect.dims[1] > 0);
 },
 
+// PUBLIC: Checks whether a rectange has no area.
 isRectEmpty: function(rect)
 {
     return rect.dims[0] == 0 || rect.dims[1] == 0;
 },
 
+// PUBLIC: Calculates a rectangle from an XUL boxObject.
 makeScreenRectFromBoxObject: function(boxObject)
 {
     this.assertError(boxObject != null, "Can't create screen rect from null boxObject.");
@@ -140,18 +161,22 @@ makeScreenRectFromBoxObject: function(boxObject)
                                  [boxObject.width, boxObject.height]);
 },
 
+// PUBLIC: Checks whether a point is in a rectangle.
 isInRect: function(pos, rect)
 {
     return this.isBetween(pos[0], rect.topLeft[0], rect.bottomRight[0]) &&
            this.isBetween(pos[1], rect.topLeft[1], rect.bottomRight[1]);
 },
 
+// PUBLIC: Checks whether a rectangle is entirely within another rectangle.
 isRectInRect: function(innerRect, outerRect)
 {
     return this.isInRect(innerRect.topLeft,     outerRect) &&
            this.isInRect(innerRect.bottomRight, outerRect);
 },
 
+// PUBLIC: Vertically splits a rectangle into a pair of rectangles of equal width,
+// such that the first rectangle has the given height.
 splitRectVert: function(rect, firstHeight)
 {
     firstHeight = this.clipToRange(firstHeight, 0, rect.dims[1]);
