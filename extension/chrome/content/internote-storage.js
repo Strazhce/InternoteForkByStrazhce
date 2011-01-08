@@ -829,7 +829,8 @@ processEffectiveURL: function(url, matchType, ignoreAnchor, ignoreParams)
         var parsedURL = this.utils.parseURL(url);
         if (parsedURL == null)
         {
-            return null;
+			this.assertWarnNotHere("Could not parse effective URL.", url);
+            return url;
         }
         else
         {
