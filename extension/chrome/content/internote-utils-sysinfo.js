@@ -16,12 +16,13 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-// This file is used for filling in the about dialog and reporting bugs.
+// This file is used for determining the system info used by the about & bug-reporting dialogs.
 
 Components.utils.import("resource://internotejs/internote-shared-global.jsm");
 
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("SysInfoUtils", {
 
+// Initializes the Addon or Extension Manager, whichever is relevant to this FF version.
 initSysInfo: function()
 {
     var amExists = (this.addonManager     != null);
@@ -49,10 +50,11 @@ initSysInfo: function()
         else
         {
             this.handleException("Exception caught when initializing addon/extension manager.", ex);
-        }    
+        }
     }
 },
 
+// Load the install.rdf file, returning it to the callback.
 loadInstallRDF: function(callback)
 {
     if (this.addonManager != null)
@@ -70,20 +72,25 @@ loadInstallRDF: function(callback)
     }
 },
 
+// Load the install.rdf file using the FF4 addon manager, asychronously returning it to the callback.
 loadAMInstallRDF: function(callback)
 {
     const MY_ID = this.consts.MY_ID;
     const INSTALL_RDF = "install.rdf";
     
+    // XXX Rename .xml -> .installRDFXML
     if (this.xml != null)
     {
-        callback(this.xml);    
+        // It's already been loaded previously.
+        callback(this.xml);
     }
     else
     {
+        // Asynchronously call the addon manager.
         this.addonManager.getAddonByID(MY_ID, this.bind(this, function(addon) {
             try
             {
+                // Load the file, whether it is packed into an XPI or unpacked.
                 var ioService = this.getCCService("@mozilla.org/network/io-service;1", "nsIIOService");
                 var uri = addon.getResourceURI("install.rdf");
                 var stream = ioService.newChannelFromURI(uri).open();
@@ -99,6 +106,7 @@ loadAMInstallRDF: function(callback)
     }
 },
 
+// Load the install.rdf file using the FF3 extension manager, immediately returning it to the callback.
 loadEMInstallRDF: function(callback)
 {
     const MY_ID = this.consts.MY_ID;
@@ -126,12 +134,15 @@ loadEMInstallRDF: function(callback)
     }
 },
 
+// Get the internote version from the supplied parsed "install.rdf".
 getInternoteVersion: function(installRDF)
 {
     var versionElt = installRDF.getElementsByTagName("em:version", this.MOZ_RDF_URL)[0];
     return versionElt.firstChild.data;
 },
 
+// Get the list of extensions that are installed and passed them to the callback.
+// This is used to detect possible conflicts between extensions.
 getExtensionList: function(callback)
 {
     if (this.addonManager != null)
@@ -149,6 +160,8 @@ getExtensionList: function(callback)
     }
 },
 
+// Gets the list of extensions that are installed from the FF4 addon manager and asychronously
+// passes them to the callback. Only returns enabled & compatible extensions.
 getAMExtensionList: function(callback)
 {
     this.addonManager.getAllAddons(this.bind(this, function(addons) {
@@ -173,6 +186,9 @@ getAMExtensionList: function(callback)
     }));
 },
 
+// Gets the list of extensions that are installed from the FF3 extension manager and immediately
+// passes them to the callback. Will include disabled & incompatible extensions as there doesn't
+// seem to be a way to exclude them in FF3.
 getEMExtensionList: function(callback)
 {
     try
@@ -190,17 +206,21 @@ getEMExtensionList: function(callback)
     callback.call(this, extensionDescs);
 },
 
+// Get the user's platform.
 getPlatformString: function()
 {
     return this.navigator.platform + " (" + this.navigator.oscpu + ")";
 },
 
+// Get the user's browser.
 getBrowserString: function()
 {
     var xulAppInfo = this.getCCService("@mozilla.org/xre/app-info;1", "nsIXULAppInfo");
     return xulAppInfo.name + " " + xulAppInfo.version;
 },
 
+// Combine all the system info together into one string.
+// XXX Rename -> getSystemInfo
 getErrorInfo: function(internoteVersion, callback)
 {
     try
