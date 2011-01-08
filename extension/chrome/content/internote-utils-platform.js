@@ -17,8 +17,11 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+// This file contains various checks for platform-specific issues. 
+
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("PlatformUtils", {
 
+// PUBLIC: Returns the platform.
 getPlatform: function()
 {
     var platform = new String(this.navigator.platform);
@@ -37,6 +40,7 @@ getPlatform: function()
     }
 },
 
+// PUBLIC: Returns whether this platform supports transparent popups (panels).
 supportsTranslucentPopups: function()
 {
     var platform = this.getPlatform();
@@ -55,6 +59,9 @@ supportsTranslucentPopups: function()
     }
 },
 
+// PUBLIC: Returns whether this platform allows interacting with the web page
+// thru a transparent popup (panel).
+// XXX Report this bug.
 supportsTransparentClickThru: function()
 {
     var platform = this.getPlatform();
@@ -73,6 +80,8 @@ supportsTransparentClickThru: function()
     }
 },
 
+// PUBLIC: Returns whether this platform has bugs that prevent the popup pane Display UI from working.
+// XXX Report these bugs.
 hasPopupBugs: function()
 {
     var platform = this.getPlatform();
@@ -91,21 +100,25 @@ hasPopupBugs: function()
     }
 },
 
+// PUBLIC: Returns whether this platform has a browser stack for displaying chrome over content (ie FF4).
 hasBrowserStack: function(browser)
 {
     return browser.parentNode.localName == "stack";
 },
 
+// PUBLIC: Returns whether to center the minimize icon (ie on Mac).
 hasMinimizeIconCentered: function()
 {
     return this.getPlatform() == "mac";
 },
 
+// PUBLIC: Returns whether to draw the scrollbar buttons together (ie on Mac).
 hasCombinedScrollButtons: function()
 {
     return this.getPlatform() == "mac";
 },
 
+// PUBLIC: Returns whether to left-align the top buttons of notes (ie on Mac).
 hasLeftAlignedTopButtons: function()
 {
     return this.getPlatform() == "mac";
