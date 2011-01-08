@@ -36,3 +36,18 @@
 <!ENTITY internote.browseButton.label "Browse…">
 <!ENTITY internote.storageRestartProviso.desc "(New locations won't be used until Firefox is restarted.)">
 <!ENTITY internote.storageMoveProviso.desc "(Existing notes won't be moved to new locations, however you may import them using &quot;Manage All Notes&quot; on the Internote menu.)">
+
+<!-- Minimized Positions -->
+
+<!ENTITY internote.minimizedPos.label         "Minimized Position:">
+
+<!ENTITY internote.inplace.value              "In Place">
+<!ENTITY internote.topleftdownwards.value     "Start at Top-Left, Go Downwards">
+<!ENTITY internote.topleftrightwards.value    "Start at Top-Left, Go Rightwards">
+<!ENTITY internote.bottomleftupwards.value    "Start at Bottom-Left, Go Upwards">
+<!ENTITY internote.bottomleftrightwards.value "Start at Bottom-Left, Go Rightwards">
+<!ENTITY internote.toprightdownwards.value    "Start at Top-Right, Go Downwards">
+<!ENTITY internote.toprightleftwards.value    "Start at Top-Right, Go Leftwards">
+<!ENTITY internote.bottomrightupwards.value   "Start at Bottom-Right, Go Upwards">
+<!ENTITY internote.bottomrightleftwards.value "Start at Bottom-Right, Go Leftwards">
+

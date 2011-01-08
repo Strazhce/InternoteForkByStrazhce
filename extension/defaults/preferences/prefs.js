@@ -11,3 +11,4 @@ pref("internote.usenativescroll", false);
 pref("internote.usestatusbar", true);
 pref("internote.changelocation", false);
 pref("internote.askbeforedelete", true);
+pref("internote.minimizedpos", "4");

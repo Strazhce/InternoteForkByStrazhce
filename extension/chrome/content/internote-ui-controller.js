@@ -205,6 +205,7 @@ init: function()
     this.storage.addBoundEventListener("fontSizeChanged",     this, "onFontSizePrefSet");
     this.storage.addBoundEventListener("scrollbarChanged",    this, "onScrollbarPrefSet");
     this.storage.addBoundEventListener("statusbarChanged",    this, "onStatusbarPrefSet");
+    this.storage.addBoundEventListener("minimizedPosChanged", this, "onMinimizedPosPrefSet");
     
     this.chromeUpdateStatusBarIconDisplay(false);
     this.chromeUpdateInternoteIcon();
@@ -385,6 +386,7 @@ destroy: function()
     this.storage.removeBoundEventListener("fontSizeChanged",     this, "onFontSizePrefSet");
     this.storage.removeBoundEventListener("scrollbarChanged",    this, "onScrollbarPrefSet");
     this.storage.removeBoundEventListener("statusbarChanged",    this, "onStatusbarPrefSet");
+    this.storage.removeBoundEventListener("minimizedPosChanged", this, "onMinimizedPosPrefSet");
     
     this.storage.usageCount--;
     if (this.storage.usageCount == 0)
@@ -2080,16 +2082,10 @@ screenCalcNotePosOnViewport: function(uiNote)
     
     this.utils.assertError(note != null, "Note is null when calculating note position.");
     
-    if (note.isMinimized)
+    if (note.isMinimized && this.prefs.getMinimizedPos() != this.prefs.IN_PLACE_MODE)
     {
-        var viewportDims = this.utils.getViewportDims(window, this.currentBrowser);
-        var top = viewportDims[1] - this.noteUI.MINIMIZED_HEIGHT;
-        
         this.utils.assertError(uiNote.minimizePos != null, "Missing minimize pos.");
-        var left = uiNote.minimizePos * (this.noteUI.MINIMIZED_WIDTH + this.WIDTH_BETWEEN_MINIMIZED)
-                 - this.currentBrowser.contentWindow.scrollX;
-        
-        return [left, top];
+        return this.screenCalcMinimizedPos(uiNote);
     }
     else
     {
@@ -2104,6 +2100,49 @@ screenCalcNotePosOnViewport: function(uiNote)
         
         return topLeftOnViewport;
     }
+},
+
+screenCalcMinimizedPos: function(uiNote)
+{
+    var minPosMode = this.prefs.getMinimizedPos();
+    
+    this.utils.assertError(minPosMode != this.prefs.IN_PLACE_MODE, "Invalid mode in screenCalcMinimizedPos.");
+
+    var viewportDims = this.utils.getViewportDims(window, this.currentBrowser);
+    
+    if (minPosMode == 1 || minPosMode == 2 || minPosMode == 5 || minPosMode == 6)
+    {
+        var top = 0; // On the top.
+    }
+    else
+    {
+        var top = viewportDims[1] - this.noteUI.MINIMIZED_HEIGHT; // On the bottom
+    }
+    
+    if (minPosMode == 1 || minPosMode == 2 || minPosMode == 3 || minPosMode == 4)
+    {
+        var left = 0; // On the left.
+    }
+    else
+    {
+        var left = viewportDims[0] - this.noteUI.MINIMIZED_WIDTH; // On the right
+    }
+    
+    if      (minPosMode == 1 || minPosMode == 5) { var offset = [ 0, +1]; }
+    else if (minPosMode == 2 || minPosMode == 4) { var offset = [+1,  0]; }
+    else if (minPosMode == 3 || minPosMode == 7) { var offset = [ 0, -1]; }
+    else if (minPosMode == 6 || minPosMode == 8) { var offset = [-1,  0]; }
+    else { this.utils.assertNotHere("Unknown minimized pos mode.", minPosMode); }
+    
+    dump("Left = " + left + " Top = " + top + "\n");
+    dump("Pos = " + uiNote.minimizePos + "\n");
+    dump("Offset = " + offset[0] + " " + offset[1] + "\n");
+    dump("Offset = " + (offset[0] * (this.noteUI.MINIMIZED_WIDTH  + this.WIDTH_BETWEEN_MINIMIZED)) + " " + (offset[1] * (this.noteUI.MINIMIZED_HEIGHT + this.WIDTH_BETWEEN_MINIMIZED)) + "\n");
+    dump("Result = " + (left + uiNote.minimizePos * offset[0] * (this.noteUI.MINIMIZED_WIDTH  + this.WIDTH_BETWEEN_MINIMIZED)) + " " + (top  + uiNote.minimizePos * offset[1] * (this.noteUI.MINIMIZED_HEIGHT + this.WIDTH_BETWEEN_MINIMIZED)) + "\n");
+    
+    // XXX Can't scroll across anymore.
+    return [left + uiNote.minimizePos * offset[0] * (this.noteUI.MINIMIZED_WIDTH  + this.WIDTH_BETWEEN_MINIMIZED),
+            top  + uiNote.minimizePos * offset[1] * (this.noteUI.MINIMIZED_HEIGHT + this.WIDTH_BETWEEN_MINIMIZED)];
 },
 
 // Figures out where the note goes on the viewport after having been offset due to moving.
@@ -3284,6 +3323,25 @@ onStatusbarPrefSet: function()
     try
     {
         this.chromeUpdateStatusBarIconDisplay(true);
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when attempting to change statusbar preference.", ex);
+    }
+},
+
+onMinimizedPosPrefSet: function()
+{
+    //dump("onStatusbarPrefSet\n");
+    
+    try
+    {
+        for (var i = 0; i < this.allUINotes.length; i++)
+        {
+            if (this.allUINotes[i].note.isMinimized) {
+                this.screenMoveNote(this.allUINotes[i]);
+            }
+        }
     }
     catch (ex)
     {

@@ -67,6 +67,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <preference id="foreColorPreference"       name="internote.defaulttextcolor" type="string"/>
       <preference id="defaultPositionPreference" name="internote.defaultposition"  type="string"/>
       <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
+      <preference id="minimizedPosPreference"    name="internote.minimizedpos"     type="string"/>
       <preference id="transparencyPreference"    name="internote.transparency"     type="bool"/>
       <preference id="highlightablePreference"   name="internote.highlightable"    type="bool"/>
       <preference id="nativeScrollPreference"    name="internote.usenativescroll"  type="bool"/>
@@ -135,18 +136,42 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     </groupbox>
     <groupbox>
       <caption label="&internote.globalStylePrefs.caption;" />
-      <hbox align="center">
-        <label value="&internote.fontSize.label;" control="fontSizeEntryBox" />
-        <menulist id="fontSizeEntryBox" preference="fontSizePreference">
-          <menupopup>
-            <menuitem value="10" label="&internote.tinySize.value;" />
-            <menuitem value="12" label="&internote.normalSize.value;" />
-            <menuitem value="14" label="&internote.largeSize.value;" />
-            <menuitem value="16" label="&internote.giantSize.value;" />
-            <menuitem value="18" label="&internote.megaSize.value;" />
-          </menupopup>
-        </menulist>
-      </hbox>
+      <grid flex="1">
+        <columns>
+          <column />
+          <column />
+        </columns>
+        <rows>
+          <row align="center">
+            <label value="&internote.fontSize.label;" control="fontSizeEntryBox" />
+            <menulist id="fontSizeEntryBox" preference="fontSizePreference">
+              <menupopup>
+                <menuitem value="10" label="&internote.tinySize.value;" />
+                <menuitem value="12" label="&internote.normalSize.value;" />
+                <menuitem value="14" label="&internote.largeSize.value;" />
+                <menuitem value="16" label="&internote.giantSize.value;" />
+                <menuitem value="18" label="&internote.megaSize.value;" />
+              </menupopup>
+            </menulist>
+          </row>
+          <row align="center">
+            <label value="&internote.minimizedPos.label;" control="minimizedPosEntryBox" />
+            <menulist id="minimizedPosEntryBox" preference="minimizedPosPreference">
+              <menupopup>
+                <menuitem value="0" label="&internote.inplace.value;" />
+                <menuitem value="1" label="&internote.topleftdownwards.value;" />
+                <menuitem value="2" label="&internote.topleftrightwards.value;" />
+                <menuitem value="3" label="&internote.bottomleftupwards.value;" />
+                <menuitem value="4" label="&internote.bottomleftrightwards.value;" />
+                <menuitem value="5" label="&internote.toprightdownwards.value;" />
+                <menuitem value="6" label="&internote.toprightleftwards.value;" />
+                <menuitem value="7" label="&internote.bottomrightupwards.value;" />
+                <menuitem value="8" label="&internote.bottomrightleftwards.value;" />
+              </menupopup>
+            </menulist>
+          </row>
+        </rows>
+      </grid>
       <checkbox id="highlightableCheckBox" preference="highlightablePreference" label="&internote.useHighlightableCBox.label;" />
       <checkbox id="defaultTransCheckBox"  preference="transparencyPreference"  label="&internote.useTranslucencyCBox.label;" />
       <checkbox id="scrollbarCheckBox"     preference="nativeScrollPreference"  label="&internote.useNativeScrollCBox.label;" />

@@ -23,6 +23,8 @@ if (internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs == null)
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs =
 {
 
+IN_PLACE_MODE: 0,
+
 initConnections: function(sharedGlobal)
 {
     this.utils  = sharedGlobal.utils;
@@ -162,6 +164,7 @@ getDefaultSize      : function() { return this.getEnumPref("defaultsize",      0
 getDefaultPosition  : function() { return this.getEnumPref("defaultposition",  0, 4); },
 getDefaultNoteColor : function() { return this.getEnumPref("defaultnotecolor", 0, 5); },
 getDefaultTextColor : function() { return this.getEnumPref("defaulttextcolor", 0, 5); },
+getMinimizedPos     : function() { return this.getEnumPref("minimizedpos",     4, 8); },
 
 detectFirstRun : function()
 {

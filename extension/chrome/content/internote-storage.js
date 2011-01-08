@@ -152,6 +152,7 @@ init: function(anyMainWindowDoc)
     this.createEvent("fontSizeChanged");
     this.createEvent("scrollbarChanged");
     this.createEvent("statusbarChanged");
+    this.createEvent("minimizedPosChanged");
     
     this.createEvent("noteAdded");
     this.createEvent("noteRemoved");
@@ -225,6 +226,10 @@ observePrefsChanges: function()
                 else if (data == "usestatusbar")
                 {
                     this.dispatchEvent("statusbarChanged", new this.StorageEvent());
+                }
+                else if (data == "minimizedpos")
+                {
+                    this.dispatchEvent("minimizedPosChanged", new this.StorageEvent());
                 }
             }
         }

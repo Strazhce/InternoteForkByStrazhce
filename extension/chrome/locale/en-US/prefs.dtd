@@ -36,6 +36,20 @@
 <!ENTITY internote.useHighlightableCBox.label "Highlightable Text (use border to move)">
 <!ENTITY internote.useNativeScrollCBox.label  "Use OS Scrollbar instead of Internote Scrollbar">
 
+<!-- Minimized Positions -->
+
+<!ENTITY internote.minimizedPos.label         "Minimized Position:">
+
+<!ENTITY internote.inplace.value              "In Place">
+<!ENTITY internote.topleftdownwards.value     "Start at Top-Left, Go Downwards">
+<!ENTITY internote.topleftrightwards.value    "Start at Top-Left, Go Rightwards">
+<!ENTITY internote.bottomleftupwards.value    "Start at Bottom-Left, Go Upwards">
+<!ENTITY internote.bottomleftrightwards.value "Start at Bottom-Left, Go Rightwards">
+<!ENTITY internote.toprightdownwards.value    "Start at Top-Right, Go Downwards">
+<!ENTITY internote.toprightleftwards.value    "Start at Top-Right, Go Leftwards">
+<!ENTITY internote.bottomrightupwards.value   "Start at Bottom-Right, Go Upwards">
+<!ENTITY internote.bottomrightleftwards.value "Start at Bottom-Right, Go Leftwards">
+
 <!-- General Options -->
 
 <!ENTITY internote.generalPrefsPane.title     "General">
