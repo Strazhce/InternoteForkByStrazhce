@@ -17,8 +17,10 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // This serves purely as the single global variable for the browser-window-specific code.
-// Other code will add to it afterwards.  It imports the shared global which is basically
-// the same thing for the back end.
+// Other code will add to it afterwards.
+
+// It imports and includes the shared global which is basically the same thing for the
+// back end, and is not to be confused with it.
 
 Components.utils.import("resource://internotejs/internote-shared-global.jsm");
 
