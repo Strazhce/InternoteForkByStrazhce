@@ -17,11 +17,14 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+// Various utilities for manipulating HTML, XML, XUL, URLs, etc.
+
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("WebUtils", {
 
 XHTML_NS: "http://www.w3.org/1999/xhtml",
 XUL_NS:   "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 
+// Canonicalize a URL. No change upon failure to parse.
 canonicalizeURL: function(url)
 {
     this.assertError(typeof(url) == "string", "Bad URL type when canonicalizing URL.", url);
@@ -39,6 +42,7 @@ canonicalizeURL: function(url)
     }
 },
 
+// Default port for a protocol.
 getDefaultPort: function(protocol)
 {
     if      (protocol == "http" ) return 80;
@@ -47,6 +51,7 @@ getDefaultPort: function(protocol)
     else return null;
 },
 
+// Check whether a site ends with a specific site suffix (leading dot optional).
 isSiteSuffix: function(site, suffix)
 {
     if (site == suffix)
@@ -64,6 +69,7 @@ isSiteSuffix: function(site, suffix)
     }
 },
 
+// Canonicalize a parsed URL.
 canonicalizeParsedURL: function(parsedURL)
 {
     if (parsedURL.path.length > 0)
@@ -129,6 +135,7 @@ canonicalizeParsedURL: function(parsedURL)
     parsedURL.site     = parsedURL.site.    toLowerCase();
 },
 
+// Format a parsed URL to a string.
 formatURL: function(parsedURL)
 {
     var userNameComponent = (parsedURL.userName != null) ? (parsedURL.userName + ":") : "";
@@ -143,7 +150,7 @@ formatURL: function(parsedURL)
            paramsComponent + anchorComponent;
 },
 
-// This is fairly rudimentary, it may let thru some invalid URLs.
+// Parse a URL string to an object. Fairly rudimentary & may let thru some invalid URLs.
 parseURL: function(url)
 {
     this.assertError(typeof(url) == "string", "Bad URL type when parsing URL.", url);
@@ -234,6 +241,7 @@ parseURL: function(url)
     }
 },
 
+// Parse a URL parameter.
 parseParam: function(param)
 {
     if (this.paramRegexp == null)
@@ -253,6 +261,7 @@ parseParam: function(param)
     }
 },
 
+// Format a URL parameter.
 formatParam: function(param)
 {
     if (param[1] != null)
@@ -265,6 +274,7 @@ formatParam: function(param)
     }
 },
 
+// Checks the "site" part of the URL is valid, where this is relevant for the protocol.
 isValidURLSite: function(site, protocol)
 {
     var checkSiteProtocols = ["http", "https", "ftp"]; // Don't check file, chrome, resource, etc.
@@ -318,6 +328,7 @@ cleanUpURL: function(url, removeAnchor, removeParams)
 },
 */
 
+// Remove all child notes from an XML/HTML element.
 removeAllChildNodes: function(elt)
 {
     while (elt.hasChildNodes())
@@ -326,6 +337,7 @@ removeAllChildNodes: function(elt)
     }
 },
 
+// HTML encode text.
 htmlEncode: function(aDoc, unencodedText)
 {
     var textNode = aDoc.createTextNode(unencodedText);
@@ -343,6 +355,7 @@ htmlDecode: function(aDoc, encodedText)
 },
 */
 
+// HTML decode text.
 htmlDecode: function(encodedText)
 {
     return encodedText.replace(/&lt;/g, "<")
@@ -351,6 +364,7 @@ htmlDecode: function(encodedText)
                       .replace(/&grave;/g, "`");
 },
 
+// Get the site part out of a URL string.
 getURLSite: function(url)
 {
     var protocolRegexp = "([^:]*)://";
@@ -375,11 +389,14 @@ getURLSite: function(url)
     }
 },
 
+// Checks whether a site is an IP address.
 isIPAddress: function(site)
 {
     return site.match(/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/) != null;
 },
 
+// Checks whether a site is a valid DNS name. Tries to exclude too short
+// sites depending on country code, but errs on the side of validity.
 isValidSite: function(site)
 {
     // Domain names with diacritics exist, support them.
@@ -420,6 +437,7 @@ isValidSite: function(site)
     }
 },
 
+// Recursively dumps an XML node or document, with indentation.
 dumpXML: function(node, level)
 {
     if (level == null) level = 0;
@@ -480,6 +498,7 @@ dumpXML: function(node, level)
     if (level == 0) dump("--- END XML DUMP ---\n");
 },
 
+// Deep clones an XML element without IDs, so no ID clashes occur.
 cloneSubtreeWithoutIDs: function(node)
 {
     var nodeClone = node.cloneNode(true);
@@ -502,6 +521,7 @@ cloneSubtreeWithoutIDs: function(node)
     return nodeClone;
 },
 
+// Removes the "px" suffix off CSS values.
 removePx : function(x) {
     this.assertError(x.match(/[0-9]+px/), "Bad px value");
     return parseInt(x, 10);
@@ -535,34 +555,40 @@ removeBoundDOMEventListener: function(elt, eventName, obj, propertyName, useCapt
     elt.removeEventListener(eventName, fn, useCapture);
 },
 
+// Prevent an event from continuing.
 blockEvent: function(ev)
 {
     ev.stopPropagation();
     ev.preventDefault();
 },
 
+// Checks that an element is a specific XUL element.
 isSpecificXULElement: function(obj, tagName)
 {
     // XXX How to check it's XULElement?
     return obj.tagName == tagName;
 },
 
+// Checks that an element is a specific HTML element.
 isSpecificHTMLElement: function(obj, tagName)
 {
     // XXX How to check it's HTMLElement?
     return obj.tagName == tagName;
 },
 
+// Gets the current browser of this window.
 getCurrentBrowser: function(tabBrowser)
 {
     return tabBrowser.getBrowserAtIndex(tabBrowser.mTabContainer.selectedIndex);
 },
 
+// Gets the current URL of this window.
 getBrowserURL: function(browser)
 {
     return browser.contentWindow.location.href;
 },
 
+// Passed an element or array of elements, sets whether they're enabled.
 setEnabledElts: function(elts, isEnabled)
 {
     var elts2 = this.isArray(elts) ? elts : [elts];
@@ -583,6 +609,7 @@ setEnabledElts: function(elts, isEnabled)
     
 },
 
+// Passed an ID or array of IDs, sets whether they're enabled.
 setEnabledIDs: function(doc, eltNames, isEnabled)
 {
     var eltNames2 = this.isArray(eltNames) ? eltNames : [eltNames];
@@ -590,6 +617,7 @@ setEnabledIDs: function(doc, eltNames, isEnabled)
     this.setEnabledElts(elts, isEnabled);
 },
 
+// Passed an element or array of elements, sets whether they're checked.
 setCheckedElts: function(elts, isChecked)
 {
     var elts2 = this.isArray(elts) ? elts : [elts];
@@ -610,6 +638,7 @@ setCheckedElts: function(elts, isChecked)
     
 },
 
+// Passed an element or array of elements, sets whether they're displayed.
 setDisplayedElts: function(elts, isDisplayed)
 {
     var elts2 = this.isArray(elts) ? elts : [elts];
@@ -621,6 +650,7 @@ setDisplayedElts: function(elts, isDisplayed)
     }
 },
 
+// Passed an ID or array of IDs, sets whether they're displayed.
 setDisplayedIDs: function(doc, eltNames, isDisplayed)
 {
     var eltNames2 = this.isArray(eltNames) ? eltNames : [eltNames];
@@ -628,6 +658,7 @@ setDisplayedIDs: function(doc, eltNames, isDisplayed)
     this.setDisplayedElts(elts, isDisplayed);
 },
 
+// Force an element to a specific width.
 fixDOMEltWidth: function(elt, width)
 {
     this.assertWarn(this.isNonNegativeNumber(width), "Can't set width to bad number.", width);
@@ -636,6 +667,7 @@ fixDOMEltWidth: function(elt, width)
     elt.style.minWidth  = width  + "px";
 },
 
+// Force an element to a specific height.
 fixDOMEltHeight: function(elt, height)
 {
     this.assertWarn(this.isNonNegativeNumber(height), "Can't set height to bad number.", height);
@@ -644,6 +676,7 @@ fixDOMEltHeight: function(elt, height)
     elt.style.minHeight = height + "px";
 },
 
+// Forces an element to specific dimensions. When one dimension is null, it'll be ignored.
 fixDOMEltDims: function(elt, dims)
 {
     //this.assertError(this.isNonNegCoordPair(dims), "Invalid dims.", dims);
@@ -657,6 +690,7 @@ fixDOMEltDims: function(elt, dims)
     }
 },
 
+// Undo the fix DOM element calls above.
 unfixDOMEltDims: function(elt)
 {
     elt.style.width     = "";
@@ -667,16 +701,19 @@ unfixDOMEltDims: function(elt)
     elt.style.minHeight = "";
 },
 
+// Gets an element's dimensions as a pair.
 getDims: function(obj)
 {
     return [parseInt(obj.width, 10), parseInt(obj.height, 10)];
 },
 
+// Gets an element's top-left coordinate as a pair.
 getPos: function(obj)
 {
     return [parseInt(obj.left, 10), parseInt(obj.top, 10)];
 },
 
+// Sets an element's top-left coordinate properties. When one dimension is null, it'll be ignored.
 setPos: function(obj, pos)
 {
     //this.assertError(this.isCoordPair(pos), "Invalid pos.");
@@ -684,6 +721,7 @@ setPos: function(obj, pos)
     if (pos[1] != null) obj.top  = pos[1];
 },
 
+// Sets an element's dimensions properties. When one dimension is null, it'll be ignored.
 setDims: function(obj, dims)
 {
     //this.assertError(this.isNonNegCoordPair(dims), "Invalid dims.");
@@ -691,11 +729,13 @@ setDims: function(obj, dims)
     if (dims[1] != null) obj.height = dims[1];
 },
 
+// Gets an element's screen top-left coordinate as a pair.
 getScreenPos: function(obj)
 {
     return [obj.screenX, obj.screenY];
 },
 
+// Create a HTML element, in the correct namespace so it will work with XUL documents.
 createHTMLElement: function(tagName, doc, id)
 {
     var elt = doc.createElementNS(this.XHTML_NS, "html:" + tagName);
@@ -703,13 +743,16 @@ createHTMLElement: function(tagName, doc, id)
     return elt;
 },
 
+// Create an XUL element. Must be in an XUL document.
 createXULElement: function(tagName, doc, id)
 {
+	// XXX Should assert document type, or add namespace if adding to HTML document.
     var elt = doc.createElementNS(this.XUL_NS, tagName);
     if (id != null) elt.id = id;
     return elt;
 },
 
+// Create a specific-sized HTML canvas with given ID.
 createHTMLCanvas: function(doc, id, width, height)
 {
     var canvas = this.createHTMLElement("canvas", doc, id);
@@ -718,6 +761,7 @@ createHTMLCanvas: function(doc, id, width, height)
     return canvas;
 },
 
+// Create a specific-sized XUL spacer.
 createXULSpacer: function(doc, width, height)
 {
     var spacer = this.createXULElement("spacer", doc);
@@ -725,9 +769,11 @@ createXULSpacer: function(doc, width, height)
     return spacer;
 },
 
-// getWindowCanvas is usually called after setScratchElement, but we don't put them
-// in one function, because certain things can only be determined when the element is in
-// a document, eg scrollHeight, and this might affect what we do to the element.
+// Creates a canvas that is a "screenshot" of a specific window.
+// Usually you should call this right after setScratchElement, but we don't put them
+// in one function, because certain things can only be determined after the element is in
+// a document, eg scrollHeight, and so we might wish to do intermediate actions.
+// XXX Choose better name.
 getWindowCanvas: function(win, doc, dims)
 {
     var canvas = this.createHTMLElement("canvas", doc);
@@ -738,6 +784,8 @@ getWindowCanvas: function(win, doc, dims)
     return canvas;
 },
 
+// This sets the element that displays inside a scratch IFRAME.
+// This can then be screenshot using getWindowCanvas, or printed.
 setScratchElement: function(iFrame, freshElement, dims)
 {
     // Configure.
@@ -758,12 +806,11 @@ setScratchElement: function(iFrame, freshElement, dims)
     body.appendChild(freshElement);
 },
 
-// Tricky code ... easy to break.
+// Gets the hidden scratch IFRAME that our overlay inserted into the browser window.
 getScratchIFrame: function(anyScratchWindowDoc)
 {
     var iFrame = anyScratchWindowDoc.getElementById("internote-scratch-frame");
     this.assertError(iFrame != null, "Could not find scratch frame.");
-    
     return iFrame;
 },
 
@@ -793,6 +840,8 @@ getDeepestMainElement: function(doc)
     return elt;
 },
 
+// Calculates the width of scrollbars on this platform. This is used to calculate
+// this size of the viewport minus scrollbars, so notes don't go on the bars.
 calcScrollbarWidth: function(anyScratchWindowDoc)
 {
     var scratchIFrame = this.getScratchIFrame(anyScratchWindowDoc);
@@ -807,6 +856,7 @@ calcScrollbarWidth: function(anyScratchWindowDoc)
     return textArea.offsetWidth - textArea.clientWidth;
 },
 
+// Parses XML from a stream.
 loadXMLFromStream: function(stream)
 {
     var parser = this.getCCInstance("@mozilla.org/xmlextras/domparser;1", "nsIDOMParser");
@@ -824,6 +874,7 @@ loadXMLFromStream: function(stream)
     }
 },
 
+// Parses XML from a file.
 loadXMLFromFile: function(file)
 {
     var stream = this.getCCInstance("@mozilla.org/network/file-input-stream;1", "nsIFileInputStream");
@@ -831,6 +882,7 @@ loadXMLFromFile: function(file)
     return this.loadXMLFromStream(stream);
 },
 
+// Parses XML from a string.
 loadXMLFromString: function(string)
 {
     var parser = new DOMParser();
@@ -847,6 +899,8 @@ loadXMLFromString: function(string)
     }
 },
 
+// This gets a note's number by looking at the numeric suffix at the end of IDs of elements
+// within the note. This is used by event handling code to discover the note we're working with.
 getNoteNum: function(elementOrEvent)
 {
     var element = (elementOrEvent.tagName != null) ? elementOrEvent : elementOrEvent.target;
@@ -867,6 +921,7 @@ getNoteNum: function(elementOrEvent)
     this.assertErrorNotHere("Could not find note num.");
 },
 
+// Gets an XML attribute, or a default value if it doesn't exist.
 getXMLAttr: function(element, attrName, defaultVal)
 {
     if (element.hasAttribute(attrName))
@@ -879,6 +934,7 @@ getXMLAttr: function(element, attrName, defaultVal)
     }
 },
 
+// Gets & parses an XML integer attribute, or a default value if it doesn't exist.
 getXMLInt: function(element, attrName, defaultVal)
 {
     if (element.hasAttribute(attrName))
@@ -891,6 +947,7 @@ getXMLInt: function(element, attrName, defaultVal)
     }
 },
 
+// Gets & parses an XML boolean attribute (a "false" or "true" string), or a default value if it doesn't exist.
 getXMLBoolean: function(element, attrName, defaultVal)
 {
     if (element.hasAttribute(attrName))
@@ -903,6 +960,7 @@ getXMLBoolean: function(element, attrName, defaultVal)
     }
 },
 
+// Removes all the elements after a specific XUL menu separator, up to the end or another separator.
 clearAfterMenuSeparator: function(menuSeparator)
 {
     while (menuSeparator.nextSibling != null && menuSeparator.nextSibling.tagName != "menuseparator")
@@ -911,6 +969,7 @@ clearAfterMenuSeparator: function(menuSeparator)
     }
 },
 
+// Updates the viewport dims for an image document, removing any scrollbars.
 updateViewportDimsForImage: function(contentDoc, startDims)
 {
     if (contentDoc.body.clientHeight < contentDoc.body.scrollHeight)
@@ -924,8 +983,9 @@ updateViewportDimsForImage: function(contentDoc, startDims)
     }
 },
 
-// Ridiculous but seemingly necessary.  Don't replace without wide testing
-// on a variety of sites.
+// Updates the viewport dims for a HTML document, removing any scrollbars.
+// It is ridiculously complex but seemingly necessary.
+// Don't replace without wide testing on a variety of sites.
 updateViewportDimsForHTML: function(browser, contentDoc, startDims)
 {
     var horzScrollbarDetected = false;
@@ -962,6 +1022,7 @@ updateViewportDimsForHTML: function(browser, contentDoc, startDims)
     
 },
 
+// Updates the viewport dims for an XML document, removing any scrollbars.
 updateViewportDimsForXML: function(contentDoc, startDims)
 {
     if (contentDoc.documentElement.clientHeight < contentDoc.documentElement.scrollHeight)
@@ -980,6 +1041,8 @@ updateViewportDimsForXML: function(contentDoc, startDims)
 // We attempt to calculate the size of the viewport minus any scrollbars.
 // In particular we can't just take the minimums of viewport and page because a page might
 // have less height than the viewport, and also image URLs might have less width and height.
+// There seems to be no easy way to do this in Firefox, and lots of bugs to work around, so
+// be careful with any changes.
 getViewportDims: function(chromeWin, browser)
 {
     this.assertError(browser != null, "Null browser", browser);
@@ -1063,6 +1126,7 @@ getViewportDims: function(chromeWin, browser)
     return viewportDims;
 },
 
+// Gets a rectangle for the viewport minus any scrollbars.
 getViewportRect: function(chromeWin, browser)
 {
     var contentWin = browser.contentWindow;
@@ -1072,11 +1136,13 @@ getViewportRect: function(chromeWin, browser)
     return this.makeRectFromDims(scrollPos, viewportDims);
 },
 
+// Gets a dimensions pair for the page.
 getPageDims: function(chromeWin, browser)
 {
     var contentDoc = browser.contentDocument;
     if (contentDoc.documentElement == null)
     {
+        // This seems to happen during page load for certain versions of Firefox.
         return [0, 0];
     }
     else if (contentDoc instanceof chromeWin.ImageDocument)
@@ -1089,6 +1155,7 @@ getPageDims: function(chromeWin, browser)
     }
 },
 
+// Changes all the pixels in a canvas to a specific color, but leaves alpha unchanged.
 colorCanvas: function(canvas, color)
 {
     var context = canvas.getContext("2d");
@@ -1110,6 +1177,9 @@ colorCanvas: function(canvas, color)
     context.putImageData(imageData, 0, 0);
 },
 
+// Scrolls page the smallest amount to show a specific rectangle in page coordinates
+// with a small amount of extra spacing from edge. Does nothing if already on-screen.
+// It shouldn't cry if the rectangle is bigger than the viewport.
 scrollToShowRect: function(chromeWin, browser, noteRect)
 {
     //dump("internoteUtilities.scrollToShowRect\n");
@@ -1158,6 +1228,7 @@ scrollToShowRect: function(chromeWin, browser, noteRect)
     }
 },
 
+// Draws a canvas into the center of a larger canvas.
 drawCanvasCenteredIntoCanvas: function(destCanvas, srcCanvas)
 {
     var diffX = destCanvas.width  - srcCanvas.width;
