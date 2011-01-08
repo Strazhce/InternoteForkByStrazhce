@@ -15,11 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-// This is the Display UI, responsible for displaying the notes within the browser.
 
-// This implementation creates an IFrame per note.  This does not support
-// translucency, so we only use it on Linux where that isn't supported for
-// popups anyway.
+// This is a display UI, responsible for displaying the notes within the browser.
+
+// This implementation creates an IFrame per note and absolutely positions it.
+// This does not support translucency, so we only use it on Linux on Firefox3 where
+// that isn't supported for popups anyway.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUIFixedIFrames = {
 
@@ -31,6 +32,7 @@ actualPosLookup:  [],
 actualDimsLookup: [],
 flipLookup:       [],
 
+// PUBLIC: Configure connections to other objects.
 initConnections: function(windowGlobal)
 {
     this.prefs   = windowGlobal.sharedGlobal.prefs;
@@ -39,27 +41,32 @@ initConnections: function(windowGlobal)
     this.noteUI  = windowGlobal.noteUI;
 },
 
+// PUBLIC: Initialise the displayUI.
 init: function(getViewportDimsFunc)
 {
     this.getViewportDimsFunc = getViewportDimsFunc;
 },
 
+// PUBLIC: Whether this display UI supports note translucency.
 supportsTranslucency: function()
 {
     return false;
 },
 
+// PUBLIC: Set the browser.
 setBrowser: function(browser)
 {
     this.browser = browser;
 },
 
+// PUBLIC: The controller set its array of all UINote objects and map of note num of UINote object.
 setUINotes: function(allUINotes, uiNoteLookup)
 {
     this.allUINotes   = allUINotes;
     this.uiNoteLookup = uiNoteLookup;
 },
 
+// PUBLIC: Called to tear down display of notes, eg when moving between tabs or changing page.
 tearDown: function()
 {
     //dump("internoteDisplayUI.tearDown\n");
@@ -81,11 +88,14 @@ tearDown: function()
     this.flipLookup       = [];
 },
 
+// PUBLIC: Ask the display UI whether it has a specific note number.
 doesNoteExist: function(noteNum)
 {
     return document.getElementById("internote-iframe" + noteNum) != null;
 },
 
+// PUBLIC: Adds a note to the display UI. The note UI will have already been set up when
+// this is called. Will call noteUI.noteShown when the note appears.
 addNote: function(uiNote, pos)
 {
     //dump("internoteDisplayUI.addNote " + uiNote.num + "\n");
@@ -147,6 +157,7 @@ addNote: function(uiNote, pos)
     onLoad = null; // prevent leak
 },
 
+// PUBLIC: Removes a note from the display UI.
 removeNote: function(uiNote)
 {
     //dump("internoteDisplayUI.removeNote\n");
@@ -161,6 +172,7 @@ removeNote: function(uiNote)
     delete this.actualDimsLookup[uiNote.num];
 },
 
+// PUBLIC: Raise a note in the display UI.
 raiseNote: function(uiNote)
 {
     //dump("internoteDisplayUI.raiseNote\n");
@@ -168,8 +180,8 @@ raiseNote: function(uiNote)
     iFrame.style.zIndex = uiNote.note.zIndex;
 },
 
-// NoteUI's focusNote method can only be called if the iFrame is already loaded,
-// whereas you can call this beforehand and it will handle matters.
+// PUBLIC: This focuses the note, calling noteUI.focusNote when appropriate.
+// For this display UI, we can only call noteUI's focusNote method once the iFrame is loaded.
 focusNote: function(uiNote)
 {
     //dump("internoteDisplayUI.focusNote\n");
@@ -189,17 +201,20 @@ focusNote: function(uiNote)
     }
 },
 
+// PRIVATE: Callback for the noteUI text area getting focused. For this display UI, nothing is
+// required.
 onNoteFocused: function()
 {
-    //dump("internoteDisplayUI.onNoteFocused\n");
+    // Do nothing in this implementation.
 },
 
+// PRIVATE: A periodic check of the display UI, called by the controller, to make sure all is in order.
 periodicCheck: function()
 {
     // Do nothing in this implementation.
 },
 
-// A callback for when the iFrame loads.
+// PRIVATE: A callback for when the iFrame loads.
 iFrameLoaded: function(uiNote)
 {
     //dump("internoteDisplayUI.iFrameLoaded\n");
@@ -220,6 +235,7 @@ iFrameLoaded: function(uiNote)
     }
 },
 
+// PUBLIC: Scroll the display UI to show a specific note.
 scrollToNote: function(uiNote)
 {
     // Check whether off-page.
@@ -238,6 +254,8 @@ scrollToNote: function(uiNote)
     }
 },
 
+// PUBLIC: When the controller detects changed viewport/page characteristics,
+// we get informed and adjust the display UI as necessary.
 handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects " + viewportResized + " " + viewportMoved + " " + scrolled + " " + pageResized + "\n");
@@ -262,11 +280,13 @@ handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled
     }
 },
 
+// PUBLIC: Gets the current viewport position of the note.
 getScreenPosition: function(uiNote)
 {
     return this.posLookup[uiNote.num];
 },
 
+// PRIVATE: Changes the position of notes depending on page scroll state.
 adjustAllNotes: function(getUpdatedPosFunc)
 {
     //dump("internoteDisplayUI.adjustAllNotes\n");
@@ -279,6 +299,9 @@ adjustAllNotes: function(getUpdatedPosFunc)
     }
 },
 
+// PUBLIC: Move note to new position on viewport. This may be called internally to update matters,
+// or by the controller during drag-move or drag-resize operations.
+// The newFlipOffset parameter will only be supplied internally.
 adjustNote: function(uiNote, newPos, newDims, newFlipOffset)
 {
     //dump("internoteDisplayUI.adjustNote " + uiNote.num + "\n");
@@ -362,6 +385,8 @@ adjustNote: function(uiNote, newPos, newDims, newFlipOffset)
     }
 },
 
+// PRIVATE: Calculate various properties for the note based its intersection
+// with the page and viewport.
 calculateNoteProperties: function(pos, dims)
 {
     this.utils.assertError(this.utils.isCoordPair      (pos ), "Invalid pos calcing note properties",           pos         );
@@ -387,10 +412,13 @@ calculateNoteProperties: function(pos, dims)
     }
 },
 
+// PUBLIC: Initialization for flipping the note.
 flipStart: function(uiNote)
 {
+	// Do nothing in this implementation.
 },
 
+// PUBLIC: Adjust the display UI for a step of flipping the note.
 flipStep: function(uiNote, offsetX, width)
 {
     this.adjustNote(uiNote, null, null, offsetX);
@@ -398,16 +426,23 @@ flipStep: function(uiNote, offsetX, width)
     this.utils.fixDOMEltWidth(iFrame, width);
 },
 
+// PUBLIC: Initialization for moving the note (via drag or animation).
 moveStart: function(uiNote)
 {
+    // Do nothing in this implementation.
 },
 
+// PUBLIC: Completion of moving the note (via drag or animation).
 moveEnd: function(uiNote)
 {
+    // Do nothing in this implementation.
 },
 
+// PUBLIC: For debugging purposes only.
 activateDebugFunction: function() {},
 
+// PRIVATE: Creates an IFRAME with an internal stack that can be scrolled to allow
+// only a part of the note to be displayed, ie allows the top or left being truncated.
 createShiftingIFrame: function(suffix, containee, onLoad)
 {
     var iFrame = this.utils.createHTMLElement("iframe", document);
@@ -446,6 +481,7 @@ createShiftingIFrame: function(suffix, containee, onLoad)
     return iFrame;
 },
 
+// PRIVATE: Shifts the internal stack in the shifting IFRAME.
 shiftShiftingIFrame: function(iFrame, offset)
 {
     //dump("internoteDisplayUI.shiftShiftingIFrame\n");
@@ -465,6 +501,7 @@ shiftShiftingIFrame: function(iFrame, offset)
     }
 },
 
+// PRIVATE: Resizes the shifting IFRAME.
 resizeShiftingIFrame: function(iFrame, dims)
 {
     //dump("internoteDisplayUI.resizeShiftingIFrame\n");
@@ -487,6 +524,7 @@ resizeShiftingIFrame: function(iFrame, dims)
     }
 },
 
+// PRIVATE: Gets the current offset of the shifting IFRAME, ie how much of the top and left isn't shown.
 getShiftingIFrameOffset: function(iFrame)
 {
     var containee = this.getShiftingIFrameContainee(iFrame);
@@ -501,6 +539,7 @@ getShiftingIFrameOffset: function(iFrame)
     }
 },
 
+// PRIVATE: Get the containee of the shifting IFRAME, ie the main element of the note UI.
 getShiftingIFrameContainee: function(iFrame)
 {
     var body = iFrame.contentDocument.body;

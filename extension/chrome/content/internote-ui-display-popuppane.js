@@ -15,7 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-// This is the Display UI, responsible for displaying the notes within the browser.
+
+// This is a display UI, responsible for displaying the notes within the browser.
+
+// This implementation creates a transparent panel popup over the browser window.
+// This is more efficient than separate popups, and works fine on Windows, however
+// it can't be used on Mac because it prevents interaction access to the window
+// underneath.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUIPopupPane =
 {
@@ -25,6 +31,7 @@ innerContainer: null,
 offset: [0, 0],
 autoFocusNote:  null,
 
+// PUBLIC: Configure connections to other objects.
 initConnections: function(windowGlobal)
 {
     this.prefs   = windowGlobal.sharedGlobal.prefs;
@@ -33,6 +40,7 @@ initConnections: function(windowGlobal)
     this.noteUI  = windowGlobal.noteUI;
 },
 
+// PUBLIC: Initialise the displayUI.
 init: function(getViewportDimsFunc)
 {
     this.isPanelShown   = false;
@@ -41,22 +49,26 @@ init: function(getViewportDimsFunc)
     this.getViewportDimsFunc = getViewportDimsFunc;
 },
 
+// PUBLIC: Whether this display UI supports note translucency.
 supportsTranslucency: function()
 {
     return this.utils.supportsTranslucentPopups();
 },
 
+// PUBLIC: Set the browser.
 setBrowser: function(browser)
 {
     this.browser = browser;
 },
 
+// PUBLIC: The controller set its array of all UINote objects and map of note num of UINote object.
 setUINotes: function(allUINotes, uiNoteLookup)
 {
     this.allUINotes   = allUINotes;
     this.uiNoteLookup = uiNoteLookup;
 },
 
+// PUBLIC: Called to tear down display of notes, eg when moving between tabs or changing page.
 tearDown: function()
 {
     //dump("internoteDisplayUI.tearDown\n");
@@ -74,11 +86,14 @@ tearDown: function()
     this.isPanelShown   = false;
 },
 
+// PUBLIC: Ask the display UI whether it has a specific note number.
 doesNoteExist: function(noteNum)
 {
     return document.getElementById("internote-note" + noteNum) != null;
 },
 
+// PUBLIC: Adds a note to the display UI. The note UI will have already been set up when
+// this is called. Will call noteUI.noteShown when the note appears (delayed until popupShown for first note).
 addNote: function(uiNote, pos, dims)
 {
     //dump("internoteDisplayUI.addNote\n");
@@ -105,6 +120,7 @@ addNote: function(uiNote, pos, dims)
     }
 },
 
+// PRIVATE: Adds the note to the container for notes (the transparent popup pane).
 addNoteToInnerContainer: function(uiNote)
 {
     for (var i = 0; i < this.innerContainer.childNodes.length; i++)
@@ -121,6 +137,7 @@ addNoteToInnerContainer: function(uiNote)
     this.innerContainer.appendChild(uiNote.noteElt);
 },
 
+// PUBLIC: Removes a note from the display UI, tearing down the note container if it's the last.
 removeNote: function(uiNote)
 {
     this.innerContainer.removeChild(uiNote.noteElt);
@@ -131,6 +148,7 @@ removeNote: function(uiNote)
     }
 },
 
+// PUBLIC: Raise a note in the display UI.
 raiseNote: function(uiNote)
 {
     // XXX This should check the note has the biggest Z-order.
@@ -184,8 +202,8 @@ raiseNote: function(uiNote)
     }
 },
 
-// NoteUI's focusNote method can only be called if the popup panel is already shown,
-// whereas you can call this beforehand and it will handle matters.
+// PUBLIC: This focuses the note, calling noteUI.focusNote when appropriate.
+// For this display UI, we can only call noteUI's focusNote method once the popup pane has shown.
 // It must be called after createInsertionContainer however.
 focusNote: function(uiNote)
 {
@@ -199,12 +217,15 @@ focusNote: function(uiNote)
     else
     {
         // The panel is not on-screen, but it should be coming because of the previous call
-        // to createInsertionContainer.  If this is the first note,set it for later autofocus.
+        // to createInsertionContainer. If this is the first note, set it for later autofocus.
         // If it's a later note, make this the new autofocus note.
         this.autoFocusNote = uiNote;
     }
 },
 
+// PRIVATE: Callback for the noteUI text area getting focused. This won't necessarily
+// go through displayUI.focusNote, for example when using the TAB key. So the note
+// container may have scrolled, and we may need to scroll the page so they line up again.  
 onNoteFocused: function()
 {
     //dump("internoteDisplayUI.onNoteFocused\n");
@@ -219,6 +240,7 @@ onNoteFocused: function()
     }
 },
 
+// PRIVATE: A periodic check of the display UI, called by the controller, to make sure all is in order.
 // If a note suddenly becomes focused the innerContainer can be unexpectedly scrolled,
 // resulting in incorrect coordinates.  This happens when you use the tab key between notes,
 // for example. We need to adjust the underlying document's scrollbars in this case.
@@ -249,7 +271,7 @@ periodicCheck: function()
     }
 },
 
-// A callback for when the popup panel appears.
+// PRIVATE: A callback for when the popup pane appears - we may need to focus the note.
 popupPanelShown: function()
 {
     //dump("internoteDisplayUI.popupPanelShown\n");
@@ -278,6 +300,7 @@ popupPanelShown: function()
     }
 },
 
+// PRIVATE: Creates the single container where all notes are added.
 createInsertionContainer: function()
 {
     //dump("internoteDisplayUI.createInsertionContainer\n");
@@ -302,6 +325,7 @@ createInsertionContainer: function()
     this.utils.assertError(document.getElementById("internote-popuppane") != null, "Can't find display popup.");
 },
 
+// PUBLIC: For debugging purposes only.
 activateDebugFunction: function()
 {
     //dump("internoteDisplayUI.activateDebugFunction\n");
@@ -315,7 +339,7 @@ activateDebugFunction: function()
         (this.innerContainer.style.backgroundColor == "transparent") ? "rgba(255, 0, 0, 0.1)" : "transparent";
 },
 
-// We need to change the pane dimensions if the viewport dimensions change.  Also
+// PRIVATE: We need to change the pane dimensions if the viewport dimensions change.  Also
 // if popups are positioned partially offscreen, they will get moved on-screen, which
 // would be inappropriate.  We shrink the popup pane appropriately to avoid this.
 // Also on Windows at least, popups on windows that get minimized and then restored,
@@ -375,6 +399,7 @@ positionPane: function()
     }
 },
 
+// PUBLIC: Scroll the display UI to show a specific note.
 scrollToNote: function(uiNote)
 {
     var currNoteRect = this.utils.makeRectFromDims(uiNote.note.getPos(), uiNote.note.getDims());
@@ -384,6 +409,8 @@ scrollToNote: function(uiNote)
     this.raiseNote(uiNote);
 },
 
+// PUBLIC: When the controller detects changed viewport/page characteristics,
+// we get informed and adjust the display UI as necessary.
 handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects\n");
@@ -399,6 +426,7 @@ handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled
     }
 },
 
+// PRIVATE: Changes the position of notes depending on page scroll state.
 adjustAllNotes: function(getUpdatedPosFunc)
 {
     for (var i = 0; i < this.allUINotes.length; i++)
@@ -410,21 +438,26 @@ adjustAllNotes: function(getUpdatedPosFunc)
     }
 },
 
+// PUBLIC: Gets the current viewport position of the note.
 getScreenPosition: function(uiNote)
 {
     return this.utils.getPos(uiNote.noteElt);
 },
 
+// PUBLIC: Initialization for flipping the note.
 flipStart: function(uiNote)
 {
     this.flipStartPos = this.getScreenPosition(uiNote);
 },
 
+// PUBLIC: Adjust the display UI for a step of flipping the note.
 flipStep: function(uiNote, offsetX)
 {
     this.adjustNote(uiNote, [this.flipStartPos[0] + offsetX, this.flipStartPos[1]], null);
 },
 
+// PUBLIC: Move note to new position on viewport. This may be called internally to update matters,
+// or by the controller during drag-move or drag-resize operations.
 adjustNote: function(uiNote, newPosOnViewport, newDims)
 {
     //dump("internoteDisplayUI.adjustNote " + this.utils.arrayToString(newPosOnViewport) + " " +
@@ -444,12 +477,16 @@ adjustNote: function(uiNote, newPosOnViewport, newDims)
     }
 },
 
+// PUBLIC: Initialization for moving the note (via drag or animation).
 moveStart: function(uiNote)
 {
+    // Do nothing in this implementation.
 },
 
+// PUBLIC: Completion of moving the note (via drag or animation).
 moveEnd: function(uiNote)
 {
+    // Do nothing in this implementation.
 },
 
 };

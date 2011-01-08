@@ -18,7 +18,7 @@
 // This is the Display UI, responsible for displaying the notes within the browser.
 
 // This implementation creates a popup per note.  This doesn't scale too well
-// but is necessary for platforms that have issues with the popup pane.
+// but is necessary for platforms that have issues with the popup pane, ie Mac.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUISeparatePopups = {
 
@@ -31,6 +31,7 @@ actualPosLookup:  [],
 actualDimsLookup: [],
 noteOrder:        [], // We use this to avoid unnecessary reopens.
 
+// PUBLIC: Configure connections to other objects.
 initConnections: function(windowGlobal)
 {
     this.prefs   = windowGlobal.sharedGlobal.prefs;
@@ -39,27 +40,32 @@ initConnections: function(windowGlobal)
     this.noteUI  = windowGlobal.noteUI;
 },
 
+// PUBLIC: Initialise the displayUI.
 init: function(getViewportDimsFunc)
 {
     this.getViewportDimsFunc = getViewportDimsFunc;
 },
 
+// PUBLIC: Whether this display UI supports note translucency.
 supportsTranslucency: function()
 {
     return this.utils.supportsTranslucentPopups();
 },
 
+// PUBLIC: Set the browser.
 setBrowser: function(browser)
 {
     this.browser = browser;
 },
 
+// PUBLIC: The controller set its array of all UINote objects and map of note num of UINote object.
 setUINotes: function(allUINotes, uiNoteLookup)
 {
     this.allUINotes   = allUINotes;
     this.uiNoteLookup = uiNoteLookup;
 },
 
+// PUBLIC: Called to tear down display of notes, eg when moving between tabs or changing page.
 tearDown: function()
 {
     //dump("internoteDisplayUI.tearDown\n");
@@ -82,11 +88,14 @@ tearDown: function()
     this.noteOrder        = [];
 },
 
+// PUBLIC: Ask the display UI whether it has a specific note number.
 doesNoteExist: function(noteNum)
 {
     return document.getElementById("internote-popup" + noteNum) != null;
 },
 
+// PUBLIC: Adds a note to the display UI. The note UI will have already been set up when
+// this is called. Will call noteUI.noteShown when the note appears (delayed until popupShown).
 addNote: function(uiNote, pos)
 {
     //dump("internoteDisplayUI.addNote " + uiNote.num + "\n");
@@ -120,6 +129,7 @@ addNote: function(uiNote, pos)
     this.addNoteToOrder(uiNote);
 },
 
+// PUBLIC: Removes a note from the display UI.
 removeNote: function(uiNote)
 {
     //dump("internoteDisplayUI.removeNote\n");
@@ -137,11 +147,13 @@ removeNote: function(uiNote)
     delete this.actualDimsLookup[uiNote.num];
 },
 
+// PRIVATE: Add a note to the stored note order.
 addNoteToOrder: function(uiNote)
 {
     this.noteOrder.push(uiNote.num);
 },
 
+// PRIVATE: Remove a note from the stored note order.
 removeNoteFromOrder: function(uiNote)
 {
     var oldPos = this.noteOrder.indexOf(uiNote.num);
@@ -149,12 +161,14 @@ removeNoteFromOrder: function(uiNote)
     this.utils.spliceFirstInstance(this.noteOrder, uiNote.num);
 },
 
+// PRIVATE: Determine whether this note is on top. Used to prevent unnecessary flickery reopening.
 isOnTop: function(uiNote)
 {
     //dump("Ordering: " + uiNote.num + " " + this.utils.compactDumpString(this.noteOrder) + "\n");
     return uiNote.num == this.noteOrder[this.noteOrder.length - 1];
 },
 
+// PRIVATE: Raise a note in the stored note order.
 raiseNoteInOrder: function(uiNote)
 {
     if (this.isOnTop(uiNote))
@@ -169,6 +183,7 @@ raiseNoteInOrder: function(uiNote)
     }
 },
 
+// PUBLIC: Raise a note in the display UI. This requires it be reopened.
 raiseNote: function(uiNote)
 {
     //dump("internoteDisplayUI.raiseNote\n");
@@ -182,8 +197,8 @@ raiseNote: function(uiNote)
     }
 },
 
-// NoteUI's focusNote method can only be called if the popup panel is already shown,
-// whereas you can call this beforehand and it will handle matters.
+// PUBLIC: This focuses the note, calling noteUI.focusNote when appropriate.
+// For this display UI, we can only call noteUI's focusNote method once the popup panel is shown.
 // It must be called after createInsertionContainer however.
 focusNote: function(uiNote)
 {
@@ -204,17 +219,19 @@ focusNote: function(uiNote)
     }
 },
 
+// PRIVATE: Callback for the noteUI text area getting focused.
 onNoteFocused: function()
 {
-    //dump("internoteDisplayUI.onNoteFocused\n");
+    // Do nothing in this implementation.
 },
 
+// PRIVATE: A periodic check of the display UI, called by the controller, to make sure all is in order.
 periodicCheck: function()
 {
     // Do nothing in this implementation.
 },
 
-// A callback for when the popup panel appears.
+// PRIVATE: A callback for when the popup appears - we may need to focus the note.
 popupShown: function(event, uiNote)
 {
     //dump("internoteDisplayUI.popupShown\n");
@@ -240,6 +257,7 @@ popupShown: function(event, uiNote)
     }
 },
 
+// PUBLIC: Scroll the display UI to show a specific note.
 scrollToNote: function(uiNote)
 {
     var currNoteRect = this.utils.makeRectFromDims(uiNote.note.getPos(), uiNote.note.getDims());
@@ -249,6 +267,8 @@ scrollToNote: function(uiNote)
     this.raiseNote(uiNote);
 },
 
+// PUBLIC: When the controller detects changed viewport/page characteristics,
+// we get informed and adjust the display UI as necessary.
 handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects " + viewportResized + " " + viewportMoved + " " + scrolled + " " + pageResized + "\n");
@@ -266,19 +286,22 @@ handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled
     }
 },
 
+// PRIVATE: When we adjust all the notes in this display UI, we have to reopen the popups.
+// This means taking care to reopen them in the right order to maintain Z-order.
 sortUINotes: function(uiNotes)
 {
-    // Sort the notes so we move the notes in the correct order, in order to preserve Z-order.
     var uiNotesClone = uiNotes.slice(0);
     uiNotesClone.sort(function(uiNote1, uiNote2) { return uiNote1.note.zIndex - uiNote2.note.zIndex; });
     return uiNotesClone;
 },
 
+// PUBLIC: Gets the current viewport position of the note.
 getScreenPosition: function(uiNote)
 {
     return this.posLookup[uiNote.num];
 },
 
+// PRIVATE: Reopens the note at the right position.
 reopenNote: function(uiNote)
 {
     //dump("internoteDisplayUI.reopenNote \"" + uiNote.note.text + "\"\n");
@@ -304,6 +327,7 @@ reopenNote: function(uiNote)
     }
 },
 
+// PRIVATE: Changes the position of notes depending on page scroll state.
 adjustAllNotes: function(getUpdatedPosFunc)
 {
     var uiNotes = this.sortUINotes(this.allUINotes);
@@ -323,6 +347,11 @@ adjustAllNotes: function(getUpdatedPosFunc)
     }
 },
 
+// PUBLIC: Move note to new position on viewport. This may be called internally to update matters,
+// or by the controller during drag-move or drag-resize operations.
+// This implementation reopens the note if necessary. popup.moveTo is buggy (bug #457600) on
+// anchored popups, so we only use moveTo if we've previously called moveStart to unanchor the popup.
+// The shouldForceReopen parameter will only be supplied internally.
 adjustNote: function(uiNote, newPos, newDims, shouldForceReopen)
 {
     //dump("internoteDisplayUI.adjustNote " + uiNote.num + "\n");
@@ -409,6 +438,7 @@ adjustNote: function(uiNote, newPos, newDims, shouldForceReopen)
     }
 },
 
+// PRIVATE: Get the part of the viewport that's showing on the screen.
 getViewportShowingRect: function()
 {
     var viewportPos  = this.utils.getScreenPos(this.browser.boxObject);
@@ -427,6 +457,8 @@ getViewportShowingRect: function()
     return this.utils.makeRectFromDims(newOffset, overlapRect.dims);
 },
 
+// PRIVATE: Calculate various properties for the note based its intersection
+// with the page, viewport and screen.
 calculateNoteProperties: function(pos, dims)
 {
     this.utils.assertError(this.utils.isCoordPair      (pos         ), "Invalid pos calcing note properties",           pos         );
@@ -459,18 +491,21 @@ calculateNoteProperties: function(pos, dims)
     }
 },
 
+// PUBLIC: Initialization for flipping the note.
 flipStart: function(uiNote)
 {
     var popup = document.getElementById("internote-popup" + uiNote.num);
     this.flipStartOffset = this.utils.getShiftingPanelOffset(popup);
 },
 
+// PUBLIC: Adjust the display UI for a step of flipping the note.
 flipStep: function(uiNote, offsetX)
 {
     var popup = document.getElementById("internote-popup" + uiNote.num);
     this.utils.shiftShiftingPanel(popup, [this.flipStartOffset[0] + offsetX, this.flipStartOffset[1]]);
 },
 
+// PUBLIC: Initialization for moving the note (via drag or animation).
 moveStart: function(uiNote)
 {
     // First we kludgily raise/reopen the note, because if we do it once the move has started,
@@ -479,11 +514,13 @@ moveStart: function(uiNote)
     this.raiseNote(uiNote);
     
     // Change to non-anchored so moving the note will switch to an unanchored popup.
-    // We use this temporarily because moveTo works properly with it and we prefer to avoid flickery reopens.
+    // We use this temporarily because moveTo works properly only with unanchored popups (bug #457600)
+	// and we prefer to avoid numerous flickery reopens during a drag.
     this.notesBeingMoved.push(uiNote);
     this.adjustNote(uiNote, null, null, false); // We don't need to reopen the note, move will unanchor it.
 },
 
+// PUBLIC: Completion of moving the note (via drag or animation).
 moveEnd: function(uiNote)
 {
     // Change to anchored.
@@ -491,6 +528,7 @@ moveEnd: function(uiNote)
     this.adjustNote(uiNote, null, null, true);
 },
 
+// PUBLIC: For debugging purposes only.
 activateDebugFunction: function() {},
 
 };

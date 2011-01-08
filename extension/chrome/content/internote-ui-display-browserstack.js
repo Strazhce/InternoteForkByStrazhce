@@ -15,7 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-// This is the Display UI, responsible for displaying the notes within the browser.
+
+// This is a display UI, responsible for displaying the notes within the browser.
+
+// This implementation uses a stack element around the browser, which is present in FF4 onwards.
+// It is the least buggy of all display UIs and so is vastly preferable.
 
 internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUIBrowserStack =
 {
@@ -23,6 +27,7 @@ internoteWindowGlobal_e3631030_7c02_11da_a72b_0800200c9a66.displayUIBrowserStack
 displayPanel:   null,
 innerContainer: null,
 
+// PUBLIC: Configure connections to other objects.
 initConnections: function(windowGlobal)
 {
     this.prefs   = windowGlobal.sharedGlobal.prefs;
@@ -31,27 +36,32 @@ initConnections: function(windowGlobal)
     this.noteUI  = windowGlobal.noteUI;
 },
 
+// PUBLIC: Initialise the displayUI.
 init: function(getViewportDimsFunc)
 {
     this.getViewportDimsFunc = getViewportDimsFunc;
 },
 
+// PUBLIC: Whether this display UI supports note translucency.
 supportsTranslucency: function()
 {
     return true;
 },
 
+// PUBLIC: Set the browser.
 setBrowser: function(browser)
 {
     this.browser = browser;
 },
 
+// PUBLIC: The controller set its array of all UINote objects and map of note num of UINote object.
 setUINotes: function(allUINotes, uiNoteLookup)
 {
     this.allUINotes   = allUINotes;
     this.uiNoteLookup = uiNoteLookup;
 },
 
+// PUBLIC: Called to tear down display of notes, eg when moving between tabs or changing page.
 tearDown: function()
 {
     //dump("internoteDisplayUI.tearDown\n");
@@ -65,11 +75,14 @@ tearDown: function()
     }
 },
 
+// PUBLIC: Ask the display UI whether it has a specific note number.
 doesNoteExist: function(noteNum)
 {
     return document.getElementById("internote-note" + noteNum) != null;
 },
 
+// PUBLIC: Adds a note to the display UI. The note UI will have already been set up when
+// this is called. Will call noteUI.noteShown when the note appears.
 addNote: function(uiNote, pos, dims)
 {
     //dump("internoteDisplayUI.addNote\n");
@@ -92,6 +105,7 @@ addNote: function(uiNote, pos, dims)
     this.noteUI.noteShown(uiNote);
 },
 
+// PRIVATE: Adds the note to the container for notes.
 addNoteToInnerContainer: function(uiNote)
 {
     uiNote.noteElt.setAttribute("mousethrough", "never");
@@ -110,6 +124,7 @@ addNoteToInnerContainer: function(uiNote)
     this.innerContainer.appendChild(uiNote.noteElt);
 },
 
+// PUBLIC: Removes a note from the display UI, tearing down the note container.
 removeNote: function(uiNote)
 {
     this.innerContainer.removeChild(uiNote.noteElt);
@@ -120,6 +135,7 @@ removeNote: function(uiNote)
     }
 },
 
+// PUBLIC: Raise the note in the display UI.
 raiseNote: function(uiNote)
 {
     // XXX This should check the note has the biggest Z-order.
@@ -158,8 +174,7 @@ raiseNote: function(uiNote)
         // XXX Check if necessary for this impl?
         this.utils.createTimeout(this.utils.bind(this, function() {
             // We need to focus and reselect explicitly because any focus may be lost when we just did the raiseNote because
-            // it removes the note from and readds it to the DOM.  This isn't entirely desirable given it may affect
-            // the focus in other windows but it seems to be the best solution as long as the notes are in a stack.
+            // it removes the note from and readds it to the DOM.
             if (isFocused)
             {
                 //dump("  Refocusing.\n");
@@ -174,12 +189,16 @@ raiseNote: function(uiNote)
     }
 },
 
+// PUBLIC: This focuses the note, calling noteUI.focusNote when appropriate.
 focusNote: function(uiNote)
 {
     //dump("displayUI.focusNote\n");
     this.noteUI.focusNote(uiNote);
 },
 
+// PRIVATE: Callback for the noteUI text area getting focused. This won't necessarily
+// go through displayUI.focusNote, for example when using the TAB key. So the note
+// container may have scrolled, and we may need to scroll the page so they line up again.  
 onNoteFocused: function()
 {
     //dump("internoteDisplayUI.onNoteFocused\n");
@@ -194,6 +213,7 @@ onNoteFocused: function()
     }
 },
 
+// PRIVATE: A periodic check of the display UI, called by the controller, to make sure all is in order.
 // If a note suddenly becomes focused the innerContainer can be unexpectedly scrolled,
 // resulting in incorrect coordinates.  This happens when you use the tab key between notes,
 // for example. We need to adjust the underlying document's scrollbars in this case.
@@ -224,6 +244,7 @@ periodicCheck: function()
     }
 },
 
+// PRIVATE: Creates the single container where all notes are added.
 createInsertionContainer: function()
 {
     //dump("internoteDisplayUI.createInsertionContainer\n");
@@ -245,6 +266,7 @@ createInsertionContainer: function()
     this.displayPanel.appendChild(this.innerContainer);
 },
 
+// PUBLIC: For debugging purposes only.
 activateDebugFunction: function()
 {
     //dump("internoteDisplayUI.activateDebugFunction\n");
@@ -258,6 +280,7 @@ activateDebugFunction: function()
         (this.innerContainer.style.backgroundColor == "transparent") ? "rgba(255, 0, 0, 0.1)" : "transparent";
 },
 
+// PUBLIC: Scroll the display UI to show a specific note.
 scrollToNote: function(uiNote)
 {
     var currNoteRect = this.utils.makeRectFromDims(uiNote.note.getPos(), uiNote.note.getDims());
@@ -267,6 +290,8 @@ scrollToNote: function(uiNote)
     this.raiseNote(uiNote);
 },
 
+// PUBLIC: When the controller detects changed viewport/page characteristics,
+// we get informed and adjust the display UI as necessary.
 handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled, pageResized)
 {
     //dump("internoteDisplayUI.handleChangedAspects\n");
@@ -287,6 +312,7 @@ handleChangedAspects: function(posFunc, viewportResized, viewportMoved, scrolled
     }
 },
 
+// PRIVATE: Changes the position of notes depending on page scroll state.
 adjustAllNotes: function(getUpdatedPosFunc)
 {
     for (var i = 0; i < this.allUINotes.length; i++)
@@ -298,21 +324,26 @@ adjustAllNotes: function(getUpdatedPosFunc)
     }
 },
 
+// PUBLIC: Gets the current viewport position of the note.
 getScreenPosition: function(uiNote)
 {
     return this.utils.getPos(uiNote.noteElt);
 },
 
+// PUBLIC: Initialization for flipping the note.
 flipStart: function(uiNote)
 {
     this.flipStartPos = this.getScreenPosition(uiNote);
 },
 
+// PUBLIC: Adjust the display UI for a step of flipping the note.
 flipStep: function(uiNote, offsetX)
 {
     this.adjustNote(uiNote, [this.flipStartPos[0] + offsetX, this.flipStartPos[1]], null);
 },
 
+// PUBLIC: Move note to new position on viewport. This may be called internally to update matters,
+// or by the controller during drag-move or drag-resize operations.
 adjustNote: function(uiNote, newPosOnViewport, newDims)
 {
     //dump("internoteDisplayUI.adjustNote " + this.utils.arrayToString(newPosOnViewport) + " " +
@@ -332,12 +363,16 @@ adjustNote: function(uiNote, newPosOnViewport, newDims)
     }
 },
 
+// PUBLIC: Initialization for moving the note (via drag or animation).
 moveStart: function(uiNote)
 {
+    // Do nothing in this implementation.
 },
 
+// PUBLIC: Completion of moving the note (via drag or animation).
 moveEnd: function(uiNote)
 {
+    // Do nothing in this implementation.
 },
 
 };
