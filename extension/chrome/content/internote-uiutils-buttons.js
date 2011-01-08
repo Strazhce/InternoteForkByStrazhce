@@ -1,5 +1,26 @@
-// XXX Rewrite this to prevent leaks.
+// Internote Extension
+// Button Handler
+// Copyright (C) 2010 Matthew Tuck
+// Copyright (C) 2006 Tim Horton
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+// This file handles the buttons in the note UI, including simple single-press & repeating
+// buttons, and press/hover effects.
+
+// The PressHoverHandler class is a framework for handling press/hover state changes. 
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandler =
 function PressHoverHandler(utils, element)
 {
@@ -10,6 +31,8 @@ function PressHoverHandler(utils, element)
     this.isPressed  = false;
 };
 
+// The FlexiblePressHoverHandler is an alternate framework for when the element can change
+// its size, or the handler should only apply to part of the element - this is used by the scrollbar.
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHoverHandler =
 function FlexiblePressHoverHandler(utils, element, area)
 {
@@ -19,29 +42,37 @@ function FlexiblePressHoverHandler(utils, element, area)
     this.utils        = utils;
     this.element      = element;
     this.area         = area;
-    this.lastLocalPos = [-1, -1]; // Should never be inside.
+    this.lastLocalPos = [-1, -1]; // Should never be inside at the start.
     
     this.isInside   = false;
     this.isPressed  = false;
 };
 
+////
+// PressHoverHandler class.
+// You MUST declare onMouseOver, onMouseOut, onMouseDown and onMouseUp methods.
+// You MAY override isHoverOK and isPressOK.
+////
+
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandler.prototype =
     new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher();
 
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandler.prototype.incorporate("PressHoverHandler", {
-
+    // PRIVATE: Initialize the handlers.
     registerHandlers: function()
     {
         this.utils.addBoundDOMEventListener(this.element, "mousedown", this, "handleMouseDown", false);
         this.utils.addBoundDOMEventListener(this.element, "mouseover", this, "handleMouseOver", false);
     },
     
+    // XXX Unused - delete?
     setButtonArea: function(area)
     {
         this.area = area;
         this.handleMouseMove();
     },
     
+    // PRIVATE: Event handler for when the mouse enters the element.
     handleMouseOver: function(ev)
     {
         try
@@ -59,6 +90,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandl
         }
     },
     
+    // PRIVATE: Event handler for when the mouse leaves the element.
     handleMouseOut: function(ev)
     {
         try
@@ -76,6 +108,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandl
         }
     },
     
+    // PRIVATE: Event handler for when the mouse is pressed on the element.
     handleMouseDown: function(ev)
     {
         try
@@ -93,6 +126,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandl
         }
     },
     
+    // PRIVATE: Event handler for when the mouse is released on the element.
     handleMouseUp: function(ev)
     {
         try
@@ -115,18 +149,24 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.PressHoverHandl
     isPressOK: function(ev) { return true; },
 });
 
+////
+// FlexiblePressHoverHandler class.
 // This version lets you set a changeable area within the element that is considered the press/hover area.
+////
+
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHoverHandler.prototype =
    new internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher();
 
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHoverHandler.prototype.incorporate("FlexiblePressHoverHandler", {
 
+    // PRIVATE: Initialize the handlers.
     registerHandlers: function()
     {
         this.utils.addBoundDOMEventListener(this.element, "mousedown", this, "handleMouseDown", false);
         this.utils.addBoundDOMEventListener(this.element, "mouseover", this, "handleMouseOver", false);
     },
     
+    // PUBLIC: Change the handler area. This may result in over/out events being generated.
     setArea: function(area)
     {
         if (!this.utils.areRectsEqual(this.area, area))
@@ -136,11 +176,13 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHo
         }
     },
     
+    // PRIVATE: Check whether the mouse is in the handler area.    
     isInArea: function(localPos)
     {
         return this.utils.isInRect(localPos, this.area);
     },
     
+    // PRIVATE: Event handler for when the mouse enters the element.
     handleMouseOver: function(ev)
     {
         try
@@ -162,6 +204,8 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHo
         }
     },
     
+    // PRIVATE: Event handler for when the mouse moves within the element.
+    // This may result in over/out events being generated.
     handleMouseMove: function(ev)
     {
         try
@@ -175,6 +219,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHo
         }
     },
     
+    // PRIVATE: Event handler for when the mouse leaves the element.
     handleMouseOut: function(ev)
     {
         try
@@ -197,6 +242,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHo
         }
     },
     
+    // PRIVATE: Event handler for when the mouse is pressed on the element.
     handleMouseDown: function(ev)
     {
         try
@@ -214,6 +260,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHo
         }
     },
     
+    // PRIVATE: Event handler for when the mouse is released on the element.
     handleMouseUp: function(ev)
     {
         try
@@ -231,6 +278,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHo
         }
     },
     
+    // PRIVATE: This rechecks whether the mouse is in the defined handler area.
     checkWhetherMouseInArea: function()
     {
         var isInsideNow = this.isInArea(this.lastLocalPos);
@@ -247,6 +295,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.FlexiblePressHo
         }
     },
     
+    // PRIVATE: Converts from client coordinates to the element's local coordinates.
     convertFromClientToLocalCoords: function(mouseClientPos)
     {
         var elementClientRect = this.utils.getSingleElement(this.element.getClientRects());
@@ -263,11 +312,13 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
     EFFECT_MODE_HOVER:  1,
     EFFECT_MODE_PRESS:  2,
     
+    // PRIVATE: This help function sets up a button handler.
     registerGeneralHandler: function(handler)
     {
         handler.initEventDispatcher();
         handler.createEvent("effectModeChanged");
         
+        // This helper function dispatches a mode change event.
         handler.dispatchNewMode = function()
         {
             if      (!this.isInside) var mode = this.utils.EFFECT_MODE_NORMAL
@@ -278,6 +329,12 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
         };
     },
     
+    // PUBLIC: This registers a simple button handler. This is a button you can left-click on &
+    // it performs an action once.
+    // It returns a fully configured PressHoverHandler or FlexiblePressHoverHandler on which you can
+    // listen to the "effectModeChanged" event, in order to change the button for press/hover effects.
+    // You must also pass a function to say whether the button is currently enabled,
+    // and may specify a flexible area (null otherwise) to use the FlexiblePressHoverHandler.
     registerSimpleButtonHandler: function(element, actionFunc, isEnabledFunc, flexibleArea)
     {
         var handler = (flexibleArea != null)
@@ -307,6 +364,9 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
         return handler;
     },
     
+    // PUBLIC: This works in exactly the same way as the simple button handler above, however
+    // the user can press and hold the button to have it fire once, wait a specified initial delay
+    // and then repeat on an interval, as occurs with scrollbar buttons.
     registerRepeatingButtonHandler: function(element, actionFunc, isEnabledFunc, delayTime, intervalTime, flexibleArea)
     {
         var handler = (flexibleArea != null)
@@ -400,6 +460,8 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
         return handler;
     },
     
+    // PUBLIC: Registers a redraw callback for when a (Flexible)PressHoverHandler's mode changes.
+    // The callback is passed the relevant EFFECT_MODE so you can do press/hover effects.
     registerButtonEffectsHandler: function(handler, redrawFunc)
     {
         this.assertError(handler    != null, "handler is null.",    handler   );
@@ -408,6 +470,8 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
         handler.addEventListener("effectModeChanged", redrawFunc);
     },
     
+    // PUBLIC: This creates a HTML canvas and configures it to act as a simple button. It is a
+    // convenience function for registering a simple button handler and then button effects handler.
     createSimpleButton: function(doc, id, width, height, redrawFunc, actionFunc, isEnabledFunc)
     {
         var canvas = this.createHTMLCanvas(doc, id, width, height);
@@ -425,6 +489,8 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
         return canvas;
     },
     
+    // PUBLIC: This creates a HTML canvas and configures it to act as a repeating button. It is a
+    // convenience function for registering a repeating button handler and then button effects handler.
     createRepeatingButton: function(doc, id, width, height, redrawFunc, actionFunc, isEnabledFunc, delayTime, intervalTime)
     {
         var canvas = this.createHTMLCanvas(doc, id, width, height);
@@ -442,6 +508,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
         return canvas;
     },
     
+    // PUBLIC: This function draws a close icon of a specified color on the given canvas.
     drawCloseButton: function(canvas, color)
     {
         var context = canvas.getContext("2d");
@@ -459,6 +526,8 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
         context.stroke();
     },
     
+    // PUBLIC: This function draws a minimize icon of a specified color on the given canvas.
+    // Note that the line position will be determined by the hasMinimizeIconCentered method.
     drawMinimizeButton: function(canvas, color)
     {
         var WIDTH_PROPORTION = 0.3;
@@ -478,6 +547,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.incorporate("Bu
         context.stroke();
     },
     
+    // PUBLIC: This function draws the given image onto the given canvas.
     drawImageCanvas: function(canvas, image)
     {
         var context = canvas.getContext("2d");
