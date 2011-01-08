@@ -16,7 +16,17 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+// This is the code for the Internote scrollbar, a scrollbar that is consistent with the
+// rest of the note UI. It attempts to handle most scrollbar functionality.
+
+// This code makes use of the drag handler and button handler code which are both in separate files.
+
 internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.ScrollHandler =
+
+// PUBLIC: Constructor.
+// You must pass various color functions so the scrollbar will change its color as required, this is
+//   used for foreground color animations.
+// You must pass a is-enabled function so that the scrollbar will be disabled if the whole note UI is.
 function ScrollHandler(utils, prefs, element, idSuffix, width, getLineColorFunc, getHandleColorFunc, getButtonColorFunc, isEnabledFunc)
 {
     //dump("internoteUtilities.ScrollHandler.ScrollHandler\n");
@@ -141,11 +151,13 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.ScrollHandler.p
 REPEAT_INTERVAL: 100,
 REPEAT_DELAY:    500,
 
+// PUBLIC: Gets the element for the whole scrollbar.
 getScrollbar: function()
 {
     return this.scrollbar;
 },
 
+// PUBLIC: (Re)draws all canvas in the scrollbar.
 paintUI: function()
 {
     //dump("internoteUtilities.ScrollHandler.paintUI\n");
@@ -154,6 +166,8 @@ paintUI: function()
     this.drawScrollLine();
 },
 
+// PUBLIC: Whether to display the scroll buttons in the same place,
+// based on preferences and platform conventions.
 hasCombinedScrollButtons: function()
 {
     var pref = this.prefs.shouldCombineScrollButtons();
@@ -167,6 +181,7 @@ hasCombinedScrollButtons: function()
     }
 },
 
+// PUBLIC: Sets the height of the scrollbar.
 setHeight: function(height)
 {
     //dump("internoteUtilities.ScrollHandler.setHeight " + height + "\n");
@@ -184,6 +199,10 @@ setHeight: function(height)
     }
 },
 
+// PUBLIC: Redraws the scroll line and updates it's upper and lower handler.
+// In particular normally the drag handle isn't a part of the upper line or lower line
+// area. But if we're pressing the scroll line we make the upper and lower
+// areas larger to better match user expectations for scroll behavior.
 updateScrollLine: function()
 {
     //dump("internoteUtilities.ScrollHandler.updateScrollLine\n");
@@ -202,15 +221,18 @@ updateScrollLine: function()
     this.lowerLineHandler.setArea(lowerLineArea);
 },
 
+// PUBLIC: Changes the height of the scroll line.
 updateLineHeight: function(lineHeight)
 {
     //dump("internoteUtilities.ScrollHandler.updateLineHeight\n");
     this.lineHeight = lineHeight;
 },
 
+// PRIVATE: Draw the arrows for the scrollbar.
 drawUpScrollButton:   function(effectMode) { this.drawScrollButton(effectMode, true ); },
 drawDownScrollButton: function(effectMode) { this.drawScrollButton(effectMode, false); },
 
+// PRIVATE: Draw an arrow for the scrollbar.
 drawScrollButton: function(effectMode, isUp)
 {
     var canvas = isUp ? this.upButton : this.downButton;
@@ -235,6 +257,7 @@ drawScrollButton: function(effectMode, isUp)
     context.stroke();
 },
 
+// PRIVATE: Draw the scroll line for the scrollbar.
 drawScrollLine: function()
 {
     //dump("internoteUtilities.ScrollHandler.drawScrollLine\n");
@@ -281,6 +304,7 @@ drawScrollLine: function()
     }
 },
 
+// PRIVATE: Calculates various info used in drawing the scrollbar.
 getScrollInfo: function()
 {
     var scrollHeight = this.scrollLine.height;
@@ -308,9 +332,9 @@ getScrollInfo: function()
     return [scrollLineTop, scrollLineBot, scrollHandleTop, scrollHandleBot];
 },
 
-// Separates the scroll line rectangle into it's three component rectangles, upper/lower lines and handle.
-// Note that the handle's rounded edges are in the line areas, not the handle area, unless an appropriate
-// handle offset is specified.
+// PRIVATE: Separates the scroll line rectangle into it's three component rectangles:
+// upper/lower lines & handle. Note that the handle's rounded edges are in the line areas,
+// not the handle area, unless an appropriate handle offset is specified.
 getLineArea: function()
 {
     //dump("internoteUtilities.ScrollHandler.getLineArea\n");
@@ -325,9 +349,9 @@ getLineArea: function()
     return [upperRect, lowerRect];
 },
 
-// When the line is being pressed, we use a version of getLineArea that ignores the handle, giving an
-// empty handleRect.  This is because the mouse pos will determine where the repeating stops and
-// we want to give the user some leeway and not stop on the handle's rounded edges.
+// PRIVATE: When the line is being pressed, we use a version of getLineArea that ignores the handle,
+// giving an empty handleRect. This is because the mouse pos will determine where the repeating stops
+// and we want to give the user some leeway and not stop on the handle's rounded edges.
 getActiveLineArea: function()
 {
     //dump("getActiveLineArea\n");
@@ -342,11 +366,13 @@ getActiveLineArea: function()
     return [upperRect, lowerRect];
 },
 
+// PUBLIC: Whether a scrollbar is currently necessary.
 isNecessary: function()
 {
     return this.element.scrollHeight > this.element.offsetHeight;
 },
 
+// PRIVATE: Changes the position of the scroll handle due to a drag handle operation.
 onChangeScroll: function(pos)
 {
     //dump("internoteUtilities.ScrollHandler.onChangeScroll\n");
@@ -355,6 +381,7 @@ onChangeScroll: function(pos)
     this.updateScrollLine();
 },
 
+// PRIVATE: Changes the position of the scroll handle due to a click arrow or line operation.
 onOffsetScroll: function(offset)
 {
     //dump("internoteUtilities.ScrollHandler.onOffsetScroll " + offset + "\n");
@@ -363,22 +390,26 @@ onOffsetScroll: function(offset)
     this.updateScrollLine();
 },
 
+// PRIVATE: Gets the size of the page, used in line click operations.
 getPageSize: function()
 {
     // -1 to scroll a little less than a page.
     return Math.ceil(this.element.offsetHeight / this.lineHeight) - 1;
 },
 
+// PRIVATE: Gets the line count for the text area.
 getLineCount: function()
 {
     return Math.floor(this.element.scrollHeight / this.lineHeight);
 },
 
+// PRIVATE: Various movements due to clicking arrow buttons or the scroll line.
 onScrollUpLine:   function() { this.onOffsetScroll(-this.lineHeight); },
 onScrollDownLine: function() { this.onOffsetScroll(+this.lineHeight); },
 onScrollUpPage:   function() { this.onOffsetScroll(-this.lineHeight * this.getPageSize()); },
 onScrollDownPage: function() { this.onOffsetScroll(+this.lineHeight * this.getPageSize()); },
 
+// PRIVATE: Create an arrow button.
 createButton: function(doc, onClick, id, redrawFuncName)
 {
     var redrawFunc = this[redrawFuncName];
@@ -388,7 +419,7 @@ createButton: function(doc, onClick, id, redrawFuncName)
     return canvas;
 },
 
-// Returns a negative, zero or positive value depending on click proximity to the slider.
+// PRIVATE: Returns a negative, zero or positive value depending on click proximity to the slider.
 getScrollLineLocation: function(event)
 {
     var [scrollLineTop, scrollLineBot, scrollTopPos, scrollBotPos] = this.getScrollInfo();
@@ -404,6 +435,8 @@ getScrollLineLocation: function(event)
     }
 },
 
+// PRIVATE: When the user has clicked on the scroll line, figure out if this is
+// a click on the upper line, lower line or drag handle, and take appropriate action.
 // XXX Should kill anims.
 onPressScrollLine: function(ev)
 {
@@ -431,6 +464,8 @@ onPressScrollLine: function(ev)
     }
 },
 
+// PRIVATE: Called when we start dragging the drag handle. Sets up the drag operation
+// using the drag handler utility.
 onStartDragHandle: function(event)
 {
     //dump("internoteUtilities.ScrollHandler.onStartDragHandle\n");
