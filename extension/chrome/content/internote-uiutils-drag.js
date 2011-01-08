@@ -37,6 +37,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.DragHandler.pro
 onDragMouseMoved: function(event, offset, data) {},
 onDragFinished:   function(wasCompleted, wasDrag, offset, data) {},
 
+// PRIVATE: Configure the event handlers.
 registerHandlers: function()
 {
     //dump("internoteUtilities.DragHandler.registerHandlers\n");
@@ -46,6 +47,7 @@ registerHandlers: function()
     this.utils.addBoundDOMEventListener(this.chromeDoc, "mouseup",   this, "dragButtonReleased", false);
 },
 
+// PRIVATE: Tear down the event handlers.
 deregisterHandlers: function()
 {
     //dump("internoteUtilities.DragHandler.deregisterHandlers\n");
@@ -55,6 +57,7 @@ deregisterHandlers: function()
     this.utils.removeBoundDOMEventListener(this.chromeDoc, "mouseup",   this, "dragButtonReleased", false);
 },
 
+// PRIVATE: Check whether a mouse movement is sufficient to constitute a drag instead of a click.
 isAdequateDrag: function(offset)
 {
     const DRAG_MIN_DISTANCE = 3;
@@ -62,6 +65,7 @@ isAdequateDrag: function(offset)
     return DRAG_MIN_DISTANCE <= pointerMovement;
 },
 
+// PUBLIC: Call this on a mouse down operation.
 dragStarted: function(event)
 {
     //dump("internoteUtilities.DragHandler.dragStarted\n");
@@ -70,6 +74,7 @@ dragStarted: function(event)
     this.registerHandlers();
 },
 
+// PRIVATE: The drag has finished, work out the situation.
 dragFinished: function(wasCompleted, wasDrag)
 {
     //dump("internoteUtilities.DragHandler.dragFinished\n");
@@ -86,6 +91,7 @@ dragFinished: function(wasCompleted, wasDrag)
     }
 },
 
+// PRIVATE: The drag has failed due to exception, clean up.
 // Lots of catches here to try to do as much as we can in case of failure.
 dragFailure: function(msg, ex)
 {
@@ -127,6 +133,8 @@ dragFailure: function(msg, ex)
     }
 },
 
+// PRIVATE: Handles key press during drag. Upon ESC key press, will abort the drag,
+// cleaning up and calling the user defined onDragFinished method.
 dragKeyPressed: function(ev)
 {
     //dump("internoteUtilities.DragHandler.dragKeyPressed\n");
@@ -146,6 +154,9 @@ dragKeyPressed: function(ev)
     }
 },
 
+// PRIVATE: Handles mouse movement during drag and passes this on to the user-defined
+// onDragMouseMoved function.
+// If it notices adequate mouse movement to constitute a drag, it will record this.
 dragMouseMoved: function(event)
 {
     //dump("internoteUtilities.DragHandler.dragMouseMoved\n");
@@ -172,6 +183,9 @@ dragMouseMoved: function(event)
     }
 },
 
+// PRIVATE: Handles mouse release during drag, cleaning up and calling the user-defined
+// onDragFinished function.
+// XXX Should just use dragFinished?
 dragButtonReleased: function(event)
 {
     //dump("internoteUtilities.DragHandler.dragButtonReleased\n");
