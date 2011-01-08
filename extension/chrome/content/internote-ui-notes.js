@@ -45,6 +45,7 @@ noteFlipImage: new Image(),
 // Externally called methods
 /////////////////////////////////
 
+// PUBLIC: Configure connections to other objects.
 initConnections: function(windowGlobal)
 {
     this.utils   = windowGlobal.sharedGlobal.utils;
@@ -52,8 +53,11 @@ initConnections: function(windowGlobal)
     this.consts  = windowGlobal.sharedGlobal.consts;
 },
 
+// PUBLIC: Initialize note UI.
+// supportsTranslucency will come in from the display UI.
 init: function(supportsTranslucency)
 {
+    // XXX Rename -> displayUISupportsTranslucency
     this.supportsTranslucency = supportsTranslucency;
     
     // XXX Can't find a constructor for this?
@@ -75,21 +79,25 @@ init: function(supportsTranslucency)
     this.MINIMIZED_HEIGHT = 2 * this.NOTE_BORDER_SIZE + this.NOTE_OUTER_SIZE;
 },
 
+// PUBLIC: Register a callback for once the image has loaded.
 waitForImageLoad: function(onLoad)
 {
     this.noteFlipImage.addEventListener("load", onLoad, false);
 },
 
+// PUBLIC: Check whether the image has loaded.
 areImagesLoaded: function()
 {
     return this.noteFlipImage.complete;
 },
 
+// PUBLIC: Register a focus listener for the text area.
 addFocusListener: function(uiNote, func)
 {
     uiNote.textArea.addEventListener("focus", func, false);
 },
 
+// PUBLIC: Register a listener for pressing TAB in the text area.
 addTabListener: function(uiNote, func)
 {
     uiNote.textArea.addEventListener("keypress", this.utils.bind(this, function(ev)
@@ -112,6 +120,8 @@ addTabListener: function(uiNote, func)
     }), false);
 },
 
+// PUBLIC: This creates a UINote, an object containing all the relevant objects for the
+// user interface of a note, such the XUL/HTML UI elements, and the isFlipped state. 
 makeUINote: function(note)
 {
     // We use this inner function so UINote is not global yet it isn't anonymous for debugging.
@@ -128,6 +138,7 @@ makeUINote: function(note)
     return new UINote(this.utils, note);
 },
 
+// PUBLIC: Destroy the note UI.
 destroy: function(uiNote)
 {
     uiNote.textArea.removeEventListener("input", function(event)
@@ -136,6 +147,8 @@ destroy: function(uiNote)
     }, false);
 },
 
+// PUBLIC: Called when a new note is shown. This is called by the display UI, which may be
+// some time after note creation if the display UI had to wait for a "popupshown" event.
 noteShown: function(uiNote)
 {
     //dump("internoteNoteUI.noteShown\n");
@@ -149,6 +162,7 @@ noteShown: function(uiNote)
     this.setFlipButtonTooltip    (uiNote);
 },
 
+// PRIVATE: Determine whether we should left align the top buttons, based on prefs and platform.
 hasLeftAlignedTopButtons: function()
 {
     var pref = this.prefs.shouldLeftAlignTopButtons();
@@ -162,6 +176,9 @@ hasLeftAlignedTopButtons: function()
     }
 },
 
+// PUBLIC Given a back-end note object, and the relevant callbacks all stored in an object, this
+// creates a UINote object and fully configures the user interface in preparation for
+// being shown by a display UI.
 // createXULElement is used here rather than createElement so that we can create the element
 // inside the about:blank HTML doc in the scratch IFrame used for static images.
 createNewNote: function(note, callbacks, doc, initialOpacity)
@@ -353,11 +370,13 @@ createNewNote: function(note, callbacks, doc, initialOpacity)
     return uiNote;
 },
 
+// PUBLIC: Checks whether this note is focused.
 isFocused: function(uiNote)
 {
     return document.activeElement == uiNote.textArea;
 },
 
+// PRIVATE: Called when (un)minimized to change the tooltip of the minimized button.
 setMinimizeButtonTooltip: function(uiNote)
 {
     this.setButtonTooltip(uiNote.minimizeButton, uiNote.note.isMinimized
@@ -365,6 +384,7 @@ setMinimizeButtonTooltip: function(uiNote)
                                                : "internote-entity-minimize-note");
 },
 
+// PRIVATE: Called when flipped to change the tooltip of the flip button.
 setFlipButtonTooltip: function(uiNote)
 {
     this.setButtonTooltip(uiNote.flipButton, uiNote.isFlipped
@@ -373,10 +393,10 @@ setFlipButtonTooltip: function(uiNote)
 },
 
 // *** VERY WEIRD CODE AHEAD ***
-// This function seems to add a XUL attribute to a HTML element (canvas). Yet using XUL_NS,
-// or the HTML title attribute doesn't work.  removeAttributeNS also seems to be necessary
-// to get it to work, as does only calling it once the panel is shown.  I judged this less
-// of a kludge than using XUL wrappers.
+// PRIVATE: This function seems to add a XUL attribute to a HTML element (canvas).
+// Yet using XUL_NS, or the HTML title attribute doesn't work. removeAttributeNS also seems to be necessary
+// to get it to work, as does only calling it once the panel is shown.
+// I judged this less of a kludge than using an XUL wrapper around the element.
 setButtonTooltip: function(button, entityLabelId)
 {
     //dump("internoteNoteUI.setButtonTooltip " + entityLabelId + "\n");
@@ -385,6 +405,7 @@ setButtonTooltip: function(button, entityLabelId)
     button.setAttributeNS(null, "tooltiptext", tooltipLabel);
 },
 
+// PRIVATE: Scroll wheel event handler, to properly adjust the Internote scrollbar.
 onMouseScroll: function(ev, uiNote)
 {
     //dump("onMouseScroll\n");
@@ -415,11 +436,13 @@ onMouseScroll: function(ev, uiNote)
     }
 },
 
+// PRIVATE: Clone a UINote.
 cloneUINote: function(uiNote, doc)
 {
     return this.createNewNote(uiNote.note, {}, doc);
 },
 
+// PRIVATE: Configure a cloned UINote.
 configureClonedUINote: function(tempUINote, uiNote)
 {
     tempUINote.textArea.scrollTop = uiNote.textArea.scrollTop;
@@ -436,12 +459,13 @@ pointers: {
     dragWest:       "move",
     dragEast:       "move",
     backSide:       "pointer",
-    scrollbar:        "pointer",
+    scrollbar:      "pointer",
     closeButton:    "pointer",
     minimizeButton: "pointer",
     textArea:       "text",
 },
 
+// PRIVATE: Draw all canvases when something has changed.
 paintUI: function(uiNote)
 {
     this.drawNoteBackground(uiNote);
@@ -484,6 +508,7 @@ getFlexingCanvas: function(uiNote, canvas, redrawFunc)
 },
 */
 
+// PUBLIC: Disable all event handling for the note UI.
 // This can't be undone, it's just for remove animations.
 disableUI: function(uiNote)
 {
@@ -495,8 +520,10 @@ disableUI: function(uiNote)
     uiNote.noteElt.addEventListener("keydown",   this.utils.blockEvent, true);
     uiNote.noteElt.addEventListener("keyup",     this.utils.blockEvent, true);
     
-    this.paintUI(uiNote); // get rid of hover effects
+    // Repaint to get rid of hover effects.
+    this.paintUI(uiNote);
     
+    // Get rid of cursors.
     for (var element in this.pointers)
     {
         uiNote[element].style.cursor = "default";
@@ -505,6 +532,7 @@ disableUI: function(uiNote)
     uiNote.textArea.disabled = true;
 },
 
+// PUBLIC: Set whether the note UI is currently enabled.
 setIsEnabled: function(uiNote, newIsEnabled)
 {
     //dump("IsEnabled = " + newIsEnabled + "\n\n");
@@ -530,6 +558,8 @@ setIsEnabled: function(uiNote, newIsEnabled)
     }
 },
 
+// PUBLIC: This fixes the size of the text area to the correct dims given the
+// note dims. This is necessary due to Firefox bug #542394.
 fixTextArea: function(uiNote, dims)
 {
     //dump("internoteNoteUI.fixTextArea\n");
@@ -544,18 +574,21 @@ fixTextArea: function(uiNote, dims)
     var vertBorderArea = 2 * (this.NOTE_OUTER_SIZE + this.NOTE_BORDER_SIZE);
     var horzBorderArea = vertBorderArea;
     
+    // If using the native scrollbar there is no east area,
+    // because that scrollbar is a part of the text area.
     if (uiNote.eastDeck.style.display == "none")
     {
         horzBorderArea -= this.NOTE_OUTER_SIZE;
     }
     
-    // See firefox bug #542394.
     var textDims = this.utils.coordPairSubtract(dims, [horzBorderArea, vertBorderArea]);
     textDims = this.utils.clipNegativeCoordPair(textDims);
     
     this.utils.fixDOMEltDims(uiNote.textArea, textDims);
 },
 
+// PUBLIC: This fixes the size of the scrollbar. Necessary due to some unknown
+// Firefox bug or limitation.
 fixScrollLine: function(uiNote, height)
 {
     var scrollbarHeight = height - 2 * this.NOTE_OUTER_SIZE - 2 * this.NOTE_SPACING
@@ -563,6 +596,9 @@ fixScrollLine: function(uiNote, height)
     uiNote.scrollHandler.setHeight(scrollbarHeight);
 },
 
+// PUBLIC: Called to adjust the dimensions of the note UI, it will adjust
+// the dimensions of the various components, and whether the scrollbar appears.
+// Ideally, these would autosize, but that is just a pipedream in practice.
 // XXX Clean up use of fixDOMEltDims versus setDims + getDims should access noteElt?
 adjustDims: function(uiNote, dims)
 {
@@ -593,6 +629,7 @@ adjustDims: function(uiNote, dims)
     }
 },
 
+// PRIVATE: Make sure the text area isn't scrolled lower than allowed.
 checkScrollTop: function(uiNote)
 {
     //dump("checkScrollTop " + uiNote.num + "\n");
@@ -606,6 +643,7 @@ checkScrollTop: function(uiNote)
     }
 },
 
+// PRIVATE: When a note is minimized, force its dimensions to the correct size.
 forceMinimizedDims: function(uiNote)
 {
     this.utils.assertError(uiNote.note.isMinimized, "Tried to init minimizing for unminimized note.");
@@ -618,6 +656,7 @@ forceMinimizedDims: function(uiNote)
     this.utils.fixDOMEltWidth(uiNote.littleText, littleSize);
 },
 
+// PRIVATE: Sets visibility of special boxes depending on whether the note is minimized.
 setMinimizedVisibility: function(uiNote)
 {
     this.utils.assertClassError(uiNote, "UINote", "UINote is not correct class when updating minimizing.")
@@ -627,12 +666,14 @@ setMinimizedVisibility: function(uiNote)
     this.setMinimizeButtonTooltip(uiNote);
 },
 
+// PUBLIC: Gets the current dims of the note UI. This uses the background instead of
+// the noteElt.boxObject as it seems to be wrong during initialization.
 getDims: function(uiNote)
 {
-    //return [uiNote.noteElt.boxObject.width, uiNote.noteElt.boxObject.height]; // XXX Seems to be a bit buggy and transitional.
     return [uiNote.background.width, uiNote.background.height];
 },
 
+// PUBLIC: Flips the note over.
 flipNote: function(uiNote, newIsFlipped)
 {
     //dump("internoteNoteUI.flipNote\n");
@@ -664,12 +705,14 @@ flipNote: function(uiNote, newIsFlipped)
     this.updateScrollbarPresence(uiNote);
 },
 
+// PUBLIC: Focuses this note.
 focusNote: function(uiNote)
 {
     this.utils.assertError(uiNote != null, "Null UINote when trying to focus.");
     uiNote.textArea.focus();
 },
 
+// PUBLIC: Sets the font size from the pref, when initialized or the pref changes.
 updateFontSize: function(uiNote)
 {
     var textArea = uiNote.textArea;
@@ -683,6 +726,7 @@ updateFontSize: function(uiNote)
     uiNote.scrollHandler.updateScrollLine();
 },
 
+// PUBLIC: Sets the scrollbar type (Internote/Native) from the pref, when initialized or the pref changes.
 updateScrollbarType: function(uiNote)
 {
     //dump("updateScrollbarType " + uiNote.num + "\n");
@@ -702,6 +746,9 @@ updateScrollbarType: function(uiNote)
     uiNote.scrollHandler.updateScrollLine();
 },
 
+// PUBLIC: Depending on whether a scrollbar should appear, due to the content, as appropriate:
+// updates the presence of the Internote scrollbar, or
+// removes the east deck for the native scrollbar
 updateScrollbarPresence: function(uiNote)
 {
     //dump("updateScrollbarPresence " + uiNote.num + "\n");
@@ -733,39 +780,42 @@ updateScrollbarPresence: function(uiNote)
     this.fixTextArea(uiNote, null);
 },
 
+// PUBLIC: Check whether note is minimized.
 isMinimized: function(uiNote)
 {
     return uiNote.midBotBox.style.display == "none";
 },
 
+// PUBLIC: Set the text that displays in the note's text area.
 setText: function(uiNote, newText)
 {
-    // These need to be checked separately, since when one is edited the callback will
-    // find the editable field to have no changes.
+    // We check before making a change to avoid an infinite loop, since there are callbacks
+    // on the UI which update back end storage, and callbacks on the storage which update the UI.
     if (newText != uiNote.textArea.value)
     {
         uiNote.textArea.value = newText;
     }
-    //if (newText != uiNote.textArea.getAttribute("value"))
-    //{
-    //    uiNote.textArea.setAttribute("value", newText);
-    //}
     if (newText != uiNote.littleText.textContent)
     {
         uiNote.littleText.textContent = this.utils.trim(this.utils.innerTrim(newText));
     }
 },
 
+// PUBLIC: Get the current note UI foreground color.
 getForeColor: function(uiNote)
 {
     return this.utils.convertRGBToHex(uiNote.textArea.style.color);
 },
 
+// PUBLIC: Get the current note UI background color.
+// Note that uiNote.backColor is different from uiNote.note.backColor,
+// as the former may be a transitional animation-interpolated color.
 getBackColor: function(uiNote)
 {
     return uiNote.backColor;
 },
 
+// PUBLIC: Sets the current note UI foreground color.
 setForeColor: function(uiNote, foreColor)
 {
     if (uiNote.textArea.style.color != foreColor)
@@ -780,6 +830,9 @@ setForeColor: function(uiNote, foreColor)
     }
 },
 
+// PUBLIC: Sets the current note UI background color.
+// This does not go to a specific UI component field, but instead is
+// stored in the UINote and later used by canvas painting.
 setBackColor: function(uiNote, backColor, redrawSelection)
 {
     this.utils.assertError(this.utils.isHexColor(backColor), "Not a hex color when parsing.", backColor);
@@ -800,6 +853,8 @@ setBackColor: function(uiNote, backColor, redrawSelection)
     }
 },
 
+// PUBLIC: Takes mouse position from an event and converts to coordinates
+// relative to the note.
 getInternalCoordinates: function(uiNote, event)
 {
     var internalX = event.screenX - uiNote.innerDeck.boxObject.screenX;
@@ -811,16 +866,19 @@ getInternalCoordinates: function(uiNote, event)
 // Helper functions
 /////////////////////////////////
 
+// PRIVATE: Gets the color of buttons in a specific mode as a CSS hex color.
 getButtonColor: function(uiNote, mode)
 {
     return this.utils.formatHexColor(this.getRawButtonColor(uiNote, mode));
 },
 
+// PRIVATE: Gets the color of note border (and the scrollbar line) as a CSS hex color.
 getBorderColor: function(uiNote)
 {
     return this.utils.formatHexColor(this.getRawBorderColor(uiNote));
 },
 
+// PRIVATE: Gets the color of buttons in a specific mode as an RGB array.
 getRawButtonColor: function(uiNote, mode)
 {
     var baseColor = uiNote.backColorArray;
@@ -839,23 +897,27 @@ getRawButtonColor: function(uiNote, mode)
     }
 },
 
+// PRIVATE: Gets the color of note border (and the scrollbar line) as an RGB array.
 getRawBorderColor: function(uiNote)
 {
     return this.utils.darken(uiNote.backColorArray, 0.05);
 },
 
+// PRIVATE: Creates a horizontal spacer.
 createHorzSpacer: function(doc, isLittle)
 {
     var size = (isLittle == true) ? this.NOTE_SPACING_LITTLE : this.NOTE_SPACING;
     return this.utils.createXULSpacer(doc, size, this.NOTE_OUTER_SIZE);
 },
 
+// PRIVATE: Creates a vertical spacer.
 createVertSpacer: function(doc, isLittle)
 {
     var size = (isLittle == true) ? this.NOTE_SPACING_LITTLE : this.NOTE_SPACING;
     return this.utils.createXULSpacer(doc, this.NOTE_OUTER_SIZE, size);
 },
 
+// PRIVATE: Creates the background of the note, including its thin border.
 createBackground: function(doc, uiNote)
 {
     var background = this.utils.createHTMLElement("canvas", doc, "internote-background" + uiNote.num);
@@ -866,6 +928,8 @@ createBackground: function(doc, uiNote)
     return background;
 },
 
+// PRIVATE: Creates one of four small transparent areas that exist around the
+// text area and can be used to drag the note.
 createDragBorder: function(doc, uiNote, directionStr, isVertical, onMoveStart)
 {
     var dragBorder = this.utils.createXULElement("spacer", doc, "internote-drag" + directionStr + uiNote.num);
@@ -891,6 +955,7 @@ createDragBorder: function(doc, uiNote, directionStr, isVertical, onMoveStart)
     return dragBorder;
 },
 
+// PRIVATE: Creates the small text area used for minimized notes.
 createLittleText: function(doc, uiNote)
 {
     var littleText = this.utils.createHTMLElement("textarea", doc, "internote-littletext" + uiNote.num);
@@ -920,6 +985,7 @@ createLittleText: function(doc, uiNote)
     return littleText;
 },
 
+// PRIVATE: Creates a simple button in the note UI.
 createButton: function(doc, uiNote, onClick, fieldName, id, redrawFuncName)
 {
     var onRedraw = this.utils.bind(this, function(effectMode) { this[redrawFuncName].call(this, uiNote, effectMode); });
@@ -929,6 +995,7 @@ createButton: function(doc, uiNote, onClick, fieldName, id, redrawFuncName)
     return canvas;
 },
 
+// PRIVATE: Creates the flip button that goes on the bottom-left.
 createFlipButton: function(doc, uiNote, onFlip)
 {
     var canvas = this.createButton(doc, uiNote, onFlip, "flipButton", "internote-flip", "colorFlipArrow");
@@ -937,6 +1004,7 @@ createFlipButton: function(doc, uiNote, onFlip)
     return canvas;
 },
 
+// PRIVATE: Creates the flip button that goes on the bottom-right.
 createResizeHandle: function(doc, uiNote, onResizeStart)
 {
     var canvas = uiNote.resizeHandle = this.utils.createHTMLElement("canvas", doc, "internote-resize" + uiNote.num);
@@ -1046,6 +1114,8 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
 },
 */
 
+// PRIVATE: Creates the main text area that appears in the center.
+// It is a HTML textarea because XUL textareas are not functional enough for this task.
 createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
 {
     var textArea = uiNote.textArea = this.utils.createHTMLElement("textarea", doc, "internote-text" + uiNote.num);
@@ -1155,6 +1225,7 @@ createTextArea: function(doc, uiNote, onEdit, onMoveStart, onFocus)
     return textArea;
 },
 
+// PRIVATE: Creates the back side of the note that appears once it is flipped.
 createBackSide: function(doc, uiNote, onClickBackSide)
 {
     var canvas = uiNote.backSide = this.utils.createHTMLElement("canvas", doc, "internote-backside" + uiNote.num);
@@ -1181,6 +1252,7 @@ createBackSide: function(doc, uiNote, onClickBackSide)
     return canvas;
 },
 
+// PRIVATE: Draws the note background, including thin border, translucency & glassy highlight effect.
 drawNoteBackground: function(uiNote)
 {
     //dump("internoteNoteUI.drawNoteBackground\n");
@@ -1239,6 +1311,7 @@ drawNoteBackground: function(uiNote)
                      h - 2 * this.NOTE_BORDER_SIZE);
 },
 
+// PRIVATE: Draws the note back side, including color swabs.
 drawNoteBackSide: function(uiNote)
 {
     var canvas = uiNote.backSide;
@@ -1307,6 +1380,7 @@ drawNoteBackSide: function(uiNote)
     }
 },
 
+// PRIVATE: Draws the note close button upon initialization or background recolor.
 drawCloseButton: function(uiNote, mode)
 {
     if (mode == null) mode = this.MODE_NORMAL;
@@ -1314,6 +1388,7 @@ drawCloseButton: function(uiNote, mode)
     this.utils.drawCloseButton(uiNote.closeButton, color);
 },
 
+// PRIVATE: Draws the note minimize button upon initialization or background recolor.
 drawMinimizeButton: function(uiNote, mode)
 {
     if (mode == null) mode = this.MODE_NORMAL;
@@ -1321,6 +1396,7 @@ drawMinimizeButton: function(uiNote, mode)
     this.utils.drawMinimizeButton(uiNote.minimizeButton, color);
 },
 
+// PRIVATE: Draws the note resize handle upon initialization or background recolor.
 drawResizeHandle: function(uiNote)
 {
     var context = uiNote.resizeHandle.getContext("2d");
@@ -1339,6 +1415,8 @@ drawResizeHandle: function(uiNote)
     context.stroke();
 },
 
+// PRIVATE: This recolors the note flip button. Unlike the other buttons it
+// is an image, so when the we just recolor the canvas upon background recolor.
 colorFlipArrow: function(uiNote, mode)
 {
     if (mode == null) mode = this.MODE_NORMAL;
@@ -1346,6 +1424,8 @@ colorFlipArrow: function(uiNote, mode)
     this.utils.colorCanvas(uiNote.flipButton, color);
 },
 
+// PRIVATE: Converts a click coordinate relevant to the note into
+// a background color swab number, or null if outside a background color swab.
 getBackColorSwabFromPoint: function(x, y)
 {
     if (this.utils.isBetween(y, this.SWAB1_TOP-1, this.SWAB1_TOP+this.SWAB_HEIGHT))
@@ -1363,6 +1443,8 @@ getBackColorSwabFromPoint: function(x, y)
     return null;
 },
 
+// PRIVATE: Converts a click coordinate relevant to the note into
+// a foreground color swab number, or null if outside a foreground color swab.
 getForeColorSwabFromPoint: function(x, y)
 {
     if (this.utils.isBetween(y, this.SWAB2_TOP-1, this.SWAB2_TOP+this.SWAB_HEIGHT))
@@ -1381,8 +1463,8 @@ getForeColorSwabFromPoint: function(x, y)
     return null;
 },
 
-// This takes a snapshot of the UI and displays that instead of the UI.  Then we are
-// free to scale it to perform a flip animation.
+// PUBLIC: This takes a snapshot of the UI and displays that instead of the UI.
+// Then we are free to scale it to perform a flip animation.
 makeStaticImage: function(uiNote, dims)
 {
     this.utils.assertError(uiNote != null, "UINote is null when making note static.");
@@ -1420,6 +1502,7 @@ makeStaticImage: function(uiNote, dims)
     uiNote.foreground.style.visibility = "hidden";
 },
 
+// PUBLIC: This scales the image to new dimensions, after a previous call to makeStaticImage.
 updateStaticImage: function(uiNote, dims)
 {
     var scaledCanvas = uiNote.scaledCanvas;
@@ -1435,6 +1518,7 @@ updateStaticImage: function(uiNote, dims)
     context.drawImage(uiNote.rawCanvas, 0, 0, scaledCanvas.width, scaledCanvas.height);
 },
 
+// PUBLIC: After a flip image animation is complete, this returns the UI to normal.
 makeDynamic: function(uiNote)
 {
     this.utils.assertError(uiNote != null, "UINote is null when making note dynamic.");
@@ -1455,6 +1539,7 @@ makeDynamic: function(uiNote)
     uiNote.foreground.style.visibility = "";
 },
 
+// PUBLIC: Checks whether the UI is a static image (UI is flipping).
 isStaticImage: function(uiNote)
 {
     return uiNote.rawCanvas != null;
