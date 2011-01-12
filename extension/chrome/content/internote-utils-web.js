@@ -158,15 +158,15 @@ parseURL: function(url)
     try
     {
         var protocolRegexp = "([A-Za-z]+)://";
-        var userNameRegexp = "([^:@/]*:)?";
-        var passwordRegexp = "([^@/]@)?";
+        var userPassRegexp = "[^:@/]*";
+        var userNPassRegexp= "(" + userPassRegexp + "(\\:" + userPassRegexp + ")?\\@)?";
         var siteRegexp     = "([^:/]*)";
         var portRegexp     = "(:[0-9]+)?";
         var pathRegexp     = "(/[^\\?#]*)?";
         var paramsRegexp   = "(\\?[^#]*)?";
         var anchorRegexp   = "(#.*)?";
         
-        var regexp = "^" + protocolRegexp + userNameRegexp + passwordRegexp + siteRegexp + portRegexp + pathRegexp + paramsRegexp + anchorRegexp + "$";
+        var regexp = "^" + protocolRegexp + userNPassRegexp + siteRegexp + portRegexp + pathRegexp + paramsRegexp + anchorRegexp + "$";
         
         var regexpResults = new RegExp(regexp).exec(url);
         
@@ -178,11 +178,11 @@ parseURL: function(url)
         {
             var userName = (regexpResults[2] == null)
                          ? null
-                         : regexpResults[2].replace(/:$/, "");
+                         : regexpResults[2].replace(/[:@].*$/, "");
             
             var password = (regexpResults[3] == null)
                          ? null
-                         : regexpResults[3].replace(/@$/, "");
+                         : regexpResults[3].replace(/^:/, "");
             
             var port     = (regexpResults[5] == null)
                          ? null
@@ -286,6 +286,19 @@ isValidURLSite: function(site, protocol)
     else
     {
         return this.isValidSite(site);
+    }
+},
+
+isValidPortString: function(port)
+{
+    const MAX_PORT = 65535;
+    if (port.match(/^\d+$/).length > 0)
+    {
+        return this.isBetween(parseInt(port), 0, MAX_PORT);
+    }
+    else
+    {
+        return false;
     }
 },
 
@@ -399,6 +412,8 @@ isIPAddress: function(site)
 // sites depending on country code, but errs on the side of validity.
 isValidSite: function(site)
 {
+    this.assertError(typeof(site) == "string", "Site is not a string.", site);
+    
     // Domain names with diacritics exist, support them.
     var alpha = "A-Za-z\u0080-\uffff";
     var char  = alpha + "0-9";

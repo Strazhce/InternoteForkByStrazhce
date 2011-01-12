@@ -834,8 +834,7 @@ processEffectiveURL: function(url, matchType, ignoreAnchor, ignoreParams)
         var parsedURL = this.utils.parseURL(url);
         if (parsedURL == null)
         {
-			this.assertWarnNotHere("Could not parse effective URL.", url);
-            return url;
+            return null;
         }
         else
         {
@@ -867,6 +866,12 @@ matchesURL: function(note, pageURL)
         
         var noteURL = this.utils.trim(note.url);
         var noteURLCanon = this.getEffectiveURL(note);
+        
+        if (noteURLCanon == null)
+        {
+            return false;
+        }
+        
         var pageURLCanon = this.processEffectiveURL(pageURL, this.URL_MATCH_URL, note.ignoreAnchor, note.ignoreParams);
         
         if (pageURLCanon == null)
