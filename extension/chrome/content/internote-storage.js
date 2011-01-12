@@ -829,7 +829,7 @@ processEffectiveURL: function(url, matchType, ignoreAnchor, ignoreParams)
         var parsedURL = this.utils.parseURL(url);
         if (parsedURL == null)
         {
-            return url;
+            return null;
         }
         else
         {
@@ -862,6 +862,11 @@ matchesURL: function(note, pageURL)
         var noteURL = this.utils.trim(note.url);
         var noteURLCanon = this.getEffectiveURL(note);
         var pageURLCanon = this.processEffectiveURL(pageURL, this.URL_MATCH_URL, note.ignoreAnchor, note.ignoreParams);
+        
+        if (noteURLCanon == null)
+        {
+            return false;
+        }
         
         if (pageURLCanon == null)
         {
