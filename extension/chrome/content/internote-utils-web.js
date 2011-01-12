@@ -383,7 +383,7 @@ isIPAddress: function(site)
 isValidSite: function(site)
 {
     // Domain names with diacritics exist, support them.
-    var alpha = "A-Za-zÀ-ÖØ-öø-ÿ";
+    var alpha = "A-Za-z\u0080-\uffff";
     var char  = alpha + "0-9";
     var regexp = "^[" + char + "][" + char + "\\.\\-]*$";
     

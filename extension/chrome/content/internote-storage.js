@@ -829,7 +829,7 @@ processEffectiveURL: function(url, matchType, ignoreAnchor, ignoreParams)
         var parsedURL = this.utils.parseURL(url);
         if (parsedURL == null)
         {
-            return null;
+            return url;
         }
         else
         {
