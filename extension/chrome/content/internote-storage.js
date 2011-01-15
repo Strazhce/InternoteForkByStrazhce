@@ -71,21 +71,10 @@ InternoteNote: function InternoteNote(url, matchType, ignoreAnchor, ignoreParams
     }
 },
 
-NOTE_WIDTHS:  [150, 150, 200, 350],
-NOTE_HEIGHTS: [100, 150, 250, 350],
-
-BACKGROUND_COLOR_SWABS: ["#FFFF99", "#FF9956", "#57BCD9", "#B0FF56", "#CB98FF", "#ECE5FC"],
-FOREGROUND_COLOR_SWABS: ["#000000", "#7F5300", "#00FF00", "#FF0000", "#ADADAD", "#FFFFFF"],
-
 STORAGE_FILENAME: "internote-storage.xml",
 BACKUP_FILENAME:  "internote-storage-old.xml",
 LEGACY_FILENAME:  "stickies",
 CORRUPTED_FILENAME: "internote-storage-corrupted.xml",
-
-MIN_NOTE_WIDTH:  150,
-MIN_NOTE_HEIGHT: 100,
-MAX_NOTE_WIDTH:  400,
-MAX_NOTE_HEIGHT: 400,
 
 // A short save delay to allow multiple events to build up.
 SAVE_DELAY: 2000,
@@ -120,6 +109,7 @@ init: function(anyMainWindowDoc)
     
     this.utils      = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
     this.prefs      = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs;
+    this.consts     = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.consts;
     this.serializer = XMLSerializer;
     this.xml        = XML;
     
@@ -618,8 +608,8 @@ addWelcomeNote: function()
     var sizeType     = parseInt(this.prefs.getDefaultSize()); // XXX Why parse here?
     
     var currTime     = new Date().getTime();
-    var backColor    = this.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
-    var foreColor    = this.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
+    var backColor    = this.consts.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
+    var foreColor    = this.consts.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
     var zIndex       = this.getMaxZIndex()[0] + 1;
     var noteWidth    = 280;
     var noteHeight   = 300;
@@ -641,8 +631,8 @@ getDefaultDims: function()
 {
     var sizeType = this.prefs.getDefaultSize();
     
-    var noteWidth  = this.NOTE_WIDTHS [sizeType];
-    var noteHeight = this.NOTE_HEIGHTS[sizeType];
+    var noteWidth  = this.consts.NOTE_WIDTHS [sizeType];
+    var noteHeight = this.consts.NOTE_HEIGHTS[sizeType];
     
     return [noteWidth, noteHeight];
 },
@@ -657,8 +647,8 @@ addSimpleNote: function(url, text, noteTopLeft, noteDims)
     var noteCount = this.allNotes.length;
     
     var currTime     = new Date().getTime();
-    var backColor    = this.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
-    var foreColor    = this.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
+    var backColor    = this.consts.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
+    var foreColor    = this.consts.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
     var zIndex       = this.getMaxZIndex()[0] + 1;
     var isMinimized  = false;
     var isHTML       = false;
@@ -779,8 +769,8 @@ raiseNote: function(note)
 
 clipDims: function(dims)
 {
-    return [this.utils.clipToRange(dims[0], this.MIN_NOTE_WIDTH,  this.MAX_NOTE_WIDTH),
-            this.utils.clipToRange(dims[1], this.MIN_NOTE_HEIGHT, this.MAX_NOTE_HEIGHT)];
+    return [this.utils.clipToRange(dims[0], this.consts.MIN_NOTE_WIDTH,  this.consts.MAX_NOTE_WIDTH),
+            this.utils.clipToRange(dims[1], this.consts.MIN_NOTE_HEIGHT, this.consts.MAX_NOTE_HEIGHT)];
 },
 
 isURLPresent: function(searchURL)

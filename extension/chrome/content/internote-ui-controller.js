@@ -17,10 +17,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-// Uses: internote-storage.js, internote-watcher.js, internote-utils.js,
-//       internote-ui-display.js, internote-ui-notes.js, internote-ui-animation.js,
-//       internote-ui-balloon.js
-
 // This is the main UI class for the browser overlay.  With the exception of the manager and
 // prefs dialogs that it can open, it calls into the other classes and controls the overall
 // operation of the application.
@@ -1030,7 +1026,7 @@ userClicksBackSideOfNote: function(event)
         
         var [internalX, internalY] = this.noteUI.getInternalCoordinates(uiNote, event);
         
-        var backColor = this.noteUI.getBackColorSwabFromPoint(internalX, internalY);
+        var backColor = this.noteUI.getBackColorSwabFromPoint(uiNote, internalX, internalY);
         
         if (backColor != null)
         {
@@ -1038,7 +1034,7 @@ userClicksBackSideOfNote: function(event)
         }
         else
         {
-            var foreColor = this.noteUI.getForeColorSwabFromPoint(internalX, internalY);
+            var foreColor = this.noteUI.getForeColorSwabFromPoint(uiNote, internalX, internalY);
             
             if (foreColor != null)
             {

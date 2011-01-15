@@ -28,16 +28,14 @@ NOTE_SPACING_LITTLE: 4,
 
 NOTE_ALPHA:  0.85,
 
-SWAB_LEFT: 5,
+SWAB_SPACING: 5,
 SWAB_TITLE_HEIGHT: 16,
 SWAB_TITLE_FONT: 12,
-SWAB_WIDTH:    16,
-SWAB_HEIGHT:   16,
-SWAB_X_SPACING: 4,
-SWAB_Y_SPACING: 6,
 
 FRONT_PAGE  : 0,
 FLIPPED_PAGE: 1,
+
+MINIMIZED_WIDTH: 150,
 
 noteFlipImage: new Image(),
 
@@ -63,19 +61,6 @@ init: function(supportsTranslucency)
     // XXX Can't find a constructor for this?
     this.noteFlipImage.src = "chrome://internote/skin/arrow" + this.NOTE_OUTER_SIZE + ".png";
     
-    this.SWAB_DISTANCE = this.SWAB_WIDTH + this.SWAB_X_SPACING,
-    
-    this.SWABTEXT1_TOP = 0;
-    this.SWAB1_TOP     = this.SWABTEXT1_TOP + this.SWAB_TITLE_HEIGHT;
-    this.SWABTEXT2_TOP = this.SWAB1_TOP     + this.SWAB_HEIGHT + this.SWAB_Y_SPACING;
-    this.SWAB2_TOP     = this.SWABTEXT2_TOP + this.SWAB_TITLE_HEIGHT;
-    this.SWAB_CANVAS_HEIGHT = this.SWAB2_TOP + this.SWAB_HEIGHT + this.SWAB_Y_SPACING;
-    
-    var colourCount = Math.max(this.consts.BACKGROUND_COLOR_SWABS.length,
-                               this.consts.FOREGROUND_COLOR_SWABS.length);
-    this.SWAB_CANVAS_WIDTH = this.SWAB_LEFT + colourCount * (this.SWAB_WIDTH + this.SWAB_X_SPACING);
-    
-    this.MINIMIZED_WIDTH  = this.consts.MIN_NOTE_WIDTH;
     this.MINIMIZED_HEIGHT = 2 * this.NOTE_BORDER_SIZE + this.NOTE_OUTER_SIZE;
 },
 
@@ -587,6 +572,12 @@ fixTextArea: function(uiNote, dims)
     this.utils.fixDOMEltDims(uiNote.textArea, textDims);
 },
 
+fixBackSide: function(uiNote, dims)
+{
+    uiNote.backSide.width  = dims[0] - 2 * (this.NOTE_OUTER_SIZE + this.NOTE_BORDER_SIZE);
+    uiNote.backSide.height = dims[1] - 2 * (this.NOTE_OUTER_SIZE + this.NOTE_BORDER_SIZE);
+},
+
 // PUBLIC: This fixes the size of the scrollbar. Necessary due to some unknown
 // Firefox bug or limitation.
 fixScrollLine: function(uiNote, height)
@@ -617,8 +608,14 @@ adjustDims: function(uiNote, dims)
             // Don't use dims as it may have a null.
             var newDims = this.utils.getDims(uiNote.background);
             this.fixTextArea(uiNote, newDims);
+            this.fixBackSide(uiNote, newDims);
             this.fixScrollLine(uiNote, newDims[1]);
             this.updateScrollbarPresence(uiNote);
+            
+            if (uiNote.isFlipped) {
+                this.calculateSwabCharacteristics(uiNote);
+                this.drawNoteBackSide(uiNote);
+            }
         }
         else
         {
@@ -689,6 +686,7 @@ flipNote: function(uiNote, newIsFlipped)
     
     if (uiNote.isFlipped)
     {
+        this.calculateSwabCharacteristics(uiNote);
         this.drawNoteBackSide(uiNote);
     }
     
@@ -1231,9 +1229,6 @@ createBackSide: function(doc, uiNote, onClickBackSide)
     var canvas = uiNote.backSide = this.utils.createHTMLElement("canvas", doc, "internote-backside" + uiNote.num);
     var context = canvas.getContext("2d");
     
-    canvas.width  = this.SWAB_CANVAS_WIDTH;
-    canvas.height = this.SWAB_CANVAS_HEIGHT;
-    
     //canvas.style.backgroundColor = "rgba(200,200,200,0.5)";
     
     // Set left/top so the back side canvas doesn't stretch (scale) to fit its parent deck.
@@ -1250,6 +1245,23 @@ createBackSide: function(doc, uiNote, onClickBackSide)
     }
     
     return canvas;
+},
+
+calculateSwabCharacteristics: function(uiNote)
+{
+    var colourCount = this.consts.BACKGROUND_COLOR_SWABS.length;
+    
+    var swabHorzSpace = (uiNote.backSide.width - (colourCount + 1) * this.SWAB_SPACING) / colourCount;
+    var swabVertSpace = uiNote.backSide.height / 2 - this.SWAB_SPACING - this.SWAB_TITLE_HEIGHT;
+    
+    var floatSize = Math.min(swabHorzSpace, swabVertSpace);
+    uiNote.swabSize = Math.floor(floatSize);
+    uiNote.swabXDist = floatSize + this.SWAB_SPACING;
+    
+    uiNote.SWABTEXT1_TOP = 0;
+    uiNote.SWAB1_TOP = uiNote.SWABTEXT1_TOP + this.SWAB_TITLE_HEIGHT;
+    uiNote.SWABTEXT2_TOP = uiNote.SWAB1_TOP + Math.ceil(floatSize) + this.SWAB_SPACING;
+    uiNote.SWAB2_TOP = uiNote.SWABTEXT2_TOP + this.SWAB_TITLE_HEIGHT;
 },
 
 // PRIVATE: Draws the note background, including thin border, translucency & glassy highlight effect.
@@ -1311,6 +1323,11 @@ drawNoteBackground: function(uiNote)
                      h - 2 * this.NOTE_BORDER_SIZE);
 },
 
+getSwabXPos: function(uiNote, swabNum)
+{
+    return Math.floor(uiNote.swabXDist * swabNum + this.SWAB_SPACING);
+},
+
 // PRIVATE: Draws the note back side, including color swabs.
 drawNoteBackSide: function(uiNote)
 {
@@ -1318,6 +1335,9 @@ drawNoteBackSide: function(uiNote)
     var context = canvas.getContext("2d");
     
     context.clearRect(0, 0, canvas.width, canvas.height);
+    
+    var colourCount = Math.max(this.consts.BACKGROUND_COLOR_SWABS.length,
+                               this.consts.FOREGROUND_COLOR_SWABS.length);
     
     function chooseSelectionCharacteristics(isSelected)
     {
@@ -1334,10 +1354,13 @@ drawNoteBackSide: function(uiNote)
         var isSelected = (uiNote.note.backColor == currentColor);
         [context.strokeStyle, context.lineWidth] = chooseSelectionCharacteristics(isSelected);
         
-        var hPos = this.SWAB_DISTANCE * colorIndex + this.SWAB_LEFT;
+        var hPos     = this.getSwabXPos(uiNote, colorIndex);
+        var nextHPos = this.getSwabXPos(uiNote, parseInt(colorIndex)+1);
+        var width = nextHPos - hPos - this.SWAB_SPACING + 1;
+        
         context.fillStyle = currentColor;
-        context.fillRect  (hPos, this.SWAB1_TOP, this.SWAB_WIDTH, this.SWAB_HEIGHT);
-        context.strokeRect(hPos, this.SWAB1_TOP, this.SWAB_WIDTH, this.SWAB_HEIGHT);
+        context.fillRect  (hPos, uiNote.SWAB1_TOP, width, uiNote.swabSize);
+        context.strokeRect(hPos, uiNote.SWAB1_TOP, width, uiNote.swabSize);
     }
     
     for (var colorIndex in this.consts.FOREGROUND_COLOR_SWABS)
@@ -1346,15 +1369,18 @@ drawNoteBackSide: function(uiNote)
         var isSelected = (uiNote.note.foreColor == currentColor);
         [context.strokeStyle, context.lineWidth] = chooseSelectionCharacteristics(isSelected);
         
-        var hPos = this.SWAB_DISTANCE * colorIndex + this.SWAB_LEFT;
+        var hPos     = this.getSwabXPos(uiNote, colorIndex);
+        var nextHPos = this.getSwabXPos(uiNote, parseInt(colorIndex)+1);
+        var width = nextHPos - hPos - this.SWAB_SPACING + 1;
+        
         context.fillStyle = currentColor;
-        context.fillRect  (hPos, this.SWAB2_TOP, this.SWAB_WIDTH, this.SWAB_HEIGHT);
-        context.strokeRect(hPos, this.SWAB2_TOP, this.SWAB_WIDTH, this.SWAB_HEIGHT);
+        context.fillRect  (hPos, uiNote.SWAB2_TOP, width, uiNote.swabSize);
+        context.strokeRect(hPos, uiNote.SWAB2_TOP, width, uiNote.swabSize);
     }
     
-    // draw the color swab headers
-    var noteColorStr = this.utils.getLocaleString(document, "NoteColorTitle");
-    var textColorStr = this.utils.getLocaleString(document, "TextColorTitle");
+    // Draw the headers.
+    var noteColorStr    = this.utils.getLocaleString(document, "NoteColorTitle");
+    var textColorStr    = this.utils.getLocaleString(document, "TextColorTitle");
     
     const MAX_TEXT_WIDTH = this.consts.MIN_NOTE_WIDTH - 2 * this.NOTE_BORDER_SIZE - 2 * this.NOTE_OUTER_SIZE;
     context.fillStyle = "black";
@@ -1362,19 +1388,19 @@ drawNoteBackSide: function(uiNote)
     
     if (context.fillText)
     {
-        context.fillText(noteColorStr, this.SWAB_LEFT - 1, this.SWABTEXT1_TOP + this.SWAB_TITLE_FONT, MAX_TEXT_WIDTH);
-        context.fillText(textColorStr, this.SWAB_LEFT - 1, this.SWABTEXT2_TOP + this.SWAB_TITLE_FONT, MAX_TEXT_WIDTH);
+        context.fillText(noteColorStr, this.SWAB_SPACING - 1, Math.floor(uiNote.SWABTEXT1_TOP + this.SWAB_TITLE_FONT), MAX_TEXT_WIDTH);
+        context.fillText(textColorStr, this.SWAB_SPACING - 1, Math.floor(uiNote.SWABTEXT2_TOP + this.SWAB_TITLE_FONT), MAX_TEXT_WIDTH);
     }
     else
     {
         // Compatibility: Before FF 3.5.
         context.save();
-        context.translate(this.SWAB_LEFT - 1, this.SWABTEXT1_TOP + this.SWAB_TITLE_FONT);
+        context.translate(this.SWAB_SPACING - 1, Math.floor(uiNote.SWABTEXT1_TOP + uiNote.SWAB_TITLE_FONT));
         context.mozDrawText(noteColorStr);
         context.restore();
         
         context.save();
-        context.translate(this.SWAB_LEFT - 1, this.SWABTEXT2_TOP + this.SWAB_TITLE_FONT);
+        context.translate(this.SWAB_SPACING - 1, Math.floor(uiNote.SWABTEXT2_TOP + uiNote.SWAB_TITLE_FONT));
         context.mozDrawText(textColorStr);
         context.restore();
     }
@@ -1426,17 +1452,19 @@ colorFlipArrow: function(uiNote, mode)
 
 // PRIVATE: Converts a click coordinate relevant to the note into
 // a background color swab number, or null if outside a background color swab.
-getBackColorSwabFromPoint: function(x, y)
+getBackColorSwabFromPoint: function(uiNote, x, y)
 {
-    if (this.utils.isBetween(y, this.SWAB1_TOP-1, this.SWAB1_TOP+this.SWAB_HEIGHT))
+    if (this.utils.isBetween(y, uiNote.SWAB1_TOP-1, uiNote.SWAB1_TOP+uiNote.swabSize+1))
     {
-        for (var colorIndex in this.consts.BACKGROUND_COLOR_SWABS)
+        for (var i = 0; i < this.consts.BACKGROUND_COLOR_SWABS.length; i++)
         {
-            var hPos = this.SWAB_DISTANCE * colorIndex + this.SWAB_LEFT;
+            var hPos     = this.getSwabXPos(uiNote, i);
+            var nextHPos = this.getSwabXPos(uiNote, i+1);
+            var endPos   = nextHPos - this.SWAB_SPACING;
             
-            if (this.utils.isBetween(x, hPos - 1, hPos + this.SWAB_WIDTH))
+            if (this.utils.isBetween(x, hPos-1, endPos+1))
             {
-                return this.consts.BACKGROUND_COLOR_SWABS[colorIndex];
+                return this.consts.BACKGROUND_COLOR_SWABS[i];
             }
         }
     }
@@ -1445,17 +1473,19 @@ getBackColorSwabFromPoint: function(x, y)
 
 // PRIVATE: Converts a click coordinate relevant to the note into
 // a foreground color swab number, or null if outside a foreground color swab.
-getForeColorSwabFromPoint: function(x, y)
+getForeColorSwabFromPoint: function(uiNote, x, y)
 {
-    if (this.utils.isBetween(y, this.SWAB2_TOP-1, this.SWAB2_TOP+this.SWAB_HEIGHT))
+    if (this.utils.isBetween(y, uiNote.SWAB2_TOP-1, uiNote.SWAB2_TOP+uiNote.swabSize+1))
     {
-        for (var colorIndex in this.consts.FOREGROUND_COLOR_SWABS)
+        for (var i = 0; i < this.consts.FOREGROUND_COLOR_SWABS.length; i++)
         {
-            var hPos = this.SWAB_DISTANCE * colorIndex + this.SWAB_LEFT;
+            var hPos     = this.getSwabXPos(uiNote, i);
+            var nextHPos = this.getSwabXPos(uiNote, i+1);
+            var endPos   = nextHPos - this.SWAB_SPACING;
             
-            if (this.utils.isBetween(x, hPos - 1, hPos + this.SWAB_WIDTH))
+            if (this.utils.isBetween(x, hPos-1, endPos+1))
             {
-                return this.consts.FOREGROUND_COLOR_SWABS[colorIndex];
+                return this.consts.FOREGROUND_COLOR_SWABS[i];
             }
         }
     }
