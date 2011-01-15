@@ -2130,12 +2130,6 @@ screenCalcMinimizedPos: function(uiNote)
     else if (minPosMode == 6 || minPosMode == 8) { var offset = [-1,  0]; }
     else { this.utils.assertNotHere("Unknown minimized pos mode.", minPosMode); }
     
-    dump("Left = " + left + " Top = " + top + "\n");
-    dump("Pos = " + uiNote.minimizePos + "\n");
-    dump("Offset = " + offset[0] + " " + offset[1] + "\n");
-    dump("Offset = " + (offset[0] * (this.noteUI.MINIMIZED_WIDTH  + this.WIDTH_BETWEEN_MINIMIZED)) + " " + (offset[1] * (this.noteUI.MINIMIZED_HEIGHT + this.WIDTH_BETWEEN_MINIMIZED)) + "\n");
-    dump("Result = " + (left + uiNote.minimizePos * offset[0] * (this.noteUI.MINIMIZED_WIDTH  + this.WIDTH_BETWEEN_MINIMIZED)) + " " + (top  + uiNote.minimizePos * offset[1] * (this.noteUI.MINIMIZED_HEIGHT + this.WIDTH_BETWEEN_MINIMIZED)) + "\n");
-    
     // XXX Can't scroll across anymore.
     return [left + uiNote.minimizePos * offset[0] * (this.noteUI.MINIMIZED_WIDTH  + this.WIDTH_BETWEEN_MINIMIZED),
             top  + uiNote.minimizePos * offset[1] * (this.noteUI.MINIMIZED_HEIGHT + this.WIDTH_BETWEEN_MINIMIZED)];
