@@ -34,7 +34,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils.DragHandler.pro
 {
 
 // Overwrite these as appropriate.
-onDragMouseMoved: function(event, offset, data) {},
+onDragMouseMoved: function(ev, offset, data) {},
 onDragFinished:   function(wasCompleted, wasDrag, offset, data) {},
 
 // PRIVATE: Configure the event handlers.
@@ -43,6 +43,8 @@ registerHandlers: function()
     //dump("internoteUtilities.DragHandler.registerHandlers\n");
     
     this.utils.addBoundDOMEventListener(this.chromeDoc, "keypress",  this, "dragKeyPressed",     false);
+    this.utils.addBoundDOMEventListener(this.chromeDoc, "keydown",   this, "dragKeyDownUp",      false);
+    this.utils.addBoundDOMEventListener(this.chromeDoc, "keyup",     this, "dragKeyDownUp",      false);
     this.utils.addBoundDOMEventListener(this.chromeDoc, "mousemove", this, "dragMouseMoved",     false);
     this.utils.addBoundDOMEventListener(this.chromeDoc, "mouseup",   this, "dragButtonReleased", false);
 },
@@ -52,8 +54,10 @@ deregisterHandlers: function()
 {
     //dump("internoteUtilities.DragHandler.deregisterHandlers\n");
     
-    this.utils.removeBoundDOMEventListener(this.chromeDoc, "keypress",  this, "dragKeyPressed"    , false);
-    this.utils.removeBoundDOMEventListener(this.chromeDoc, "mousemove", this, "dragMouseMoved"    , false);
+    this.utils.removeBoundDOMEventListener(this.chromeDoc, "keypress",  this, "dragKeyPressed",     false);
+    this.utils.removeBoundDOMEventListener(this.chromeDoc, "keydown",   this, "dragKeyDownUp",      false);
+    this.utils.removeBoundDOMEventListener(this.chromeDoc, "keyup",     this, "dragKeyDownUp",      false);
+    this.utils.removeBoundDOMEventListener(this.chromeDoc, "mousemove", this, "dragMouseMoved",     false);
     this.utils.removeBoundDOMEventListener(this.chromeDoc, "mouseup",   this, "dragButtonReleased", false);
 },
 
@@ -66,11 +70,12 @@ isAdequateDrag: function(offset)
 },
 
 // PUBLIC: Call this on a mouse down operation.
-dragStarted: function(event)
+dragStarted: function(ev)
 {
     //dump("internoteUtilities.DragHandler.dragStarted\n");
     
-    this.pointerInitialPos = [event.screenX, event.screenY];
+    this.pointerInitialPos = [ev.screenX, ev.screenY];
+    this.effectiveOffset = this.pointerOffset = [0, 0];
     this.registerHandlers();
 },
 
@@ -81,7 +86,7 @@ dragFinished: function(wasCompleted, wasDrag)
     
     try
     {
-        this.onDragFinished(wasCompleted, wasDrag, this.pointerOffset, this.data);
+        this.onDragFinished(wasCompleted, wasDrag, this.effectiveOffset, this.data);
         this.hasBeenDragMovement = false;
         this.deregisterHandlers();
     }
@@ -137,7 +142,7 @@ dragFailure: function(msg, ex)
 // cleaning up and calling the user defined onDragFinished method.
 dragKeyPressed: function(ev)
 {
-    //dump("internoteUtilities.DragHandler.dragKeyPressed\n");
+    dump("internoteUtilities.DragHandler.dragKeyPressed\n");
     
     try
     {
@@ -154,16 +159,27 @@ dragKeyPressed: function(ev)
     }
 },
 
+dragKeyDownUp: function(ev)
+{
+    dump("internoteUtilities.DragHandler.dragKeyDownUp\n");
+    
+    if (ev.keyCode == ev.DOM_VK_SHIFT)
+    {
+        // Check for changes with shift key dragging.
+        this.checkEffectiveOffset(ev);
+    }
+},
+
 // PRIVATE: Handles mouse movement during drag and passes this on to the user-defined
 // onDragMouseMoved function.
 // If it notices adequate mouse movement to constitute a drag, it will record this.
-dragMouseMoved: function(event)
+dragMouseMoved: function(ev)
 {
     //dump("internoteUtilities.DragHandler.dragMouseMoved\n");
     
     try
     {
-        var pointerCurrentPos = [event.screenX, event.screenY];
+        var pointerCurrentPos = [ev.screenX, ev.screenY];
         this.pointerOffset = this.utils.coordPairSubtract(pointerCurrentPos, this.pointerInitialPos);
         
         if (!this.hasBeenDragMovement && this.isAdequateDrag(this.pointerOffset))
@@ -172,10 +188,7 @@ dragMouseMoved: function(event)
             this.hasBeenDragMovement = true;
         }
         
-        if (this.hasBeenDragMovement)
-        {
-            this.onDragMouseMoved(event, this.pointerOffset, this.data);
-        }
+        this.checkEffectiveOffset(ev);
     }
     catch (ex)
     {
@@ -186,7 +199,7 @@ dragMouseMoved: function(event)
 // PRIVATE: Handles mouse release during drag, cleaning up and calling the user-defined
 // onDragFinished function.
 // XXX Should just use dragFinished?
-dragButtonReleased: function(event)
+dragButtonReleased: function(ev)
 {
     //dump("internoteUtilities.DragHandler.dragButtonReleased\n");
     
@@ -198,6 +211,37 @@ dragButtonReleased: function(event)
     catch (ex)
     {
         this.dragFailure("Exception caught while releasing button during drag.", ex);
+    }
+},
+
+// PRIVATE: Checks whether the effective offset (pointer offset adjusted by shift key if
+// applicable) has changed, if so generate an event.
+checkEffectiveOffset: function(ev)
+{
+    if (ev.shiftKey)
+    {
+        if (Math.abs(this.pointerOffset[0]) < Math.abs(this.pointerOffset[1]))
+        {
+            var newEffectiveOffset = [0, this.pointerOffset[1]];
+        }
+        else
+        {
+            var newEffectiveOffset = [this.pointerOffset[0], 0];
+        }
+    }
+    else
+    {
+        var newEffectiveOffset = this.pointerOffset;
+    }
+    
+    if (!this.utils.areCoordPairsEqual(this.effectiveOffset, newEffectiveOffset))
+    {
+        this.effectiveOffset = newEffectiveOffset;
+    }
+    
+    if (this.hasBeenDragMovement)
+    {
+        this.onDragMouseMoved(ev, this.effectiveOffset, this.data);
     }
 },
 
