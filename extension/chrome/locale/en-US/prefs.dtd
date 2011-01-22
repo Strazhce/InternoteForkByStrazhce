@@ -48,14 +48,14 @@
 <!ENTITY internote.minimizedPos.label         "Minimized Position:">
 
 <!ENTITY internote.inplace.value              "In Place">
-<!ENTITY internote.topleftdownwards.value     "Start at Top-Left, Go Downwards">
-<!ENTITY internote.topleftrightwards.value    "Start at Top-Left, Go Rightwards">
-<!ENTITY internote.bottomleftupwards.value    "Start at Bottom-Left, Go Upwards">
-<!ENTITY internote.bottomleftrightwards.value "Start at Bottom-Left, Go Rightwards">
-<!ENTITY internote.toprightdownwards.value    "Start at Top-Right, Go Downwards">
-<!ENTITY internote.toprightleftwards.value    "Start at Top-Right, Go Leftwards">
-<!ENTITY internote.bottomrightupwards.value   "Start at Bottom-Right, Go Upwards">
-<!ENTITY internote.bottomrightleftwards.value "Start at Bottom-Right, Go Leftwards">
+<!ENTITY internote.topleftdownwards.value     "Start Top-Left, Go Down">
+<!ENTITY internote.topleftrightwards.value    "Start Top-Left, Go Right">
+<!ENTITY internote.bottomleftupwards.value    "Start Bottom-Left, Go Up">
+<!ENTITY internote.bottomleftrightwards.value "Start Bottom-Left, Go Right">
+<!ENTITY internote.toprightdownwards.value    "Start Top-Right, Go Down">
+<!ENTITY internote.toprightleftwards.value    "Start Top-Right, Go Left">
+<!ENTITY internote.bottomrightupwards.value   "Start Bottom-Right, Go Up">
+<!ENTITY internote.bottomrightleftwards.value "Start Bottom-Right, Go Left">
 
 <!-- General Options -->
 
