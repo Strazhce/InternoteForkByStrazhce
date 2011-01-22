@@ -515,7 +515,7 @@ moveStart: function(uiNote)
     
     // Change to non-anchored so moving the note will switch to an unanchored popup.
     // We use this temporarily because moveTo works properly only with unanchored popups (bug #457600)
-	// and we prefer to avoid numerous flickery reopens during a drag.
+    // and we prefer to avoid numerous flickery reopens during a drag.
     this.notesBeingMoved.push(uiNote);
     this.adjustNote(uiNote, null, null, false); // We don't need to reopen the note, move will unanchor it.
 },

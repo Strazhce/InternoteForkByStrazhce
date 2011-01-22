@@ -415,7 +415,7 @@ calculateNoteProperties: function(pos, dims)
 // PUBLIC: Initialization for flipping the note.
 flipStart: function(uiNote)
 {
-	// Do nothing in this implementation.
+    // Do nothing in this implementation.
 },
 
 // PUBLIC: Adjust the display UI for a step of flipping the note.

@@ -47,7 +47,7 @@ function InternoteStorageWatcher(storage, filterFn, extraReevaluateEvents, extra
     
     this.initEventDispatcher();
     
-	// Initialize the note subset.
+    // Initialize the note subset.
     for each (var note in storage.allNotes)
     {
         if (this.doesPassFilter(note))
@@ -57,15 +57,15 @@ function InternoteStorageWatcher(storage, filterFn, extraReevaluateEvents, extra
         }
     }
     
-	// Initialize the events for callers to use.
+    // Initialize the events for callers to use.
     this.createEvent("noteAdded");
     this.createEvent("noteRemoved");
-	
-	// Watch for underlying changes.    
+    
+    // Watch for underlying changes.    
     storage.addBoundEventListener("noteAdded",     this, "onNoteAdded");
     storage.addBoundEventListener("noteRemoved",   this, "onNoteRemoved");
     
-	// Set up the passthru and reevaluate events.
+    // Set up the passthru and reevaluate events.
     for each (var eventName in extraReevaluateEvents)
     {
         this.createEvent(eventName);
@@ -87,9 +87,9 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.StorageWatcher.protot
 destroy: function(event)
 {
     // The watcher's events can be safely garbage collected, but we must
-	// detach from the underlying storage so the callbacks don't leak.
-	
-	this.storage.removeBoundEventListener("noteAdded",   this, "onNoteAdded"  );
+    // detach from the underlying storage so the callbacks don't leak.
+    
+    this.storage.removeBoundEventListener("noteAdded",   this, "onNoteAdded"  );
     this.storage.removeBoundEventListener("noteRemoved", this, "onNoteRemoved");
     
     for each (var eventName in this.extraReevaluateEvents)
@@ -116,8 +116,8 @@ addNote: function(event)
 
     this.noteMap[event.note.num] = event.note;
     this.count++;
-	
-	// We clone to prevent dispatchEvent overwriting the event.name field.
+    
+    // We clone to prevent dispatchEvent overwriting the event.name field.
     this.dispatchEvent("noteAdded", event.clone()); 
 },
 

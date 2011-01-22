@@ -761,7 +761,7 @@ createHTMLElement: function(tagName, doc, id)
 // Create an XUL element. Must be in an XUL document.
 createXULElement: function(tagName, doc, id)
 {
-	// XXX Should assert document type, or add namespace if adding to HTML document.
+    // XXX Should assert document type, or add namespace if adding to HTML document.
     var elt = doc.createElementNS(this.XUL_NS, tagName);
     if (id != null) elt.id = id;
     return elt;
