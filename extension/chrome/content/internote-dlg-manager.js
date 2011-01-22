@@ -385,9 +385,9 @@ clearNoteData : function ()
 updateText: function(id, value)
 {
     var elt = document.getElementById(id);
-    if (elt.value != value)
+    if (elt.getAttribute("value") != value)
     {
-        elt.value = value;
+        elt.setAttribute("value", value);
         elt.setAttribute("tooltiptext", value);
     }
 },
@@ -398,7 +398,8 @@ updateList: function(id, value)
     if (elt.value != value)
     {
         elt.value = value;
-        elt.setAttribute("tooltiptext", elt.selectedItem.getAttribute("label"));
+        var newLabel = (elt.selectedItem == null) ? "" : elt.selectedItem.getAttribute("label");
+        elt.setAttribute("tooltiptext", newLabel);
     }
 },
 
@@ -453,14 +454,7 @@ setNoteData: function(note)
         
         function convertTime(time)
         {
-            if (time == null)
-            {
-                return unknownTimeMessage;
-            }
-            else
-            {
-                return utils.convertSecondsToDate(time).toLocaleString();
-            }
+            return (time == null) ? unknownTimeMessage : utils.convertSecondsToDate(time).toLocaleString();
         }
         
         this.updateText("noteText",       note.text);
