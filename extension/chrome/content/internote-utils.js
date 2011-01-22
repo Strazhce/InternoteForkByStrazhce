@@ -515,6 +515,11 @@ isBoolean: function(num)
     return typeof(num) == "boolean";
 },
 
+isNaturalString: function(str)
+{
+    return str != null && typeof(str) == "string" && str.match(/^\d+$/) != null;
+},
+
 // trim() not built in to FF3.0, added in 3.5, so we don't use it.
 trim: function(line)
 {

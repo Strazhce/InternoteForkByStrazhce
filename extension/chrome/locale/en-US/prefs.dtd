@@ -36,6 +36,13 @@
 <!ENTITY internote.useHighlightableCBox.label "Highlightable Text (use border to move)">
 <!ENTITY internote.useNativeScrollCBox.label  "Use OS Scrollbar instead of Internote Scrollbar">
 
+<!-- Color Palette -->
+
+<!ENTITY internote.palettePrefsPane.title     "Color Palette">
+
+<!ENTITY internote.textColors.caption         "Text Colors:">
+<!ENTITY internote.noteColors.caption         "Note Colors:">
+
 <!-- Minimized Positions -->
 
 <!ENTITY internote.minimizedPos.label         "Minimized Position:">

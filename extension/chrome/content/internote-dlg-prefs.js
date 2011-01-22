@@ -22,8 +22,9 @@ var internotePrefsDialog =
 
 init: function()
 {
-    this.utils = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
-    this.prefs = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs;
+    this.utils  = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
+    this.prefs  = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs;
+    this.consts = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.consts;
     
     this.utils.init(window);
     this.prefs.init();
@@ -37,6 +38,75 @@ init: function()
     
     this.userTogglesLocationCheckbox();
     this.checkSaveLocation();
+    
+    this.notePalette = [];
+    this.textPalette = [];
+    
+    this.utils.fillColorField(document, "textColorEntryBox", this.consts.TEXT_COLORS);
+    this.utils.fillColorField(document, "noteColorEntryBox", this.consts.NOTE_COLORS);
+    
+    for (var i = 0; i < this.consts.DEFAULT_TEXT_PALETTE.length; i++)
+    {
+        var id = "textColor" + i + "EntryBox";
+        this.utils.fillColorField(document, id, this.consts.TEXT_COLORS);
+        this.setUpPalette(i, "text", this.consts.TEXT_COLORS, this.textPalette);
+    }
+    
+    for (var i = 0; i < this.consts.DEFAULT_NOTE_PALETTE.length; i++)
+    {
+        var id = "noteColor" + i + "EntryBox";
+        this.utils.fillColorField(document, id, this.consts.NOTE_COLORS);
+        this.setUpPalette(i, "note", this.consts.NOTE_COLORS, this.notePalette);
+    }
+},
+
+findColorInPalette: function(palette, color, excludeIndex)
+{
+    for (var i = 0; i < palette.length; i++)
+    {
+        if (i != excludeIndex && palette[i] == color)
+        {
+            return i;
+        }
+    }
+    return -1;
+},
+
+setUpPalette: function(pickNum, idSuffix, colors, palette)
+{
+    var id = idSuffix + "Color" + pickNum + "EntryBox";
+    
+    var menuList = document.getElementById(id);
+    var menuPopup = menuList.childNodes[0];
+    
+    palette[pickNum] = menuList.getAttribute("value");
+    
+    for (var i = 0; i < menuPopup.childNodes.length; i++)
+    {
+        menuPopup.childNodes[i].addEventListener("command", this.utils.bind(this, function(ev) {
+            var newColor = menuList.selectedItem.getAttribute("value");
+            var oldColor = palette[pickNum];
+            
+            var newColorOldPickNum = this.findColorInPalette(palette, newColor, pickNum);
+            if (newColorOldPickNum != -1)
+            {
+                // We've chosen a color that was already selected in another box,
+                // so swap by moving the old color as the new color in the other box.
+                palette[newColorOldPickNum] = oldColor;
+                var otherID = idSuffix + "Color" + newColorOldPickNum + "EntryBox";
+                var otherMenuList = document.getElementById(otherID);
+                
+                otherMenuList.selectedIndex = colors.indexOf(oldColor);
+                
+                // Generate an event so the prefs system updates.
+                var ev = document.createEvent("UIEvents");
+                ev.initUIEvent("command", true, false, window, 0);
+                otherMenuList.dispatchEvent(ev);
+            }
+            
+            palette[pickNum] = newColor;
+        }), false);
+    }
 },
 
 getLocaleString: function(messageName)
@@ -135,3 +205,7 @@ userTogglesLocationCheckbox: function(ev)
 },
 
 };
+
+window.addEventListener("DOMContentLoaded", function() {
+    internotePrefsDialog.init();
+}, false);

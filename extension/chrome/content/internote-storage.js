@@ -143,6 +143,7 @@ init: function(anyMainWindowDoc)
     this.createEvent("scrollbarChanged");
     this.createEvent("statusbarChanged");
     this.createEvent("minimizedPosChanged");
+    this.createEvent("paletteChanged");
     
     this.createEvent("noteAdded");
     this.createEvent("noteRemoved");
@@ -220,6 +221,10 @@ observePrefsChanges: function()
                 else if (data == "minimizedpos")
                 {
                     this.dispatchEvent("minimizedPosChanged", new this.StorageEvent());
+                }
+                else if (data.match(/^(back|fore)color/))
+                {
+                    this.dispatchEvent("paletteChanged", new this.StorageEvent());
                 }
             }
         }
@@ -608,8 +613,8 @@ addWelcomeNote: function()
     var sizeType     = parseInt(this.prefs.getDefaultSize()); // XXX Why parse here?
     
     var currTime     = new Date().getTime();
-    var backColor    = this.consts.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
-    var foreColor    = this.consts.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
+    var backColor    = this.prefs.getDefaultNoteColor();
+    var foreColor    = this.prefs.getDefaultTextColor();
     var zIndex       = this.getMaxZIndex()[0] + 1;
     var noteWidth    = 280;
     var noteHeight   = 300;
@@ -647,8 +652,8 @@ addSimpleNote: function(url, text, noteTopLeft, noteDims)
     var noteCount = this.allNotes.length;
     
     var currTime     = new Date().getTime();
-    var backColor    = this.consts.BACKGROUND_COLOR_SWABS[this.prefs.getDefaultNoteColor()];
-    var foreColor    = this.consts.FOREGROUND_COLOR_SWABS[this.prefs.getDefaultTextColor()];
+    var backColor    = this.prefs.getDefaultNoteColor();
+    var foreColor    = this.prefs.getDefaultTextColor();
     var zIndex       = this.getMaxZIndex()[0] + 1;
     var isMinimized  = false;
     var isHTML       = false;

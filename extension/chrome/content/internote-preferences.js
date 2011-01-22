@@ -37,6 +37,18 @@ init: function()
     {
         this.prefsBranch = this.utils.getCCService("@mozilla.org/preferences-service;1", "nsIPrefService").getBranch("internote.");
     }
+    
+    var colorIndex = this.getDefaultNoteColor();
+    if (this.utils.isNaturalString(colorIndex))
+    {
+        this.setCharPref("defaultnotecolor", this.consts.DEFAULT_NOTE_PALETTE[colorIndex]);
+    }
+
+    colorIndex = this.getDefaultTextColor();
+    if (this.utils.isNaturalString(colorIndex))
+    {
+        this.setCharPref("defaulttextcolor", this.consts.DEFAULT_TEXT_PALETTE[colorIndex]);
+    }
 },
 
 getBoolPref: function(prefName, defaultValue)
@@ -80,7 +92,7 @@ getCharPref: function(prefName, defaultValue)
         return defaultValue;
     }
 },
-                                    
+
 getEnumPref: function(prefName, defaultValue, maxValue)
 {
     if (this.prefsBranch.getPrefType(prefName) !=0)
@@ -114,6 +126,12 @@ getFontSize : function()
     {
         return 12;
     }
+},
+
+setCharPref: function(prefName, newValue)
+{
+    this.utils.assertError(this.prefsBranch.getPrefType(prefName) == this.prefsBranch.PREF_STRING, "Not an char pref.", prefName);
+    this.prefsBranch.setCharPref(prefName, "" + newValue);
 },
 
 setEnumPref: function(prefName, newValue)
@@ -162,9 +180,13 @@ getModifiedSaveLocation: function()
 // XXX Demagic
 getDefaultSize      : function() { return this.getEnumPref("defaultsize",      0, 3); },
 getDefaultPosition  : function() { return this.getEnumPref("defaultposition",  0, 4); },
-getDefaultNoteColor : function() { return this.getEnumPref("defaultnotecolor", 0, 5); },
-getDefaultTextColor : function() { return this.getEnumPref("defaulttextcolor", 0, 5); },
 getMinimizedPos     : function() { return this.getEnumPref("minimizedpos",     4, 8); },
+
+getNoteColor: function(i) { return this.getCharPref("notecolor" + i, this.consts.DEFAULT_NOTE_PALETTE[i]); },
+getTextColor: function(i) { return this.getCharPref("textcolor" + i, this.consts.DEFAULT_TEXT_PALETTE[i]); },
+
+getDefaultNoteColor: function() { return this.getCharPref("defaultnotecolor", this.consts.DEFAULT_NOTE_PALETTE[0]); },
+getDefaultTextColor: function() { return this.getCharPref("defaulttextcolor", this.consts.DEFAULT_TEXT_PALETTE[0]); },
 
 detectFirstRun : function()
 {
@@ -209,14 +231,14 @@ setDefaultColors: function(foreColor, backColor)
     this.utils.assertError(this.utils.isHexColor(foreColor), "Invalid foreground color.", foreColor);
     this.utils.assertError(this.utils.isHexColor(backColor), "Invalid background color.", backColor);
     
-    var foreColorNum = this.consts.FOREGROUND_COLOR_SWABS.indexOf(foreColor);
-    var backColorNum = this.consts.BACKGROUND_COLOR_SWABS.indexOf(backColor);
+    var foreColorNum = this.consts.TEXT_COLORS.indexOf(foreColor);
+    var backColorNum = this.consts.NOTE_COLORS.indexOf(backColor);
     
     if (foreColorNum >= 0 && backColorNum >= 0)
     {
         // XXX Should probably update prefs dialog by observation.
-        this.setEnumPref("defaulttextcolor", foreColorNum);
-        this.setEnumPref("defaultnotecolor", backColorNum);
+        this.setCharPref("defaulttextcolor", foreColorNum);
+        this.setCharPref("defaultnotecolor", backColorNum);
     }
     else
     {

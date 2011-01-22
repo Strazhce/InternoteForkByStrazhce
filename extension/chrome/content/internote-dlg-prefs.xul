@@ -31,7 +31,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <prefwindow id="internotePrefsDialog"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
             title="&internote.prefsDialog.title;"
-            onload="internotePrefsDialog.init();"
             maxwidth="390">
 
   <prefpane id="generalPrefsPane" label="&internote.generalPrefsPane.title;" flex="1">
@@ -63,8 +62,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <prefpane id="appearancePrefsPane" label="&internote.appearancePrefsPane.title;" flex="1">
     <preferences>
       <preference id="fontSizePreference"        name="internote.fontsize"         type="string"/>
-      <preference id="backColorPreference"       name="internote.defaultnotecolor" type="string"/>
-      <preference id="foreColorPreference"       name="internote.defaulttextcolor" type="string"/>
+      <preference id="noteColorPreference"       name="internote.defaultnotecolor" type="string"/>
+      <preference id="textColorPreference"       name="internote.defaulttextcolor" type="string"/>
       <preference id="defaultPositionPreference" name="internote.defaultposition"  type="string"/>
       <preference id="defaultSizePreference"     name="internote.defaultsize"      type="string"/>
       <preference id="minimizedPosPreference"    name="internote.minimizedpos"     type="string"/>
@@ -81,28 +80,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         </columns>
         <rows>
           <row align="center">
-            <label value="&internote.defaultNoteColor.label;" control="colorEntryBox" />
-            <menulist id="colorEntryBox" preference="backColorPreference">
+            <label value="&internote.defaultNoteColor.label;" control="noteColorEntryBox" />
+            <menulist id="noteColorEntryBox" preference="noteColorPreference">
               <menupopup>
-                <menuitem value="0" label="&internote.bananaColor.value;" />
-                <menuitem value="1" label="&internote.melonColor.value;" />
-                <menuitem value="2" label="&internote.blueberryColor.value;" />
-                <menuitem value="3" label="&internote.limeColor.value;" />
-                <menuitem value="4" label="&internote.grapeColor.value;" />
-                <menuitem value="5" label="&internote.cauliflowerColor.value;" />
+                <!-- Colors get inserted here by code. -->
               </menupopup>
             </menulist>
           </row>
           <row align="center">
             <label value="&internote.defaultTextColor.label;" control="textColorEntryBox" />
-            <menulist id="textColorEntryBox" preference="foreColorPreference">
+            <menulist id="textColorEntryBox" preference="textColorPreference">
               <menupopup>
-                <menuitem value="0" label="&internote.charcoalColor.value;" />
-                <menuitem value="1" label="&internote.topsoilColor.value;" />
-                <menuitem value="2" label="&internote.grassColor.value;" />
-                <menuitem value="3" label="&internote.roseColor.value;" />
-                <menuitem value="4" label="&internote.aluminumColor.value;" />
-                <menuitem value="5" label="&internote.snowColor.value;" />
+                <!-- Colors get inserted here by code. -->
               </menupopup>
             </menulist>
           </row>
@@ -179,6 +168,114 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <!-- Work around bug #343964 and provide space for notification box message. -->
     <separator height="100" />
   </prefpane>
+  <prefpane id="palettePrefsPane" label="&internote.palettePrefsPane.title;" flex="1">
+    <preferences>
+      <preference id="textColor0Preference" name="internote.textcolor0" type="string" />
+      <preference id="textColor1Preference" name="internote.textcolor1" type="string" />
+      <preference id="textColor2Preference" name="internote.textcolor2" type="string" />
+      <preference id="textColor3Preference" name="internote.textcolor3" type="string" />
+      <preference id="textColor4Preference" name="internote.textcolor4" type="string" />
+      <preference id="textColor5Preference" name="internote.textcolor5" type="string" />
+      <preference id="noteColor0Preference" name="internote.notecolor0" type="string" />
+      <preference id="noteColor1Preference" name="internote.notecolor1" type="string" />
+      <preference id="noteColor2Preference" name="internote.notecolor2" type="string" />
+      <preference id="noteColor3Preference" name="internote.notecolor3" type="string" />
+      <preference id="noteColor4Preference" name="internote.notecolor4" type="string" />
+      <preference id="noteColor5Preference" name="internote.notecolor5" type="string" />
+    </preferences>
+    <groupbox>
+      <caption label="&internote.noteColors.caption;" />
+      <grid flex="1">
+        <columns>
+          <column width="0" flex="1" />
+          <column width="0" flex="1" />
+          <column width="0" flex="1" />
+        </columns>
+        <rows>
+          <row align="center">
+            <menulist id="noteColor0EntryBox" preference="noteColor0Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+            <menulist id="noteColor1EntryBox" preference="noteColor1Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+            <menulist id="noteColor2EntryBox" preference="noteColor2Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+          </row>
+          <row align="center">
+            <menulist id="noteColor3EntryBox" preference="noteColor3Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+            <menulist id="noteColor4EntryBox" preference="noteColor4Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+            <menulist id="noteColor5EntryBox" preference="noteColor5Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+          </row>
+        </rows>
+      </grid>
+    </groupbox>
+    <groupbox>
+      <caption label="&internote.textColors.caption;" />
+      <grid flex="1">
+        <columns>
+          <column width="0" flex="1" />
+          <column width="0" flex="1" />
+          <column width="0" flex="1" />
+        </columns>
+        <rows>
+          <row align="center">
+            <menulist id="textColor0EntryBox" preference="textColor0Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+            <menulist id="textColor1EntryBox" preference="textColor1Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+            <menulist id="textColor2EntryBox" preference="textColor2Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+          </row>
+          <row align="center">
+            <menulist id="textColor3EntryBox" preference="textColor3Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+            <menulist id="textColor4EntryBox" preference="textColor4Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+            <menulist id="textColor5EntryBox" preference="textColor5Preference" sizetopopup="none">
+              <menupopup>
+                <!-- Colors get inserted here by code. -->
+              </menupopup>
+            </menulist>
+          </row>
+        </rows>
+      </grid>
+    </groupbox>
+  </prefpane>
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="internote-strings" src="chrome://internote/locale/internote.properties"/>
@@ -186,6 +283,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
   <script type="application/x-javascript" src="chrome://internote/content/internote-utils.js"/>
   <script type="application/x-javascript" src="chrome://internote/content/internote-utils-web.js"/>
+  <script type="application/x-javascript" src="chrome://internote/content/internote-uiutils-colors.js"/>
   <script type="application/x-javascript" src="chrome://internote/content/internote-preferences.js"/>
   <script type="application/x-javascript" src="chrome://internote/content/internote-dlg-prefs.js"/>
 

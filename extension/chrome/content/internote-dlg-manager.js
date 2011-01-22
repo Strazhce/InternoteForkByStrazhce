@@ -32,7 +32,7 @@ suppressSelectionChangeEvents: false,
 
 noteBeingEdited: null,
 
-editingFields: ["noteURL", "colorEntryBox", "textColorEntryBox", "ignoreAnchor", "ignoreParams",
+editingFields: ["noteURL", "noteColorEntryBox", "textColorEntryBox", "ignoreAnchor", "ignoreParams",
                 "deleteCurrentNote", "resetCurrentNote", "matchTypeEntryBox", "isMinimized", "goToLink"],
 
 actions: ["deleteSelected", "resetSelected", "exportSelected",
@@ -41,6 +41,17 @@ actions: ["deleteSelected", "resetSelected", "exportSelected",
 init: function()
 {
     //dump("internoteManager.init\n");
+    
+    if (this.isManagerInitialized)
+    {
+        // For some reason DOMContentLoaded is called twice, so don't initialize twice.
+        return;
+    }
+    else
+    {
+        this.isManagerInitialized = true;
+    }
+    
     this.sharedGlobal  = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66;
     
     this.utils   = this.sharedGlobal.utils;
@@ -58,8 +69,11 @@ init: function()
         this.registerStorageListeners();
         
         var foreColorBox = document.getElementById("textColorEntryBox");
-        var backColorBox = document.getElementById("colorEntryBox"    );
+        var backColorBox = document.getElementById("noteColorEntryBox");
         var matchTypeBox = document.getElementById("matchTypeEntryBox");
+        
+        this.utils.fillColorField(document, "textColorEntryBox", this.consts.TEXT_COLORS);
+        this.utils.fillColorField(document, "noteColorEntryBox", this.consts.NOTE_COLORS);
         
         this.utils.addBoundDOMEventListener(foreColorBox, "ValueChange", this, "entryBoxChanges", false);
         this.utils.addBoundDOMEventListener(backColorBox, "ValueChange", this, "entryBoxChanges", false);
@@ -363,7 +377,7 @@ clearNoteData : function ()
     this.updateText("noteModfnTime",  "");
     this.updateText("noteURL",        "");
     
-    this.updateList("colorEntryBox",     0);
+    this.updateList("noteColorEntryBox", 0);
     this.updateList("textColorEntryBox", 0);
     this.updateList("matchTypeEntryBox", 0);
     
@@ -427,27 +441,11 @@ setNoteData: function(note)
         var urlData = this.treeView.getManagerURLData(note);
         var [category, url] = this.utils.simpleSplit(urlData, ":");
         
-        var backColor = this.consts.BACKGROUND_COLOR_SWABS.indexOf(note.backColor.toUpperCase());
-        var foreColor = this.consts.FOREGROUND_COLOR_SWABS.indexOf(note.foreColor.toUpperCase());
+        var textColor = note.foreColor.toUpperCase();
+        var noteColor = note.backColor.toUpperCase();
         
-        // Handle custom colour - full UI not supported yet.
-        if (backColor == -1)
-        {
-            this.setMenuListToCustom("colorEntryBox");
-        }
-        else
-        {
-            this.uncustomizeMenuList("colorEntryBox");
-        }
-        
-        if (foreColor == -1)
-        {
-            this.setMenuListToCustom("textColorEntryBox");
-        }
-        else
-        {
-            this.uncustomizeMenuList("textColorEntryBox");
-        }
+        this.utils.adjustFieldCustomColor("noteColorEntryBox", noteColor, this.consts.NOTE_COLORS);
+        this.utils.adjustFieldCustomColor("textColorEntryBox", textColor, this.consts.TEXT_COLORS);
         
         var unknownTimeMessage = "--- " + this.getLocaleString("UnknownTimeMessage") + " ---";
         var utils = this.utils;
@@ -463,8 +461,8 @@ setNoteData: function(note)
         this.updateText("noteURL",        note.url);
         
         this.updateList("matchTypeEntryBox", note.matchType);
-        this.updateList("colorEntryBox",     backColor);
-        this.updateList("textColorEntryBox", foreColor);
+        this.updateList("noteColorEntryBox", noteColor);
+        this.updateList("textColorEntryBox", textColor);
         
         this.updateCheck("isMinimized",  note.isMinimized );
         this.updateCheck("ignoreAnchor", note.ignoreAnchor);
@@ -615,32 +613,6 @@ isValidURLOrSite: function()
     }
 },
 
-setMenuListToCustom: function(menuListID)
-{
-    var menuList = document.getElementById(menuListID);
-    var customText = this.getLocaleString("CustomColor");
-    
-    var customID = menuListID + "-custom";
-    var existingElement = document.getElementById(customID);
-    
-    if (existingElement == null)
-    {
-        var item = menuList.appendItem(customText, "-1");
-        item.setAttribute("id", customID);
-        menuList.value = "-1";
-    }
-},
-
-uncustomizeMenuList: function(menuListID)
-{
-    var item = document.getElementById(menuListID + "-custom");
-    
-    if (item != null)
-    {
-        item.parentNode.removeChild(item);
-    }
-},
-
 entryBoxChanges: function()
 {
     if (!this.isUpdating)
@@ -745,7 +717,7 @@ userEditsData: function(event)
             
             var noteURLVal   = document.getElementById("noteURL").value;
             var noteTextVal  = document.getElementById("noteText").value;
-            var backColorVal = document.getElementById("colorEntryBox").value;
+            var backColorVal = document.getElementById("noteColorEntryBox").value;
             var foreColorVal = document.getElementById("textColorEntryBox").value;
             
             var isMinimized  = document.getElementById("isMinimized") .checked;
@@ -759,15 +731,8 @@ userEditsData: function(event)
             this.storage.setIsMinimizedMulti([this.noteBeingEdited], isMinimized);
             this.storage.setIgnoreAnchor    (this.noteBeingEdited,   ignoreAnchor);
             this.storage.setIgnoreParams    (this.noteBeingEdited,   ignoreParams);
-            
-            if (backColorVal != -1)
-            {
-                this.storage.setBackColor       (this.noteBeingEdited,   this.consts.BACKGROUND_COLOR_SWABS[backColorVal]);
-            }
-            if (foreColorVal != -1)
-            {
-                this.storage.setForeColor       (this.noteBeingEdited,   this.consts.FOREGROUND_COLOR_SWABS[foreColorVal]);
-            }
+            this.storage.setBackColor       (this.noteBeingEdited,   backColorVal);
+            this.storage.setForeColor       (this.noteBeingEdited,   foreColorVal);
             
             this.configureURLSection(this.noteBeingEdited);
         }
@@ -1917,3 +1882,11 @@ treeView : {
 }
 
 };
+
+window.addEventListener("DOMContentLoaded", function() {
+    internoteManager.init();
+}, false);
+
+window.addEventListener("unload", function() {
+    internoteManager.destroy();
+}, false);

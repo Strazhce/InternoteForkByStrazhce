@@ -682,7 +682,7 @@ function(windowGlobal, uiNote, endColor)
     animation.onStart = function()
     {
         // We delay this until start in case an existing animation on the note has not yet been hurried.
-        startColorArr = utils.parseHexColor(noteUI.getForeColor(uiNote));
+        startColorArr = utils.parseHexColor(noteUI.getTextColor(uiNote));
         endColorArr   = utils.parseHexColor(endColor);
     };
     

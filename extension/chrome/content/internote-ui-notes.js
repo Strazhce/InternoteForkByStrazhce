@@ -800,7 +800,7 @@ setText: function(uiNote, newText)
 },
 
 // PUBLIC: Get the current note UI foreground color.
-getForeColor: function(uiNote)
+getTextColor: function(uiNote)
 {
     return this.utils.convertRGBToHex(uiNote.textArea.style.color);
 },
@@ -808,7 +808,7 @@ getForeColor: function(uiNote)
 // PUBLIC: Get the current note UI background color.
 // Note that uiNote.backColor is different from uiNote.note.backColor,
 // as the former may be a transitional animation-interpolated color.
-getBackColor: function(uiNote)
+getNoteColor: function(uiNote)
 {
     return uiNote.backColor;
 },
@@ -1249,7 +1249,8 @@ createBackSide: function(doc, uiNote, onClickBackSide)
 
 calculateSwabCharacteristics: function(uiNote)
 {
-    var colorCount = this.consts.BACKGROUND_COLOR_SWABS.length;
+    var colorCount = Math.max(this.consts.DEFAULT_NOTE_PALETTE.length,
+                              this.consts.DEFAULT_TEXT_PALETTE.length);
     
     var swabHorzSpace = (uiNote.backSide.width - (colorCount + 1) * this.SWAB_SPACING) / colorCount;
     var swabVertSpace = uiNote.backSide.height / 2 - this.SWAB_SPACING - this.SWAB_TITLE_HEIGHT;
@@ -1345,14 +1346,14 @@ drawNoteBackSide: function(uiNote)
     }
     
     // draw the color swabs
-    for (var colorIndex in this.consts.BACKGROUND_COLOR_SWABS)
+    for (var i = 0; i < this.consts.DEFAULT_NOTE_PALETTE.length; i++)
     {
-        var currentColor = this.consts.BACKGROUND_COLOR_SWABS[colorIndex];
+        var currentColor = this.prefs.getNoteColor(i);
         var isSelected = (uiNote.note.backColor == currentColor);
         [context.strokeStyle, context.lineWidth] = chooseSelectionCharacteristics(isSelected);
         
-        var hPos     = this.getSwabXPos(uiNote, colorIndex);
-        var nextHPos = this.getSwabXPos(uiNote, parseInt(colorIndex)+1);
+        var hPos     = this.getSwabXPos(uiNote, i);
+        var nextHPos = this.getSwabXPos(uiNote, parseInt(i)+1);
         var width = nextHPos - hPos - this.SWAB_SPACING + 1;
         
         context.fillStyle = currentColor;
@@ -1360,14 +1361,14 @@ drawNoteBackSide: function(uiNote)
         context.strokeRect(hPos, uiNote.SWAB1_TOP, width, uiNote.swabSize);
     }
     
-    for (var colorIndex in this.consts.FOREGROUND_COLOR_SWABS)
+    for (var i = 0; i < this.consts.DEFAULT_TEXT_PALETTE.length; i++)
     {
-        var currentColor = this.consts.FOREGROUND_COLOR_SWABS[colorIndex];
+        var currentColor = this.prefs.getTextColor(i);
         var isSelected = (uiNote.note.foreColor == currentColor);
         [context.strokeStyle, context.lineWidth] = chooseSelectionCharacteristics(isSelected);
         
-        var hPos     = this.getSwabXPos(uiNote, colorIndex);
-        var nextHPos = this.getSwabXPos(uiNote, parseInt(colorIndex)+1);
+        var hPos     = this.getSwabXPos(uiNote, i);
+        var nextHPos = this.getSwabXPos(uiNote, parseInt(i)+1);
         var width = nextHPos - hPos - this.SWAB_SPACING + 1;
         
         context.fillStyle = currentColor;
@@ -1449,11 +1450,11 @@ colorFlipArrow: function(uiNote, mode)
 
 // PRIVATE: Converts a click coordinate relevant to the note into
 // a background color swab number, or null if outside a background color swab.
-getBackColorSwabFromPoint: function(uiNote, x, y)
+getNoteColorSwabFromPoint: function(uiNote, x, y)
 {
     if (this.utils.isBetween(y, uiNote.SWAB1_TOP-1, uiNote.SWAB1_TOP+uiNote.swabSize+1))
     {
-        for (var i = 0; i < this.consts.BACKGROUND_COLOR_SWABS.length; i++)
+        for (var i = 0; i < this.consts.DEFAULT_NOTE_PALETTE.length; i++)
         {
             var hPos     = this.getSwabXPos(uiNote, i);
             var nextHPos = this.getSwabXPos(uiNote, i+1);
@@ -1461,7 +1462,7 @@ getBackColorSwabFromPoint: function(uiNote, x, y)
             
             if (this.utils.isBetween(x, hPos-1, endPos+1))
             {
-                return this.consts.BACKGROUND_COLOR_SWABS[i];
+                return this.prefs.getNoteColor(i);
             }
         }
     }
@@ -1470,11 +1471,11 @@ getBackColorSwabFromPoint: function(uiNote, x, y)
 
 // PRIVATE: Converts a click coordinate relevant to the note into
 // a foreground color swab number, or null if outside a foreground color swab.
-getForeColorSwabFromPoint: function(uiNote, x, y)
+getTextColorSwabFromPoint: function(uiNote, x, y)
 {
     if (this.utils.isBetween(y, uiNote.SWAB2_TOP-1, uiNote.SWAB2_TOP+uiNote.swabSize+1))
     {
-        for (var i = 0; i < this.consts.FOREGROUND_COLOR_SWABS.length; i++)
+        for (var i = 0; i < this.consts.DEFAULT_TEXT_PALETTE.length; i++)
         {
             var hPos     = this.getSwabXPos(uiNote, i);
             var nextHPos = this.getSwabXPos(uiNote, i+1);
@@ -1482,7 +1483,7 @@ getForeColorSwabFromPoint: function(uiNote, x, y)
             
             if (this.utils.isBetween(x, hPos-1, endPos+1))
             {
-                return this.consts.FOREGROUND_COLOR_SWABS[i];
+                return this.prefs.getTextColor(i);
             }
         }
     }

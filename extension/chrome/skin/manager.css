@@ -62,3 +62,15 @@ caption[disabled="true"] {
 tree {
     overflow: hidden; /* Prevents scrollbar of a really small area overflowing. */
 }
+
+/* Start fix for bug #307188 taken from attachment on that bug. */
+menulist > menupopup > menuitem.menuitem-iconic > .menu-iconic-left {
+  display: -moz-box;
+}
+
+menulist > menupopup > menuitem.menuitem-iconic .menu-iconic-icon {
+  width: auto;
+  height: auto;
+}
+/* End fix for bug #307188. */
+

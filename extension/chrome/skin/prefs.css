@@ -18,6 +18,26 @@ radio[pane=appearancePrefsPane]:hover, radio[pane=appearancePrefsPane][selected=
     -moz-image-region: rect(32px, 64px, 64px, 32px)
 }
 
+radio[pane=palettePrefsPane] {
+    -moz-image-region: rect(0px, 96px, 32px, 64px);
+}
+
+radio[pane=palettePrefsPane]:hover, radio[pane=palettePrefsPane][selected="true"]  {
+    -moz-image-region: rect(32px, 96px, 64px, 64px)
+}
+
 description[disabled="true"] {
 	color: gray;
 }
+
+/* Start fix for bug #307188 taken from attachment on that bug. */
+menulist > menupopup > menuitem.menuitem-iconic > .menu-iconic-left {
+  display: -moz-box;
+}
+
+menulist > menupopup > menuitem.menuitem-iconic .menu-iconic-icon {
+  width: auto;
+  height: auto;
+}
+/* End fix for bug #307188. */
+

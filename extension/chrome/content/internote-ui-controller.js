@@ -202,6 +202,7 @@ init: function()
     this.storage.addBoundEventListener("scrollbarChanged",    this, "onScrollbarPrefSet");
     this.storage.addBoundEventListener("statusbarChanged",    this, "onStatusbarPrefSet");
     this.storage.addBoundEventListener("minimizedPosChanged", this, "onMinimizedPosPrefSet");
+    this.storage.addBoundEventListener("paletteChanged",      this, "onPaletteChanged");
     
     this.chromeUpdateStatusBarIconDisplay(false);
     this.chromeUpdateInternoteIcon();
@@ -383,6 +384,7 @@ destroy: function()
     this.storage.removeBoundEventListener("scrollbarChanged",    this, "onScrollbarPrefSet");
     this.storage.removeBoundEventListener("statusbarChanged",    this, "onStatusbarPrefSet");
     this.storage.removeBoundEventListener("minimizedPosChanged", this, "onMinimizedPosPrefSet");
+    this.storage.removeBoundEventListener("paletteChanged",      this, "onPaletteChanged");
     
     this.storage.usageCount--;
     if (this.storage.usageCount == 0)
@@ -1026,7 +1028,7 @@ userClicksBackSideOfNote: function(event)
         
         var [internalX, internalY] = this.noteUI.getInternalCoordinates(uiNote, event);
         
-        var backColor = this.noteUI.getBackColorSwabFromPoint(uiNote, internalX, internalY);
+        var backColor = this.noteUI.getNoteColorSwabFromPoint(uiNote, internalX, internalY);
         
         if (backColor != null)
         {
@@ -1034,7 +1036,7 @@ userClicksBackSideOfNote: function(event)
         }
         else
         {
-            var foreColor = this.noteUI.getForeColorSwabFromPoint(uiNote, internalX, internalY);
+            var foreColor = this.noteUI.getTextColorSwabFromPoint(uiNote, internalX, internalY);
             
             if (foreColor != null)
             {
@@ -3336,6 +3338,25 @@ onMinimizedPosPrefSet: function()
     catch (ex)
     {
         this.utils.handleException("Exception caught when attempting to change statusbar preference.", ex);
+    }
+},
+
+onPaletteChanged: function()
+{
+    try
+    {
+        for (var i = 0; i < this.allUINotes.length; i++)
+        {
+            var uiNote = this.allUINotes[i];
+            if (uiNote.isFlipped)
+            {
+                this.noteUI.drawNoteBackSide(uiNote);
+            }
+        }
+    }
+    catch (ex)
+    {
+        this.utils.handleException("Exception caught when palette changed.", ex);
     }
 },
 
