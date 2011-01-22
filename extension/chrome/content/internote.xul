@@ -209,6 +209,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </menupopup>
         </menu>
     </menupopup>
+    
+    <!-- We include the popup pane here even though it's only used for one display UI impl,
+         because placing it in the XUL prevents an bug in FF3.6 (fixed in FF4, bug # unknown),
+         that causes menus to flicker when you hover over the popup pane. -->
+    <panel id="internote-popuppane" style="background-color: transparent; border: none; -moz-appearance: none; -moz-window-shadow: none;" noautohide="true" />
 </popupset>
 
 <statusbar id="status-bar">

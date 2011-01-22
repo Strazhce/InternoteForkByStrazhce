@@ -76,7 +76,8 @@ tearDown: function()
     if (this.popupPanel != null)
     {
         this.popupPanel.hidePopup();
-        this.popupPanel.parentNode.removeChild(this.popupPanel);
+        //this.popupPanel.parentNode.removeChild(this.popupPanel);
+        this.utils.removeAllChildNodes(this.popupPanel);
         
         this.popupPanel = null;
         this.innerContainer = null;
@@ -315,7 +316,9 @@ createInsertionContainer: function()
     this.innerContainer.style.backgroundColor = "transparent";
     //this.innerContainer.style.backgroundColor = "rgba(255, 0, 0, 0.1)"
     
-    this.popupPanel = this.utils.createShiftingPanel(document, "pane", this.innerContainer);
+    this.popupPanel = document.getElementById("internote-popuppane");
+    this.utils.fillShiftingPanel(document, this.popupPanel, "pane", this.innerContainer);
+    //this.popupPanel = this.utils.createShiftingPanel(document, "pane", this.innerContainer);
     
     this.utils.addBoundDOMEventListener(this.popupPanel, "popupshown",   this, "popupPanelShown",   false);
     

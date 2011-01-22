@@ -26,17 +26,19 @@ createShiftingPanel: function(doc, suffix, containee)
     popupPanel.setAttribute("style", "background-color: transparent; border: none; -moz-appearance: none; -moz-window-shadow: none;");
     popupPanel.setAttribute("noautohide", "true");
     
+    this.fillShiftingPanel(doc, popupPanel, suffix, containee);
+    return popupPanel;
+},
+
+fillShiftingPanel: function(doc, panel, suffix, containee)
+{
     // We need this stack because you can position in stacks but not panels.
     var container = doc.createElement("stack");
     container.setAttribute("id", "internote-shiftcontainer" + suffix);
     container.setAttribute("style", "overflow: hidden; background-color: transparent;");
     
-    var myBody = doc.getElementById("main-window");
-    myBody.appendChild(popupPanel);
-    popupPanel.appendChild(container);
+    panel.appendChild(container);
     container.appendChild(containee);
-    
-    return popupPanel;
 },
 
 shiftShiftingPanel: function(popupPanel, offset)
