@@ -27,17 +27,17 @@ radio[pane=palettePrefsPane]:hover, radio[pane=palettePrefsPane][selected="true"
 }
 
 description[disabled="true"] {
-	color: gray;
+    color: gray;
 }
 
 /* Start fix for bug #307188 taken from attachment on that bug. */
 menulist > menupopup > menuitem.menuitem-iconic > .menu-iconic-left {
-  display: -moz-box;
+    display: -moz-box;
 }
 
 menulist > menupopup > menuitem.menuitem-iconic .menu-iconic-icon {
-  width: auto;
-  height: auto;
+    width: auto;
+    height: auto;
 }
 /* End fix for bug #307188. */
 
