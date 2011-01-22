@@ -1381,7 +1381,7 @@ drawNoteBackSide: function(uiNote)
     var textColorStr    = this.utils.getLocaleString(document, "TextColorTitle");
     
     const MAX_TEXT_WIDTH = this.consts.MIN_NOTE_WIDTH - 2 * this.NOTE_BORDER_SIZE - 2 * this.NOTE_OUTER_SIZE;
-    context.fillStyle = "black";
+    context.fillStyle = this.getTextColor(uiNote);
     context.font = "bold " + this.SWAB_TITLE_FONT + "px sans-serif";
     
     if (context.fillText)

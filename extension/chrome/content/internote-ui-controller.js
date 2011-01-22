@@ -3044,16 +3044,8 @@ onNoteForeRecolored: function(event)
         var uiNote = this.uiNoteLookup[note.num];
         this.utils.assertError(uiNote != null, "UINote is null trying to fore-recolor note.");
         
-        if (uiNote.isFlipped)
-        {
-            this.noteUI.setForeColor(uiNote, event.data1);
-        }
-        else
-        {
-            // This will only happen for a change in another window.
-            var animation = this.windowGlobal.getForeRecolorAnimation(this.windowGlobal, uiNote, event.data1);
-            this.startNoteAnimation(uiNote, animation, this.RECOLOR_ANIMATION_TIME);
-        }
+        var animation = this.windowGlobal.getForeRecolorAnimation(this.windowGlobal, uiNote, event.data1);
+        this.startNoteAnimation(uiNote, animation, this.RECOLOR_ANIMATION_TIME);
     }
     catch (ex)
     {
