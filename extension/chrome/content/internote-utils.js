@@ -181,7 +181,7 @@ openURL: function(url)
     recentWindow.delayedOpenTab(url);
 },
 
-saveStringToFilename : function(writeString, path)
+saveStringToFilename: function(writeString, path)
 {
     var stream     = this.getCCInstance("@mozilla.org/network/file-output-stream;1",   "nsIFileOutputStream");
     var convStream = this.getCCInstance("@mozilla.org/intl/converter-output-stream;1", "nsIConverterOutputStream");
@@ -224,7 +224,7 @@ readStringFromFilename: function(path)
     return inputData;
 },
 
-clipToRange : function(x, min, max)
+clipToRange: function(x, min, max)
 {
     this.assertError(min <= max, "Bad clip range");
     if      (x <= min) return min;
@@ -232,7 +232,7 @@ clipToRange : function(x, min, max)
     else               return x;
 },
 
-isBetween : function(x, min, max)
+isBetween: function(x, min, max)
 {
     return min <= x && x <= max;
 },
@@ -264,7 +264,7 @@ doubleDump: function(dumpMessage)
     }
 },
 
-getStack : function(toRemove)
+getStack: function(toRemove)
 {
     toRemove = Math.max(toRemove || 0, 0);
     toRemove += 2; // remove the header and the element for this function
@@ -330,7 +330,7 @@ assertClassError: function(obj, className, msg)
     this.assertError(obj != null && this.isSpecificJSClass(obj, className), msg, obj);
 },
 
-assertWarnNotHere : function(msg, obj)
+assertWarnNotHere: function(msg, obj)
 {
     var errorMsg = "Should not be here." + "\n" +
                    msg + "\n" +
@@ -347,7 +347,7 @@ assertWarnNotHere : function(msg, obj)
     this.doubleDump("\n");
 },
 
-assertErrorNotHere : function(msg, obj)
+assertErrorNotHere: function(msg, obj)
 {
     var errorMsg = "Should not be here." + "\n" +
                    msg + "\n" +
