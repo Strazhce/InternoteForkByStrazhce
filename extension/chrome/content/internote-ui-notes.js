@@ -1249,9 +1249,9 @@ createBackSide: function(doc, uiNote, onClickBackSide)
 
 calculateSwabCharacteristics: function(uiNote)
 {
-    var colourCount = this.consts.BACKGROUND_COLOR_SWABS.length;
+    var colorCount = this.consts.BACKGROUND_COLOR_SWABS.length;
     
-    var swabHorzSpace = (uiNote.backSide.width - (colourCount + 1) * this.SWAB_SPACING) / colourCount;
+    var swabHorzSpace = (uiNote.backSide.width - (colorCount + 1) * this.SWAB_SPACING) / colorCount;
     var swabVertSpace = uiNote.backSide.height / 2 - this.SWAB_SPACING - this.SWAB_TITLE_HEIGHT;
     
     var floatSize = Math.min(swabHorzSpace, swabVertSpace);
@@ -1335,9 +1335,6 @@ drawNoteBackSide: function(uiNote)
     var context = canvas.getContext("2d");
     
     context.clearRect(0, 0, canvas.width, canvas.height);
-    
-    var colourCount = Math.max(this.consts.BACKGROUND_COLOR_SWABS.length,
-                               this.consts.FOREGROUND_COLOR_SWABS.length);
     
     function chooseSelectionCharacteristics(isSelected)
     {
