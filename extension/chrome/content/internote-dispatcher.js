@@ -33,7 +33,7 @@ internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.EventDispatcher.proto
 
 initEventDispatcher: function()
 {
-    this.events = [];
+    this.events = {};
     
     // The purpose of the event stack is to remember which events are
     // currently being dispatched.  This allows us to prevent adding
