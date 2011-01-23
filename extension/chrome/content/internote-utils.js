@@ -663,9 +663,12 @@ traceData: function(data, maxLevels, maxLineLength)
         {
             if (maxLineLength < 0 || maxLevels < 1)
             {
-                var dataText = "{...}";
                 var className = this.getJSClassName(data);
-                return [(className == "") ? dataText : className + " " + dataText];
+                var dataText =
+                    ((className != "")  ? (className   + " ") : "") +
+                    (this.isArray(data) ? (data.length + " ") : "") +
+                    "{...}";
+                return [dataText];
             }
             
             var attributes = [];
@@ -692,7 +695,7 @@ traceData: function(data, maxLevels, maxLineLength)
                 }
                 catch (ex)
                 {
-                    attributes.push(prefix + "<<<INTERNAL-ERROR:" + ex.name + ">>>");
+                    attributes.push(prefix + "<<<INTERNAL-ERROR : " + ex.name + " : " + ex.message + ">>>" + idx);
                 }
                 
                 if (prop == data)
@@ -719,7 +722,8 @@ traceData: function(data, maxLevels, maxLineLength)
                         attributes.push(prefix + elementData[0]);
                     }
                 }
-                else {
+                else
+                {
                     complexSubobjects[idx] = elementData;
                 }
             }
@@ -727,13 +731,15 @@ traceData: function(data, maxLevels, maxLineLength)
             // First attempt to put it all on one line, if there are no subobjects.
             if (simpleSubobjects.length == 0 && complexSubobjects.length == 0)
             {
-                var dataText = "{ " + attributes.join(", ") + " }";
                 var className = this.getJSClassName(data);
-                var combined = (className == "") ? dataText : className + " " + dataText;
+                var dataText =
+                    ((className != "")  ? (className   + " ") : "") +
+                    (this.isArray(data) ? (data.length + " ") : "") +
+                    "{ " + attributes.join(", ") + " }";
                 
-                if (combined <= maxLineLength)
+                if (dataText.length <= maxLineLength)
                 {
-                    return [combined];
+                    return [dataText];
                 }
             }
             
@@ -760,9 +766,13 @@ traceData: function(data, maxLevels, maxLineLength)
                 allLines = allLines.concat(complexSubobject);
             }
             
+            var className = this.getJSClassName(data);
+            
             this.prefixAllLines(allLines, SPACER);
-            allLines.unshift(this.getJSClassName(data) + " {");
-            allLines.push   ("}");
+            allLines.unshift(((className != "")  ? (className   + " ") : "") +
+                             (this.isArray(data) ? (data.length + " ") : "") +
+                             "{");
+            allLines.push("}");
             
             return allLines;
         }
@@ -774,7 +784,7 @@ traceData: function(data, maxLevels, maxLineLength)
     catch (ex)
     {
         // Certain system objects seem to give errors when we try to loop over them.
-        return ["<<<INTERNAL-ERROR:" + ex.name + ">>>"];
+        return ["<<<INTERNAL-ERROR : " + ex.name + " : " + ex.message + ">>>"];
     }
 },
 
