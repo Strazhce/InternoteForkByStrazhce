@@ -1206,6 +1206,58 @@ confirmCheck: function(window, messageName, titleName, checkName, checkCallback)
     return result;
 },
 
+filterNulls: function(parsedURLData)
+{
+    var newObj = {};
+    for (var prop in parsedURLData)
+    {
+        if (parsedURLData[prop] != null)
+        {
+            newObj[prop] = parsedURLData[prop];
+        }
+    }
+    return newObj;
+},
+
+areObjectsDeepEqual: function(obj1, obj2) {
+    var keys1 = this.getSortedKeys(obj1);
+    var keys2 = this.getSortedKeys(obj2);
+    
+    if (!this.areArraysEqual(keys1, keys2))
+    {
+        return false;
+    }
+
+    for (var i = 0; i < keys1.length; i++)
+    {
+        var key = keys1[i];
+        var val1 = obj1[key];
+        var val2 = obj2[key];
+        
+        if (typeof(val1) != typeof(val2))
+        {
+            return false;
+        }
+        
+        if (typeof(val1) == "object")
+        {
+            if (!this.areObjectsDeepEqual(val1, val2))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (val1 != val2)
+            {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+},
+
 });
 
 }
