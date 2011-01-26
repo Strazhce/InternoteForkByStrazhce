@@ -380,14 +380,16 @@ htmlDecode: function(encodedText)
 // Get the site part out of a URL string.
 getURLSite: function(url)
 {
-    var protocolRegexp = "([^:]*)://";
-    var userNameRegexp = "([^:@]*:)?";
-    var passwordRegexp = "([^@]@)?";
+    var protocolRegexp = "([A-Za-z]+)://";
+    var userPassRegexp = "[^:@/]*";
+    var userNPassRegexp= "(" + userPassRegexp + "(\\:" + userPassRegexp + ")?\\@)?";
     var siteRegexp     = "([^:/]*)";
     var portRegexp     = "(:[0-9]+)?";
-    var endRegexp      = "(/|$)";
+    var pathRegexp     = "(/[^\\?#]*)?";
+    var paramsRegexp   = "(\\?[^#]*)?";
+    var anchorRegexp   = "(#.*)?";
     
-    var regexp = "^" + protocolRegexp + userNameRegexp + passwordRegexp + siteRegexp + portRegexp + endRegexp;
+    var regexp = "^" + protocolRegexp + userNPassRegexp + siteRegexp + portRegexp + pathRegexp + paramsRegexp + anchorRegexp + "$";
     
     var regexpResults = new RegExp(regexp).exec(url);
     
