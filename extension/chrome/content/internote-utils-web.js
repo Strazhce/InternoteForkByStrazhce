@@ -432,9 +432,12 @@ isValidSite: function(site)
     
     var components = site.split(/\./);
     
-    var hasEmptyStringComponent = components.some(function(component) { return component == ""; });
+    var hasInvalidStringComponent = components.some(function(component)
+    {
+        return component == "" || component.charAt(0) == "-" || component.charAt(site.length-1) == "-";
+    });
     
-    if (hasEmptyStringComponent)
+    if (hasInvalidStringComponent)
     {
         return false;
     }
