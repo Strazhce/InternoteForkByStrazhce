@@ -1074,6 +1074,12 @@ isPair: function(pair)
     return this.isArray(pair) && pair.length == 2;
 },
 
+getGeneralCharPref: function(prefName)
+{
+    var generalPrefBranch = this.getCCService("@mozilla.org/preferences-service;1", "nsIPrefService").getBranch("");
+    return generalPrefBranch.getCharPref(prefName);
+},
+
 generateIdentifier: function()
 {
     if (this.guidGenerator == null)
@@ -1205,6 +1211,13 @@ confirmCheck: function(window, messageName, titleName, checkName, checkCallback)
     
     return result;
 },
+
+
+initialCap: function(str)
+{
+    return str.charAt(0).toUpperCase() + str.substring(1);
+},
+
 
 filterNulls: function(parsedURLData)
 {

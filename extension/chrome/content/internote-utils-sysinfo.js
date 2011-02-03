@@ -241,6 +241,8 @@ getErrorInfo: function(internoteVersion, callback)
             text = "Platform: "   + this.getPlatformString() + "\n" +
                    "Browser: "    + this.getBrowserString()  + "\n" +
                    "Internote: "  + internoteVersion         + "\n" +
+                   "Locale: "     + this.getGeneralCharPref("general.useragent.locale") + "\n" +
+                   "Theme: "      + this.getGeneralCharPref("general.skins.selectedSkin") + "\n" +
                    "Extensions: " + extensionText            + "\n\n" +
                    "Internal Errors/Warnings/Messages: " + ((text == "") ? "None" : "\n\n") +
                    text;
