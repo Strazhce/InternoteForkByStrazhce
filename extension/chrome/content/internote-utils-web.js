@@ -404,6 +404,10 @@ isValidSite: function(site)
     {
         return false;
     }
+    else if (site == "localhost")
+    {
+        return true;
+    }
     
     // Not all country code domains are required to have at least three domains, eg ro isn't.
     // List those where we can exclude two domains, eg com.au.
