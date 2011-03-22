@@ -1,7 +1,7 @@
 #!/usr/bin/csh -f
 
 rm -Rf svn-export internote-$1.xpi
-svn export trunk/branches/3.0 svn-export
+svn export branches/3.0/extension svn-export
 cd svn-export
 mv chrome.manifest.release chrome.manifest
 (cd chrome; zip -9 --recurse-paths --move internote.jar *)
