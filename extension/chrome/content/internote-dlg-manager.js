@@ -1643,87 +1643,94 @@ treeView : {
     {
         this.utils.assertClassError(note, "InternoteNote", "Not a note when getting manager URL data.");
         
-        if (note.matchType == this.storage.URL_MATCH_REGEXP)
+        try
         {
-            var noteRegexp = this.utils.trim(note.url);
-            if (noteRegexp == "")
+            if (note.matchType == this.storage.URL_MATCH_REGEXP)
             {
-                return "blankregexp:";
-            }
-            else if (this.utils.isValidRegexp(noteRegexp))
-            {
-                return "regexp:" + noteRegexp;
-            }
-            else
-            {
-                return "invalidregexp:";
-            }
-        }
-        else if (note.matchType == this.storage.URL_MATCH_SITE ||
-                 note.matchType == this.storage.URL_MATCH_SUFFIX)
-        {
-            var site = this.storage.getEffectiveSite(note);
-            if (this.utils.isValidSite(site))
-            {
-                return "category:" + site;
-            }
-            else if (site == "")
-            {
-                return "blanksite:";
-            }
-            else
-            {
-                return "invalidsite:";
-            }
-        }
-        else if (note.matchType == this.storage.URL_MATCH_ALL)
-        {
-            return "all:";
-        }
-        else
-        {
-            var effectiveURL = this.storage.getEffectiveURL(note);
-            if (effectiveURL == null)
-            {
-                if (this.utils.trim(note.url) == "")
+                var noteRegexp = this.utils.trim(note.url);
+                if (noteRegexp == "")
                 {
-                    return "blankurl:";
+                    return "blankregexp:";
                 }
-                else if (note.matchType == this.storage.URL_MATCH_PREFIX)
+                else if (this.utils.isValidRegexp(noteRegexp))
                 {
-                    // URL prefixes don't need to be valid.
-                    return "category:" + note.url;
+                    return "regexp:" + noteRegexp;
                 }
                 else
                 {
-                    return "invalidurl:";
+                    return "invalidregexp:";
                 }
+            }
+            else if (note.matchType == this.storage.URL_MATCH_SITE ||
+                     note.matchType == this.storage.URL_MATCH_SUFFIX)
+            {
+                var site = this.storage.getEffectiveSite(note);
+                if (this.utils.isValidSite(site))
+                {
+                    return "category:" + site;
+                }
+                else if (site == "")
+                {
+                    return "blanksite:";
+                }
+                else
+                {
+                    return "invalidsite:";
+                }
+            }
+            else if (note.matchType == this.storage.URL_MATCH_ALL)
+            {
+                return "all:";
             }
             else
             {
-                // Strip trailing slash if present.
-                if (effectiveURL.charAt(effectiveURL.length - 1) == "/")
+                var effectiveURL = this.storage.getEffectiveURL(note);
+                if (effectiveURL == null)
                 {
-                    // Check the trailing slash is a part of a path and not params/anchor.
-                    var parsedURL = this.utils.parseURL(effectiveURL);
-                    
-                    if (parsedURL.params == null && parsedURL.anchor == null)
+                    if (this.utils.trim(note.url) == "")
                     {
-                        // Remove trailing slash.
-                        effectiveURL = effectiveURL.substr(0, effectiveURL.length - 1);
+                        return "blankurl:";
+                    }
+                    else if (note.matchType == this.storage.URL_MATCH_PREFIX)
+                    {
+                        // URL prefixes don't need to be valid.
+                        return "category:" + note.url;
+                    }
+                    else
+                    {
+                        return "invalidurl:";
                     }
                 }
-                
-                // Strip protocol.
-                var strippedURL = effectiveURL.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
-                strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
-                if (strippedURL != "")
+                else
                 {
-                    effectiveURL = strippedURL;
+                    // Try to strip trailing slash if present.
+                    if (effectiveURL.charAt(effectiveURL.length - 1) == "/")
+                    {
+                        // Check the trailing slash is a part of a path and not params/anchor.
+                        var parsedURL = this.utils.parseURL(effectiveURL);
+                        
+                        if (parsedURL != null && parsedURL.params == null && parsedURL.anchor == null)
+                        {
+                            // Remove trailing slash.
+                            effectiveURL = effectiveURL.substr(0, effectiveURL.length - 1);
+                        }
+                    }
+                    
+                    // Strip protocol.
+                    var strippedURL = effectiveURL.replace(/^[a-zA-Z]*:\/\/\//g, ""); // 3 slashes
+                    strippedURL  = strippedURL.replace(/^[a-zA-Z]*:\/\//g,   ""); // 2 slashes
+                    if (strippedURL != "")
+                    {
+                        effectiveURL = strippedURL;
+                    }
+                    
+                    return "category:" + effectiveURL;
                 }
-                
-                return "category:" + effectiveURL;
             }
+        }
+        catch (ex) {
+            this.utils.handleException("Exception caught when getting manager data.", ex, [note.matchType, note.url, note.ignoreAnchor, note.ignoreParams]);
+            return "error:";
         }
     },
     
@@ -1796,6 +1803,11 @@ treeView : {
         {
             var categoryStyle = "special_data";
             var urlDesc = this.getLocaleString("EmptySiteCategory");
+        }
+        else if (category == "error")
+        {
+            var categoryStyle = "special_data";
+            var urlDesc = "???";        
         }
         else
         {
