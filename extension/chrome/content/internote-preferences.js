@@ -78,7 +78,20 @@ getCharPref: function(prefName, defaultValue)
         return defaultValue;
     }
 },
-                                    
+
+getI18NStringPref: function(prefName, defaultValue)
+{
+    if (this.prefsBranch.getPrefType(prefName) !=0)
+    {
+        var nsISupportsString = this.utils.getCIInterface("nsISupportsString");
+        return this.prefsBranch.getComplexValue("savelocation", nsISupportsString).data;
+    }
+    else
+    {
+        return defaultValue;
+    }
+},
+
 getEnumPref: function(prefName, defaultValue, maxValue)
 {
     if (this.prefsBranch.getPrefType(prefName) !=0)
@@ -143,7 +156,7 @@ getSaveLocationPref: function()
 {
     if (this.shouldUseOtherSaveLoc())
     {
-        return this.getCharPref("savelocation", "");
+        return this.getI18NStringPref("savelocation", "");
     }
     else
     {
