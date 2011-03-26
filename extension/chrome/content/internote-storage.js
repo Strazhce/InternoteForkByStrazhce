@@ -123,11 +123,6 @@ init: function(anyMainWindowDoc)
 
     this.storageLoc = this.prefs.getModifiedSaveLocation();
     
-    if (this.storageLoc == null)
-    {
-        this.storageLoc = this.utils.getProfileDir();
-    }
-    
     this.allNotes     = [];
     
     this.initEventDispatcher();
@@ -425,7 +420,7 @@ loadStorage: function()
 {
     var primaryFailed = false;
     
-    if (!this.storageLoc.exists())
+    if (this.storageLoc == null || !this.storageLoc.exists())
     {
         this.loadStatus = this.LOAD_DIR_DOESNT_EXIST;
         return;
