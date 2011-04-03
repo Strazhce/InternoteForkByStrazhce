@@ -5,11 +5,13 @@ resource internotejs components/
 
 locale internote en-US chrome/locale/en-US/
 
+locale internote da    chrome/locale/da/
 locale internote es-ES chrome/locale/es-ES/
 locale internote en-GB chrome/locale/en-GB/
 locale internote fr    chrome/locale/fr/
 locale internote hu    chrome/locale/hu/
 locale internote pl    chrome/locale/pl/
+locale internote pt-BR chrome/locale/pt-BR/
 locale internote sv-SE chrome/locale/sv-SE/
 locale internote uk    chrome/locale/uk/
 

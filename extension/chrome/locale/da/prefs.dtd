@@ -1,0 +1,38 @@
+<!ENTITY internote.prefsDialog.title "Internote indstillinger">
+<!-- Appearance -->
+<!ENTITY internote.appearancePrefsPane.title "Udseende">
+<!ENTITY internote.tinySize.value "Lille">
+<!ENTITY internote.normalSize.value "Normal">
+<!ENTITY internote.largeSize.value "Stor">
+<!ENTITY internote.giantSize.value "Kæmpe">
+<!ENTITY internote.megaSize.value "Enorm">
+<!ENTITY internote.defaultStylePrefs.caption "Standard for nye noter">
+<!ENTITY internote.defaultNoteColor.label "Notefarve:">
+<!ENTITY internote.defaultTextColor.label "Tekstfarve:">
+<!-- Colors defined in common.dtd. -->
+<!ENTITY internote.defaultSize.label "Størrelse:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.defaultPos.label "Placering:">
+<!ENTITY internote.topLeftPos.value "Øverst venstre">
+<!ENTITY internote.topRightPos.value "Øverst højre">
+<!ENTITY internote.bottomLeftPos.value "Nederst venstre">
+<!ENTITY internote.bottomRightPos.value "Nederst højre">
+<!ENTITY internote.centerPos.value "I midten">
+<!ENTITY internote.adjustDefaults.desc "(Disse indstillinger kan ændres for den enkelte note, enten med symbolerne i kanten eller via højreklik.)">
+<!ENTITY internote.globalStylePrefs.caption "Standard for alle noter">
+<!ENTITY internote.fontSize.label "Skrift:">
+<!-- Sizes defined at the top. -->
+<!ENTITY internote.useTranslucencyCBox.label "Gennemsigtighed">
+<!ENTITY internote.useHighlightableCBox.label "Markerbar tekst (brug kanter til at flytte)">
+<!ENTITY internote.useNativeScrollCBox.label "Brug systemets scrollbar i stedet for Internotes">
+<!-- General Options -->
+<!ENTITY internote.generalPrefsPane.title "Generelt">
+<!ENTITY internote.generalPrefs.caption "Generelle indstillinger">
+<!ENTITY internote.confirmDeleteCBox.label "Bekræft sletning">
+<!ENTITY internote.useStatusBarCBox.label "Vis ikon på tilføjelseslinie">
+<!ENTITY internote.confirmProviso.desc "(&quot;Rediger noter&quot; beder altid om bekræftelse ved sletning af flere noter.)">
+<!ENTITY internote.storagePrefs.caption "Placering af data">
+<!ENTITY internote.useAlternativeCBox.label "Brug alternativ placering">
+<!ENTITY internote.browseButton.label "Gennemse">
+<!ENTITY internote.storageRestartProviso.desc "(Ændring af placering kræver at Firefox genstartes.)">
+<!ENTITY internote.storageMoveProviso.desc "(Eksisterende noter flyttes ikke, men kan importeres med &quot;Rediger noter&quot; funktionen i Internotes menu.)">

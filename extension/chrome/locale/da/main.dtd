@@ -1,0 +1,58 @@
+<!-- Main Menus -->
+<!-- Application menu name in common.dtd. -->
+<!ENTITY internote.newNoteCmd.label "Opret note">
+<!ENTITY internote.newNoteCmd.accesskey "e">
+<!ENTITY internote.minimizeAllCmd.label "Minimer sidens noter">
+<!ENTITY internote.minimizeAllCmd.accesskey "M">
+<!ENTITY internote.unminimizeAllCmd.label "Gendan sidens noter">
+<!ENTITY internote.unminimizeAllCmd.accesskey "G">
+<!ENTITY internote.openManagerCmd.label "Rediger noter…">
+<!ENTITY internote.openManagerCmd.accesskey "R">
+<!ENTITY internote.displayNotesCmd.label "Vis noter">
+<!ENTITY internote.displayNotesCmd.accesskey "i">
+<!ENTITY internote.openPrefsCmd.label "Indstillinger…">
+<!ENTITY internote.openPrefsCmd.accesskey "d">
+<!ENTITY internote.helpCmd.label "Hjælp…">
+<!ENTITY internote.helpCmd.accesskey "H">
+<!ENTITY internote.reportBugCmd.label "Rapporter fejl…">
+<!ENTITY internote.reportBugCmd.accesskey "R">
+<!ENTITY internote.aboutCmd.label "Om Internote…">
+<!ENTITY internote.aboutCmd.accesskey "O">
+<!-- Note Context Menu -->
+<!ENTITY internote.cutTextCmd.label "Klip">
+<!ENTITY internote.cutTextCmd.accesskey "K">
+<!ENTITY internote.copyTextCmd.label "Kopier">
+<!ENTITY internote.copyTextCmd.accesskey "p">
+<!ENTITY internote.pasteTextCmd.label "Sæt ind">
+<!ENTITY internote.pasteTextCmd.accesskey "S">
+<!ENTITY internote.deleteTextCmd.label "Slet">
+<!ENTITY internote.deleteTextCmd.accesskey "l">
+<!-- Markera alla in common.dtd. -->
+<!ENTITY internote.setDefaultColorsCmd.label "Brug som standardfarve">
+<!ENTITY internote.setDefaultColorsCmd.accesskey "v">
+<!ENTITY internote.deleteNoteCmd.label "Slet note">
+<!ENTITY internote.deleteNoteCmd.accesskey "l">
+<!ENTITY internote.chooseColorsCmd.label "Vælg nye farver">
+<!ENTITY internote.chooseColorsCmd.accesskey "y">
+<!ENTITY internote.editTextCmd.label "Rediger tekst">
+<!ENTITY internote.editTextCmd.accesskey "g">
+<!ENTITY internote.minimizeNoteCmd.label "Minimer note">
+<!ENTITY internote.minimizeNoteCmd.accesskey "m">
+<!ENTITY internote.unminimizeNoteCmd.label "Gendan note">
+<!ENTITY internote.unminimizeNoteCmd.accesskey "G">
+<!ENTITY internote.viewInOpenManagerCmd.label "Rediger note">
+<!ENTITY internote.viewInOpenManagerCmd.accesskey "o">
+<!ENTITY internote.showsOnMenuCmd.label "Vises på">
+<!ENTITY internote.showsOnMenuCmd.accesskey "å">
+<!ENTITY internote.showsOnPageCmd.label "Kun denne side">
+<!ENTITY internote.showsOnPageCmd.accesskey "K">
+<!ENTITY internote.showsOnSiteCmd.label "Kun dette websted">
+<!ENTITY internote.showsOnSiteCmd.accesskey "u">
+<!ENTITY internote.showsOnAllCmd.label "Alle sider">
+<!ENTITY internote.showsOnAllCmd.accesskey "A">
+<!ENTITY internote.showsRegexpCmd.label "Sider som matcher regulært udtryk">
+<!ENTITY internote.showsRegexpCmd.accesskey "u">
+<!-- Some elements of this menu are dynamic, and properties. -->
+<!ENTITY internote.ignoreParamsCmd.accesskey "P">
+<!ENTITY internote.ignoreAnchorCmd.accesskey "k">
+<!-- Ignore Params/Anchor labels in common.dtd. -->
