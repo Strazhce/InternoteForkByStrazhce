@@ -1,0 +1,12 @@
+<!ENTITY internote.bugReportDialog.title "Rapporter en Internote fejl">
+<!ENTITY internote.infoThanks.desc "Tak fordi du indberetter en fejl - din rapport vil hjælpe med at forbedre Internote. Sendt information bruges udelukkende som hjælp til fejlretning.">
+<!ENTITY internote.infoType.desc "Herunder findes automatisk indsamlet information, der kan hjælpe med at identificere problemet.">
+<!ENTITY internote.infoDisclaimer.desc "Det viser dine installerede tilføjelser, og kan indeholde data fra dine noter og din browser.">
+<!ENTITY internote.sendInstructions.desc "Når beskeden er færdig, så kopier den med knappen herunder, og brug linket til at åbne websiden.">
+<!ENTITY internote.infoWhy.desc "Er dette nødvendigt?">
+<!ENTITY internote.infoReasons1.desc "Viden om dine tilføjelser, kan bruges til at konstatere, om problemet skyldes konflikter med andre tilføjelser.">
+<!ENTITY internote.infoReasons2.desc "Når problemet opstår, indsamles data der kan bruges til at identificere årsagen. Disse data kan indeholde oplysninger om dine noter og brugen af din browser">
+<!ENTITY internote.reportComments.desc "Beskriv hvad der forårsagede problemet, og andre relevante oplysninger.">
+<!ENTITY internote.reportEmail.desc "Hvis du angiver din mailadresse, kan du blive bedt om flere oplysninger, hvis det bliver nødvendigt.">
+<!ENTITY internote.submitBugReportButton.label "Send rapport">
+<!ENTITY internote.infoCopy.label "Kopier information">

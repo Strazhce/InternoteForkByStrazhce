@@ -1,0 +1,69 @@
+<!-- Left Panel -->
+<!ENTITY internote.managerDialog.title "Rediger noter">
+<!ENTITY internote.noteList.columnTitle "Noter">
+<!ENTITY internote.searchQuery.label "Søg:">
+<!ENTITY internote.searchResults.label "Søgeresultat">
+<!ENTITY internote.closeResults.tooltip "Luk søgeresultat">
+<!-- Left Panel Menu Commands -->
+<!ENTITY internote.actionsCmd.label "Valg">
+<!ENTITY internote.actionsCmd.accesskey "a">
+<!ENTITY internote.expandSelectedCmd.label "Udvid valgte">
+<!ENTITY internote.expandSelectedCmd.accesskey "d">
+<!ENTITY internote.collapseSelectedCmd.label "Minimer valgte">
+<!ENTITY internote.collapseSelectedCmd.accesskey "M">
+<!-- Select All in common.dtd. -->
+<!ENTITY internote.deleteSelectedCmd.label "Slet valgte">
+<!ENTITY internote.deleteSelectedCmd.accesskey "v">
+<!ENTITY internote.resetSelectedCmd.label "Nulstil valgtes placering">
+<!ENTITY internote.resetSelectedCmd.accesskey "l">
+<!ENTITY internote.printSelectedCmd.label "Udskriv valgte…">
+<!ENTITY internote.printSelectedCmd.accesskey "U">
+<!ENTITY internote.printAllCmd.label "Udskriv alle…">
+<!ENTITY internote.printAllCmd.accesskey "d">
+<!ENTITY internote.importCmd.label "Importer">
+<!ENTITY internote.importCmd.accesskey "I">
+<!ENTITY internote.fromV3Cmd.label "Fra Internote v3…">
+<!ENTITY internote.fromV3Cmd.accesskey "3">
+<!ENTITY internote.fromV2Cmd.label "Fra Internote v2…">
+<!ENTITY internote.fromV2Cmd.accesskey "2">
+<!ENTITY internote.exportSelectedCmd.label "Eksporter valgte">
+<!ENTITY internote.exportSelectedCmd.accesskey "E">
+<!ENTITY internote.exportAllCmd.label "Eksporter alle">
+<!ENTITY internote.exportAllCmd.accesskey "k">
+<!ENTITY internote.toV3Cmd.label "Til Internote v3…">
+<!ENTITY internote.toV3Cmd.accesskey "3">
+<!ENTITY internote.toV2Cmd.label "Til Internote v2…">
+<!ENTITY internote.toV2Cmd.accesskey "2">
+<!ENTITY internote.toBookmarksCmd.label "Til Bogmærker…">
+<!ENTITY internote.toBookmarksCmd.accesskey "B">
+<!ENTITY internote.toTextCmd.label "Som tekst…">
+<!ENTITY internote.toTextCmd.accesskey "t">
+<!ENTITY internote.toHTMLCmd.label "Som HTML…">
+<!ENTITY internote.toHTMLCmd.accesskey "H">
+<!-- Right Panel -->
+<!ENTITY internote.noteScope.caption "Note vises på">
+<!ENTITY internote.noteMatchType.label "Hvilke sider?">
+<!ENTITY internote.urlMatchExact.value "Kun en">
+<!ENTITY internote.urlMatchSite.value "Kun på denne side">
+<!ENTITY internote.urlMatchStarts.value "Når URL starter med …">
+<!ENTITY internote.urlMatchSuffix.value "På sider som ender med …">
+<!ENTITY internote.urlMatchAll.value "Alle (vises altid)">
+<!ENTITY internote.urlMatchRegexp.value "Matcher RegEx">
+<!ENTITY internote.goLink.label "Åben side">
+<!ENTITY internote.noteURL.label "URL:">
+<!ENTITY internote.noteSite.label "Webside:">
+<!ENTITY internote.noteURLPrefix.label "URL starter med:">
+<!ENTITY internote.noteSiteSuffix.label "Webside ender med:">
+<!ENTITY internote.noteURLRegexp.label "URL RegEx:">
+<!ENTITY internote.noteData.caption "Notedetaljer">
+<!ENTITY internote.createTime.label "Oprettet:">
+<!ENTITY internote.modfnTime.label "Ændret:">
+<!ENTITY internote.isMinimizedCBox.label "Minimeret?">
+<!ENTITY internote.text.label "Tekst:">
+<!ENTITY internote.backColor.label "Notefarve:">
+<!ENTITY internote.foreColor.label "Tekstfarve:">
+<!ENTITY internote.thisNoteActions.caption "Handling for noten">
+<!ENTITY internote.deleteCurrentCmd.label "Slet">
+<!ENTITY internote.deleteCurrentCmd.accesskey "t">
+<!ENTITY internote.resetCurrentCmd.label "Nulstil placering">
+<!ENTITY internote.resetCurrentCmd.accesskey "N">

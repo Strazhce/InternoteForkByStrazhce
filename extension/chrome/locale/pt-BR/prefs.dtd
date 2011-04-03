@@ -1,0 +1,38 @@
+<!ENTITY internote.prefsDialog.title "Opções do Internote">
+<!---->
+<!ENTITY internote.appearancePrefsPane.title "Aparência">
+<!ENTITY internote.tinySize.value "Pequeno">
+<!ENTITY internote.normalSize.value "Normal">
+<!ENTITY internote.largeSize.value "Grande">
+<!ENTITY internote.giantSize.value "Gigante">
+<!ENTITY internote.megaSize.value "Mega">
+<!ENTITY internote.defaultStylePrefs.caption "Opções para Novas Notas">
+<!ENTITY internote.defaultNoteColor.label "Cor Padrão da Nota:">
+<!ENTITY internote.defaultTextColor.label "Cor padrão do texto:">
+<!---->
+<!ENTITY internote.defaultSize.label "Tamanho padrão da Nota:">
+<!---->
+<!ENTITY internote.defaultPos.label "Posição padrão da Nota:">
+<!ENTITY internote.topLeftPos.value "Esquerda Superior">
+<!ENTITY internote.topRightPos.value "Direita Superior">
+<!ENTITY internote.bottomLeftPos.value "Esquerda Inferior">
+<!ENTITY internote.bottomRightPos.value "Direita Inferior">
+<!ENTITY internote.centerPos.value "Centro">
+<!ENTITY internote.adjustDefaults.desc "(Estes são padrões que podem ser trocados em notas individuais posteriormente, utilizando as bordas da nota ou o botão flip).">
+<!ENTITY internote.globalStylePrefs.caption "Opções para Todas as Notas">
+<!ENTITY internote.fontSize.label "Tamanho da fonte:">
+<!---->
+<!ENTITY internote.useTranslucencyCBox.label "Notas Translúcidas">
+<!ENTITY internote.useHighlightableCBox.label "Texto Destacável (use a borda para mover)">
+<!ENTITY internote.useNativeScrollCBox.label "Use a barra de rolagem de seu sistema ao invés da Barra de rolagem do Internote">
+<!---->
+<!ENTITY internote.generalPrefsPane.title "Geral">
+<!ENTITY internote.generalPrefs.caption "Opções Gerais">
+<!ENTITY internote.confirmDeleteCBox.label "Confirmar a exclusão">
+<!ENTITY internote.useStatusBarCBox.label "Mostrar Internote na Barra de Status">
+<!ENTITY internote.confirmProviso.desc "(Ao usar o gerenciador para excluir várias notas sempre será necessária confirmação).">
+<!ENTITY internote.storagePrefs.caption "Opções de Armazenamento">
+<!ENTITY internote.useAlternativeCBox.label "Usar Locais Alternativos">
+<!ENTITY internote.browseButton.label "Navegar…">
+<!ENTITY internote.storageRestartProviso.desc "(Novos locais não serão usados até que o Firefox for reiniciado.)">
+<!ENTITY internote.storageMoveProviso.desc "(Notas existentes não serão transferidas para novos locais, porém você pode importá-las utilizando &quot;Gerenciar todas as Notas&quot; no menu Internote).">
